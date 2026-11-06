@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# ./incant INPUT [METHOD ...] [OUTPUT] [options]   — see ./incant --help / --list
+here="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+export INCANT_HOME="$here"
+exec uv run --quiet --project "$here" python -m incant "$@"

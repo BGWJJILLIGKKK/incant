@@ -1,0 +1,27 @@
+[project]
+name = "incant"
+version = "0.1.0"
+description = "Turn books (txt, epub, URLs) into fully-voiced, multi-speaker m4b audiobooks using local LLMs and TTS."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.9",
+    "httpx>=0.27",
+    "ebooklib>=0.18",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "trafilatura>=1.12",
+]
+
+[project.scripts]
+incant = "incant.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

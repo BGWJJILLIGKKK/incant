@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+/work/
+/voices/*
+!/voices/README.md
+!/voices/voices.json
+incant.local.toml

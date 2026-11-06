@@ -1,0 +1,55 @@
+# incant configuration. Personal overrides go in incant.local.toml (gitignored).
+# Relative paths resolve against this file's directory.
+
+# Default method per stage, used when the command line doesn't name one.
+# "auto" = detect from the input (ingest).
+[pipeline]
+ingest = "auto"
+parse = "basic"              # "characters" = + LLM character profiles (~5-15 min/book)
+attribute = "narrator"
+synthesize = "indextts"
+output = "m4b"
+
+[paths]
+work_dir = "work"
+voices_dir = "voices"
+
+[cast]
+narrator = "a_janelle_risa"  # voice id from voices/voices.json; also the fallback for uncast speakers
+
+# LLM and TTS share one GPU through llama-swap: all LLM stages run over the whole book
+# first, then the first TTS request swaps IndexTTS in (~30 s).
+[llm]                        # shared by LLM-backed parse/attribute methods
+base_url = "http://localhost:8080/v1"
+model = "qwen3.5-9b"
+concurrency = 4              # llama.cpp slots
+context_tokens = 32768       # KV cache shared by ALL slots; requests are admitted to fit it
+temperature = 0.0
+
+[audio]                      # shared by all synthesize methods
+sample_rate = 22050          # IndexTTS native rate
+target_lufs = -19.0
+true_peak_db = -3.0
+
+# ---- per-method settings: [<stage>.<method>] ----
+
+[parse.characters]
+window_words = 5000          # chapters longer than this are split for extraction
+think = false                # thinking for extraction: ~10x slower, little gain
+verify_links_with_thinking = true
+max_tokens_thinking = 6144
+
+[synthesize.indextts]
+base_url = "http://localhost:8080/v1"
+model = "indextts-2.5"
+lang = "en"
+speed = 1.0
+use_random = false           # deterministic: same text + voice -> same audio (cache-friendly)
+concurrency = 2              # server is serial; 2 just overlaps network with generation
+max_segment_chars = 300
+
+[synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
+concurrency = 4
+
+[output.m4b]
+bitrate = "64k"              # mono AAC; plenty for speech

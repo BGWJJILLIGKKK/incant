@@ -1,0 +1,161 @@
+"""Discovery, CLI resolution, and an end-to-end run: synthetic EPUB -> ... -> m4b (dummy TTS)."""
+
+import json
+import shutil
+import subprocess
+
+import pytest
+from ebooklib import epub
+
+from incant.cli import main
+from incant.config import Config
+from incant.pipeline import ResolveError, discover, load_method_class, resolve
+
+HAVE_FFMPEG = bool(shutil.which("ffmpeg") and shutil.which("ffprobe"))
+
+
+def make_epub(path):
+    book = epub.EpubBook()
+    book.set_identifier("test-1")
+    book.set_title("Test Book")
+    book.add_author("A. Writer")
+    book.set_language("en")
+    docs = [
+        ("Title", "c0.xhtml", "<h1>Test Book</h1><p>by A. Writer</p>"),
+        ("Chapter One", "c1.xhtml", "<h1>Test Book</h1><h2>Chapter One</h2><p>It began. “Hello,” said Ann, “there.”</p>"
+                                    '<div class="figcenter"><p class="caption">A caption to skip</p></div>'
+                                    '<p><img alt="T" src="x.png"/>he end of one.</p>'),
+        ("Chapter Two", "c2.xhtml", "<h2>Chapter Two</h2><p>Second <i>chapter</i> text.</p><table><tr><td>skip me</td></tr></table>"),
+        ("License", "c3.xhtml", '<section id="pg-footer"><h2>License</h2><p>Boilerplate.</p></section>'),
+    ]
+    items = []
+    for title, name, body in docs:
+        it = epub.EpubHtml(title=title, file_name=name, lang="en")
+        it.content = f"<html><body>{body}</body></html>"
+        book.add_item(it)
+        items.append(it)
+    book.toc = items
+    book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
+    book.spine = ["nav", *items]
+    epub.write_epub(str(path), book)
+
+
+@pytest.fixture
+def setup(tmp_path):
+    src = tmp_path / "t.epub"
+    make_epub(src)
+    conf = tmp_path / "incant.toml"
+    conf.write_text('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nsynthesize = "dummy"\n')
+    return tmp_path, src, conf
+
+
+# ------------------------------------------------------------------ discovery / resolution
+
+
+def test_discovery_finds_stages_and_methods_in_order():
+    stages = discover()
+    assert [s.name for s in stages] == ["ingest", "parse", "attribute", "synthesize", "output"]
+    by = {s.name: s for s in stages}
+    assert {"epub", "txt", "url"} <= set(by["ingest"].methods)
+    for s in stages:
+        for m in s.methods:
+            cls = load_method_class(s, m)
+            assert issubclass(cls, s.module.Base) and cls.name == m
+
+
+def test_resolve_out_of_order_explicit_and_output_path(setup):
+    _, src, _ = setup
+    stages = discover()
+    steps, out = resolve(["m4b", "dummy", "parse=basic", "final.m4b"], str(src), Config(), stages)
+    plan = {s.stage.name: (s.method, s.why) for s in steps}
+    assert plan["ingest"] == ("epub", "auto")
+    assert plan["synthesize"] == ("dummy", "cli") and plan["output"] == ("m4b", "cli")
+    assert str(out) == "final.m4b"
+
+
+def test_resolve_errors(setup):
+    _, src, _ = setup
+    stages = discover()
+    with pytest.raises(ResolveError, match="did you mean indextts"):
+        resolve(["indexts"], str(src), Config(), stages)
+    with pytest.raises(ResolveError, match="already set"):
+        resolve(["dummy", "indextts"], str(src), Config(), stages)
+    with pytest.raises(ResolveError, match="no method given"):  # two TTS methods, no default
+        resolve([], str(src), Config(), stages)
+
+
+def test_resolve_uses_config_default(setup):
+    _, src, _ = setup
+    steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "synthesize": "dummy"}), discover())
+    assert [(s.stage.name, s.why) for s in steps if s.stage.name == "synthesize"] == [("synthesize", "config")]
+
+
+# ------------------------------------------------------------------ end to end
+
+
+def test_epub_ingest_structure(setup):
+    tmp, src, conf = setup
+    assert main([str(src), "--until", "parse", "-c", str(conf)]) == 0
+    root = tmp / "work" / "test-book"
+    text = (root / "text.md").read_text()
+    assert "# Chapter One" in text and "# Chapter Two" in text
+    assert "# Test Book" not in text  # repeated book title is not a chapter boundary
+    for gone in ("caption to skip", "skip me", "Boilerplate", "License"):
+        assert gone not in text
+    assert "The end of one." in text  # image drop-cap restored
+    assert "*chapter*" in text
+    chapters = json.loads((root / "chapters.json").read_text())["chapters"]
+    assert [c["title"] for c in chapters] == ["Chapter One", "Chapter Two"]
+
+
+@pytest.mark.skipif(not HAVE_FFMPEG, reason="ffmpeg not installed")
+def test_end_to_end_dummy_and_resume(setup, capsys):
+    tmp, src, conf = setup
+    out = tmp / "book.m4b"
+    assert main([str(src), "epub", "basic", "narrator", "dummy", "m4b", str(out), "-c", str(conf)]) == 0
+    probe = json.loads(subprocess.run(["ffprobe", "-v", "error", "-show_chapters", "-show_format", "-of", "json", str(out)],
+                                      capture_output=True, check=True).stdout)
+    assert [c["tags"]["title"] for c in probe["chapters"]] == ["Chapter One", "Chapter Two"]
+    assert probe["format"]["tags"]["artist"] == "A. Writer"
+
+    capsys.readouterr()
+    assert main(["test-book", "-c", str(conf), "-o", str(out)]) == 0  # resume by slug: nothing upstream changed
+    log = capsys.readouterr().out
+    assert "[parse] basic: up to date" in log and "[attribute] narrator: up to date" in log
+
+    ch = tmp / "work" / "test-book" / "chapters" / "0001.txt"
+    ch.write_text(ch.read_text().replace("It began.", "It started."))
+    assert main(["test-book", "-c", str(conf), "-o", str(out)]) == 0  # chapter edit -> attribute reruns, parse keeps the edit
+    log = capsys.readouterr().out
+    assert "[parse] basic: up to date" in log and "[attribute] narrator\n" in log
+    assert "It started." in ch.read_text()
+
+
+def test_same_voice_spans_merge_into_one_segment(setup):
+    from incant.config import load_config
+    from incant.pipeline import discover, instantiate
+    from incant.schemas import Cast
+    from incant.stages.synthesize.render import Renderer
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    assert main([str(src), "--until", "attribute", "-c", str(conf)]) == 0
+    cfg = load_config(conf)
+    wd = WorkDir.for_slug(cfg.paths.work_dir, "test-book")
+    dummy = instantiate(cfg, {s.name: s for s in discover()}["synthesize"], "dummy")
+    ch = wd.read_chapters().chapters[0]
+
+    # single voice: quote + tag + quote in one paragraph -> one segment
+    one = Renderer(cfg, wd, dummy, dummy.voices(), Cast(roles={"narrator": "n"}, default_voice="n"), strict_voices=False)
+    texts = [s.text for s in one.plan(ch)]
+    assert "It began. Hello, said Ann, there." in texts
+
+    # distinct voices for narration vs dialogue -> split again
+    spans = wd.read_spans(ch.id)
+    for s in spans:
+        if s.kind == "dialogue":
+            s.speaker = "ann"
+    wd.write_spans(ch.id, spans)
+    two = Renderer(cfg, wd, dummy, dummy.voices(), Cast(roles={"narrator": "n", "ann": "a"}), strict_voices=False)
+    assert [(s.voice, s.text) for s in two.plan(ch)][1:4] == [("n", "It began."), ("a", "Hello,"), ("n", "said Ann,")]

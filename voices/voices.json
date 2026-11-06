@@ -1,0 +1,802 @@
+{
+  "a_janelle_risa": {
+    "voice": "a_janelle_risa",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "neutral",
+    "tone": "neutral"
+  },
+  "alan_davis_drake": {
+    "voice": "alan_davis_drake",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "older",
+    "tone": "deep"
+  },
+  "alec_daitsman": {
+    "voice": "alec_daitsman",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "deep"
+  },
+  "alexander_hatton": {
+    "voice": "alexander_hatton",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "neutral"
+  },
+  "amy_koenig": {
+    "voice": "amy_koenig",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "deep"
+  },
+  "andi": {
+    "voice": "andi",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "teen",
+    "tone": "high"
+  },
+  "andy": {
+    "voice": "andy",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "deep"
+  },
+  "anna_simon": {
+    "voice": "anna_simon",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "neutral"
+  },
+  "anne_cheng": {
+    "voice": "anne_cheng",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "older",
+    "tone": "deep"
+  },
+  "annie_coleman_rothenberg": {
+    "voice": "annie_coleman_rothenberg",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "teen",
+    "tone": "high"
+  },
+  "annise": {
+    "voice": "annise",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "neutral",
+    "tone": "neutral"
+  },
+  "bellona_times": {
+    "voice": "bellona_times",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "neutral"
+  },
+  "ben_gr": {
+    "voice": "ben_gr",
+    "source": "voice-zero",
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "high"
+  },
+  "ben_tucker": {
+    "voice": "ben_tucker",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "bev_j_stevens": {
+    "voice": "bev_j_stevens",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "bill_boerst": {
+    "voice": "bill_boerst",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "bill_mosley": {
+    "voice": "bill_mosley",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "brett_condron": {
+    "voice": "brett_condron",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "bridget_gaige": {
+    "voice": "bridget_gaige",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "browneyedgirl32382": {
+    "voice": "browneyedgirl32382",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "caden_vaughn_clegg-gravel": {
+    "voice": "caden_vaughn_clegg-gravel",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "caden_vaughn_clegg": {
+    "voice": "caden_vaughn_clegg",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "caprisha_page": {
+    "voice": "caprisha_page",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "caro_davy": {
+    "voice": "caro_davy",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "carrie_mae_streb": {
+    "voice": "carrie_mae_streb",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "christine_blachford": {
+    "voice": "christine_blachford",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "claudia_salto": {
+    "voice": "claudia_salto",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "clayton_j_smith": {
+    "voice": "clayton_j_smith",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "cori_samuel": {
+    "voice": "cori_samuel",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "dan_mason": {
+    "voice": "dan_mason",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "dave_chase": {
+    "voice": "dave_chase",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "david_clark": {
+    "voice": "david_clark",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "david_cole": {
+    "voice": "david_cole",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "david_jaquay-english": {
+    "voice": "david_jaquay-english",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "david_jaquay": {
+    "voice": "david_jaquay",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "david_wales": {
+    "voice": "david_wales",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "deanna_bovee": {
+    "voice": "deanna_bovee",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "delibab": {
+    "voice": "delibab",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "devorah_allen": {
+    "voice": "devorah_allen",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "diana_majlinger": {
+    "voice": "diana_majlinger",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "diana_majlinger2": {
+    "voice": "diana_majlinger2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "donald_malone": {
+    "voice": "donald_malone",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "douglas_harlon": {
+    "voice": "douglas_harlon",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "dullstar": {
+    "voice": "dullstar",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "dvoice": {
+    "voice": "dvoice",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "elli": {
+    "voice": "elli",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "emily_anderson": {
+    "voice": "emily_anderson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "emily_cripps": {
+    "voice": "emily_cripps",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "emily_cripps2": {
+    "voice": "emily_cripps2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ernst_pattynama": {
+    "voice": "ernst_pattynama",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ernst_pattynama2": {
+    "voice": "ernst_pattynama2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ezwa": {
+    "voice": "ezwa",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "george_fairchild": {
+    "voice": "george_fairchild",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "graeme_dunlop": {
+    "voice": "graeme_dunlop",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "greasyplastic-whisper": {
+    "voice": "greasyplastic-whisper",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "greg_giordano": {
+    "voice": "greg_giordano",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "greg_golding": {
+    "voice": "greg_golding",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ian_skillen": {
+    "voice": "ian_skillen",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "j_m_smallheer": {
+    "voice": "j_m_smallheer",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "j_rebecca_franklin": {
+    "voice": "j_rebecca_franklin",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jared_hess": {
+    "voice": "jared_hess",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jason_mayoff": {
+    "voice": "jason_mayoff",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jason_mills": {
+    "voice": "jason_mills",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jason_x": {
+    "voice": "jason_x",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jeanni_hall": {
+    "voice": "jeanni_hall",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jessi": {
+    "voice": "jessi",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jodi_krangle-expressive": {
+    "voice": "jodi_krangle-expressive",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jodi_krangle": {
+    "voice": "jodi_krangle",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jodi_krangle2": {
+    "voice": "jodi_krangle2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "jolie_odell": {
+    "voice": "jolie_odell",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "joy_easton": {
+    "voice": "joy_easton",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "julia_niedermaier": {
+    "voice": "julia_niedermaier",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "julie_vw": {
+    "voice": "julie_vw",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kara_shallenberg": {
+    "voice": "kara_shallenberg",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "karen_savage": {
+    "voice": "karen_savage",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "karen_savage2": {
+    "voice": "karen_savage2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kathryn_louise": {
+    "voice": "kathryn_louise",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kent_f": {
+    "voice": "kent_f",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kris_moore": {
+    "voice": "kris_moore",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristen_mcquillin": {
+    "voice": "kristen_mcquillin",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_barkhurst": {
+    "voice": "kristin_barkhurst",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_hughes-angry": {
+    "voice": "kristin_hughes-angry",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_hughes-expressive": {
+    "voice": "kristin_hughes-expressive",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_hughes-poetic": {
+    "voice": "kristin_hughes-poetic",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_hughes-sad": {
+    "voice": "kristin_hughes-sad",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kristin_hughes": {
+    "voice": "kristin_hughes",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kumarei": {
+    "voice": "kumarei",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "kyle_donelan": {
+    "voice": "kyle_donelan",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "larry_wilson": {
+    "voice": "larry_wilson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "lars_rolander": {
+    "voice": "lars_rolander",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "laura_caldwell": {
+    "voice": "laura_caldwell",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "laurie_anne_walden": {
+    "voice": "laurie_anne_walden",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "lily_took": {
+    "voice": "lily_took",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "linda_jenner": {
+    "voice": "linda_jenner",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "linda_johnson": {
+    "voice": "linda_johnson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "lizzie_driver": {
+    "voice": "lizzie_driver",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "lucy_burgoyne": {
+    "voice": "lucy_burgoyne",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "magdalena": {
+    "voice": "magdalena",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "maria_kasper": {
+    "voice": "maria_kasper",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "maria_kasper2": {
+    "voice": "maria_kasper2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "marianne_coleman-hipkins": {
+    "voice": "marianne_coleman-hipkins",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "mark_f_smith": {
+    "voice": "mark_f_smith",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "mark_nelson": {
+    "voice": "mark_nelson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "matt_wills": {
+    "voice": "matt_wills",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "may_low": {
+    "voice": "may_low",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "melora": {
+    "voice": "melora",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "mezzogal": {
+    "voice": "mezzogal",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "mike_pelton": {
+    "voice": "mike_pelton",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "mil_nicholson": {
+    "voice": "mil_nicholson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "miranda_stinson": {
+    "voice": "miranda_stinson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "nancy_roberts": {
+    "voice": "nancy_roberts",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "nicholas_james_bridgewater": {
+    "voice": "nicholas_james_bridgewater",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "padraig_o'hiceadha-lyrical": {
+    "voice": "padraig_o'hiceadha-lyrical",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "padraig_o'hiceadha": {
+    "voice": "padraig_o'hiceadha",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "padraig_o'hiceadha2": {
+    "voice": "padraig_o'hiceadha2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "pam_castille": {
+    "voice": "pam_castille",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "perry_clayton": {
+    "voice": "perry_clayton",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "peter_bishop": {
+    "voice": "peter_bishop",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "peter_yearsley": {
+    "voice": "peter_yearsley",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "phil_chenevert": {
+    "voice": "phil_chenevert",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "philippa": {
+    "voice": "philippa",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "phillip_dyer": {
+    "voice": "phillip_dyer",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rachael_nowotny": {
+    "voice": "rachael_nowotny",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rachael_nowotny2": {
+    "voice": "rachael_nowotny2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rachel": {
+    "voice": "rachel",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rachel_lintern": {
+    "voice": "rachel_lintern",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rebecca_braunert-plunkett": {
+    "voice": "rebecca_braunert-plunkett",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "reeses118": {
+    "voice": "reeses118",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rob_smith": {
+    "voice": "rob_smith",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "robert_garrison": {
+    "voice": "robert_garrison",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "robert_middleton": {
+    "voice": "robert_middleton",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "rosslyn_carlyle": {
+    "voice": "rosslyn_carlyle",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ruth_golding": {
+    "voice": "ruth_golding",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "ryan_bradburn": {
+    "voice": "ryan_bradburn",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "sarah_holtz": {
+    "voice": "sarah_holtz",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "sean_daeley": {
+    "voice": "sean_daeley",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "sean_michael_hogan": {
+    "voice": "sean_michael_hogan",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "semantic_nuance": {
+    "voice": "semantic_nuance",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "simon_evers": {
+    "voice": "simon_evers",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "sonja": {
+    "voice": "sonja",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "stephanie_dupal-demartin": {
+    "voice": "stephanie_dupal-demartin",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "stepheather": {
+    "voice": "stepheather",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "steve_c": {
+    "voice": "steve_c",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "steve_jackson": {
+    "voice": "steve_jackson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "steve_lawrence": {
+    "voice": "steve_lawrence",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "stuart_bell": {
+    "voice": "stuart_bell",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "tamurile": {
+    "voice": "tamurile",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "timothy_ferguson": {
+    "voice": "timothy_ferguson",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "tony_pettit": {
+    "voice": "tony_pettit",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "tricia_g": {
+    "voice": "tricia_g",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "tricia_g2": {
+    "voice": "tricia_g2",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  },
+  "voicebynatalie": {
+    "voice": "voicebynatalie",
+    "source": "voice-zero",
+    "default_emotion": "calm"
+  }
+}
+

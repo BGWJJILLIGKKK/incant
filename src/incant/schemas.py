@@ -83,6 +83,7 @@ class Character(BaseModel):
     description: str | None = None
     accent_hint: str | None = None
     first_chapter: str | None = None
+    chapters: list[str] = Field(default_factory=list)  # chapters the character appears in
     mentions: int = 0  # text windows the character appears in (importance)
     speaks: bool = False  # has quoted dialogue somewhere
     line_count: int = 0  # dialogue spans attributed (filled by attribution); drives voice pooling

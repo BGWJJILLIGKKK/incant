@@ -35,8 +35,8 @@ is content-cached per segment, so it always runs but only renders what changed.
 |---|---|---|---|
 | 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `txt`, `url` |
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
-| 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator` (LLM: todo) |
-| 4 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json` | `indextts`, `dummy` |
+| 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `speakers` (LLM) |
+| 4 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `indextts`, `dummy` |
 | 5 | `output` | `out/<slug>.m4b` | `m4b` |
 
 ## Adding a method
@@ -68,10 +68,17 @@ shared helpers, not methods. A new stage is a new directory with `ORDER`,
 - **One GPU, swapped.** The LLM and IndexTTS share the GPU via llama-swap: LLM stages
   finish the whole book before synthesis starts, so each model is swapped in once.
 
+## Quality checks
+
+- `eval/attribution.py eval/gold/<book>.json` scores speaker attribution against hand labels
+  (Pride and Prejudice ch. I–II: 93.8% with qwen3.5-9b).
+- Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
+  re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.
+
 ## Setup
 
 ```sh
-uv sync
+uv sync --extra qa
 ./incant --check
 uv run pytest
 ```

@@ -56,10 +56,12 @@ class IndexTTS(SynthesizeMethod):
             body["speed"] = s.speed
         return body
 
-    def synthesize(self, text: str, voice: Voice | None, emotion: Emotion | None) -> bytes:
+    def synthesize(self, text: str, voice: Voice | None, emotion: Emotion | None, variant: int = 0) -> bytes:
         if voice is None:
             raise ValueError("IndexTTS needs a voice: set [cast] narrator in incant.toml or edit the book's cast.json")
         body = self.payload(text, voice, emotion)
+        if variant:  # QA retry: ask for a different take
+            body["extra_params"]["use_random"] = True
         last: str = ""
         for attempt in range(self.settings.retries + 1):
             try:

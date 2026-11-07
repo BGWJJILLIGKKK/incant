@@ -56,6 +56,7 @@ class PathsConfig(BaseModel):
 
 class CastConfig(BaseModel):
     narrator: str | None = None  # voice id for the narrator and fallback for uncast speakers
+    main_unique: int = 8  # the N speakers with most lines never share a voice
 
 
 class Config(BaseModel):

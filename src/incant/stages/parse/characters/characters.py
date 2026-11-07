@@ -325,7 +325,8 @@ def build_characters(groups: list[list[Entry]]) -> list[Character]:
             gender_evidence=evidence.most_common(1)[0][0] if evidence else None,
             age=AgeBracket(max(known_ages.items(), key=lambda kv: kv[1])[0]) if known_ages else AgeBracket.unknown,
             description="; ".join(descriptions[:3]) or None,
-            first_chapter=min(chapters) if chapters else None, mentions=mentions, speaks=speaks,
+            first_chapter=min(chapters) if chapters else None, chapters=sorted(chapters),
+            mentions=mentions, speaks=speaks,
         ))
     # unique ids
     seen: Counter = Counter()

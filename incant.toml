@@ -5,8 +5,8 @@
 # "auto" = detect from the input (ingest).
 [pipeline]
 ingest = "auto"
-parse = "basic"              # "characters" = + LLM character profiles (~5-15 min/book)
-attribute = "narrator"
+parse = "characters"         # LLM character profiles (~10 min/book); "basic" = chapters only
+attribute = "speakers"       # LLM speaker + emotion per quote (~8 min/book); "narrator" = one voice
 synthesize = "indextts"
 output = "m4b"
 
@@ -16,6 +16,9 @@ voices_dir = "voices"
 
 [cast]
 narrator = "a_janelle_risa"  # voice id from voices/voices.json; also the fallback for uncast speakers
+main_unique = 8              # the N characters with most lines never share a voice
+# Speaking characters are cast automatically into the book's cast.json from voice gender/age/tone tags;
+# existing entries there are never changed, so edit cast.json to recast.
 
 # LLM and TTS share one GPU through llama-swap: all LLM stages run over the whole book
 # first, then the first TTS request swaps IndexTTS in (~30 s).
@@ -39,6 +42,11 @@ think = false                # thinking for extraction: ~10x slower, little gain
 verify_links_with_thinking = true
 max_tokens_thinking = 6144
 
+[attribute.speakers]
+max_quotes = 25              # quotations per request
+emotion_scale = 0.8          # intensity -> IndexTTS emo_alpha
+min_intensity = 0.3          # weaker emotions are rendered neutral
+
 [synthesize.indextts]
 base_url = "http://localhost:8080/v1"
 model = "indextts-2.5"
@@ -47,6 +55,9 @@ speed = 1.0
 use_random = false           # deterministic: same text + voice -> same audio (cache-friendly)
 concurrency = 2              # server is serial; 2 just overlaps network with generation
 max_segment_chars = 300
+qa = true                    # speech-to-text check of every segment (CPU, faster-whisper base.en)
+qa_max_wer = 0.25
+qa_retries = 2
 
 [synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
 concurrency = 4

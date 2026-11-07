@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING
 from ...audio import loudnorm, to_canonical_wav, trim_silence, wav_duration_ms
 from ...config import Config
 from ...normalize import is_scene_break
+from ...qa import Transcriber
 from ...schemas import NARRATOR_ID, AudioManifest, Cast, Chapter, ChapterAudio, Emotion, Segment, Voice
 from ...textprep import chunk
 from ...voices import VoiceLibrary
@@ -47,11 +48,13 @@ class _Group:
 
 
 class Renderer:
-    def __init__(self, cfg: Config, wd: WorkDir, backend: SynthesizeMethod, voices: VoiceLibrary, cast: Cast, strict_voices: bool = True):
+    def __init__(self, cfg: Config, wd: WorkDir, backend: SynthesizeMethod, voices: VoiceLibrary, cast: Cast, strict_voices: bool = True,
+                 qa: Transcriber | None = None):
         self.cfg, self.wd, self.backend, self.voices, self.cast = cfg, wd, backend, voices, cast
         self.strict_voices = strict_voices
         self.backend_id = backend.identity()
         self._resolved: dict[str, Voice] = {}  # voice id -> Voice, filled during planning
+        self.qa = qa
 
     # ------------------------------------------------------------ planning
 
@@ -133,25 +136,59 @@ class Renderer:
     def _cache_path(self, key: str) -> Path:
         return self.wd.cache_dir / key[:2] / f"{key}.wav"
 
-    def _synth_one(self, seg: Segment) -> None:
-        voice = self._resolved.get(seg.voice) if seg.voice else None
-        raw = self.backend.synthesize(seg.text, voice, seg.emotion)
-        wav = trim_silence(to_canonical_wav(raw, self.cfg.audio.sample_rate), pad_ms=TRIM_PAD_MS)
-        atomic_write(self._cache_path(seg.cache_key), wav)
+    def _qa_path(self, key: str) -> Path:
+        return self.wd.cache_dir / key[:2] / f"{key}.qa.json"
 
-    def synthesize(self, segs: list[Segment], progress: Progress | None = None) -> int:
-        todo = {s.cache_key: s for s in segs if not self._cache_path(s.cache_key).exists()}
+    def _render_take(self, seg: Segment, variant: int) -> bytes:
+        voice = self._resolved.get(seg.voice) if seg.voice else None
+        raw = self.backend.synthesize(seg.text, voice, seg.emotion, variant=variant)
+        return trim_silence(to_canonical_wav(raw, self.cfg.audio.sample_rate), pad_ms=TRIM_PAD_MS)
+
+    def _synth_one(self, seg: Segment) -> dict | None:
+        """Render (or reuse) a segment; with QA on, verify it and retry bad takes, keeping the best.
+        Returns the QA record if the final take still fails."""
+        path, qa_path = self._cache_path(seg.cache_key), self._qa_path(seg.cache_key)
+        if path.exists() and (self.qa is None or qa_path.exists()):
+            rec = json.loads(qa_path.read_text()) if qa_path.exists() else None
+            return rec if rec and not rec["ok"] else None
+        st = self.backend.settings
+        best: tuple[float, bytes, dict] | None = None
+        attempts = 1 + (st.qa_retries if self.qa else 0)
+        for variant in range(attempts):
+            wav = path.read_bytes() if variant == 0 and path.exists() else self._render_take(seg, variant)
+            if self.qa is None:
+                atomic_write(path, wav)
+                return None
+            chk = self.qa.check(wav, seg.text)
+            rec = {"ok": chk.ok(st.qa_max_wer), "wer": round(chk.wer, 3), "heard": chk.heard, "text": seg.text,
+                   "voice": seg.voice, "variant": variant, "span_ids": seg.span_ids}
+            if best is None or chk.wer < best[0]:
+                best = (chk.wer, wav, rec)
+            if rec["ok"]:
+                break
+        _, wav, rec = best
+        rec["attempts"] = attempts if not rec["ok"] else rec["variant"] + 1
+        atomic_write(path, wav)
+        atomic_write(qa_path, json.dumps(rec) + "\n")
+        return None if rec["ok"] else rec
+
+    def synthesize(self, segs: list[Segment], progress: Progress | None = None) -> list[dict]:
+        """Returns QA failures (segments whose best take still doesn't match its text)."""
+        todo = {s.cache_key: s for s in segs
+                if not self._cache_path(s.cache_key).exists() or (self.qa and not self._qa_path(s.cache_key).exists())}
+        failures = [r for s in segs if s.cache_key not in todo and (r := self._synth_one(s))]
         if not todo:
-            return 0
+            return failures
         done = 0
         with ThreadPoolExecutor(max_workers=max(1, self.backend.settings.concurrency)) as ex:
             futs = [ex.submit(self._synth_one, s) for s in todo.values()]
             for f in as_completed(futs):
-                f.result()
+                if rec := f.result():
+                    failures.append(rec)
                 done += 1
                 if progress and (done % 25 == 0 or done == len(todo)):
-                    progress(f"  synthesized {done}/{len(todo)}")
-        return len(todo)
+                    progress(f"  synthesized {done}/{len(todo)}" + (f" ({len(failures)} failed QA)" if failures else ""))
+        return failures
 
     # ------------------------------------------------------------ assembly
 
@@ -189,6 +226,7 @@ class Renderer:
         chapters = self.wd.read_chapters().chapters
         prior = {c.chapter_id: c for c in self.wd.read_manifest().chapters} if self.wd.manifest_path.exists() else {}
         results: list[ChapterAudio] = []
+        qa_fail: list[dict] = []
         for ch in chapters:
             if only is not None and ch.id not in only:
                 if ch.id in prior:
@@ -197,8 +235,13 @@ class Renderer:
             segs = self.plan(ch)
             if progress:
                 progress(f"chapter {ch.id} '{ch.title}': {len(segs)} segments")
-            self.synthesize(segs, progress)
+            qa_fail += self.synthesize(segs, progress)
             results.append(self.assemble(ch, segs))
         manifest = AudioManifest(sample_rate=self.cfg.audio.sample_rate, chapters=results)
         self.wd.write_manifest(manifest)
+        if self.qa is not None:
+            report = self.wd.root / "audio" / "qa_report.json"
+            atomic_write(report, json.dumps(qa_fail, indent=1) + "\n")
+            if progress:
+                progress(f"  QA: {len(qa_fail)} segments still mismatched after retries" + (f" -> {report}" if qa_fail else ""))
         return manifest

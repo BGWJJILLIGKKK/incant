@@ -39,7 +39,7 @@ class DummyTTS(SynthesizeMethod):
             self._words[(freq, amp)] = a.tobytes()
         return self._words[(freq, amp)]
 
-    def synthesize(self, text: str, voice: Voice | None, emotion: Emotion | None) -> bytes:
+    def synthesize(self, text: str, voice: Voice | None, emotion: Emotion | None, variant: int = 0) -> bytes:
         key = voice.id if voice else "default"
         freq = 180 + int(hashlib.sha1(key.encode()).hexdigest(), 16) % 300
         amp = 2500 * (1.0 + (emotion.alpha if emotion else 0.0))

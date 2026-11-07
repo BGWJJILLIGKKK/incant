@@ -46,7 +46,7 @@ def setup(tmp_path):
     src = tmp_path / "t.epub"
     make_epub(src)
     conf = tmp_path / "incant.toml"
-    conf.write_text('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nsynthesize = "dummy"\n')
+    conf.write_text('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nattribute = "narrator"\nsynthesize = "dummy"\n')
     return tmp_path, src, conf
 
 
@@ -67,7 +67,7 @@ def test_discovery_finds_stages_and_methods_in_order():
 def test_resolve_out_of_order_explicit_and_output_path(setup):
     _, src, _ = setup
     stages = discover()
-    steps, out = resolve(["m4b", "dummy", "parse=basic", "final.m4b"], str(src), Config(), stages)
+    steps, out = resolve(["m4b", "dummy", "parse=basic", "narrator", "final.m4b"], str(src), Config(), stages)
     plan = {s.stage.name: (s.method, s.why) for s in steps}
     assert plan["ingest"] == ("epub", "auto")
     assert plan["synthesize"] == ("dummy", "cli") and plan["output"] == ("m4b", "cli")
@@ -87,7 +87,7 @@ def test_resolve_errors(setup):
 
 def test_resolve_uses_config_default(setup):
     _, src, _ = setup
-    steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "synthesize": "dummy"}), discover())
+    steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "attribute": "narrator", "synthesize": "dummy"}), discover())
     assert [(s.stage.name, s.why) for s in steps if s.stage.name == "synthesize"] == [("synthesize", "config")]
 
 

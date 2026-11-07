@@ -13,6 +13,9 @@ dependencies = [
     "trafilatura>=1.12",
 ]
 
+[project.optional-dependencies]
+qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
+
 [project.scripts]
 incant = "incant.cli:main"
 

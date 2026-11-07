@@ -87,8 +87,11 @@ class Fetcher:
                 p = Path(site.cookies).expanduser()
                 try:
                     self.jar.load(str(p), ignore_discard=True, ignore_expires=True)
-                except (OSError, LoadError) as e:
-                    raise FetchError(f"cookies for {host}: can't read {p} ({e}); export cookies.txt in Netscape format") from None
+                except FileNotFoundError:
+                    raise FetchError(f"cookies for {host}: {p} does not exist") from None
+                except (OSError, LoadError):  # (the exception text can quote cookie lines: not shown)
+                    raise FetchError(f"cookies for {host}: {p} is not a Netscape-format cookies.txt "
+                                     "(first line '# Netscape HTTP Cookie File', then 7 tab-separated fields per cookie)") from None
         for c in self.jar:  # browser exports write session cookies as expiry 0, which reads as long expired
             if c.expires == 0:
                 c.expires, c.discard = None, True
@@ -121,6 +124,9 @@ class Fetcher:
         a = self._netrc.authenticators(host)
         return (a[0] or "", a[2] or "") if a and (a[0] or a[2]) else None
 
+    def _has_cookies(self, host: str) -> bool:
+        return any(host == c.domain.lstrip(".") or host.endswith("." + c.domain.lstrip(".")) for c in self.jar)
+
     def credentials(self, url: str) -> tuple[dict[str, str], httpx.Auth | None, bool]:
         """(headers, auth, has_credentials) for this URL's host. Only https gets secrets, except localhost."""
         u = urlsplit(url)
@@ -139,7 +145,7 @@ class Fetcher:
                 headers["Authorization"] = f"Bearer {token}"
         elif na := self._netrc_auth(host):
             auth = httpx.BasicAuth(*na)
-        has = bool(headers or auth)
+        has = bool(headers or auth) or self._has_cookies(host)
         if has and u.scheme != "https" and host not in ("localhost", "127.0.0.1", "::1"):
             raise FetchError(f"refusing to send credentials for {host} over plain http; use the https URL")
         return headers, auth, has
@@ -172,18 +178,27 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
     fetcher = fetcher or Fetcher(UrlSettings())
     final, html, used = fetcher.get(url)
     host = urlsplit(final).hostname
-    fix = ("the credentials/cookies didn't get past it (expired session?)" if used else
-           f'if your browser session sees the text, export its cookies and set cookies = "…" under '
-           f'[ingest.url.sites."{host}"] in incant.local.toml')
     text = trafilatura.extract(html, include_comments=False, include_tables=False, favor_precision=True) or ""
     words = len(text.split())
     if _PASSWORD_FIELD.search(html) and words < LOGIN_PAGE_MAX_WORDS:
-        raise FetchError(f"{url} returned a login page ({final}) — {fix}")
+        why = ("the credentials/cookies didn't log in (expired session?)" if used else
+               f'add credentials or cookies under [ingest.url.sites."{host}"] in incant.local.toml')
+        raise FetchError(f"{url} returned a login page ({final}) — {why}")
     if words < fetcher.s.min_words:
-        gate = _GATE.search(text) or _GATE.search(re.sub(r"<[^>]+>", " ", html))
-        what = (f"a gate page (\"{' '.join(gate.group(0).split())}\")" if gate
-                else "no readable text (the page may build its content with JavaScript)")
-        raise FetchError(f"{url}: only {words} words extracted — {what}; {fix}. Nothing ingested.")
+        gate = _GATE.search(text)  # in the extracted text: what the page shows instead of the content
+        label = " ".join(gate.group(0).split()) if gate else ""
+        if gate and used:
+            what = (f'a gate page ("{label}") even with your credentials/cookies — '
+                    "the session may have expired; export fresh cookies")
+        elif gate:
+            what = (f'a gate page ("{label}") — if your browser session sees the text, '
+                    f'export its cookies and set cookies = "…" under [ingest.url.sites."{host}"] in incant.local.toml')
+        elif used:
+            what = ("no article text although your credentials/cookies were sent: the page probably loads its "
+                    "text with JavaScript, which the url method doesn't run; this site needs its own ingest method")
+        else:
+            what = "no readable text: the page may build its content with JavaScript, or need a login"
+        raise FetchError(f"{url}: only {words} words extracted — {what}. Nothing ingested.")
     md = trafilatura.extract_metadata(html)
     # trafilatura emits one paragraph per line; make them blank-line separated
     text = "\n\n".join(clean_unicode(text).splitlines())

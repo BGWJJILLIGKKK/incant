@@ -61,8 +61,10 @@ class IngestMethod(Method):
         src = ctx.source if ctx.source.startswith(("http://", "https://")) else str(Path(ctx.source).resolve())
         slug = ctx.slug or unique_slug(ctx.cfg.paths.work_dir, slugify(ing.title), src)
         wd = WorkDir.for_slug(ctx.cfg.paths.work_dir, slug)
+        ctx.created = not wd.meta_path.exists()
         wd.root.mkdir(parents=True, exist_ok=True)
 
+        ctx.wd = wd  # set early: a failure from here on can clean the directory up
         cover_name = None
         if ing.cover:
             ext, data = ing.cover

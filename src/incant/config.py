@@ -18,7 +18,7 @@ from __future__ import annotations
 import os
 import tomllib
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -71,6 +71,13 @@ class ReviewConfig(BaseModel):
     port: int = 8765
 
 
+class RunConfig(BaseModel):
+    # A failed run deletes the work directory of a book it created ("new"), so half-made books (a gate page
+    # ingested as text, a stage that crashed) don't linger or get resumed. Books that existed before the run,
+    # and books with synthesized audio (hours of TTS), are never deleted. "never" keeps everything.
+    cleanup_failed: Literal["new", "never"] = "new"
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="allow")  # [<stage>] tables land here
 
@@ -80,6 +87,7 @@ class Config(BaseModel):
     paths: PathsConfig = PathsConfig()
     cast: CastConfig = CastConfig()
     review: ReviewConfig = ReviewConfig()
+    run: RunConfig = RunConfig()
     base_dir: Path = Path(".")
     files: list[Path] = []
 

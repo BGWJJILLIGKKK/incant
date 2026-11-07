@@ -88,7 +88,7 @@ def test_errors_name_the_problem_not_the_secret(monkeypatch, tmp_path):
         f.get("https://paywall.test/a")
     assert "bad" not in str(e.value)
 
-    with pytest.raises(FetchError, match="cookies.txt"):
+    with pytest.raises(FetchError, match="does not exist"):
         fetcher({"example.com": {"cookies": str(tmp_path / "missing.txt")}})
 
 
@@ -144,5 +144,26 @@ def test_gate_and_empty_pages_refused():
         ingest_url("https://stories.test/s/2", f)
 
     f, _ = fetcher({"stories.test": {"bearer": "t"}}, routes=lambda r: httpx.Response(200, html=gate))
-    with pytest.raises(FetchError, match="expired session"):
+    with pytest.raises(FetchError, match="may have expired"):
         ingest_url("https://stories.test/s/1", f)
+
+
+def test_cookie_session_counts_as_credentials(tmp_path):
+    """A logged-in page with no article text (loaded by JavaScript) must not be blamed on missing cookies,
+    and a page that merely mentions 'adult content' somewhere isn't a gate."""
+    jar = tmp_path / "cookies.txt"
+    jar.write_text("# Netscape HTTP Cookie File\n.stories.test\tTRUE\t/\tTRUE\t1999999999\tsess\tv\n")
+    page = ('<html><body><nav>Filters: hide adult content</nav><div id="root"></div>'
+            '<script>loadStory()</script></body></html>')
+    f, _ = fetcher({"stories.test": {"cookies": str(jar)}}, routes=lambda r: httpx.Response(200, html=page))
+    with pytest.raises(FetchError) as e:
+        ingest_url("https://stories.test/s/3", f)
+    assert "were sent" in str(e.value) and "JavaScript" in str(e.value) and "gate" not in str(e.value)
+
+
+def test_bad_cookie_file_error_does_not_echo_contents(tmp_path):
+    jar = tmp_path / "cookies.txt"
+    jar.write_text("sessionid=SECRETVALUE; other=1\n")
+    with pytest.raises(FetchError, match="not a Netscape-format") as e:
+        fetcher({"example.com": {"cookies": str(jar)}})
+    assert "SECRETVALUE" not in str(e.value)

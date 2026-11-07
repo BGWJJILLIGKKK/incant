@@ -36,6 +36,7 @@ class Context:
     cfg: Config
     source: str | None = None  # stage 1 input
     wd: WorkDir | None = None  # set by ingest (or by the CLI when resuming a book)
+    created: bool = False  # ingest made this book's work directory in this run (cleanup on failure)
     slug: str | None = None
     title: str | None = None  # title hint for ingest (from a container such as a bookmark file)
     out: Path | None = None  # final output path override

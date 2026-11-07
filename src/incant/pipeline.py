@@ -181,6 +181,37 @@ def _read_records(wd: WorkDir) -> dict:
 
 def run_pipeline(steps: list[Step], ctx: Context, *, start: str | None = None, stop: str | None = None,
                  force: set[str] | None = None) -> Context:
+    """Run the steps; on failure, clean up a book this run created (see [run] cleanup_failed), then re-raise."""
+    try:
+        return _run_steps(steps, ctx, start=start, stop=stop, force=force)
+    except Exception as e:
+        cleanup_failed(ctx, e)
+        raise
+
+
+def cleanup_failed(ctx: Context, error: BaseException) -> bool:
+    """Delete the work directory of a book created by this run. Kept: books that existed before the run (they
+    may hold hand edits) and books with synthesized audio (expensive, and resumable). Returns True if deleted."""
+    wd = ctx.wd
+    if ctx.cfg.run.cleanup_failed == "never" or not ctx.created or wd is None or not wd.root.is_dir():
+        return False
+    if any(wd.cache_dir.glob("*/*.wav")):
+        ctx.log(f"  keeping {wd.root}: it has synthesized audio (resume with --from)")
+        return False
+    root = wd.root.resolve()
+    work = ctx.cfg.resolve(ctx.cfg.paths.work_dir).resolve()
+    if root.parent != work:  # only ever a book directory directly under the work dir
+        return False
+    import shutil
+
+    shutil.rmtree(root)
+    ctx.log(f"  removed {root} (new book; the run failed: {type(error).__name__})")
+    ctx.wd = None
+    return True
+
+
+def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, stop: str | None = None,
+               force: set[str] | None = None) -> Context:
     force = force or set()
     names = [s.stage.name for s in steps]
     for n in (start, stop):

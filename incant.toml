@@ -11,6 +11,9 @@ normalize = "rules"          # spell out numerals/numbers/abbreviations/caps for
 synthesize = "indextts"
 output = "m4b"
 
+[run]
+cleanup_failed = "new"       # a failed run deletes a book it created ("never" keeps it); never books with audio
+
 [paths]
 work_dir = "work"
 voices_dir = "voices"
@@ -48,7 +51,7 @@ netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
 # [ingest.url.sites."example.com"]
 # username = "me"
 # password_env = "EXAMPLE_PASSWORD"       # or password = "…"; or bearer / bearer_env; or headers = {…}
-# cookies = "~/cookies/example.txt"       # cookies.txt exported from a logged-in browser
+cookies = "/tmp/browser_cookies.txt"       # cookies.txt exported from a logged-in browser
 
 [parse.characters]
 window_words = 5000          # chapters longer than this are split for extraction

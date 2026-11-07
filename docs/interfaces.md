@@ -114,6 +114,7 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - **Errors:**
   - 401/403/407 → names the `[ingest.url.sites."host"]` entry to add, or says the credentials were rejected.
   - A page with a password field and under 300 words of text is reported as a login wall, not ingested.
+  - Cookies count as credentials for the hint wording: a logged-in page without text is reported as JavaScript-loaded, not as missing cookies.
   - A page with under `min_words` (100) words of text is refused. The error names the gate it found (age/consent/bot check,
     "enable JavaScript") or says there was no readable text, and how to supply cookies.
 
@@ -412,6 +413,14 @@ The m4b file:
 - The upstream hash is sha256 over the previous stage's `outputs()` files (names and bytes).
 - A stage with `SKIP_IF_UNCHANGED` (parse, attribute) is skipped when its key matches and its outputs exist.
 - `--force <stage>|all` overrides the skip.
+
+### Cleanup after failure (`[run] cleanup_failed`, default `"new"`)
+When a run fails, `run_pipeline` deletes the book's work directory, but only if all of these hold:
+- ingest created it in this run (`Context.created`: no `meta.json` existed before);
+- it has no synthesized audio (`audio/cache/*/*.wav`);
+- it sits directly under `work_dir`.
+
+The error is then re-raised. In a batch each item is cleaned up on its own. Books that existed before the run (they may hold hand edits) are never deleted. Set `"never"` to keep everything.
 
 ### `llm_cache/XX/<sha256>.json`
 - Key: sha256 of the full request body (model, messages, schema, sampling, thinking flag).

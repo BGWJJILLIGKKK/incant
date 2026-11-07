@@ -129,3 +129,20 @@ def test_settings_from_local_config_and_secret_free_fingerprint(tmp_path, monkey
     monkeypatch.delenv("TOK", raising=False)
     assert [ok for ok, _ in m.check()] == [False]
     assert "hunter2" not in json.dumps([msg for _, msg in m.check()])
+
+
+def test_gate_and_empty_pages_refused():
+    gate = ('<html><body><h1>Adult content</h1><p>This submission contains adult content. By continuing you '
+            'confirm you are 18 or older.</p><button>I am 18 or older - Continue</button></body></html>')
+    f, _ = fetcher(routes=lambda r: httpx.Response(200, html=gate))
+    with pytest.raises(FetchError, match=r'only \d+ words .*gate page .*cookies = .*sites\."stories\.test"'):
+        ingest_url("https://stories.test/s/1", f)
+
+    shell = '<html><body><div id="root"></div><script>render()</script></body></html>'
+    f, _ = fetcher(routes=lambda r: httpx.Response(200, html=shell))
+    with pytest.raises(FetchError, match="JavaScript"):
+        ingest_url("https://stories.test/s/2", f)
+
+    f, _ = fetcher({"stories.test": {"bearer": "t"}}, routes=lambda r: httpx.Response(200, html=gate))
+    with pytest.raises(FetchError, match="expired session"):
+        ingest_url("https://stories.test/s/1", f)

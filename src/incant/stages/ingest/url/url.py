@@ -35,6 +35,12 @@ __all__ = ["UrlIngest"]
 MAX_REDIRECTS = 10
 _PASSWORD_FIELD = re.compile(r"<input[^>]+type\s*=\s*[\"']?password", re.I)
 LOGIN_PAGE_MAX_WORDS = 300  # a page this short with a password box is a login wall, not the article
+# Interstitials served instead of the content: age gates, consent walls, bot checks, JavaScript-only pages.
+_GATE = re.compile(
+    r"\b(?:18 (?:years )?or older|over 18|confirm (?:that )?you are (?:at least )?\d\d|verify your age|age verification"
+    r"|adult content|mature content|enable javascript|javascript (?:is )?required|requires javascript"
+    r"|log ?in to (?:view|read|continue)|sign ?in to (?:view|read|continue)|members only|subscribe to (?:read|continue)"
+    r"|verify you are (?:a )?human|are you a robot|captcha|access denied|checking your browser)\b", re.I)
 
 
 class Site(BaseModel):
@@ -52,6 +58,8 @@ class UrlSettings(BaseModel):
     timeout_s: float = 30.0
     netrc: bool = True  # use ~/.netrc ($NETRC) for hosts without a [sites] entry
     sites: dict[str, Site] = Field(default_factory=dict)
+    # Pages with less extracted text than this are refused: almost always a gate or an empty shell, not a story.
+    min_words: int = 100
 
 
 class FetchError(RuntimeError):
@@ -161,14 +169,21 @@ class Fetcher:
 
 
 def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
-    final, html, used = (fetcher or Fetcher(UrlSettings())).get(url)
-    text = trafilatura.extract(html, include_comments=False, include_tables=False, favor_precision=True)
-    if not text:
-        raise FetchError(f"no main text extracted from {url}")
-    if _PASSWORD_FIELD.search(html) and len(text.split()) < LOGIN_PAGE_MAX_WORDS:
-        host = urlsplit(final).hostname
-        why = "the credentials didn't log in" if used else f'add credentials under [ingest.url.sites."{host}"]'
-        raise FetchError(f"{url} returned a login page ({final}) — {why}")
+    fetcher = fetcher or Fetcher(UrlSettings())
+    final, html, used = fetcher.get(url)
+    host = urlsplit(final).hostname
+    fix = ("the credentials/cookies didn't get past it (expired session?)" if used else
+           f'if your browser session sees the text, export its cookies and set cookies = "…" under '
+           f'[ingest.url.sites."{host}"] in incant.local.toml')
+    text = trafilatura.extract(html, include_comments=False, include_tables=False, favor_precision=True) or ""
+    words = len(text.split())
+    if _PASSWORD_FIELD.search(html) and words < LOGIN_PAGE_MAX_WORDS:
+        raise FetchError(f"{url} returned a login page ({final}) — {fix}")
+    if words < fetcher.s.min_words:
+        gate = _GATE.search(text) or _GATE.search(re.sub(r"<[^>]+>", " ", html))
+        what = (f"a gate page (\"{' '.join(gate.group(0).split())}\")" if gate
+                else "no readable text (the page may build its content with JavaScript)")
+        raise FetchError(f"{url}: only {words} words extracted — {what}; {fix}. Nothing ingested.")
     md = trafilatura.extract_metadata(html)
     # trafilatura emits one paragraph per line; make them blank-line separated
     text = "\n\n".join(clean_unicode(text).splitlines())

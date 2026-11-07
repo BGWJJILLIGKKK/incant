@@ -114,6 +114,8 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - **Errors:**
   - 401/403/407 → names the `[ingest.url.sites."host"]` entry to add, or says the credentials were rejected.
   - A page with a password field and under 300 words of text is reported as a login wall, not ingested.
+  - A page with under `min_words` (100) words of text is refused. The error names the gate it found (age/consent/bot check,
+    "enable JavaScript") or says there was no readable text, and how to supply cookies.
 
 ### Container sources (`expand`)
 A method that overrides `expand(source) -> list[SourceItem] | None` is a container (today: `bookmark`).

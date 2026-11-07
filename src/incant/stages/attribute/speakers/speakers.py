@@ -212,8 +212,12 @@ class SpeakersAttribute(AttributeMethod):
     def run(self, ctx: Context):
         wd = ctx.need_wd()
         chars = wd.read_characters()
-        if not chars or not chars.characters:
+        if not chars:
             raise RuntimeError("speakers needs characters.json — run the parse stage with the 'characters' method")
+        if not chars.characters:
+            words = sum(c.word_count for c in wd.read_chapters().chapters)
+            raise RuntimeError(f"character profiling found no characters in {words:,} words of text — check "
+                               f"{wd.text_path} (a short or wrong page?), or use attribute=narrator for one voice")
         llm = LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
         # Unnamed speakers from a previous run are rebuilt below (hand-edited ones are kept).
         chars.characters = [c for c in chars.characters if c.origin != "attribution" or c.locked]

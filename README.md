@@ -60,6 +60,10 @@ The LLM can be any OpenAI-compatible server (`[llm] dialect = "openai"` for Olla
 OpenAI). Each TTS backend has its own voices and its own cast: switching backends keeps the other's `cast.json`
 as `cast.<backend>.json` and brings it back when you switch again.
 
+**Author's notes** on web stories — introductions, commentary, "Thanks for reading!", calls to comment or tip —
+are removed from the start and end of each chapter by default (`[parse.<method>] metatext`: `auto` = web pages only,
+`rules`, `llm`, `off`); everything removed is listed in `work/<book>/removed.txt`.
+
 **Normalisation** (`rules`) spells out what a TTS is likely to misread — Roman numerals in titles,
 section words and regnal names ("Henry VIII"), years/numbers/money/times, abbreviations ("Mr.", "St."),
 ALL-CAPS runs, symbols, archaic hyphenation — conservatively, leaving the pronoun "I" and real acronyms

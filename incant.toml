@@ -57,6 +57,9 @@ netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
 # password_env = "EXAMPLE_PASSWORD"       # or password = "…"; or bearer / bearer_env; or headers = {…}
 cookies = "/tmp/browser_cookies.txt"       # cookies.txt exported from a logged-in browser
 
+# Author's notes, intros, sign-offs and site text at chapter edges ("This is a story about…", "Thanks for
+# reading!", "Click here to tip"): metatext = "auto" (rules for web pages, off for books) | "rules" | "llm" | "off".
+# What was removed is listed in work/<book>/removed.txt. Set it per parse method, e.g. [parse.basic] metatext = "llm".
 [parse.characters]
 window_words = 5000          # chapters longer than this are split for extraction
 think = false                # thinking for extraction: ~10x slower, little gain

@@ -34,11 +34,12 @@ from ....workdir import WorkDir
 from ...base import Context
 from ..base import ParseMethod
 from ..chapters import build_chapters
+from ..metatext import MetatextSettings
 
 __all__ = ["CharactersParse"]
 
 
-class CharactersSettings(BaseModel):
+class CharactersSettings(MetatextSettings):
     # Chapters longer than this are split for extraction. A 9B model gets sloppy on big windows (aliases
     # attached to the wrong person, characters missed): 2000 words is close to a typical novel chapter.
     window_words: int = 2000
@@ -432,7 +433,7 @@ class CharactersParse(ParseMethod):
 
     def run(self, ctx: Context):
         wd = ctx.need_wd()
-        cl, notes = build_chapters(wd)
+        cl, notes = build_chapters(wd, self.settings, self.llm_for_metatext(wd))
         for n in notes:
             ctx.log(f"  note: {n}")
         ctx.log(f"  {len(cl.chapters)} chapters via {cl.method}")

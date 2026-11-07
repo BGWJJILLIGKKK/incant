@@ -46,6 +46,7 @@ work/<slug>/
   audio/qa_report.json            synthesize   segments still failing QA
   audio/concat.txt, ffmetadata.txt  output     ffmpeg inputs (scratch)
   output.json                     output       {"files": [absolute paths written]}; the files are in the output tree
+  removed.txt                     parse        author's notes / site text removed (metatext); absent if none
   llm_cache/XX/<sha256>.json      parse, attribute   cached LLM answers
   pipeline.json                   runner       stage skip records
 ```
@@ -161,6 +162,18 @@ Chapters are split deterministically, by `stages/parse/chapters.py`. Every parse
 - Chapters titled Contents or List of Illustrations are dropped.
 - Leading chapters under 40 words with no sentence (title-page fragments) are dropped.
 - Chapter ids follow the order of `text.md`. If `text.md` changes, the ids may change, and every downstream file is then invalid.
+- **Author's notes / site text** (`[parse.<method>] metatext`, `stages/parse/metatext.py`): paragraphs at a chapter's
+  start or end that aren't the story are removed — introductions and forewords in the author's voice, content
+  notes, commentary, thanks, calls to comment/fave/vote/tip, links, update notes, site navigation, repeated title
+  lines, bylines, page numbers. Listed in `removed.txt` (chapter, start/end, reason, text); no file when nothing is removed.
+  - `"auto"` (default): `rules` for `source_format = "url"`, `off` for books. `"rules"`: phrase/style cues, no LLM.
+    `"llm"`: the LLM labels the first/last `metatext_scan` (12) paragraphs per chapter; a label counts only if the
+    paragraph also has a cue, is a title line or has ≤ 12 words. `"off"`.
+  - Only blocks touching an edge go: the longest edge run that ends on a note, is ≥ ⅔ notes and has no dialogue
+    among the rest, or everything before an early scene break when most of it is notes. Never text in the middle.
+  - At most `metatext_max_share` (0.3) of a chapter; more is reported and nothing is removed.
+  - The options count in the parse fingerprint only when changed from their defaults, so existing books aren't
+    re-parsed by the option's arrival. Existing web books need `--force parse` to be cleaned.
 
 ### `chapters.json` — ChapterList
 | Field | Type | Req | Meaning |

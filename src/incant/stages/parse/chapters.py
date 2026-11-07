@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 from ...normalize import SCENE_BREAK
 from ...schemas import Chapter, ChapterList
 from ...workdir import WorkDir, atomic_write
+from .metatext import MetatextSettings, report, strip_metatext
 
 _NUM_WORDS = (
     r"one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
@@ -138,9 +139,29 @@ def _strip_edge_breaks(paras: list[str]) -> list[str]:
     return paras
 
 
-def build_chapters(wd: WorkDir) -> tuple[ChapterList, list[str]]:
+def metatext_mode(setting: str, source_format: str) -> str:
+    """"auto": web pages get the rules pass (they're full of author's notes); books don't."""
+    if setting == "auto":
+        return "rules" if source_format == "url" else "off"
+    return setting
+
+
+def build_chapters(wd: WorkDir, metatext: MetatextSettings | None = None, llm=None) -> tuple[ChapterList, list[str]]:
     meta = wd.read_meta()
     chunks, method, notes = split_chapters(wd.text_path.read_text())
+    report_path = wd.root / "removed.txt"
+    mode = metatext_mode(metatext.metatext, meta.source_format) if metatext else "off"
+    if mode != "off":
+        cleaned, removed, log = strip_metatext([c.paras for c in chunks], meta.title, mode, metatext, llm)
+        for c, paras in zip(chunks, cleaned):
+            c.paras = paras
+        chunks = [c for c in chunks if c.words or not removed]
+        notes += log
+        if removed:
+            atomic_write(report_path, report(removed, mode))
+            notes.append(f"{len(removed)} paragraph(s) of author's notes / site text removed -> {report_path.name}")
+    if mode == "off" or not removed:
+        report_path.unlink(missing_ok=True)
     chapters: list[Chapter] = []
     for i, ch in enumerate(chunks, start=1):
         cid = f"{i:04d}"

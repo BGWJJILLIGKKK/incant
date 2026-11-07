@@ -120,14 +120,22 @@ def roster_for(chars: CharacterList, chapter_id: str, top: int, full_max: int = 
     for a stave that only says "the nephew"). Without per-chapter data, or for small casts when full_max
     allows, every speaking character."""
     ranked = sorted(chars.characters, key=lambda c: -c.mentions)
-    keep = {c.id for c in ranked[:top]} | {c.id for c in chars.characters if chapter_id in c.chapters}
+    keep = {c.id for c in chars.characters if chapter_id in c.chapters}
+    # The book's main characters, unless chapter data says they're elsewhere and the text doesn't name them
+    # (top-N pulled every ghost into every stave of A Christmas Carol).
+    keep |= {c.id for c in ranked[:top] if not text or not c.chapters}
     if text:
         low = text.casefold()
         words = set(re.findall(r"[a-z]+", low))
+        ambiguous = {a.casefold() for a in chars.ambiguous_aliases}
+
+        def distinctive(n: str) -> bool:  # "the Spirit"/"the Ghost" appear everywhere and mean different people
+            return len(n) >= 3 and n.casefold() not in ambiguous and not re.match(r"(?i)^the\s+\w+$", n)
+
         for c in chars.characters:
             if c.origin != "profile":
                 continue
-            if any(len(n) >= 3 and re.search(rf"(?<!\w){re.escape(n.casefold())}(?!\w)", low)
+            if any(distinctive(n) and re.search(rf"(?<!\w){re.escape(n.casefold())}(?!\w)", low)
                    for n in (c.canonical_name, *c.aliases)):
                 keep.add(c.id)
             elif c.speaks and c.description and (set(re.findall(r"[a-z]+", c.description.casefold())) & ROLE_NOUNS & words):
@@ -145,7 +153,8 @@ def roster_text(roster: list[Character], narrator: str | None = None) -> str:
     for c in roster:
         al = f"; also {', '.join(c.aliases[:6])}" if c.aliases else ""
         desc = f" — {c.description[:100]}" if c.description else ""
-        lines.append(f"{c.id}: {c.canonical_name} ({c.gender.value}{al}){desc}")
+        quiet = " [not seen speaking]" if not c.speaks and c.origin == "profile" else ""
+        lines.append(f"{c.id}: {c.canonical_name} ({c.gender.value}{al}){desc}{quiet}")
     return "\n".join(lines)
 
 

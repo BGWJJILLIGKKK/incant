@@ -96,7 +96,7 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
 ## Quality checks
 
 - `eval/attribution.py eval/gold/<book>.json` scores speaker attribution against hand labels
-  (qwen3.5-9b: Pride and Prejudice ch. I–II 96.9%; Sherlock Holmes "A Scandal in Bohemia" opening 95.8%;
+  (qwen3.5-9b: Pride and Prejudice ch. I–II 93.8%; Sherlock Holmes "A Scandal in Bohemia" opening 97.9%;
   A Christmas Carol Stave One 93.2%).
 - Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
   re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.

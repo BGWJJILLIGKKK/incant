@@ -60,8 +60,8 @@ against the hardware below; where something is a judgement rather than a measure
 
 | Gold set | Quotes | Accuracy |
 |---|---|---|
-| Pride and Prejudice ch. I–II (third person) | 64 | 93.8% → 96.9% |
-| Sherlock Holmes, "A Scandal in Bohemia" opening (first person) | 48 | 91.7% → 95.8% |
+| Pride and Prejudice ch. I–II (third person) | 64 | 93.8% → 93.8% (96.9% with a top-10 roster rule) |
+| Sherlock Holmes, "A Scandal in Bohemia" opening (first person) | 48 | 91.7% → 97.9% |
 | A Christmas Carol, Stave One (unnamed/role speakers) | 59 | 55.9% → 93.2% |
 
 - Whole P&P: 1,792 quotations, 97% attributed, ~8 min.
@@ -76,7 +76,12 @@ against the hardware below; where something is a judgement rather than a measure
   In first-person books "narrator" maps to the narrating character.
 - Roster size matters both ways: every speaking character in every roster fixed Fred but cost P&P
   95.3% -> 87.5% (distractors). What works: chapter characters + top 10 + anyone named in the chapter text
-  + speaking characters whose described role ("Scrooge's nephew") appears in it ("the nephew").
+  + speaking characters whose described role ("Scrooge's nephew") appears in it ("the nephew"). Generic
+  titles ("the Spirit") must not count as a name appearing, and the book's top-10 characters are only
+  added when chapter data doesn't place them elsewhere: otherwise every ghost is in every stave and the
+  silent Ghost of Christmas Yet to Come collected 31 lines (now 2). That last rule costs P&P two quotes.
+- With 48–64 quotes per gold set, ±2 quotes (±3–4%) is within noise of prompt/roster changes; the gold
+  sets need to grow before smaller effects can be measured.
 
 ## TTS (IndexTTS-2.5 over HTTP)
 

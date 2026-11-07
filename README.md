@@ -1,7 +1,11 @@
 # incant
 
-Books in (txt, epub, URL), fully-voiced multi-speaker m4b audiobooks out — with a
-local LLM for character analysis and speaker attribution, and IndexTTS for voices.
+Books in (txt, epub, pdf, URL), fully-voiced multi-speaker audiobooks out (m4b, mp3, or a file per chapter).
+Every stage has a cheap option and a better one: rule-based or LLM speaker attribution (any OpenAI-compatible
+server), and Kokoro on the CPU, any OpenAI-style speech server, or IndexTTS for voices.
+
+**Cheapest full run (no GPU, no servers):** `./incant book.epub basic tags kokoro` — rule-based attribution
+and local Kokoro voices.
 
 ## Usage
 
@@ -11,6 +15,7 @@ The pipeline is spelled out on the command line, one method per stage:
 ./incant book.epub epub characters speakers rules indextts m4b   # fully explicit
 ./incant book.epub                                     # everything from [pipeline] defaults / auto-detect
 ./incant book.epub dummy out/test.m4b                  # override one stage; trailing path = output file
+./incant book.epub basic tags kokoro mp3               # no LLM, CPU voices, one chaptered mp3
 ./incant book.epub synthesize=indextts                 # stage=method when a name is ambiguous
 ./incant pride-and-prejudice --from synthesize         # resume a book already in work/
 ./incant books/ -o audiobooks/                         # batch: every epub/pdf/txt in books/, one by one
@@ -25,7 +30,8 @@ Other options: `--until STAGE`, `--force STAGE[,..]|all`, `--chapters 1-3,7`,
 **Resolution:** bare names unique to one stage go to that stage wherever they
 appear; names shared by several stages go to the next matching stage in order;
 stages not named fall back to `[pipeline]` in `incant.toml`, then auto-detection
-(ingest), then the stage's only method.
+(ingest), then the stage's only method, then its built-in default (basic, narrator,
+rules, kokoro, m4b). A trailing `out.mp3` picks the output method by extension.
 
 **Re-runs:** parse and attribute are skipped when their method, settings and
 upstream outputs are unchanged, so hand edits to their outputs survive. Synthesis
@@ -37,10 +43,22 @@ is content-cached per segment, so it always runs but only renders what changed.
 |---|---|---|---|
 | 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `pdf`, `txt`, `url` |
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
-| 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `speakers` (LLM) |
+| 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `tags` (rules), `speakers` (LLM) |
 | 4 | `normalize` | `speech/<chapter>.json` (spans + TTS-ready `say`), `speech/changes.txt` | `rules`, `none` |
-| 5 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `indextts`, `dummy` |
-| 6 | `output` | `output/<author>/<title>/<title>.m4b` (outside `work/`), `output.json` | `m4b` |
+| 5 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `kokoro` (local), `openai` (HTTP), `indextts`, `dummy` |
+| 6 | `output` | `output/<author>/<title>/…` (outside `work/`), `output.json` | `m4b`, `mp3`, `chapters` |
+
+**Choosing methods** (speaker accuracy on the 10-book gold suite; see `docs/interfaces.md`):
+
+| Need | parse | attribute | synthesize |
+|---|---|---|---|
+| Best | `characters` (LLM) | `speakers` (LLM, 95%) | `indextts` (GPU server, emotion) |
+| Fewer LLM calls | `characters` (LLM) | `tags` (80%) | `kokoro` |
+| No LLM at all | `basic` | `tags` (~68%) | `kokoro` (CPU, ~3–5× real time) |
+
+The LLM can be any OpenAI-compatible server (`[llm] dialect = "openai"` for Ollama, LM Studio, OpenRouter,
+OpenAI). Each TTS backend has its own voices and its own cast: switching backends keeps the other's `cast.json`
+as `cast.<backend>.json` and brings it back when you switch again.
 
 **Normalisation** (`rules`) spells out what a TTS is likely to misread — Roman numerals in titles,
 section words and regnal names ("Henry VIII"), years/numbers/money/times, abbreviations ("Mr.", "St."),
@@ -105,7 +123,7 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
 ## Setup
 
 ```sh
-uv sync --extra qa --extra browser
+uv sync --extra qa --extra browser --extra kokoro   # kokoro: local CPU voices (model downloads on first use)
 .venv/bin/playwright install chromium   # headless browser for web pages that load their text with JavaScript
 ./incant --check
 uv run pytest

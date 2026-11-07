@@ -206,20 +206,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"plan: {_plan_str(steps)}")
 
     if args.check:
-        import shutil
-
-        ok = True
-        for tool in ("ffmpeg", "ffprobe"):
-            found = shutil.which(tool)
-            ok &= bool(found)
-            print(f"{'ok ' if found else 'ERR'} {tool}")
-        for st in steps:
-            if st.method == "-":
-                continue
-            for good, msg in instantiate(cfg, st.stage, st.method).check():
-                ok &= good
-                print(f"{'ok ' if good else 'ERR'} [{st.stage.name}.{st.method}] {msg}")
-        return 0 if ok else 1
+        return run_checks(cfg, steps)
     if args.dry_run:
         return 0
 
@@ -245,6 +232,26 @@ def _folder_items(folder: Path, tokens: list[str], stages: list[StageInfo]) -> l
         inner = expand_source(str(f), tokens, stages)
         items += inner if inner is not None else [BatchItem(f.name, str(f))]
     return items
+
+
+def run_checks(cfg, steps: list[Step]) -> int:
+    """--check: tools on PATH plus each planned method's own readiness checks."""
+    import shutil
+
+    ok = True
+    for tool in ("ffmpeg", "ffprobe"):
+        found = shutil.which(tool)
+        ok &= bool(found)
+        print(f"{'ok ' if found else 'ERR'} {tool}")
+    seen = set()
+    for st in steps:
+        if st.method == "-" or (st.stage.name, st.method) in seen:
+            continue
+        seen.add((st.stage.name, st.method))
+        for good, msg in instantiate(cfg, st.stage, st.method).check():
+            ok &= good
+            print(f"{'ok ' if good else 'ERR'} [{st.stage.name}.{st.method}] {msg}")
+    return 0 if ok else 1
 
 
 def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: list[str] | None = None) -> int:
@@ -276,6 +283,8 @@ def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: li
         print(f"error: a batch writes one file per book — give an output directory, not '{out_dir}'", file=sys.stderr)
         return 2
     print(f"batch: {len(plans)} books from {origin}")
+    if args.check:  # every distinct plan's methods, once
+        return run_checks(cfg, [st for _, steps, _ in plans for st in steps])
     if args.dry_run:
         for it, steps, _ in plans:
             print(f"  {it.label}: {_plan_str(steps)}")

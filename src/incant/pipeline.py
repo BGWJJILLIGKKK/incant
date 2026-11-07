@@ -76,7 +76,7 @@ def instantiate(cfg: Config, stage: StageInfo, name: str) -> Method:
 class Step:
     stage: StageInfo
     method: str
-    why: str  # "cli" | "config" | "auto" | "only" | "existing"
+    why: str  # "cli" | "config" | "auto" | "only" | "default" | "existing"
 
 
 class ResolveError(ValueError):
@@ -91,7 +91,9 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
     - A bare name unique to one stage goes to that stage, wherever it appears.
     - A name shared by several stages goes to the first such stage after the previous token's stage.
     - A trailing token that isn't a method but looks like a file (e.g. out.m4b) is the output path.
-    - Stages left over take [pipeline] defaults from config, then 'auto' guessing, then a sole method.
+    - A trailing output path picks the output method writing that extension (out.mp3 -> mp3).
+    - Stages left over take [pipeline] defaults from config, then 'auto' guessing, then a sole method,
+      then the stage's own DEFAULT.
     """
     by_name = {s.name: s for s in stages}
     owners: dict[str, list[StageInfo]] = {}
@@ -131,6 +133,14 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
         chosen[st.name] = tok.split(sep, 1)[1] if sep else tok
         last_order = st.order
 
+    if out_path is not None:  # out.mp3 picks the output method that writes .mp3
+        for s in stages:
+            if s.name in chosen or not hasattr(s.module.Base, "EXTENSION"):
+                continue
+            hits = [m for m in s.methods if getattr(load_method_class(s, m), "EXTENSION", None) == out_path.suffix.lower()]
+            if len(hits) == 1 and cfg.pipeline.get(s.name) not in hits:
+                chosen[s.name] = hits[0]
+
     steps: list[Step] = []
     for s in stages:
         if s.name in chosen:
@@ -152,6 +162,8 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
             steps.append(Step(s, default, "config"))
         elif len(s.methods) == 1:
             steps.append(Step(s, s.methods[0], "only"))
+        elif getattr(s.module, "DEFAULT", None) in s.methods:
+            steps.append(Step(s, s.module.DEFAULT, "default"))
         else:
             raise ResolveError(f"stage '{s.name}': no method given and no [pipeline] default (choose: {', '.join(s.methods)})")
     return steps, out_path

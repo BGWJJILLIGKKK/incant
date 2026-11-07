@@ -24,9 +24,20 @@ from pydantic import BaseModel, ConfigDict
 
 
 class LLMConfig(BaseModel):
+    """Any OpenAI-compatible chat server: llama.cpp / llama-swap, vLLM, Ollama (http://localhost:11434/v1),
+    LM Studio, OpenRouter, OpenAI. `dialect` picks the extra request fields the server understands."""
+
     base_url: str = "http://localhost:8080/v1"
     model: str = "qwen3.5-9b"
     api_key: str = "none"
+    api_key_env: str | None = None  # read the key from this environment variable instead
+    # "llama.cpp": Qwen-style thinking switch (chat_template_kwargs) and top_k/min_p sampling (also vLLM, SGLang).
+    # "openai": standard fields only; thinking is off and the thinking sampling extras are dropped
+    #           (OpenAI, Ollama, LM Studio, OpenRouter, most hosted APIs).
+    dialect: Literal["llama.cpp", "openai"] = "llama.cpp"
+    # Structured output: "json_schema" (constrained decoding), or "json_object" for servers without schemas
+    # (the schema is then described in the prompt and the answer validated).
+    structured: Literal["json_schema", "json_object"] = "json_schema"
     timeout_s: float = 1200.0  # long thinking calls share the GPU 4 ways (~25 tok/s each)
     concurrency: int = 4  # llama.cpp slots
     # Total KV cache shared by ALL slots (llama.cpp unified KV). Concurrent requests' prompt + max output

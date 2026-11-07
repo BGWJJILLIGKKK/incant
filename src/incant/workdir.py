@@ -101,12 +101,16 @@ class WorkDir:
     def write_characters(self, c: CharacterList) -> None:
         self._write(self.characters_path, c)
 
-    def read_cast(self) -> Cast | None:
-        p = self.cast_path
+    def cast_path_for(self, space: str) -> Path:
+        """Where a backend's cast is kept while another backend's is active."""
+        return self.root / f"cast.{space}.json"
+
+    def read_cast(self, path: Path | None = None) -> Cast | None:
+        p = path or self.cast_path
         return self._read(p, Cast) if p.exists() else None
 
-    def write_cast(self, c: Cast) -> None:
-        self._write(self.cast_path, c)
+    def write_cast(self, c: Cast, path: Path | None = None) -> None:
+        self._write(path or self.cast_path, c)
 
     def read_manifest(self) -> AudioManifest:
         return self._read(self.manifest_path, AudioManifest)

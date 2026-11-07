@@ -6,10 +6,11 @@
 [pipeline]
 ingest = "auto"
 parse = "characters"         # LLM character profiles (~10 min/book); "basic" = chapters only
-attribute = "speakers"       # LLM speaker + emotion per quote (~8 min/book); "narrator" = one voice
+attribute = "speakers"       # LLM speaker + emotion per quote (~8 min/book, 95%); "tags" = rules, seconds (80%,
+                             # 68% with parse=basic); "narrator" = one voice
 normalize = "rules"          # spell out numerals/numbers/abbreviations/caps for the TTS; "none" = markup only
-synthesize = "indextts"
-output = "m4b"
+synthesize = "indextts"      # "kokoro" = local CPU, no server; "openai" = any /v1/audio/speech server; "dummy"
+output = "m4b"               # "mp3" = one chaptered mp3; "chapters" = a file per chapter + playlist
 
 [run]
 cleanup_failed = "new"       # a failed run deletes a book it created ("never" keeps it); never books with audio
@@ -31,8 +32,10 @@ main_unique = 8              # the N characters with most lines never share a vo
 host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
 port = 8765
 
-[llm]                        # shared by LLM-backed parse/attribute methods
+[llm]                        # shared by LLM-backed parse/attribute methods; any OpenAI-compatible server
 base_url = "http://localhost:8080/v1"
+# Ollama/LM Studio/OpenRouter/OpenAI: dialect = "openai" (no llama.cpp extras); structured = "json_object" if the
+# server can't constrain to a JSON schema; api_key_env = "OPENAI_API_KEY"
 model = "qwen3.5-9b"
 concurrency = 4              # llama.cpp slots
 context_tokens = 32768       # KV cache shared by ALL slots; requests are admitted to fit it
@@ -80,8 +83,27 @@ qa = true                    # speech-to-text check of every segment (CPU, faste
 qa_max_wer = 0.25
 qa_retries = 2
 
+[synthesize.kokoro]          # Kokoro-82M on the CPU (uv sync --extra kokoro); model files download on first use
+# narrator = "af_heart"      # default; voices: a*/b* = American/British English (voicesets.py); voices/kokoro.json
+model = "fp32"               # "int8": smaller download, not faster on most CPUs
+speed = 1.0
+qa = true
+
+[synthesize.openai]          # any OpenAI-style speech server; defaults fit Kokoro-FastAPI (docker, port 8880)
+base_url = "http://localhost:8880/v1"
+model = "kokoro"
+voices = "kokoro"            # built-in voice list: "kokoro", "openai" (alloy, nova…), or "none" (voices/openai.json only)
+# api_key_env = "OPENAI_API_KEY"; instructions = true  # gpt-4o-mini-tts: speak each line's emotion
+
 [synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
 concurrency = 4
 
 [output.m4b]
 bitrate = "64k"              # mono AAC; plenty for speech
+
+[output.mp3]
+bitrate = "64k"
+
+[output.chapters]
+format = "mp3"               # "opus" (32k is plenty), "m4a"
+bitrate = "64k"

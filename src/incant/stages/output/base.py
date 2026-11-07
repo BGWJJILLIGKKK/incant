@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 
+from ...audio import _run
 from ...normalize import slugify
 from ...schemas import BookMeta
 from ...workdir import WorkDir, atomic_write
@@ -65,3 +66,58 @@ class OutputMethod(Method):
 
     def run(self, ctx: Context) -> Path:
         raise NotImplementedError
+
+
+# ------------------------------------------------------------ shared encoding helpers
+
+
+def _esc(v: str) -> str:
+    return re.sub(r"([=;#\\\n])", r"\\\1", v)
+
+
+def ffmetadata(wd: WorkDir, narrator: str | None = None, chapters: bool = True) -> str:
+    """ffmpeg metadata: book tags and (optionally) chapter markers from the audio manifest."""
+    meta = wd.read_meta()
+    manifest = wd.read_manifest()
+    lines = [";FFMETADATA1", f"title={_esc(meta.title)}", f"album={_esc(meta.title)}", "genre=Audiobook"]
+    if meta.author:
+        lines += [f"artist={_esc(meta.author)}", f"album_artist={_esc(meta.author)}"]
+    if narrator:
+        lines.append(f"composer={_esc(narrator)}")
+    if meta.description:
+        lines.append(f"comment={_esc(meta.description[:2000])}")
+    t = 0
+    for ch in manifest.chapters if chapters else []:
+        lines += ["", "[CHAPTER]", "TIMEBASE=1/1000", f"START={t}", f"END={t + ch.duration_ms}", f"title={_esc(ch.title)}"]
+        t += ch.duration_ms
+    return "\n".join(lines) + "\n"
+
+
+def cover_path(wd: WorkDir) -> Path | None:
+    meta = wd.read_meta()
+    p = wd.root / meta.cover if meta.cover else None
+    return p if p and p.exists() else None
+
+
+def encode_book(wd: WorkDir, out: Path, codec_args: list[str], narrator: str | None = None,
+                cover_args: list[str] | None = None) -> Path:
+    """All chapter WAVs -> one file with book tags and chapter markers (and cover art if cover_args)."""
+    manifest = wd.read_manifest()
+    if not manifest.chapters:
+        raise RuntimeError("audio manifest has no chapters; run the synthesize stage first")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    concat = wd.root / "audio" / "concat.txt"
+    atomic_write(concat, "".join(f"file '{(wd.root / c.file).resolve()}'\n" for c in manifest.chapters))
+    metafile = wd.root / "audio" / "ffmetadata.txt"
+    atomic_write(metafile, ffmetadata(wd, narrator))
+    args = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(concat), "-i", str(metafile)]
+    cover = cover_path(wd) if cover_args is not None else None
+    if cover:
+        args += ["-i", str(cover)]
+    args += ["-map", "0:a", "-map_metadata", "1", "-map_chapters", "1"]
+    if cover:
+        args += ["-map", "2:v", *cover_args]
+    tmp = out.with_name(f".{out.stem}.tmp{out.suffix}")
+    _run([*args, *codec_args, str(tmp)])
+    tmp.replace(out)
+    return out

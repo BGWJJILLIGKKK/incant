@@ -6,7 +6,8 @@ symbols, archaic hyphenation) and applies the pronunciation lexicon. Book text i
 
 from .base import NormalizeMethod as Base
 
+DEFAULT = "rules"  # when neither the command line nor [pipeline] names a method
 ORDER = 4
 DESCRIPTION = "spell out numbers, abbreviations, numerals, etc. for the TTS; apply the lexicon"
 
-__all__ = ["Base", "ORDER", "DESCRIPTION"]
+__all__ = ["Base", "DEFAULT", "ORDER", "DESCRIPTION"]

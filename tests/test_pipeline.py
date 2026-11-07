@@ -81,8 +81,8 @@ def test_resolve_errors(setup):
         resolve(["indexts"], str(src), Config(), stages)
     with pytest.raises(ResolveError, match="already set"):
         resolve(["dummy", "indextts"], str(src), Config(), stages)
-    with pytest.raises(ResolveError, match="no method given"):  # two TTS methods, no default
-        resolve([], str(src), Config(), stages)
+    steps, _ = resolve([], str(src), Config(), stages)  # several TTS methods, no config: the stage's DEFAULT
+    assert {s.stage.name: s.why for s in steps}["synthesize"] == "default"
 
 
 def test_resolve_uses_config_default(setup):

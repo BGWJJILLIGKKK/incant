@@ -18,7 +18,7 @@ General rules for every file below:
   - span id `NNNN-nnnnn`: chapter id + 5-digit, 1-based span number within the chapter;
   - character id: slug of the canonical name (`elizabeth-bennet`), `minor-NNNN-<role-slug>` for unnamed
     speakers, or the reserved `narrator`;
-  - voice id: a key of `voices/voices.json`.
+  - voice id: a voice of the active synthesize backend's library (its *voice space*: IndexTTS → `voices/voices.json`, Kokoro → built-in + `voices/kokoro.json`, …).
 
 ## Directory layout
 
@@ -35,7 +35,8 @@ work/<slug>/
   speech/changes.txt      normalize    human report
   lexicon.toml            human/review per-book pronunciations
   say_overrides.json      review       hand-edited spoken text
-  cast.json               synthesize (+review, human)  Cast
+  cast.json               synthesize (+review, human)  Cast of the active backend
+  cast.<space>.json       synthesize   casts of other backends, kept while another is active
   audio/cache/XX/<key>.wav        synthesize   one rendered segment
   audio/cache/XX/<key>.qa.json    synthesize   QA record for that segment
   audio/cache/XX/<key>.lvl.json   synthesize   loudness of that segment
@@ -212,7 +213,22 @@ Character fields:
 
 ## Stage 3 — attribute
 
-**Reads:** `chapters.json`, `chapters/*.txt`, `characters.json` (required by `speakers`, ignored by `narrator`).
+**Reads:** `chapters.json`, `chapters/*.txt`, `characters.json` (required by `speakers`, used by `tags` when it came from profiling, ignored by `narrator`).
+
+| Method | Cost | Suite accuracy (502 gold quotes) |
+|---|---|---|
+| `speakers` | LLM, ~8 min/book | 94.8% |
+| `tags` + `parse=characters` | parse LLM only; attribution in seconds | 79.5% |
+| `tags` + `parse=basic` | no LLM | ~68% (names matched loosely: it builds its own character list) |
+| `narrator` | none | 3.4% (one voice) |
+
+`tags` (rule-based): per quotation, its dialogue tag (`said Elizabeth`, `Elizabeth replied`, `said he`, `said his wife`,
+`said Scrooge's nephew`, a tag ending the previous paragraph `he replied:—`), then another tag in the paragraph, then the
+subject of the adjacent narration sentence (action beat), then who is addressed (`"Say, Jim, …"` → not Jim), then
+turn-taking. Pronouns resolve by gender to the nearest character in the scene; roles (`wife`, `nephew`, `stranger`) to the
+character whose profile description starts with that role. Delivery from the verb (`whispered` → hushed). Without a profiled
+`characters.json` it writes one (`origin = "attribution"`) from tag names, gender from titles and following pronouns.
+Weak spot: first-person narration with few tags (Dracula 28%).
 **Writes:**
 - `spans/NNNN.jsonl` for every chapter. Only the `ctx.chapters` chapters are relabelled; any missing ones are created unlabelled.
 - `characters.json`: sets `narrator`, rebuilds the `origin=attribution` characters and, on full runs, sets `line_count`.
@@ -293,11 +309,18 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 **Reads:**
 - `chapters.json`, and `speech/NNNN.json` (falls back to `spans/` when there is none)
 - `characters.json`, `cast.json`
-- `voices/voices.json`
+- the backend's voice library (below)
 - config `[audio]`, `[cast]`
 
+| Method | Runs | Voices | Emotion | Notes |
+|---|---|---|---|---|
+| `indextts` | HTTP (IndexTTS-2.5 server) | `voices/voices.json` | free text + strength | best quality; GPU |
+| `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
+| `openai` | HTTP, any OpenAI `/v1/audio/speech` (Kokoro-FastAPI, openedai-speech, LocalAI, OpenAI) | built-in `kokoro` or `openai` list (+ `voices/openai.json`) | `instructions` (gpt-4o-mini-tts) if `instructions = true` | `api_key_env` |
+| `dummy` | local | any id | — | beeps; tests |
+
 **Writes:**
-- `cast.json`
+- `cast.json` (and `cast.<space>.json` when switching backends)
 - `audio/cache/**`, `audio/chapters/NNNN.{wav,json}`
 - `audio/manifest.json`, `audio/qa_report.json`
 
@@ -307,6 +330,7 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 | schema_version | int | |
 | roles | {char id: voice id} | must include `narrator` (from `[cast] narrator`) |
 | default_voice | str | voice for unknown or uncast speakers; defaults to the narrator voice |
+| engine | str\|None | voice space the ids belong to (`indextts`, `kokoro`, `openai-kokoro`…). None = older file, adopted by the first backend that has all its voices. |
 | auto | {char id: voice id} | the last automatic pick. A role equal to its `auto` entry is recast every run; a role that differs (hand-set) is kept. |
 
 Casting (`casting.auto_cast`):
@@ -314,11 +338,19 @@ Casting (`casting.auto_cast`):
 - Candidates are voices tagged `male`/`female` that match the character's gender. A character of unknown gender may take any of them. The narrator's voice is avoided where possible.
 - Ranked by: fewest chapters shared with the voice's other characters, not already used by a main character, unused, best age match, best tone match, fewest lines.
 - No candidate means the character falls back to `default_voice`.
+- Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`, OpenAI `nova`).
+- **Switching backends:** `cast.json` belongs to one voice space. A backend with another space moves it to `cast.<old>.json` and restores `cast.<new>.json` if present, so hand edits for each backend survive switching back and forth.
 - The `[cast] main_unique` characters with the most lines never share a voice, and scene partners avoid sharing one.
 - First-person books (with `[cast] first_person_narration = "character"`): the `narrator` role takes the narrating character's voice.
 
-### Voice library: `voices/voices.json` (+ optional `voices/<id>.json` overrides)
-`{voice_id: {voice, source, default_emotion, gender, age, tone, description?, license?, consent?, ref_audio?}}`
+### Voice library: per backend
+- `indextts`: `voices/voices.json` (+ optional `voices/<id>.json` overrides).
+- `kokoro`: built-in list (`voicesets.py`), then `voices/kokoro.json` entries override fields or add voices.
+- `openai`: built-in list named by `voices` (`kokoro`|`openai`|`none`), then `voices/openai.json`.
+
+`{voice_id: {voice, source, default_emotion, gender, age, tone, description?, license?, consent?, ref_audio?, mix?, lang?}}`
+- `mix`: `{voice id: weight}` — a blend of the backend's voices (Kokoro locally; sent as `a(0.7)+b(0.3)` over HTTP).
+- `lang`: accent/language for backends that need it (Kokoro: `en-us`, `en-gb`, … — from the id's first letter by default).
 - `gender`: `male`|`female`
 - `age`: `teen`|`adult`|`older`|`neutral`
 - `tone`: `high`|`neutral`|`deep`
@@ -380,10 +412,15 @@ Tags are optional, but **voices without a `gender` tag are never auto-cast** (th
 A list of QA records (same shape as `.qa.json`) for segments still failing after retries. `[]` = clean.
 
 **Backend contract:**
-- `synthesize(text, voice: Voice|None, emotion: Emotion|None, variant: int) -> bytes` returns any WAV.
-  `variant > 0` must produce a different take.
+- `synthesize(text, voice: Voice|None, emotion: Emotion|None, variant: int) -> bytes` returns any WAV (any rate; resampled).
+  `variant > 0` must produce a different take (deterministic models: e.g. a slightly different tempo).
 - `identity()` returns a string that changes whenever output for the same input would change.
-- `NEEDS_VOICE_LIBRARY = False` for backends that don't use the library: no casting, no QA.
+- `voices() -> VoiceLibrary`: the backend's voices (default `voices/voices.json`). Tag them for casting.
+- `voice_space() -> str|None`: names the id space (default: method name); None = ids are labels (no cast switching).
+- `DEFAULT_NARRATOR`: a voice id to narrate when config names none of this backend's voices.
+- `NEEDS_VOICE_LIBRARY = False`: any voice id accepted, no casting. `QA_SUPPORTED = False`: output can't be transcribed.
+- HTTP backends: subclass `speech_http.SpeechHTTP` (auth via `api_key_env`, retries, `--check` of `/models`) and implement `payload()`.
+- Cache keys include `Voice.mix`/`lang` only when set, so adding a field never invalidates existing audio.
 
 ---
 
@@ -400,6 +437,14 @@ A list of QA records (same shape as `.qa.json`) for segments still failing after
 - Names keep spaces and case; `/ \ : * ? " < > |` and control characters become spaces; ≤120 characters.
 - `output.json`: `{"files": [absolute paths]}` — where the book went. An output method that sets `SKIP_IF_UNCHANGED` is up to date only if it and every listed file exist (`m4b` always rebuilds).
 - New output methods: build the path with `default_path(ctx)` (or `tree_path(base, meta, ext)` for extra files in the book's directory) and call `self.record(wd, files)`.
+
+| Method | Writes |
+|---|---|
+| `m4b` (stage `DEFAULT`) | `<title>.m4b`: AAC, chapters, tags, cover |
+| `mp3` | `<title>.mp3`: MP3, ID3v2.3 chapter frames, tags, cover |
+| `chapters` | `NN - <chapter>.{mp3,opus,m4a}` per chapter + `<title>.m3u`; per-file title/album/artist/track tags; cover for mp3/m4a |
+
+A trailing output path picks the method by extension (`book.epub out.mp3`).
 
 The m4b file:
 - AAC mono at `bitrate` (64k), faststart.
@@ -418,7 +463,8 @@ The m4b file:
 
 **Requirements for a new output method:**
 - Use only the manifest, meta and cover; never re-render audio.
-- Return the path written.
+- Write into the output tree via `default_path(ctx)`; record every file with `self.record(wd, files)`; return the path(s).
+- Shared helpers in `output/base.py`: `encode_book(wd, out, codec_args, narrator, cover_args)` (one chaptered file), `ffmetadata`, `cover_path`, `safe_name`.
 
 ---
 
@@ -488,8 +534,8 @@ class Method:
 7. Add a test. Discovery and `--list` pick the method up automatically.
 
 **A stage:**
-1. Create `stages/<stage>/__init__.py` with `ORDER`, `DESCRIPTION` and `Base`.
-2. Give `Base.outputs()` and a `[pipeline]` default.
+1. Create `stages/<stage>/__init__.py` with `ORDER`, `DESCRIPTION`, `Base` and (if it has several methods) `DEFAULT`.
+2. Give `Base.outputs()`; optionally a `[pipeline]` default in `incant.toml`.
 3. New files get a schema model with `schema_version`, `WorkDir` accessors, and an entry in this document.
 4. Downstream readers must handle the file being absent, so the new stage stays optional.
 
@@ -501,7 +547,9 @@ class Method:
 ## External services
 | Service | Contract |
 |---|---|
-| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions` with `response_format: json_schema` (strict) and `chat_template_kwargs.enable_thinking`; `/v1/models` for `--check`. Shared 32K context (`[llm] context_tokens`). |
+| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). Key: `api_key` or `api_key_env`. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
+| TTS (`openai`) | `POST /v1/audio/speech` `{model, input, voice, response_format, speed?, instructions?}` → audio. 4xx fatal; 5xx/network retried. |
+| TTS (`kokoro`) | none: kokoro-onnx in-process; model files from the kokoro-onnx GitHub release into `model_dir` (`~/.cache/incant/kokoro`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |
 | ffmpeg | on PATH: decode, resample, ebur128, loudnorm, AAC/mp4 mux |
 | Web (url ingest) | HTTP GET via httpx, manual redirects (≤ 10), per-site credentials as above; HTML → trafilatura → embedded script data → headless Chromium (Playwright) |
@@ -515,7 +563,9 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
 - **Methods:**
   - `stage=method` is explicit.
   - A bare name belongs to its unique stage; a name several stages share goes to the next of them after the previous token's stage.
-  - Stages left over take `[pipeline]`, then `auto`, then the stage's only method.
+  - A trailing output path (`out.mp3`) picks the output method writing that extension.
+  - Stages left over take `[pipeline]`, then `auto`, then the stage's only method, then the stage's `DEFAULT`
+    (parse `basic`, attribute `narrator`, normalize `rules`, synthesize `kokoro`, output `m4b`).
 - **Input:** a directory without `meta.json` is a batch. Its files are processed in sorted order, failures are reported and the run continues.
   A container file (bookmark export) is a batch of its items; inside a directory it is expanded in place.
 - **Exit code:** non-zero on any failure.

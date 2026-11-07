@@ -94,6 +94,8 @@ class Renderer:
             self.cfg.audio.sample_rate,
             RENDER_VERSION,
         ]
+        if voice and (voice.mix or voice.lang):  # only when set, so existing cache keys stay valid
+            parts.append({"mix": voice.mix, "lang": voice.lang})
         return hashlib.sha256(json.dumps(parts, sort_keys=True).encode()).hexdigest()[:32]
 
     def _groups(self, ch: Chapter) -> list[_Group | None]:

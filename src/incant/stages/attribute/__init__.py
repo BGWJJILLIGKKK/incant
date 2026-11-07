@@ -5,7 +5,8 @@ Shared helper: spans.py (deterministic span splitting — the LLM never writes t
 
 from .base import AttributeMethod as Base
 
+DEFAULT = "narrator"  # when neither the command line nor [pipeline] names a method
 ORDER = 3
 DESCRIPTION = "split into speaker spans; assign character + emotion"
 
-__all__ = ["Base", "ORDER", "DESCRIPTION"]
+__all__ = ["Base", "DEFAULT", "ORDER", "DESCRIPTION"]

@@ -5,7 +5,8 @@ Shared helper: chapters.py (deterministic splitting; LLM methods can start from 
 
 from .base import ParseMethod as Base
 
+DEFAULT = "basic"  # when neither the command line nor [pipeline] names a method
 ORDER = 2
 DESCRIPTION = "split into chapters; build character profiles"
 
-__all__ = ["Base", "ORDER", "DESCRIPTION"]
+__all__ = ["Base", "DEFAULT", "ORDER", "DESCRIPTION"]

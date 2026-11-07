@@ -8,7 +8,7 @@ Standard library only, so it works under any system Python 3.8+.
   - Without uv: the project's .venv directly, if it exists.
 Environment:
   INCANT_NO_SYNC=1   skip uv's dependency sync and run the .venv directly (faster startup)
-  INCANT_EXTRAS      comma-separated optional extras to include (default: qa,browser)
+  INCANT_EXTRAS      comma-separated optional extras to include (default: qa,browser,kokoro)
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ def main() -> None:
     no_sync = os.environ.get("INCANT_NO_SYNC") == "1"
 
     if uv and not no_sync:
-        extras = [e.strip() for e in os.environ.get("INCANT_EXTRAS", "qa,browser").split(",") if e.strip()]
+        extras = [e.strip() for e in os.environ.get("INCANT_EXTRAS", "qa,browser,kokoro").split(",") if e.strip()]
         cmd = [uv, "run", "--quiet", "--project", str(HOME)]
         for e in extras:
             cmd += ["--extra", e]
@@ -38,7 +38,7 @@ def main() -> None:
         cmd = [str(VENV_PYTHON), "-m", "incant", *args]
     else:
         sys.exit(f"incant: no environment found. Install uv (https://docs.astral.sh/uv/) or run\n"
-                 f"  cd {HOME} && uv sync --extra qa --extra browser")
+                 f"  cd {HOME} && uv sync --extra qa --extra browser --extra kokoro")
     try:
         os.execv(cmd[0], cmd)  # replace this process: signals and exit codes pass straight through
     except OSError as e:

@@ -155,6 +155,9 @@ class Voice(BaseModel):
     id: str
     name: str | None = None
     ref_audio: str | None = None  # path relative to voices dir; only for backends that clone locally
+    # A blend of the backend's own voices, {voice id: weight} (Kokoro; Kokoro-FastAPI over HTTP).
+    mix: dict[str, float] | None = None
+    lang: str | None = None  # language/accent the backend should speak this voice in (e.g. Kokoro "en-gb")
     default_emotion: str | None = None
     # Casting tags, in the voice library's own vocabulary (e.g. gender: female/male,
     # age: teen/adult/older/neutral, tone: high/neutral/deep). Untagged = None.
@@ -177,6 +180,9 @@ class Cast(BaseModel):
     # What automatic casting last chose. A role equal to its auto pick is recomputed on every run (so new
     # voice tags take effect); a role you changed (or added) differs from it and is kept as-is.
     auto: dict[str, str] = Field(default_factory=dict)
+    # The voice space these ids belong to (the synthesize method's voice_space(), e.g. "indextts", "kokoro").
+    # None: written before casts were per backend; adopted by the first backend that knows all its voices.
+    engine: str | None = None
 
     def voice_for(self, speaker: str | None) -> str | None:
         if speaker and speaker in self.roles:

@@ -23,6 +23,7 @@ RATE = 24000
 
 class DummyTTS(SynthesizeMethod):
     NEEDS_VOICE_LIBRARY = False
+    QA_SUPPORTED = False
 
     def __init__(self, settings, cfg):
         super().__init__(settings, cfg)

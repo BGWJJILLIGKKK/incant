@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import threading
 from pathlib import Path
 from typing import TypeVar
@@ -61,9 +62,36 @@ class LLM:
         self.cache_dir = cache_dir
         with _budgets_lock:  # one budget per server, shared by every client in the process
             self.budget = _budgets.setdefault(cfg.base_url, TokenBudget(cfg.context_tokens))
+        key = os.environ.get(cfg.api_key_env, "") if cfg.api_key_env else cfg.api_key
         self.http = httpx.Client(
-            base_url=cfg.base_url.rstrip("/"), timeout=cfg.timeout_s, headers={"Authorization": f"Bearer {cfg.api_key}"}
+            base_url=cfg.base_url.rstrip("/"), timeout=cfg.timeout_s, headers={"Authorization": f"Bearer {key}"}
         )
+
+    def body(self, system: str, user: str, schema: type[BaseModel], think: bool, max_tokens: int) -> dict:
+        """The request. For the llama.cpp dialect it is exactly what earlier versions sent, so cached answers
+        (keyed by the request) stay valid."""
+        c = self.cfg
+        if c.structured == "json_object":
+            system += ("\n\nAnswer with one JSON object matching this JSON schema, and nothing else:\n"
+                       + json.dumps(schema.model_json_schema()))
+            fmt: dict = {"type": "json_object"}
+        else:
+            fmt = {"type": "json_schema",
+                   "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema(), "strict": True}}
+        body = {
+            "model": c.model,
+            "temperature": c.temperature,
+            "max_tokens": max_tokens,
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "response_format": fmt,
+        }
+        if c.dialect == "llama.cpp":
+            body["chat_template_kwargs"] = {"enable_thinking": think}
+            if think:
+                body |= c.thinking_sampling
+        elif think:  # standard sampling fields only
+            body |= {k: v for k, v in c.thinking_sampling.items() if k in ("temperature", "top_p", "seed")}
+        return body
 
     def models(self) -> list[str]:
         r = self.http.get("/models")
@@ -71,19 +99,7 @@ class LLM:
         return [m["id"] for m in r.json().get("data", [])]
 
     def chat_json(self, system: str, user: str, schema: type[M], *, think: bool = False, max_tokens: int = 4096) -> M:
-        body = {
-            "model": self.cfg.model,
-            "temperature": self.cfg.temperature,
-            "max_tokens": max_tokens,
-            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "response_format": {
-                "type": "json_schema",
-                "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema(), "strict": True},
-            },
-            "chat_template_kwargs": {"enable_thinking": think},
-        }
-        if think:
-            body |= self.cfg.thinking_sampling
+        body = self.body(system, user, schema, think, max_tokens)
         key = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
         cached = self.cache_dir / key[:2] / f"{key}.json" if self.cache_dir else None
         if cached and cached.exists():
@@ -104,7 +120,7 @@ class LLM:
         finally:
             self.budget.release(need)
         choice = data["choices"][0]
-        content = choice["message"].get("content") or ""
+        content = _strip_fences(choice["message"].get("content") or "")
         if choice.get("finish_reason") == "length":
             used = data.get("usage", {}).get("completion_tokens")
             raise LLMError(f"hit max_tokens={max_tokens} ({used} generated){' while thinking' if not content else ''}")
@@ -115,3 +131,12 @@ class LLM:
         if cached:
             atomic_write(cached, result.model_dump_json())
         return result
+
+
+def _strip_fences(s: str) -> str:
+    """Some servers wrap JSON-mode answers in ```json fences."""
+    t = s.strip()
+    if t.startswith("```"):
+        t = t.split("\n", 1)[1] if "\n" in t else ""
+        t = t.rsplit("```", 1)[0]
+    return t.strip()

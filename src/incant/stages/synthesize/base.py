@@ -15,6 +15,8 @@ from .render import Renderer
 
 class SynthSettings(BaseModel):
     concurrency: int = 1
+    # Narrator voice for this backend; else [cast] narrator if this backend has that voice; else the backend's own default.
+    narrator: str | None = None
     max_segment_chars: int = 300
     # Speech-to-text check of every segment (needs `uv sync --extra qa`; skipped if not installed).
     qa: bool = True
@@ -28,8 +30,12 @@ class SynthesizeMethod(Method):
     Settings: ClassVar[type[BaseModel]] = SynthSettings
     settings: SynthSettings
 
-    # False for backends that don't need reference clips (voice ids are just labels).
+    # False for backends whose voice ids are just labels (dummy): any id is accepted, nothing is cast.
     NEEDS_VOICE_LIBRARY: ClassVar[bool] = True
+    # False for backends whose output can't be checked with speech-to-text (dummy beeps).
+    QA_SUPPORTED: ClassVar[bool] = True
+    # Narrator when neither the method's `narrator` setting nor [cast] narrator names one of its voices.
+    DEFAULT_NARRATOR: ClassVar[str | None] = None
 
     def identity(self) -> str:
         """Stable string for cache keys; change it whenever output for the same input would change."""
@@ -45,13 +51,46 @@ class SynthesizeMethod(Method):
         return [wd.manifest_path]
 
     def voices(self) -> VoiceLibrary:
+        """This backend's voices. Default: voices/voices.json (+ voices/<id>.json), the reference-clip library."""
         return VoiceLibrary(self.cfg.paths.voices_dir)
+
+    def voice_space(self) -> str | None:
+        """Name of the set of voice ids this backend understands. Each space keeps its own cast, so switching
+        backends doesn't feed one backend's voice ids to another. None: ids are labels (dummy)."""
+        return self.name if self.NEEDS_VOICE_LIBRARY else None
+
+    def narrator(self) -> str | None:
+        lib = self.voices().voices
+        for v in (self.settings.narrator, self.cfg.cast.narrator, self.DEFAULT_NARRATOR):
+            if v and (v in lib or not self.NEEDS_VOICE_LIBRARY):
+                return v
+        return None
+
+    def load_cast(self, wd: WorkDir, log=None) -> Cast:
+        """The book's cast for this backend's voice space. cast.json is the active one; switching backends
+        puts it aside as cast.<space>.json and brings back the new backend's own (hand edits survive)."""
+        space = self.voice_space()
+        cast = wd.read_cast()
+        if space is None or cast is None or cast.engine == space:
+            return cast or Cast(roles={}, engine=space)
+        lib = self.voices().voices
+        ids = [*cast.roles.values(), *([cast.default_voice] if cast.default_voice else [])]
+        if cast.engine is None and all(v in lib for v in ids):
+            cast.engine = space  # an older cast.json, written for this backend
+            return cast
+        old = cast.engine or "unknown"
+        wd.write_cast(cast, wd.cast_path_for(old))
+        saved = wd.read_cast(wd.cast_path_for(space))
+        if log:
+            log(f"  voices: {old} -> {space}; {old}'s cast kept in {wd.cast_path_for(old).name}"
+                + (f", {space}'s restored" if saved else ""))
+        return saved or Cast(roles={}, engine=space)
 
     def ensure_cast(self, wd: WorkDir, log=None) -> Cast:
         """cast.json is hand-editable: existing roles are kept; the narrator comes from config and
         speaking characters without a role are cast automatically from the voice library's tags."""
-        cast = wd.read_cast() or Cast(roles={})
-        narrator = self.cfg.cast.narrator
+        cast = self.load_cast(wd, log)
+        narrator = self.narrator()
         if narrator and NARRATOR_ID not in cast.roles:
             cast.roles[NARRATOR_ID] = narrator
         if narrator and not cast.default_voice:
@@ -80,7 +119,7 @@ class SynthesizeMethod(Method):
         require_ffmpeg()
         wd = ctx.need_wd()
         qa = None
-        if self.settings.qa and self.NEEDS_VOICE_LIBRARY:  # (the dummy backend's beeps can't be transcribed)
+        if self.settings.qa and self.QA_SUPPORTED:
             from ...qa import Transcriber, available
 
             if available():
@@ -93,3 +132,11 @@ class SynthesizeMethod(Method):
         total = sum(c.duration_ms for c in m.chapters) / 1000
         ctx.log(f"  {len(m.chapters)} chapters, {total / 3600:.2f} h")
         return m
+
+    def check(self) -> list[tuple[bool, str]]:
+        lib = self.voices()
+        out = [(bool(lib.voices), f"{len(lib.voices)} voices ({lib.describe()})")]
+        narr = self.narrator()
+        out.append((narr is not None, f"narrator voice: {narr!r}" if narr else
+                    f"no narrator voice: set narrator under [synthesize.{self.name}] or [cast]"))
+        return out

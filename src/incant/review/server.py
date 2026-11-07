@@ -20,7 +20,6 @@ from urllib.parse import unquote, urlparse
 
 from ..config import Config
 from ..schemas import NARRATOR_ID, AgeBracket, Cast, Emotion, Gender
-from ..voices import VoiceLibrary
 from ..workdir import WorkDir, atomic_write
 
 _KEY = re.compile(r"^[0-9a-f]{32}$")
@@ -31,19 +30,23 @@ class Book:
 
     def __init__(self, cfg: Config, wd: WorkDir):
         self.cfg, self.wd = cfg, wd
-        self.voices = VoiceLibrary(cfg.paths.voices_dir)
         self._renderer = None
+        self.voices = self.synth().voices()  # the configured backend's voices
+
+    def synth(self):
+        from ..pipeline import discover, instantiate
+
+        stage = {s.name: s for s in discover()}["synthesize"]
+        return instantiate(self.cfg, stage, self.cfg.pipeline.get("synthesize", "indextts"))
 
     # ------------------------------------------------------------ reads
 
     def renderer(self):
         """A Renderer for mapping spans to their cached audio segments (no TTS calls are made)."""
         if self._renderer is None:
-            from ..pipeline import discover, instantiate
             from ..stages.synthesize.render import Renderer
 
-            stage = {s.name: s for s in discover()}["synthesize"]
-            method = instantiate(self.cfg, stage, self.cfg.pipeline.get("synthesize", "indextts"))
+            method = self.synth()
             self._renderer = Renderer(self.cfg, self.wd, method, self.voices, self.wd.read_cast() or Cast(roles={}),
                                       strict_voices=False)
         self._renderer.cast = self.wd.read_cast() or Cast(roles={})

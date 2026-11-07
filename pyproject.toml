@@ -19,6 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
 browser = ["playwright>=1.47"]  # render JavaScript-built pages (then: playwright install chromium)
+kokoro = ["kokoro-onnx>=0.4"]  # local Kokoro-82M TTS on CPU (model files download on first use, ~340 MB)
 
 [project.scripts]
 incant = "incant.cli:main"

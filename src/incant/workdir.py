@@ -14,7 +14,7 @@ work/<slug>/
   audio/cache/<key>.wav stage 5 content-addressed segment cache
   audio/chapters/<id>.wav stage 5 assembled, loudness-normalized chapter
   audio/manifest.json  stage 5  AudioManifest
-  out/<slug>.m4b       stage 6
+  output.json          stage 6  {"files": [absolute paths written]}; the files live in the output tree
 """
 
 from __future__ import annotations
@@ -61,7 +61,6 @@ class WorkDir:
     cache_dir = property(lambda s: s.root / "audio" / "cache")
     chapter_audio_dir = property(lambda s: s.root / "audio" / "chapters")
     manifest_path = property(lambda s: s.root / "audio" / "manifest.json")
-    out_dir = property(lambda s: s.root / "out")
 
     def spans_path(self, chapter_id: str) -> Path:
         return self.root / "spans" / f"{chapter_id}.jsonl"

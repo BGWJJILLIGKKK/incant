@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -58,6 +60,7 @@ class IngestMethod(Method):
             ctx.log(f"  warning: {w}")
         if ctx.title and (not ing.title.strip() or ing.title == ctx.source):
             ing.title = ctx.title  # the page has no title of its own: use the container's
+        ing.author = normalize_author(ing.author)
         src = ctx.source if ctx.source.startswith(("http://", "https://")) else str(Path(ctx.source).resolve())
         slug = ctx.slug or unique_slug(ctx.cfg.paths.work_dir, slugify(ing.title), src)
         wd = WorkDir.for_slug(ctx.cfg.paths.work_dir, slug)
@@ -80,10 +83,28 @@ class IngestMethod(Method):
         return wd
 
 
+def normalize_author(author: str | None) -> str | None:
+    """Library-catalog names to reading order, so one author gets one output directory:
+    "Dickens, Charles, 1812-1870" -> "Charles Dickens". Several authors ("A; B", "A and B") are kept as given."""
+    if not author or not (a := " ".join(author.split())):
+        return None
+    a = re.sub(r",?\s*\(?(?:b\.|d\.|ca\.)?\s*\d{3,4}\??\s*-\s*(?:\d{3,4}\??)?\)?$", "", a).strip(" ,")  # life dates
+    parts = [p.strip() for p in a.split(",")]
+    if len(parts) == 2 and all(parts) and ";" not in a and " and " not in a and len(parts[1].split()) <= 3:
+        a = f"{parts[1]} {parts[0]}"
+    return a or None
+
+
 def unique_slug(work_dir: Path, slug: str, source: str) -> str:
     """`slug`, or `slug-2`, `slug-3`… when a different source already owns it. Re-ingesting the same source
-    reuses its work directory; two different sources with the same title ("Chapter 1", "Untitled") get
+    reuses its work directory (whatever its slug); two different sources with the same title ("Chapter 1", "Untitled") get
     separate ones instead of overwriting each other."""
+    for meta in sorted(work_dir.glob("*/meta.json")):  # this source's book, even if its title has changed
+        try:
+            if BookMeta.model_validate_json(meta.read_text()).source == source:
+                return meta.parent.name
+        except ValueError:
+            continue
     n = 1
     while True:
         cand = slug if n == 1 else f"{slug}-{n}"

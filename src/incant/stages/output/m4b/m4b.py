@@ -30,6 +30,7 @@ class M4b(OutputMethod):
         cast = wd.read_cast()
         narrator = cast.voice_for(NARRATOR_ID) if cast else self.cfg.cast.narrator
         out = build_m4b(wd, self.default_path(ctx), self.settings.bitrate, narrator)
+        self.record(wd, [out])
         ctx.log(f"  -> {out}")
         return out
 

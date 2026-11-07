@@ -7,7 +7,7 @@ Stages share data only through files in the book's work directory. No data passe
 General rules for every file below:
 - **Location:** `<work_dir>/<slug>/`, where `work_dir` is `[paths] work_dir` (default `work/`, relative to
   the project home) and `slug` is the ingested title, slugified (or `--slug`). If a *different* source already
-  owns that slug, `-2`, `-3`… is appended; re-ingesting the same source (same `meta.source`) reuses its directory.
+  owns that slug, `-2`, `-3`… is appended; re-ingesting the same source (same `meta.source`) reuses its directory, whatever its slug (a changed title doesn't fork the book).
 - **Writes are atomic:** temp file plus rename, via `workdir.atomic_write`. Half-written files never exist.
 - **JSON:** UTF-8, 2-space indent, fields that are `null` are **omitted** (`exclude_none`). Readers must treat
   a missing optional field as its default.
@@ -44,7 +44,7 @@ work/<slug>/
   audio/manifest.json             synthesize   AudioManifest
   audio/qa_report.json            synthesize   segments still failing QA
   audio/concat.txt, ffmetadata.txt  output     ffmpeg inputs (scratch)
-  out/<slug>.m4b                  output       final file (or -o path)
+  output.json                     output       {"files": [absolute paths written]}; the files are in the output tree
   llm_cache/XX/<sha256>.json      parse, attribute   cached LLM answers
   pipeline.json                   runner       stage skip records
 ```
@@ -97,6 +97,7 @@ UTF-8 plain text. The paragraph and heading conventions are produced by `normali
 An image (`jpg`/`png`) attached as m4b cover art. Optional.
 
 ### Web pages (`url`) and credentials
+- Title and author: the page metadata's, with a trailing `- Site` / `| Site` removed when it names the site (og:site_name or a domain label). With no author in the metadata, a trailing `by Name` becomes the author if it looks like a name (capitalized words, ≤4; or one handle in a site-templated title).
 `[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), and `sites`: `{host: Site}`.
 - A `sites` key matches that host and its subdomains; the most specific key wins.
 - `Site` fields (all optional):
@@ -393,7 +394,12 @@ A list of QA records (same shape as `.qa.json`) for segments still failing after
 - `meta.json`, `cover.*`
 - `cast.json` (narrator voice)
 
-**Writes:** `out/<slug><EXTENSION>`, or the `-o` path, or `<-o dir>/<slug><ext>` in batch mode.
+**Writes:** the book into the output tree, plus `output.json` in the work dir.
+- Path: `<base>/<author>/<title>/<title><EXTENSION>`. `<base>` is `[paths] output_dir` (default `output/`) or `-o DIR`; `-o FILE` names the file outright.
+- `<author>` = `meta.author`, else `Unknown Author`; `<title>` = `meta.title`, plus ` (N)` when the slug was numbered (`slug-N`) for a same-titled different source.
+- Names keep spaces and case; `/ \ : * ? " < > |` and control characters become spaces; ≤120 characters.
+- `output.json`: `{"files": [absolute paths]}` — where the book went. An output method that sets `SKIP_IF_UNCHANGED` is up to date only if it and every listed file exist (`m4b` always rebuilds).
+- New output methods: build the path with `default_path(ctx)` (or `tree_path(base, meta, ext)` for extra files in the book's directory) and call `self.record(wd, files)`.
 
 The m4b file:
 - AAC mono at `bitrate` (64k), faststart.
@@ -448,7 +454,7 @@ The error is then re-raised. In a batch each item is cleaned up on its own. Book
 | wd | WorkDir | set by ingest, or by the CLI when resuming |
 | slug | str | `--slug` override |
 | title | str | title hint from a container item (bookmark title) |
-| out / out_dir | Path | output path / batch output directory |
+| out / out_dir | Path | `-o FILE` output file / `-o DIR` output tree base |
 | chapters | set[str]\|None | `--chapters` restriction; None = all |
 | log | callable | progress lines |
 | results | {stage: return value} | |

@@ -40,7 +40,7 @@ class Context:
     slug: str | None = None
     title: str | None = None  # title hint for ingest (from a container such as a bookmark file)
     out: Path | None = None  # final output path override
-    out_dir: Path | None = None  # final output directory (batch runs: <out_dir>/<slug>.<ext>)
+    out_dir: Path | None = None  # base of the output tree (-o DIR); default paths.output_dir
     chapters: set[str] | None = None  # restrict per-chapter stages to these ids
     log: Callable[[str], None] = field(default=lambda msg: print(msg, flush=True))
     results: dict[str, object] = field(default_factory=dict)  # stage name -> return value

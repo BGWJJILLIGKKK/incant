@@ -226,6 +226,7 @@ def test_batch_directory(setup, capsys):
     log = capsys.readouterr()
     assert rc == 1  # one failure
     assert "skip: notes.docx" in log.out and "batch finished: 2 ok, 1 failed" in log.out
-    assert sorted(p.name for p in outs.iterdir()) == ["little-book.m4b", "test-book.m4b"]
+    assert sorted(str(p.relative_to(outs)) for p in outs.rglob("*.m4b")) == [
+        "A. Writer/Test Book/Test Book.m4b", "Unknown Author/Little Book/Little Book.m4b"]
     assert main([str(books), "-c", str(conf), "--slug", "x"]) == 2
     assert main([str(books), "-c", str(conf), "-o", str(tmp / "one.m4b")]) == 2

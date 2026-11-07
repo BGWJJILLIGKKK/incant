@@ -57,6 +57,7 @@ class AudioConfig(BaseModel):
 class PathsConfig(BaseModel):
     work_dir: Path = Path("work")
     voices_dir: Path = Path("voices")
+    output_dir: Path = Path("output")  # finished books: <output_dir>/<author>/<title>/<title>.<ext>
 
 
 class CastConfig(BaseModel):
@@ -123,4 +124,5 @@ def load_config(path: Path | None = None) -> Config:
     cfg = Config.model_validate({**data, "base_dir": base.resolve(), "files": used})
     cfg.paths.work_dir = cfg.resolve(cfg.paths.work_dir)
     cfg.paths.voices_dir = cfg.resolve(cfg.paths.voices_dir)
+    cfg.paths.output_dir = cfg.resolve(cfg.paths.output_dir)
     return cfg

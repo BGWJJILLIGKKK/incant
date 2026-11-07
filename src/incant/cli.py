@@ -14,11 +14,15 @@ each through the whole pipeline; a failing book is reported and the batch contin
 
     ./incant books/                            # every epub/pdf/txt in books/
     ./incant books/ dummy --until synthesize   # same methods/options for each
-    ./incant books/ -o audiobooks/             # outputs collected in one directory
+    ./incant books/ -o audiobooks/             # output tree under audiobooks/ instead of output/
 
 A container file (a browser bookmark export) is a batch too: each page in it is its own book. Inside a
 batch directory, containers are expanded in place. Two sources with the same title get separate books
 (slug, slug-2, …); re-running the same source reuses its book.
+
+Finished books go to one output tree, [paths] output_dir (default output/):
+    output/<author>/<title>/<title>.m4b      ("Unknown Author" when the source names none)
+-o FILE writes one book to that file instead; -o DIR (or a trailing directory) moves the tree.
 
     ./incant bookmarks.html --until attribute
 """
@@ -140,7 +144,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("input", nargs="?", help="file, URL, book slug, book work dir, or a directory of files (batch)")
     ap.add_argument("methods", nargs="*", help="method per stage (bare name or stage=method); optional trailing output path")
     ap.add_argument("-c", "--config", type=Path, help="config TOML (default: incant.toml in cwd or $INCANT_HOME)")
-    ap.add_argument("-o", "--out", type=Path, help="final output path")
+    ap.add_argument("-o", "--out", type=Path, help="output file (one book) or output tree base directory")
     ap.add_argument("--slug", help="work-dir name for a new book (default: from title)")
     ap.add_argument("--from", dest="start", metavar="STAGE", help="start at this stage (earlier stages must have run)")
     ap.add_argument("--until", dest="stop", metavar="STAGE", help="stop after this stage")
@@ -219,7 +223,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         return 0
 
-    ctx = Context(cfg=cfg, source=None if wd else source, wd=wd, slug=args.slug, out=args.out or out_path,
+    target = args.out or out_path
+    tree = target is not None and (target.is_dir() or not target.suffix)  # a directory: base of the output tree
+    ctx = Context(cfg=cfg, source=None if wd else source, wd=wd, slug=args.slug, out=None if tree else target,
+                  out_dir=target if tree else None,
                   chapters=_parse_chapters(args.chapters))
     force = {f.strip() for f in args.force.split(",") if f.strip()}
     try:

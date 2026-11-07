@@ -195,6 +195,28 @@ def _extract(html: str, s: UrlSettings) -> tuple[str, str | None]:
     return text, None
 
 
+_SEP = r"\s+[-|\u2013\u2014\u00b7:]\s+"
+
+
+def split_byline(title: str, author: str | None, sitename: str | None, host: str | None) -> tuple[str, str | None]:
+    """Page titles carry the site and often the author: "A Story by Someone - SiteName" -> ("A Story",
+    "Someone"). The site suffix is dropped only when it names the site (its og:site_name or domain)."""
+    names = {n.casefold().replace(" ", "") for n in (sitename, *(host or "").removeprefix("www.").split(".")[:-1]) if n}
+    templated = False  # the title came from a site template ("… - Site"), so a trailing "by x" is a byline
+    for _ in range(2):  # "Title | Section - Site"
+        parts = re.split(f"({_SEP})", title)
+        if len(parts) >= 3 and parts[-1].strip().casefold().replace(" ", "") in names:
+            title, templated = "".join(parts[:-2]).strip(), True
+    if not author:
+        head, sep, tail = title.rpartition(" by ")
+        words = tail.split()
+        name_like = 0 < len(words) <= 4 and not re.search(r"[.!?,;]$", tail) and (
+            all(w[:1].isupper() or w[:1].isdigit() for w in words) or (templated and len(words) == 1))
+        if sep and head.strip() and name_like:
+            title, author = head.strip(), tail.strip()
+    return title.strip(), (author.strip() if author else None)
+
+
 def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
     fetcher = fetcher or Fetcher(UrlSettings())
     s = fetcher.s
@@ -241,9 +263,11 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
             what = f"no readable text in {tried}: the page may need a login"
         raise FetchError(f"{url}: only {words} words extracted — {what}{render_note}. Nothing ingested.")
     md = trafilatura.extract_metadata(html)
+    title, author = split_byline(md.title if md and md.title else "", md.author if md else None,
+                                 md.sitename if md else None, host)
     return Ingested(
-        title=(md.title if md and md.title else url),
-        author=(md.author if md else None),
+        title=title or url,
+        author=author,
         paragraphs=paragraphs_from_plain(text),
         source_format="url",
         warnings=notes,

@@ -17,6 +17,7 @@ cleanup_failed = "new"       # a failed run deletes a book it created ("never" k
 [paths]
 work_dir = "work"
 voices_dir = "voices"
+output_dir = "output"         # finished books: output/<author>/<title>/<title>.m4b
 
 [cast]
 narrator = "a_janelle_risa"  # voice id from voices/voices.json; also the fallback for uncast speakers

@@ -10,3 +10,4 @@ incant.local.toml
 /books/
 /logs/
 /eval/results/
+/output/

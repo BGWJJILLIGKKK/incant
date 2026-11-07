@@ -12,6 +12,7 @@ dependencies = [
     "lxml>=5.0",
     "trafilatura>=1.12",
     "num2words>=0.5",
+    "numpy>=1.26",
 ]
 
 [project.optional-dependencies]

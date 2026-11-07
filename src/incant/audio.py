@@ -64,6 +64,15 @@ def trim_silence(data: bytes, pad_ms: int = 40, threshold_db: float = -45.0) -> 
     return pcm_to_wav(a[max(0, start - pad): min(len(a), end + 1 + pad)].tobytes(), rate)
 
 
+def measure_lufs(path: Path) -> float | None:
+    """Integrated loudness (EBU R128) of a clip; None if too short or silent to measure."""
+    p = subprocess.run(["ffmpeg", "-nostats", "-hide_banner", "-i", str(path), "-af", "ebur128=framelog=quiet",
+                        "-f", "null", "-"], capture_output=True, text=True)
+    m = re.findall(r"I:\s+(-?[\d.]+) LUFS", p.stderr)
+    v = float(m[-1]) if m else None
+    return v if v is not None and v > -60 else None
+
+
 def wav_duration_ms(path: Path) -> int:
     with wave.open(str(path)) as w:
         return round(w.getnframes() * 1000 / w.getframerate())

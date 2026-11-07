@@ -18,7 +18,7 @@ from pathlib import Path
 
 from typing import TYPE_CHECKING
 
-from ...audio import loudnorm, to_canonical_wav, trim_silence, wav_duration_ms
+from ...audio import loudnorm, measure_lufs, to_canonical_wav, trim_silence, wav_duration_ms
 from ...config import Config
 from ...normalize import is_scene_break
 from ...qa import Transcriber, compare
@@ -35,6 +35,21 @@ RENDER_VERSION = 2  # 2: trim clip edge silence
 TRIM_PAD_MS = 40
 
 Progress = Callable[[str], None]
+
+
+def apply_gain(frames: bytes, db: float) -> bytes:
+    """Scale 16-bit PCM by `db`, reduced if needed so the clip's peak stays below -1 dBFS."""
+    import numpy as np
+
+    x = np.frombuffer(frames, dtype=np.int16).astype(np.float32)
+    if not len(x):
+        return frames
+    g = 10 ** (db / 20)
+    peak = float(np.abs(x).max()) * g
+    ceiling = 32767 * 10 ** (-1 / 20)
+    if peak > ceiling:
+        g *= ceiling / peak
+    return np.clip(x * g, -32768, 32767).astype(np.int16).tobytes()
 
 
 @dataclass
@@ -140,6 +155,35 @@ class Renderer:
     def _cache_path(self, key: str) -> Path:
         return self.wd.cache_dir / key[:2] / f"{key}.wav"
 
+    def _lvl_path(self, key: str) -> Path:
+        return self.wd.cache_dir / key[:2] / f"{key}.lvl.json"
+
+    def measure(self, segs: list[Segment]) -> None:
+        """Loudness of each segment's clip, cached beside it (with the voice, for per-voice statistics)."""
+        todo = [s for s in segs if self._cache_path(s.cache_key).exists() and not self._lvl_path(s.cache_key).exists()]
+
+        def one(s: Segment):
+            atomic_write(self._lvl_path(s.cache_key),
+                         json.dumps({"voice": s.voice, "lufs": measure_lufs(self._cache_path(s.cache_key))}) + "\n")
+
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            list(ex.map(one, todo))
+
+    def voice_gains(self) -> dict[str, float]:
+        """dB per voice: target minus the median loudness of every measured clip of that voice in this book."""
+        a = self.cfg.audio
+        levels: dict[str, list[float]] = {}
+        for f in self.wd.cache_dir.glob("*/*.lvl.json"):
+            rec = json.loads(f.read_text())
+            if rec.get("voice") and rec.get("lufs") is not None:
+                levels.setdefault(rec["voice"], []).append(rec["lufs"])
+        gains = {}
+        for v, ls in levels.items():
+            ls.sort()
+            median = ls[len(ls) // 2]
+            gains[v] = round(max(-a.max_voice_gain_db, min(a.max_voice_gain_db, a.voice_target_lufs - median)), 1)
+        return gains
+
     def _qa_path(self, key: str) -> Path:
         return self.wd.cache_dir / key[:2] / f"{key}.qa.json"
 
@@ -201,12 +245,14 @@ class Renderer:
 
     # ------------------------------------------------------------ assembly
 
-    def assemble(self, ch: Chapter, segs: list[Segment]) -> ChapterAudio:
+    def assemble(self, ch: Chapter, segs: list[Segment], gains: dict[str, float] | None = None) -> ChapterAudio:
         a = self.cfg.audio
+        gains = gains or {}
         out = self.wd.chapter_audio_dir / f"{ch.id}.wav"
         sidecar = out.with_suffix(".json")
         fingerprint = hashlib.sha256(
-            json.dumps([[s.cache_key, s.pause_after_ms] for s in segs] + [a.target_lufs, a.true_peak_db]).encode()
+            json.dumps([[s.cache_key, s.pause_after_ms, gains.get(s.voice or "", 0.0)] for s in segs]
+                       + [a.target_lufs, a.true_peak_db]).encode()
         ).hexdigest()
         if out.exists() and sidecar.exists() and json.loads(sidecar.read_text()).get("fingerprint") == fingerprint:
             return ChapterAudio(chapter_id=ch.id, title=ch.title, file=str(out.relative_to(self.wd.root)),
@@ -221,7 +267,9 @@ class Renderer:
             w.setframerate(rate)
             for s in segs:
                 with wave.open(str(self._cache_path(s.cache_key))) as r:
-                    w.writeframes(r.readframes(r.getnframes()))
+                    frames = r.readframes(r.getnframes())
+                g = gains.get(s.voice or "", 0.0)
+                w.writeframes(apply_gain(frames, g) if g else frames)
                 w.writeframes(b"\x00\x00" * (rate * s.pause_after_ms // 1000))
         loudnorm(raw, out, rate, a.target_lufs, a.true_peak_db)
         raw.unlink()
@@ -245,7 +293,14 @@ class Renderer:
             if progress:
                 progress(f"chapter {ch.id} '{ch.title}': {len(segs)} segments")
             qa_fail += self.synthesize(segs, progress)
-            results.append(self.assemble(ch, segs))
+            gains = {}
+            if self.cfg.audio.level_match:
+                self.measure(segs)
+                gains = self.voice_gains()
+                used = sorted({s.voice for s in segs if s.voice}, key=lambda v: gains.get(v, 0.0))
+                if progress and used:
+                    progress("  level match (dB): " + ", ".join(f"{v} {gains.get(v, 0.0):+.1f}" for v in used))
+            results.append(self.assemble(ch, segs, gains))
         manifest = AudioManifest(sample_rate=self.cfg.audio.sample_rate, chapters=results)
         self.wd.write_manifest(manifest)
         if self.qa is not None:

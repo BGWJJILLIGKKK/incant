@@ -56,3 +56,15 @@ def test_transcript_normalised_like_the_text():
 
     said = normalize("“To-morrow,” said Mr. Bennet, “in 1888.”")
     assert compare(said, "Tomorrow, said Mr. Bennet, in 1888.").edits == 0
+
+
+def test_apply_gain_scales_and_never_clips():
+    import numpy as np
+
+    from incant.stages.synthesize.render import apply_gain
+
+    x = (np.sin(np.linspace(0, 100, 2205)) * 1000).astype(np.int16)
+    up6 = np.frombuffer(apply_gain(x.tobytes(), 6.0), dtype=np.int16)
+    assert abs(int(np.abs(up6).max()) / int(np.abs(x).max()) - 10 ** (6 / 20)) < 0.01
+    loud = np.frombuffer(apply_gain((x * 30).astype(np.int16).tobytes(), 12.0), dtype=np.int16)
+    assert np.abs(loud.astype(np.int32)).max() <= 32767 * 10 ** (-1 / 20) + 1

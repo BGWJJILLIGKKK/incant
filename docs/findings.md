@@ -79,6 +79,11 @@ against the hardware below; where something is a judgement rather than a measure
   for QA retries).
 - Fails occasionally on very short inputs ("Bingley." garbled once in 100 segments).
 
+- **Voices differ wildly in level**: median segment loudness spanned 15.6 dB across voices (narrator
+  a_janelle_risa −29.4 LUFS, alexander_hatton −13.8). Chapter-level loudnorm can't fix that. Per-voice gain
+  to a common median (EBU R128 per clip via ffmpeg, ~70 clips/s on 12 threads) cut the spread inside
+  P&P ch. V from 7.3 dB to 0.5 dB while keeping each voice's own dynamics.
+
 ## QA (faster-whisper base.en on CPU)
 
 - 5.9x realtime on 8 threads — keeps pace with TTS without GPU time.

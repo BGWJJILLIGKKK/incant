@@ -39,6 +39,11 @@ class LLMConfig(BaseModel):
 
 class AudioConfig(BaseModel):
     sample_rate: int = 22050  # IndexTTS native rate; other backends get resampled
+    # Level matching: one gain per voice brings each voice's median segment loudness to voice_target_lufs
+    # (voices differ by ~15 dB out of IndexTTS); dynamics within a voice are kept. Chapter loudnorm follows.
+    level_match: bool = True
+    voice_target_lufs: float = -21.0
+    max_voice_gain_db: float = 12.0
     target_lufs: float = -19.0
     true_peak_db: float = -3.0
     pause_segment_ms: int = 150

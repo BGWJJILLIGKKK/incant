@@ -23,6 +23,10 @@ main_unique = 8              # the N characters with most lines never share a vo
 
 # LLM and TTS share one GPU through llama-swap: all LLM stages run over the whole book
 # first, then the first TTS request swaps IndexTTS in (~30 s).
+[review]                     # ./incant <book> --review
+host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
+port = 8765
+
 [llm]                        # shared by LLM-backed parse/attribute methods
 base_url = "http://localhost:8080/v1"
 model = "qwen3.5-9b"

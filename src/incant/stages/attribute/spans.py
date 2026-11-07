@@ -91,6 +91,21 @@ def reconstruct(spans: list[Span]) -> str:
     return "\n\n".join("".join(v) for _, v in sorted(paras.items()))
 
 
+def keep_locked(wd: WorkDir, chapter_id: str, spans: list[Span]) -> int:
+    """Carry hand-reviewed labels (locked spans, e.g. from the review page) over to freshly built spans,
+    matched by id and unchanged text. Returns how many were kept."""
+    if not wd.spans_path(chapter_id).exists():
+        return 0
+    old = {s.id: s for s in wd.read_spans(chapter_id) if s.locked}
+    kept = 0
+    for s in spans:
+        o = old.get(s.id)
+        if o and o.text == s.text:
+            s.speaker, s.emotion, s.locked = o.speaker, o.emotion, True
+            kept += 1
+    return kept
+
+
 def build_spans(wd: WorkDir, force: bool = False) -> dict[str, int]:
     """Write spans/<id>.jsonl for every chapter. Existing files are kept unless force,
     because they may hold LLM attribution or hand edits."""
@@ -103,6 +118,7 @@ def build_spans(wd: WorkDir, force: bool = False) -> dict[str, int]:
         text = wd.read_chapter_text(ch.file)
         spans = split_chapter(ch.id, text)
         assert reconstruct(spans) == text.rstrip("\n"), f"span invariant broken in chapter {ch.id}"
+        keep_locked(wd, ch.id, spans)
         wd.write_spans(ch.id, spans)
         counts[ch.id] = len(spans)
     return counts

@@ -214,7 +214,7 @@ class Renderer:
                 return None
             chk = self.qa.check(wav, seg.text)
             rec = {"ok": chk.ok(st.qa_max_wer), "wer": round(chk.wer, 3), "heard": chk.heard, "text": seg.text,
-                   "voice": seg.voice, "variant": variant, "span_ids": seg.span_ids}
+                   "voice": seg.voice, "variant": variant, "span_ids": seg.span_ids, "key": seg.cache_key}
             if best is None or chk.wer < best[0]:
                 best = (chk.wer, wav, rec)
             if rec["ok"]:

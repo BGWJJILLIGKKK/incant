@@ -20,7 +20,7 @@ from ....llm import LLM, LLMError
 from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Span, SpanKind
 from ...base import Context
 from ..base import AttributeMethod
-from ..spans import split_chapter
+from ..spans import keep_locked, split_chapter
 
 __all__ = ["SpeakersAttribute"]
 
@@ -196,7 +196,7 @@ class SpeakersAttribute(AttributeMethod):
                     ctx.log(f"  labelled {done}/{len(jobs)} windows")
 
         counts: dict[str, int] = {}
-        total = unknown = 0
+        total = unknown = locked = 0
         for cid, spans in book.items():
             for s in spans:
                 if s.kind is SpanKind.dialogue:
@@ -204,10 +204,15 @@ class SpeakersAttribute(AttributeMethod):
                     who, emo = labels.get(s.id, (UNKNOWN, None))
                     s.speaker = None if who == UNKNOWN else who
                     s.emotion = emo
+            locked += keep_locked(wd, cid, spans)  # hand-reviewed labels win
+            for s in spans:
+                if s.kind is SpanKind.dialogue:
                     unknown += s.speaker is None
                     if s.speaker:
                         counts[s.speaker] = counts.get(s.speaker, 0) + 1
             wd.write_spans(cid, spans)
+        if locked:
+            ctx.log(f"  kept {locked} hand-reviewed spans")
 
         if ctx.chapters is None:  # line counts drive casting priority; only meaningful for a full run
             for c in chars.characters:

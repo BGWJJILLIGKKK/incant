@@ -66,6 +66,11 @@ class CastConfig(BaseModel):
     first_person_narration: str = "character"
 
 
+class ReviewConfig(BaseModel):
+    host: str = "127.0.0.1"  # "0.0.0.0" to reach it from another machine (no authentication!)
+    port: int = 8765
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="allow")  # [<stage>] tables land here
 
@@ -74,6 +79,7 @@ class Config(BaseModel):
     audio: AudioConfig = AudioConfig()
     paths: PathsConfig = PathsConfig()
     cast: CastConfig = CastConfig()
+    review: ReviewConfig = ReviewConfig()
     base_dir: Path = Path(".")
     files: list[Path] = []
 

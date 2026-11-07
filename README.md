@@ -75,6 +75,23 @@ shared helpers, not methods. A new stage is a new directory with `ORDER`,
 - **One GPU, swapped.** The LLM and IndexTTS share the GPU via llama-swap: LLM stages
   finish the whole book before synthesis starts, so each model is swapped in once.
 
+## Review and edit
+
+```sh
+./incant pride-and-prejudice --review                 # http://localhost:8765/
+./incant pride-and-prejudice --review --host 0.0.0.0  # reachable from other machines (no auth)
+```
+
+- **Script**: the chapter with every quotation coloured by speaker; click any line to change its
+  speaker, delivery (emotion + strength) or exact spoken text, and play its rendered segment.
+  "Next unknown" walks the unattributed quotes.
+- **Cast**: voice per speaking character (pin a voice or leave it automatic), gender/age, voice samples.
+- **Pronunciations**: the book's lexicon. **QA**: segments that failed the speech-to-text check.
+
+Edits are written where re-runs keep them: locked spans (attribution keeps them), `say_overrides.json`
+(normalize applies them), manual cast roles, locked characters, `work/<book>/lexicon.toml`. The page never
+renders audio; re-render a chapter with `./incant <book> --from normalize --chapters N`.
+
 ## Quality checks
 
 - `eval/attribution.py eval/gold/<book>.json` scores speaker attribution against hand labels

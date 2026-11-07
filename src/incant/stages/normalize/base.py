@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import tomllib
 from pathlib import Path
@@ -17,6 +18,14 @@ class NormalizeSettings(BaseModel):
     # The project-wide file plus <work>/<book>/lexicon.toml (the book's entries win). Whole words, case-insensitive.
     lexicon: str = "lexicon.toml"
     show_examples: int = 12  # changed spans to print as a sample
+
+
+SAY_OVERRIDES = "say_overrides.json"  # {span id: {"text": original span text, "say": spoken text}}
+
+
+def read_say_overrides(wd: WorkDir) -> dict[str, dict]:
+    p = wd.root / SAY_OVERRIDES
+    return json.loads(p.read_text()) if p.exists() else {}
 
 
 class Lexicon:
@@ -57,11 +66,17 @@ class NormalizeMethod(Method):
     def run(self, ctx: Context):
         wd = ctx.need_wd()
         lex = self.lexicon(wd)
+        overrides = read_say_overrides(wd)
+        applied = 0
         changed, total, examples, report = 0, 0, [], []
         for ch in wd.read_chapters().chapters:
             spans: list[Span] = wd.read_spans(ch.id)
             for s in spans:
                 s.say = lex.apply(self.say(s.text, s.kind))
+                o = overrides.get(s.id)
+                if o and o.get("text") == s.text:  # hand-edited spoken text (review page) wins
+                    s.say = o["say"]
+                    applied += 1
                 total += 1
                 plain = " ".join(s.text.replace("*", "").strip("“”\" ").split())
                 if s.say and s.say != plain and _interesting(plain, s.say):
@@ -74,7 +89,7 @@ class NormalizeMethod(Method):
             wd.write_speech(ChapterSpeech(chapter_id=ch.id, title_say=title_say, spans=spans))
         (wd.root / "speech" / "changes.txt").write_text("".join(report))
         ctx.log(f"  {changed:,} of {total:,} spans respelled (all listed in speech/changes.txt); "
-                f"lexicon: {len(lex.entries)} entries")
+                f"lexicon: {len(lex.entries)} entries; hand edits: {applied}")
         for before, after in examples:
             ctx.log(f"    {before}\n      -> {after}")
         return changed

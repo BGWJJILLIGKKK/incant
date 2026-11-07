@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>incant review</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --panel: #ffffff; --ink: #1f2328; --muted: #6b7078; --line: #e4e1da;
+    --accent: #2f6fde; --warn: #c2410c; --ok: #15803d; --chip-l: 92%; --chip-ink-l: 30%;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16181c; --panel: #1e2126; --ink: #e6e6e3; --muted: #9aa0a8; --line: #30343b;
+            --accent: #6ea0ff; --warn: #fb923c; --ok: #4ade80; --chip-l: 26%; --chip-ink-l: 82%; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--font); }
+  header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line);
+           padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 650; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  nav { display: flex; gap: 4px; }
+  nav button { border: 1px solid transparent; background: none; color: var(--muted); padding: 5px 10px; border-radius: 6px; cursor: pointer; font: inherit; }
+  nav button[aria-selected="true"] { color: var(--ink); border-color: var(--line); background: var(--bg); }
+  select, input, textarea, button { font: inherit; color: inherit; }
+  select, input[type=text], textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; }
+  button.btn { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+  button.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.btn:disabled { opacity: .5; cursor: default; }
+  .spacer { flex: 1; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 0; min-height: calc(100vh - 52px); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } aside { position: static !important; border-left: 0 !important; border-top: 1px solid var(--line); } }
+  .view { padding: 16px 24px 80px; max-width: 860px; }
+  .view.wide { max-width: none; grid-column: 1 / -1; }
+  aside { border-left: 1px solid var(--line); background: var(--panel); padding: 16px; position: sticky; top: 52px; align-self: start; max-height: calc(100vh - 52px); overflow: auto; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 14px; color: var(--muted); font-size: 13px; }
+  .script p { font: 17px/1.75 var(--serif); margin: 0 0 1em; }
+  .script .title { font: 600 20px/1.3 var(--serif); margin-bottom: 18px; }
+  .s { cursor: pointer; border-radius: 3px; }
+  .s:hover { outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+  .s.sel { outline: 2px solid var(--accent); }
+  .q { background: hsl(var(--h) 60% var(--chip-l)); padding: 1px 2px; }
+  .q .who { font: 600 10.5px/1 var(--font); color: hsl(var(--h) 55% var(--chip-ink-l)); vertical-align: super; margin-left: 2px; letter-spacing: .02em; }
+  .q.unknown { background: color-mix(in srgb, var(--warn) 18%, transparent); }
+  .q.unknown .who { color: var(--warn); }
+  .q.locked .who::after { content: " ✎"; }
+  .dim .q:not(.unknown) { background: none; } .dim .q:not(.unknown) .who { opacity: .35; }
+  .respelled { text-decoration: underline dotted color-mix(in srgb, var(--accent) 60%, transparent); text-underline-offset: 4px; }
+  aside h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  aside label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
+  aside textarea { width: 100%; min-height: 84px; resize: vertical; font: 14px/1.4 var(--serif); }
+  aside select, aside input[type=text] { width: 100%; }
+  .orig { font: 14px/1.5 var(--serif); padding: 8px 10px; background: var(--bg); border-radius: 6px; border: 1px dashed var(--line); }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .warn { color: var(--warn); } .okc { color: var(--ok); }
+  audio { width: 100%; height: 34px; margin-top: 8px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-size: 12px; color: var(--muted); font-weight: 600; position: sticky; top: 52px; background: var(--bg); }
+  td .aka { color: var(--muted); font-size: 12px; }
+  .badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .badge.manual { color: var(--accent); border-color: var(--accent); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: hsl(var(--h) 60% 55%); margin-right: 6px; }
+  .play { border: 1px solid var(--line); background: var(--bg); border-radius: 50%; width: 26px; height: 26px; cursor: pointer; line-height: 1; }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; }
+  .toast.show { opacity: .95; }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--bg); border: 1px solid var(--line); padding: 1px 5px; border-radius: 4px; user-select: all; }
+  .empty { color: var(--muted); padding: 24px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="bookTitle">…</h1><div class="sub" id="bookSub"></div></div>
+  <nav role="tablist">
+    <button role="tab" data-tab="script" aria-selected="true">Script</button>
+    <button role="tab" data-tab="cast">Cast</button>
+    <button role="tab" data-tab="lexicon">Pronunciations</button>
+    <button role="tab" data-tab="qa">QA <span id="qaCount"></span></button>
+  </nav>
+  <span class="spacer"></span>
+  <select id="chapterSel" aria-label="Chapter"></select>
+</header>
+<main>
+  <section class="view" id="view"></section>
+  <aside id="side"></aside>
+</main>
+<div class="toast" id="toast"></div>
+<audio id="player" hidden></audio>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const state = { book: null, chapter: null, tab: "script", sel: null, onlyUnknown: false };
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+}
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3500); }
+function hue(id) { let h = 0; for (const c of id || "") h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+const chars = () => Object.fromEntries((state.book?.characters || []).map(c => [c.id, c]));
+function nameOf(id) {
+  if (!id) return "unknown";
+  if (id === "narrator") return "narrator";
+  return chars()[id]?.canonical_name || id;
+}
+function voiceLabel(v) { return v ? `${v.id}${v.gender ? ` — ${v.gender}/${v.age || "?"}/${v.tone || "?"}` : " (untagged)"}` : ""; }
+function rerunHint(ch) {
+  return `./incant ${state.book.meta.slug} --from normalize --chapters ${parseInt(ch, 10)}`;
+}
+function play(url) { const p = $("#player"); p.src = url; p.play().catch(() => toast("No audio for this yet")); }
+
+// ------------------------------------------------------------------ boot
+async function boot() {
+  state.book = await api("/api/book");
+  const b = state.book;
+  document.title = `Review — ${b.meta.title}`;
+  $("#bookTitle").textContent = b.meta.title;
+  $("#bookSub").textContent = [b.meta.author, `${b.chapters.length} chapters`, `${b.characters.filter(c => c.line_count).length} speaking characters`,
+    b.narrator_character ? `narrated by ${nameOf(b.narrator_character)}` : null].filter(Boolean).join(" · ");
+  $("#qaCount").textContent = b.qa.length ? `(${b.qa.length})` : "";
+  const sel = $("#chapterSel");
+  sel.innerHTML = b.chapters.map(c => `<option value="${c.id}">${esc(c.title)}${c.rendered ? " ♪" : ""}</option>`).join("");
+  const firstRendered = b.chapters.find(c => c.rendered) || b.chapters[0];
+  sel.value = location.hash.slice(1) || firstRendered.id;
+  sel.onchange = () => { location.hash = sel.value; loadChapter(); };
+  document.querySelectorAll("nav button").forEach(btn => btn.onclick = () => setTab(btn.dataset.tab));
+  await loadChapter();
+}
+function setTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  $("#chapterSel").style.visibility = tab === "script" ? "visible" : "hidden";
+  render();
+}
+async function loadChapter() {
+  state.chapter = await api(`/api/chapter/${$("#chapterSel").value}`);
+  state.sel = null;
+  render();
+}
+function render() {
+  const v = $("#view");
+  v.classList.toggle("wide", state.tab !== "script");
+  $("#side").hidden = state.tab !== "script";
+  ({script: renderScript, cast: renderCast, lexicon: renderLexicon, qa: renderQA})[state.tab]();
+}
+
+// ------------------------------------------------------------------ script
+function spanById(id) { for (const p of state.chapter.paragraphs) for (const s of p) if (s.id === id) return s; }
+function renderScript() {
+  const c = state.chapter, ch = c.chapter;
+  const unknown = c.paragraphs.flat().filter(s => s.kind === "dialogue" && !s.speaker).length;
+  const quotes = c.paragraphs.flat().filter(s => s.kind === "dialogue").length;
+  $("#view").innerHTML = `
+    <div class="toolbar">
+      <span>${quotes} quotations · <span class="${unknown ? "warn" : "okc"}">${unknown} unknown speaker${unknown === 1 ? "" : "s"}</span></span>
+      <label class="row"><input type="checkbox" id="onlyUnknown" ${state.onlyUnknown ? "checked" : ""}> highlight unknown only</label>
+      <button class="btn" id="nextUnknown" ${unknown ? "" : "disabled"}>Next unknown ↓</button>
+      <span class="spacer"></span>
+      ${c.audio ? `<button class="btn" id="playChapter">▶ Chapter audio</button>` : `<span>not rendered yet</span>`}
+    </div>
+    <div class="script ${state.onlyUnknown ? "dim" : ""}">
+      <div class="title">${esc(ch.title)}${c.title_say && c.title_say !== ch.title ? ` <span class="note">(read as “${esc(c.title_say)}”)</span>` : ""}</div>
+      ${c.paragraphs.length ? c.paragraphs.map(p => `<p>${p.map(spanHtml).join("")}</p>`).join("") : `<div class="empty">No spans yet — run the attribute stage.</div>`}
+    </div>`;
+  $("#onlyUnknown").onchange = e => { state.onlyUnknown = e.target.checked; renderScript(); };
+  $("#nextUnknown").onclick = () => {
+    const all = c.paragraphs.flat().filter(s => s.kind === "dialogue" && !s.speaker);
+    const i = all.findIndex(s => s.id === state.sel);
+    const next = all[(i + 1) % all.length];
+    select(next.id, true);
+  };
+  if (c.audio) $("#playChapter").onclick = () => play(`/audio/chapter/${ch.id}.wav`);
+  $("#view").querySelectorAll(".s").forEach(el => el.onclick = () => select(el.dataset.id));
+  renderEditor();
+}
+function spanHtml(s) {
+  const plain = s.text.replace(/\*/g, "");
+  const respelled = s.say && s.say_overridden ? " respelled" : "";
+  const sel = s.id === state.sel ? " sel" : "";
+  if (s.kind !== "dialogue") return `<span class="s${sel}${respelled}" data-id="${s.id}">${esc(plain)}</span>`;
+  const cls = `s q${s.speaker ? "" : " unknown"}${s.locked ? " locked" : ""}${sel}${respelled}`;
+  return `<span class="${cls}" style="--h:${hue(s.speaker)}" data-id="${s.id}">${esc(plain)}<span class="who">${esc(nameOf(s.speaker))}</span></span>`;
+}
+function select(id, scroll) {
+  state.sel = id;
+  document.querySelectorAll(".s.sel").forEach(e => e.classList.remove("sel"));
+  const el = document.querySelector(`.s[data-id="${id}"]`);
+  if (el) { el.classList.add("sel"); if (scroll) el.scrollIntoView({block: "center", behavior: "smooth"}); }
+  renderEditor();
+}
+function renderEditor() {
+  const side = $("#side");
+  const s = state.sel && spanById(state.sel);
+  if (!s) {
+    side.innerHTML = `<h2>Edit</h2><p class="note">Click any line of the script to change who says it, how it’s delivered, or exactly what the TTS reads. Underlined text has a hand-edited reading.</p>
+      <p class="note">Edits are saved to the book’s files and survive re-runs. Hear them by re-rendering the chapter:</p>
+      <p><code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+    return;
+  }
+  const isQ = s.kind === "dialogue";
+  const cs = [...state.book.characters].filter(c => c.line_count || c.id === s.speaker).sort((a, b) => b.line_count - a.line_count);
+  const others = state.book.characters.filter(c => !c.line_count && c.id !== s.speaker).sort((a, b) => a.canonical_name.localeCompare(b.canonical_name));
+  const opt = c => `<option value="${c.id}" ${c.id === s.speaker ? "selected" : ""}>${esc(c.canonical_name)}${c.line_count ? ` (${c.line_count})` : ""}</option>`;
+  const seg = s.segment;
+  const emo = s.emotion || {};
+  side.innerHTML = `
+    <h2>${isQ ? "Quotation" : "Narration"} <span class="note">${s.id}</span></h2>
+    <div class="orig">${esc(s.text.replace(/\*/g, ""))}</div>
+    ${isQ ? `
+      <label for="spk">Speaker</label>
+      <select id="spk">
+        <option value="" ${!s.speaker ? "selected" : ""}>— unknown (narrator’s voice) —</option>
+        <option value="narrator" ${s.speaker === "narrator" ? "selected" : ""}>narrator</option>
+        <optgroup label="Speaking characters">${cs.map(opt).join("")}</optgroup>
+        <optgroup label="Other characters">${others.map(opt).join("")}</optgroup>
+      </select>
+      <label for="emo">Delivery <span class="note">(empty = neutral)</span></label>
+      <input type="text" id="emo" value="${esc(emo.text || "")}" placeholder="e.g. teasing, amused">
+      <label for="alpha">Strength <span id="alphaV">${(emo.alpha ?? 0.5).toFixed(2)}</span></label>
+      <input type="range" id="alpha" min="0.1" max="0.9" step="0.05" value="${emo.alpha ?? 0.5}" style="width:100%">
+    ` : ""}
+    <label for="say">Spoken as ${s.say_overridden ? `<span class="badge manual">hand-edited</span>` : ""}</label>
+    <textarea id="say">${esc(s.say ?? "")}</textarea>
+    <div class="row" style="margin-top:6px">${s.say_overridden ? `<button class="btn" id="resetSay">Use automatic reading</button>` : ""}</div>
+    <div class="row" style="margin-top:14px"><button class="btn primary" id="save">Save</button><span class="note" id="saveNote"></span></div>
+    <label>Audio</label>
+    ${seg && seg.rendered ? `<button class="btn" id="playSeg">▶ Play segment</button>
+       <div class="note">voice ${esc(seg.voice || "?")}${seg.text !== (s.say ?? "") ? " · segment includes neighbouring text" : ""}</div>`
+      : `<div class="note">${seg && seg.message ? esc(seg.message) : "Not rendered with current settings."}</div>`}
+    <p class="note">Re-render to hear changes: <code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+  if (isQ) $("#alpha").oninput = e => $("#alphaV").textContent = (+e.target.value).toFixed(2);
+  if (seg && seg.rendered) $("#playSeg").onclick = () => play(`/audio/segment/${seg.key}.wav`);
+  const reset = $("#resetSay");
+  if (reset) reset.onclick = () => saveSpan(s, {say: null});
+  $("#save").onclick = () => {
+    const body = {};
+    const sayNow = $("#say").value.trim();
+    if (sayNow !== (s.say ?? "").trim()) body.say = sayNow;
+    if (isQ) {
+      body.speaker = $("#spk").value || null;
+      const t = $("#emo").value.trim();
+      body.emotion = t ? {text: t, alpha: +$("#alpha").value} : null;
+    }
+    saveSpan(s, body);
+  };
+}
+async function saveSpan(s, body) {
+  try {
+    const saved = await api("/api/span", {id: s.id, ...body});
+    Object.assign(s, {speaker: saved.speaker ?? null, emotion: saved.emotion ?? null, locked: true});
+    if ("say" in body) { s.say_overridden = body.say !== null; if (body.say !== null) s.say = body.say; }
+    toast(body.say === null ? "Automatic reading restored (applies on the next normalize run)" : "Saved");
+    const el = document.querySelector(`.s[data-id="${s.id}"]`);
+    if (el) { el.outerHTML = spanHtml(s); document.querySelector(`.s[data-id="${s.id}"]`).onclick = () => select(s.id); }
+    renderEditor();
+  } catch (e) { toast("Save failed: " + e.message); }
+}
+
+// ------------------------------------------------------------------ cast
+function renderCast() {
+  const b = state.book;
+  const roles = b.cast.roles, auto = b.cast.auto || {};
+  const voices = Object.fromEntries(b.voices.map(v => [v.id, v]));
+  const tagged = b.voices.filter(v => v.gender), untagged = b.voices.filter(v => !v.gender);
+  const vopts = cur => `<option value="">(automatic)</option>
+    <optgroup label="Tagged">${tagged.map(v => `<option value="${v.id}" ${v.id === cur ? "selected" : ""}>${esc(voiceLabel(v))}</option>`).join("")}</optgroup>
+    <optgroup label="Untagged">${untagged.map(v => `<option value="${v.id}" ${v.id === cur ? "selected" : ""}>${esc(v.id)}</option>`).join("")}</optgroup>`;
+  const speaking = b.characters.filter(c => c.line_count).sort((a, x) => x.line_count - a.line_count);
+  const shared = {};
+  for (const [c, v] of Object.entries(roles)) if (c !== "narrator") (shared[v] ||= []).push(c);
+  const rows = [{id: "narrator", canonical_name: "Narrator", aliases: [], line_count: null, gender: null, age: null}, ...speaking].map(c => {
+    const v = roles[c.id];
+    const kind = c.id === "narrator" ? "" : !v ? `<span class="badge">uncast</span>` : auto[c.id] === v ? `<span class="badge">auto</span>` : `<span class="badge manual">manual</span>`;
+    const others = (shared[v] || []).filter(x => x !== c.id).map(nameOf);
+    const sel = (field, list) => c.id === "narrator" ? "" : `<select data-char="${c.id}" data-field="${field}">${list.map(x => `<option ${x === c[field] ? "selected" : ""}>${x}</option>`).join("")}</select>`;
+    return `<tr>
+      <td><span class="swatch" style="--h:${hue(c.id)}"></span><b>${esc(c.canonical_name)}</b>${c.locked ? ` <span class="badge manual">edited</span>` : ""}
+          ${c.aliases?.length ? `<div class="aka">${esc(c.aliases.slice(0, 4).join(", "))}</div>` : ""}</td>
+      <td>${sel("gender", b.genders)}</td><td>${sel("age", b.ages)}</td>
+      <td>${c.line_count ?? ""}</td>
+      <td><select data-cast="${c.id}">${vopts(v)}</select>
+          ${others.length ? `<div class="aka">shared with ${esc(others.slice(0, 3).join(", "))}</div>` : ""}</td>
+      <td>${v && voices[v]?.has_sample ? `<button class="play" data-voice="${v}" title="Play a sample">▶</button>` : ""}</td>
+      <td>${kind}</td></tr>`;
+  }).join("");
+  $("#view").innerHTML = `
+    <div class="toolbar"><span>Voices for speaking characters. “(automatic)” lets casting choose from voice tags on each run; picking a voice pins it. Changes apply to chapters rendered after this.</span></div>
+    <table><thead><tr><th>Character</th><th>Gender</th><th>Age</th><th>Lines</th><th>Voice</th><th></th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  $("#view").querySelectorAll("select[data-cast]").forEach(el => el.onchange = async () => {
+    try { b.cast = await api("/api/cast", {character: el.dataset.cast, voice: el.value || null}); toast("Voice saved"); renderCast(); }
+    catch (e) { toast("Save failed: " + e.message); }
+  });
+  $("#view").querySelectorAll("select[data-char]").forEach(el => el.onchange = async () => {
+    try {
+      const c = await api("/api/character", {id: el.dataset.char, [el.dataset.field]: el.value});
+      Object.assign(b.characters.find(x => x.id === c.id), c); toast("Character saved — recasting uses it on the next run"); renderCast();
+    } catch (e) { toast("Save failed: " + e.message); }
+  });
+  $("#view").querySelectorAll("button[data-voice]").forEach(el => el.onclick = () => play(`/audio/voice/${el.dataset.voice}.wav`));
+}
+
+// ------------------------------------------------------------------ lexicon
+async function renderLexicon() {
+  const words = await api("/api/lexicon");
+  const rows = Object.entries(words).concat([["", ""]]);
+  $("#view").innerHTML = `
+    <div class="toolbar"><span>How the TTS should say particular words in this book (whole words, any case). Write the word as it should sound, e.g. <i>Hermione → Her-my-oh-nee</i>.</span></div>
+    <table id="lex"><thead><tr><th>Word</th><th>Say it as</th><th></th></tr></thead><tbody>
+      ${rows.map(([k, v]) => `<tr><td><input type="text" value="${esc(k)}" placeholder="word"></td><td><input type="text" value="${esc(v)}" placeholder="respelling"></td><td><button class="btn" data-del>✕</button></td></tr>`).join("")}
+    </tbody></table>
+    <div class="row" style="margin-top:12px"><button class="btn" id="addRow">Add word</button><button class="btn primary" id="saveLex">Save</button></div>
+    <p class="note">Takes effect on the next normalize run, e.g. <code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+  const tbody = $("#lex tbody");
+  const wire = () => tbody.querySelectorAll("[data-del]").forEach(b => b.onclick = () => b.closest("tr").remove());
+  wire();
+  $("#addRow").onclick = () => { tbody.insertAdjacentHTML("beforeend", `<tr><td><input type="text" placeholder="word"></td><td><input type="text" placeholder="respelling"></td><td><button class="btn" data-del>✕</button></td></tr>`); wire(); };
+  $("#saveLex").onclick = async () => {
+    const out = {};
+    tbody.querySelectorAll("tr").forEach(tr => { const [k, v] = [...tr.querySelectorAll("input")].map(i => i.value.trim()); if (k && v) out[k] = v; });
+    try { await api("/api/lexicon", out); toast(`Saved ${Object.keys(out).length} pronunciations`); } catch (e) { toast("Save failed: " + e.message); }
+  };
+}
+
+// ------------------------------------------------------------------ QA
+function renderQA() {
+  const qa = state.book.qa;
+  $("#view").innerHTML = qa.length ? `
+    <div class="toolbar"><span>Segments whose best take still didn’t match their text when transcribed. Listen, then fix the text on the Script tab or add a pronunciation.</span></div>
+    <table><thead><tr><th></th><th>Text</th><th>Heard</th><th>Voice</th><th>WER</th></tr></thead><tbody>
+      ${qa.map(r => `<tr><td><button class="play" data-key="${esc(r.key || "")}" data-span="${esc((r.span_ids || [])[0] || "")}">▶</button></td>
+        <td>${esc(r.text)}</td><td class="warn">${esc(r.heard)}</td><td>${esc(r.voice || "")}</td><td>${(r.wer * 100).toFixed(0)}%</td></tr>`).join("")}
+    </tbody></table>` : `<div class="empty">No QA failures in the latest render. ✓</div>`;
+  $("#view").querySelectorAll("button[data-span]").forEach(b => b.onclick = async () => {
+    if (b.dataset.key) return play(`/audio/segment/${b.dataset.key}.wav`);
+    const sid = b.dataset.span, ch = sid.split("-")[0];
+    const data = await api(`/api/chapter/${ch}`);
+    const s = data.paragraphs.flat().find(x => x.id === sid);
+    if (s?.segment?.rendered) play(`/audio/segment/${s.segment.key}.wav`); else toast("Segment audio not found");
+  });
+}
+
+boot().catch(e => { document.body.innerHTML = `<p style="padding:24px">Failed to load: ${esc(e.message)}</p>`; });
+</script>
+</body>
+</html>

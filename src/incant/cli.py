@@ -6,6 +6,7 @@ The pipeline is spelled out by method names, one per stage, in stage order:
     ./incant book.epub indextts                 # other stages from [pipeline] / auto-detect
     ./incant book.epub dummy out/test.m4b       # trailing file path = output location
     ./incant pride-and-prejudice synthesize=indextts --from synthesize   # resume an ingested book
+    ./incant pride-and-prejudice --review --host 0.0.0.0                  # review/edit page
 
 INPUT is a file, a URL, an existing book slug under work/, or a book work directory.
 """
@@ -74,6 +75,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--dry-run", action="store_true", help="show the resolved plan and exit")
     ap.add_argument("--list", action="store_true", help="list stages and methods")
     ap.add_argument("--check", action="store_true", help="check readiness of the resolved methods (endpoints, voices, tools)")
+    ap.add_argument("--review", action="store_true", help="serve the review/edit page for an existing book")
+    ap.add_argument("--host", help="review page bind address (default [review] host, 127.0.0.1)")
+    ap.add_argument("--port", type=int, help="review page port (default [review] port, 8765)")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config)
@@ -96,6 +100,14 @@ def main(argv: list[str] | None = None) -> int:
     if source is None and not args.check:
         ap.print_help()
         return 2
+    if args.review:
+        if wd is None:
+            print("error: --review needs an existing book (slug or work dir), not a new source", file=sys.stderr)
+            return 2
+        from .review.server import serve
+
+        serve(cfg, wd, args.host or cfg.review.host, args.port or cfg.review.port)
+        return 0
 
     try:
         steps, out_path = resolve(args.methods, None if wd else source, cfg, stages,

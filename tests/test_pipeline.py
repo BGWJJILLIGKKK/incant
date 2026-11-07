@@ -159,3 +159,54 @@ def test_same_voice_spans_merge_into_one_segment(setup):
     wd.write_spans(ch.id, spans)
     two = Renderer(cfg, wd, dummy, dummy.voices(), Cast(roles={"narrator": "n", "ann": "a"}), strict_voices=False)
     assert [(s.voice, s.text) for s in two.plan(ch)][1:4] == [("n", "It began."), ("a", "Hello,"), ("n", "said Ann,")]
+
+
+def test_locked_spans_and_say_overrides_survive_reruns(setup):
+    import json
+
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    assert main([str(src), "--until", "normalize", "-c", str(conf)]) == 0
+    wd = WorkDir(tmp / "work" / "test-book")
+    spans = wd.read_spans("0001")
+    q = next(s for s in spans if s.kind == "dialogue")
+    q.speaker, q.locked = "ann", True
+    wd.write_spans("0001", spans)
+    (wd.root / "say_overrides.json").write_text(json.dumps({q.id: {"text": q.text, "say": "Hullo"}}))
+    assert main(["test-book", "--from", "attribute", "--until", "normalize", "--force", "attribute", "-c", str(conf)]) == 0
+    again = {s.id: s for s in wd.read_spans("0001")}
+    assert again[q.id].speaker == "ann" and again[q.id].locked
+    assert {s.id: s for s in wd.read_speech("0001").spans}[q.id].say == "Hullo"
+
+
+@pytest.mark.skipif(not HAVE_FFMPEG, reason="ffmpeg not installed")
+def test_review_book_api(setup):
+    import tomllib
+
+    from incant.config import load_config
+    from incant.review.server import Book
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    assert main([str(src), "-c", str(conf), "-o", str(tmp / "o.m4b")]) == 0
+    cfg = load_config(conf)
+    cfg.pipeline["synthesize"] = "dummy"
+    book = Book(cfg, WorkDir(tmp / "work" / "test-book"))
+    info = book.book()
+    assert [c["id"] for c in info["chapters"]] == ["0001", "0002"] and all(c["rendered"] for c in info["chapters"])
+    ch = book.chapter("0001")
+    spans = [s for p in ch["paragraphs"] for s in p]
+    q = next(s for s in spans if s["kind"] == "dialogue")
+    assert q["say"] and q["segment"]["rendered"]
+    assert book.segment_audio(q["segment"]["key"]) is not None and book.chapter_audio("0001") is not None
+    assert book.segment_audio("../../etc/passwd") is None
+
+    saved = book.save_span({"id": q["id"], "speaker": "narrator", "emotion": {"text": "wry", "alpha": 0.4}, "say": "Hi"})
+    assert saved["locked"] and saved["emotion"]["text"] == "wry"
+    assert book.chapter("0001")["paragraphs"][0] is not None
+    with pytest.raises(ValueError):
+        book.save_span({"id": q["id"], "speaker": "nobody"})
+    assert book.save_cast({"character": "narrator", "voice": None})["roles"].get("narrator") is None
+    book.save_lexicon({"Ann": "Anne", " ": "x"})
+    assert tomllib.loads((tmp / "work" / "test-book" / "lexicon.toml").read_text())["words"] == {"Ann": "Anne"}

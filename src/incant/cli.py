@@ -58,19 +58,37 @@ def _doc(cls) -> str:
 
 
 def cmd_list(stages: list[StageInfo], cfg) -> int:
+    """Stages and their methods; a method that inherits from another is listed under it."""
+    from .pipeline import parent_methods
+
     for s in stages:
         default = cfg.pipeline.get(s.name)
         print(f"{s.order}. {s.name:<11} {s.description}")
+        docs, parent = {}, {}
         for m in s.methods:
             try:
-                doc = _doc(load_method_class(s, m))
+                cls = load_method_class(s, m)
+                docs[m] = _doc(cls)
+                parent[m] = next(iter(parent_methods(s, cls)), None)
             except Exception as e:  # noqa: BLE001
-                doc = f"(failed to load: {e})"
-            mark = "*" if m == default else " "
-            print(f"   {mark} {m:<10} {doc}")
+                docs[m], parent[m] = f"(failed to load: {e})", None
+        rows: list[tuple[str, str]] = []  # (displayed name, method)
+
+        def walk(m: str, depth: int) -> None:
+            rows.append((("   " * (depth - 1) + "└─ " if depth else "") + m, m))
+            for child in sorted(c for c, p in parent.items() if p == m):
+                walk(child, depth + 1)
+
+        for m in s.methods:
+            if parent[m] is None:
+                walk(m, 0)
+        width = max(len(n) for n, _ in rows) + 2
+        for name, m in rows:
+            mark = "*" if m == default or (default is None and m == getattr(s.module, "DEFAULT", None)) else " "
+            print(f"   {mark} {name:<{width}} {docs[m]}")
         if default == "auto":
-            print("   * auto       (detected from the input)")
-    print("\n* = default from [pipeline] in config")
+            print("   * auto       (detected from the input; the most specific accepting method wins)")
+    print("\n* = default ([pipeline] in config, else the stage's own)")
     return 0
 
 

@@ -1,4 +1,5 @@
-from incant.normalize import paragraphs_from_plain, render_text_md, strip_gutenberg
+from incant.normalize import paragraphs_from_plain, render_text_md
+from incant.stages.ingest.gutenberg.gutenberg import strip_gutenberg
 from incant.schemas import SpanKind
 from incant.stages.attribute.spans import reconstruct, split_chapter, split_paragraph
 from incant.stages.parse.chapters import split_chapters

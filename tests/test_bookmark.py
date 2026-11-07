@@ -115,9 +115,9 @@ def fake_web(monkeypatch):
         if url not in pages:
             raise RuntimeError(f"could not fetch {url}")
         title, body = pages[url]
-        return Ingested(title=title or url, paragraphs=[body], source_format="url")
+        return url_mod.Page(url, "", Ingested(title=title or url, paragraphs=[body], source_format="url"))
 
-    monkeypatch.setattr(url_mod, "ingest_url", fetch)
+    monkeypatch.setattr(url_mod, "fetch_page", fetch)
     return pages
 
 

@@ -79,7 +79,9 @@ def is_title_line(p: str, title: str) -> bool:
     if re.fullmatch(r"\d{1,4}", n):
         return True  # a page number
     n = re.sub(r" by [a-z0-9 ]{1,40}$", "", n)  # "Title by Author"
-    return bool(n) and (n == t or (t.startswith(n) and len(n) >= 4) or bool(re.fullmatch(r"(?:chapter|part) \w+", n)))
+    return bool(n) and (n == t or (t.startswith(n) and len(n) >= 4)
+                        or (len(t) >= 4 and n.startswith(t + " ") and len(n.split()) <= 10)  # "Series: Part Title"
+                        or bool(re.fullmatch(r"(?:chapter|part) \w+", n)))
 
 
 def score(p: str) -> tuple[bool, str]:

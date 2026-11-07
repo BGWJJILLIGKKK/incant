@@ -132,6 +132,20 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
   - A page with under `min_words` (100) words of text is refused. The error names the gate it found (age/consent/bot check,
     "enable JavaScript") or says there was no readable text, and how to supply cookies.
 
+### Series (`url.series()`)
+- `UrlIngest.series(page, fetcher) -> Series | None` is a hook: the generic `url` returns None (one page). A
+  site-specific subclass returns `Series(url, title, parts=[Part(url, title)…], author, skipped)` in reading order;
+  `UrlIngest.collect()` then ingests every part with the same fetcher (credentials, rendering) and writes
+  `# <part title>` (series name prefix removed) + its paragraphs per part. Parts that fail are noted and skipped.
+- `Ingested.source` = the series URL, so every part of a series (two bookmarks, say) is the same book (`meta.source`).
+- When text comes from embedded script data, `url` also renders the page (if allowed) and keeps the longer text:
+  JavaScript sites can embed reader comments while the article loads separately.
+
+### Plain text and Project Gutenberg
+- `txt`: the file as is; `Title:`/`Author:` header lines name the book. `clean(raw)` is the hook for subclasses.
+- `gutenberg` (inherits `txt`): picked for `.txt` files with `*** START OF THE PROJECT GUTENBERG …` in the first
+  64 KB; removes the license header/footer and `[Illustration…]` placeholders (keeping a heading wrapped in one).
+
 ### Container sources (`expand`)
 A method that overrides `expand(source) -> list[SourceItem] | None` is a container (today: `bookmark`).
 - The CLI runs each item as its own book, exactly like a directory batch.
@@ -521,7 +535,7 @@ The error is then re-raised. In a batch each item is cleaned up on its own. Book
 ## Method contract (`stages/base.py`)
 ```python
 class Method:
-    Settings: type[BaseModel] = NoSettings     # from [<stage>.<method>]; extra keys rejected
+    Settings: type[BaseModel] = NoSettings     # from [<stage>.<parent>…] + [<stage>.<method>]; unknown keys in its own table are an error
     SKIP_IF_UNCHANGED: bool = False
     def run(self, ctx: Context) -> object       # required
     @classmethod
@@ -534,6 +548,11 @@ class Method:
 
 **A method:**
 1. Create `stages/<stage>/<name>/__init__.py` and `<name>.py`, holding one subclass of the stage's `Base`.
+   It may subclass another method of the same stage (`class EbookIngest(EpubIngest)`, imported from
+   `..epub.epub`); only the class defined in the module counts. A child method:
+   - reads `[<stage>.<parent>]` settings, then its own `[<stage>.<name>]` on top (credentials carry over);
+   - wins auto-detection over its parent when both accept a source;
+   - is listed under its parent in `--list`.
 2. Write every file listed for the stage above, with the fields marked required, through `WorkDir`.
 3. Keep the stage's invariants:
    - the span text invariant;

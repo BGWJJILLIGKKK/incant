@@ -63,10 +63,41 @@ def load_method_class(stage: StageInfo, name: str) -> type[Method]:
     return cls
 
 
+def parent_methods(stage: StageInfo, cls: type) -> list[str]:
+    """Methods of the same stage that `cls` inherits from, nearest first (ebook -> [epub])."""
+    out = []
+    prefix = f"{stages_pkg.__name__}.{stage.name}."
+    for base in cls.__mro__[1:]:
+        mod = base.__module__
+        if mod.startswith(prefix):
+            parts = mod[len(prefix):].split(".")
+            if len(parts) == 2 and parts[0] == parts[1] and parts[0] in stage.methods and parts[0] not in out:
+                out.append(parts[0])
+    return out
+
+
 def instantiate(cfg: Config, stage: StageInfo, name: str) -> Method:
+    """Settings come from [<stage>.<name>], on top of the tables of the methods it inherits from
+    ([ingest.epub] settings apply to [ingest.ebook] too)."""
     cls = load_method_class(stage, name)
-    settings = cls.Settings.model_validate(cfg.method_settings(stage.name, name))
+    merged: dict = {}
+    for parent in reversed(parent_methods(stage, cls)):
+        merged = _merge(merged, cfg.method_settings(stage.name, parent))
+    merged = _merge(merged, cfg.method_settings(stage.name, name))
+    fields = cls.Settings.model_fields
+    unknown = sorted(set(cfg.method_settings(stage.name, name)) - set(fields))
+    if unknown:
+        raise ValueError(f"[{stage.name}.{name}]: unknown setting(s) {', '.join(unknown)}"
+                         + (f" (known: {', '.join(fields)})" if fields else " (this method has no settings)"))
+    settings = cls.Settings.model_validate({k: v for k, v in merged.items() if k in fields})
     return cls(settings, cfg)
+
+
+def _merge(a: dict, b: dict) -> dict:
+    out = dict(a)
+    for k, v in b.items():
+        out[k] = _merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
 
 
 # ------------------------------------------------------------------ resolution
@@ -170,13 +201,14 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
 
 
 def _auto(stage: StageInfo, source: str | None) -> str | None:
+    """The accepting method; when several accept, the most specific one (a subclass over the method it
+    inherits from: gutenberg over txt for Project Gutenberg files)."""
     if source is None:
         return None
-    for m in stage.methods:
-        cls = load_method_class(stage, m)
-        if getattr(cls, "accepts", None) and cls.accepts(source):
-            return m
-    return None
+    hits = {m: load_method_class(stage, m) for m in stage.methods}
+    hits = {m: c for m, c in hits.items() if getattr(c, "accepts", None) and c.accepts(source)}
+    specific = [m for m, c in hits.items() if not any(o is not c and issubclass(o, c) for o in hits.values())]
+    return specific[0] if specific else None
 
 
 # ------------------------------------------------------------------ execution

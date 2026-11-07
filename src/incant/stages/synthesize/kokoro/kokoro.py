@@ -1,5 +1,5 @@
-"""Kokoro-82M, locally on the CPU (kokoro-onnx). No server, no GPU; roughly 3-6x faster than real time
-on a desktop CPU with the fp32 model, faster with `model = "int8"`.
+"""Kokoro-82M, locally on the CPU (kokoro-onnx). No server, no GPU; roughly 3-5x faster than real time
+on a 16-core desktop CPU (the int8 model is smaller, not faster).
 
     uv sync --extra kokoro          # model files (~340 MB, or ~120 MB for int8) download on first use
 

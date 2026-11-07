@@ -11,7 +11,8 @@ Credentials (all optional) go in incant.local.toml (git-ignored) or come from en
 
 Hosts without an entry fall back to ~/.netrc (`netrc = true`). Credentials are attached only to requests
 for the site they belong to, including across redirects, and never reach logs, pipeline.json or meta.json.
-Multi-page serial crawling is future work.
+Series: a site-specific subclass overrides `series()` to list the parts a page belongs to;
+`collect()` then ingests each part as a chapter. The generic method reads one page.
 """
 
 from __future__ import annotations
@@ -21,6 +22,7 @@ import os
 import re
 from http.cookiejar import LoadError, MozillaCookieJar
 from pathlib import Path
+from dataclasses import dataclass, field
 from typing import Literal
 from urllib.parse import urljoin, urlsplit
 
@@ -33,7 +35,7 @@ from ..base import Ingested, IngestMethod
 from .embedded import embedded_text
 from . import render as render_mod
 
-__all__ = ["UrlIngest"]
+__all__ = ["UrlIngest", "Page", "Part", "Series", "fetch_page", "ingest_url"]
 
 MAX_REDIRECTS = 10
 _PASSWORD_FIELD = re.compile(r"<input[^>]+type\s*=\s*[\"']?password", re.I)
@@ -217,7 +219,37 @@ def split_byline(title: str, author: str | None, sitename: str | None, host: str
     return title.strip(), (author.strip() if author else None)
 
 
+@dataclass
+class Page:
+    """A fetched page: where it ended up, the HTML the text came from (rendered if it was), and the result."""
+
+    url: str
+    html: str
+    ingested: Ingested
+
+
+@dataclass
+class Part:
+    url: str
+    title: str  # the part's own title, as the series lists it
+
+
+@dataclass
+class Series:
+    """What a site-specific subclass's series() returns: the parts in reading order."""
+
+    url: str  # canonical address of the whole series (the book's source)
+    title: str
+    parts: list[Part]
+    author: str | None = None
+    skipped: list[str] = field(default_factory=list)  # parts left out, for the log
+
+
 def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
+    return fetch_page(url, fetcher).ingested
+
+
+def fetch_page(url: str, fetcher: Fetcher | None = None) -> Page:
     fetcher = fetcher or Fetcher(UrlSettings())
     s = fetcher.s
     notes = ["URL ingest reads a single page only."]
@@ -231,7 +263,9 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
         raise FetchError(f"{url} returned a login page ({final}) — {why}")
 
     render_note = ""
-    if s.render == "always" or (s.render == "auto" and words < s.min_words):
+    # Render when the page had too little text, and also when the text came from embedded script data: on pages
+    # that load the article with JavaScript, the embedded data can hold reader comments instead (seen on story sites).
+    if s.render == "always" or (s.render == "auto" and (words < s.min_words or how is not None)):
         try:
             r_final, r_html = render_mod.render(final, fetcher, s.render_timeout_s)
             r_text, r_how = _extract(r_html, s)
@@ -240,6 +274,10 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
                 words = len(text.split())
         except render_mod.RenderUnavailable as e:
             render_note = f" (browser rendering unavailable: {e})"
+        except FetchError:
+            if words < s.min_words:
+                raise
+            notes.append("browser render failed; using the text found without it")
     if how:
         notes.append(f"text taken from {how} ({words:,} words); check it is the article, not a comment or summary")
 
@@ -265,13 +303,19 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
     md = trafilatura.extract_metadata(html)
     title, author = split_byline(md.title if md and md.title else "", md.author if md else None,
                                  md.sitename if md else None, host)
-    return Ingested(
+    return Page(final, html, Ingested(
         title=title or url,
         author=author,
         paragraphs=paragraphs_from_plain(text),
         source_format="url",
         warnings=notes,
-    )
+    ))
+
+
+def part_title(title: str, series: str) -> str:
+    """"The Long Road: Homecoming" in series "The Long Road" -> "Homecoming"; "The Long Road" stays."""
+    rest = re.sub(rf"^\s*{re.escape(series)}\s*[:\-–—~|,]*\s*", "", title, flags=re.I).strip()
+    return rest or title
 
 
 class UrlIngest(IngestMethod):
@@ -304,5 +348,43 @@ class UrlIngest(IngestMethod):
                 out.append((p.is_file(), f"{host}: cookies file {p}"))
         return out
 
+    # ------------------------------------------------------------ series (for site-specific subclasses)
+
+    def series(self, page: Page, fetcher: Fetcher) -> Series | None:
+        """The series this page belongs to, parts in reading order, or None to ingest just this page.
+        Site-specific subclasses override this; the generic method knows no series."""
+        return None
+
     def load(self, source: str) -> Ingested:
-        return ingest_url(source, Fetcher(self.settings))
+        fetcher = Fetcher(self.settings)
+        page = fetch_page(source, fetcher)
+        found = self.series(page, fetcher)
+        if not found or len(found.parts) < 2:
+            return page.ingested
+        return self.collect(page, found, fetcher)
+
+    def collect(self, page: Page, series: Series, fetcher: Fetcher) -> Ingested:
+        """Every part as a chapter ('# <part title>' heading, then its text)."""
+        import time
+
+        paragraphs: list[str] = []
+        notes = [f"series '{series.title}': {len(series.parts)} parts as chapters ({series.url})"]
+        notes += [f"left out: {s}" for s in series.skipped]
+        here = urlsplit(page.url)._replace(query="", fragment="").geturl()
+        for i, part in enumerate(series.parts):
+            if urlsplit(part.url)._replace(query="", fragment="").geturl() == here:
+                ing = page.ingested
+            else:
+                if i and getattr(self.settings, "part_delay_s", 0):
+                    time.sleep(self.settings.part_delay_s)  # be polite to the site
+                try:
+                    ing = fetch_page(part.url, fetcher).ingested
+                except FetchError as e:
+                    notes.append(f"part {i + 1} '{part.title}' not ingested: {e}")
+                    continue
+            paragraphs += [f"# {part_title(part.title, series.title)}", *ing.paragraphs]
+            notes += [w for w in ing.warnings if w not in notes and "single page" not in w]
+        if not paragraphs:
+            raise FetchError(f"no part of series '{series.title}' could be ingested")
+        return Ingested(title=series.title, author=series.author or page.ingested.author, paragraphs=paragraphs,
+                        source_format="url", warnings=notes, source=series.url)

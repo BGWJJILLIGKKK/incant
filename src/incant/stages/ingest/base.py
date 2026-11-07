@@ -21,6 +21,9 @@ class Ingested:
     description: str | None = None
     cover: tuple[str, bytes] | None = None  # (extension, data)
     warnings: list[str] = field(default_factory=list)
+    # Canonical address when it differs from what was given (a series' folder for one of its parts), so every
+    # part of a series lands in the same book.
+    source: str | None = None
 
 
 @dataclass
@@ -61,7 +64,8 @@ class IngestMethod(Method):
         if ctx.title and (not ing.title.strip() or ing.title == ctx.source):
             ing.title = ctx.title  # the page has no title of its own: use the container's
         ing.author = normalize_author(ing.author)
-        src = ctx.source if ctx.source.startswith(("http://", "https://")) else str(Path(ctx.source).resolve())
+        src = ing.source or (ctx.source if ctx.source.startswith(("http://", "https://"))
+                             else str(Path(ctx.source).resolve()))
         slug = ctx.slug or unique_slug(ctx.cfg.paths.work_dir, slugify(ing.title), src)
         wd = WorkDir.for_slug(ctx.cfg.paths.work_dir, slug)
         ctx.created = not wd.meta_path.exists()

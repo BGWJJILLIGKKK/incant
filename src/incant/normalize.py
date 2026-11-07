@@ -17,35 +17,11 @@ SCENE_BREAK = "* * *"
 _SCENE_BREAK_RE = re.compile(r"^\s*([*#~•·=_-]\s*){3,}$|^\s*[⁂§]\s*$")
 _LIGATURES = str.maketrans({"ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl", " ": " ", "​": ""})
 
-_GUTENBERG_START = re.compile(r"^\*{3}\s*START OF (THE|THIS) PROJECT GUTENBERG.*$", re.I | re.M)
-_GUTENBERG_END = re.compile(r"^\*{3}\s*END OF (THE|THIS) PROJECT GUTENBERG.*$", re.I | re.M)
-_ILLUSTRATION = re.compile(r"\[Illustration[^\]]*\]", re.I | re.S)
 
 
 def clean_unicode(s: str) -> str:
     s = unicodedata.normalize("NFC", s).translate(_LIGATURES)
     return s.replace("\r\n", "\n").replace("\r", "\n")
-
-
-def strip_gutenberg(s: str) -> str:
-    """Remove Project Gutenberg license header/footer and illustration placeholders."""
-    if m := _GUTENBERG_START.search(s):
-        s = s[m.end():]
-    if m := _GUTENBERG_END.search(s):
-        s = s[: m.start()]
-    return _ILLUSTRATION.sub(_illustration_keep_heading, s)
-
-
-_CAPTION_HEADING = re.compile(r"^\s*((chapter|book|part|volume)\s+[\w.]+\.?)\s*$", re.I)
-
-
-def _illustration_keep_heading(m: re.Match) -> str:
-    """Gutenberg sometimes wraps the chapter heading inside the illustration block:
-    '[Illustration: ...\n\nChapter I.]'. Keep the heading, drop the caption."""
-    lines = [ln for ln in m.group(0)[1:-1].splitlines() if ln.strip()]
-    if lines and (h := _CAPTION_HEADING.match(lines[-1])):
-        return f"\n\n{h.group(1)}\n\n"
-    return ""
 
 
 def is_scene_break(p: str) -> bool:

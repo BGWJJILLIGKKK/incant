@@ -55,7 +55,7 @@ netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
 # [ingest.url.sites."example.com"]
 # username = "me"
 # password_env = "EXAMPLE_PASSWORD"       # or password = "…"; or bearer / bearer_env; or headers = {…}
-cookies = "/tmp/browser_cookies.txt"       # cookies.txt exported from a logged-in browser
+# cookies = "~/cookies/example.txt"      # cookies.txt exported from a logged-in browser
 
 # Author's notes, intros, sign-offs and site text at chapter edges ("This is a story about…", "Thanks for
 # reading!", "Click here to tip"): metatext = "auto" (rules for web pages, off for books) | "rules" | "llm" | "off".

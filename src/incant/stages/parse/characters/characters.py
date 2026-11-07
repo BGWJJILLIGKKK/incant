@@ -324,15 +324,20 @@ def clusters_from_links(entries: list[Entry], links: dict[int, int], log) -> lis
 
 
 def canonical_name(members: list[Entry], aliases: list[str], claims: dict[str, Counter]) -> str:
-    """Prefer a full name (two or more non-title words) among the members' names and this character's
-    unambiguous aliases, then the most used; e.g. "Jane" + alias "Jane Bennet" -> "Jane Bennet"."""
+    """The name the book uses most for this person (proper names before roles), upgraded to a full name
+    that contains it when one is used: "Elizabeth" -> "Elizabeth Bennet", "Jane" -> "Jane Bennet". Never a
+    different name ("Meg" must not become her married "Mrs. John Brooke" — that misleads attribution)."""
     uses: Counter = Counter()
     for e in members:
         uses[e.name] += e.mentions
         for a, n in e.alias_counts.items():
             if a in aliases and len(claims.get(a, {})) == 1:
                 uses[a] += n
-    return max(uses, key=lambda n: (not (_is_bad_name(n) and is_role(n)), len(core_tokens(n)) >= 2, uses[n], len(n)))
+    proper = [n for n in uses if not (_is_bad_name(n) and is_role(n))] or list(uses)
+    best = max(proper, key=lambda n: (uses[n], len(n)))
+    core = core_tokens(best)
+    fuller = [n for n in proper if core and core < core_tokens(n) and uses[n] * 10 >= uses[best]]
+    return max(fuller, key=lambda n: (uses[n], -len(n))) if fuller else best
 
 
 def build_characters(groups: list[list[Entry]]) -> list[Character]:

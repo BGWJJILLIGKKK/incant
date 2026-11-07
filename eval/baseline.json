@@ -1,0 +1,42 @@
+{
+ "a-christmas-carol": {
+  "ok": 55,
+  "n": 59
+ },
+ "alice-in-wonderland": {
+  "ok": 60,
+  "n": 60
+ },
+ "dracula": {
+  "ok": 43,
+  "n": 46
+ },
+ "jane-eyre": {
+  "ok": 27,
+  "n": 27
+ },
+ "little-women": {
+  "ok": 54,
+  "n": 61
+ },
+ "pride-and-prejudice": {
+  "ok": 61,
+  "n": 64
+ },
+ "the-adventures-of-sherlock-holmes": {
+  "ok": 46,
+  "n": 48
+ },
+ "tom-sawyer": {
+  "ok": 26,
+  "n": 29
+ },
+ "treasure-island": {
+  "ok": 46,
+  "n": 50
+ },
+ "wizard-of-oz": {
+  "ok": 58,
+  "n": 58
+ }
+}

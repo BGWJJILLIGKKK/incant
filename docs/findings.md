@@ -83,6 +83,37 @@ against the hardware below; where something is a judgement rather than a measure
 - With 48–64 quotes per gold set, ±2 quotes (±3–4%) is within noise of prompt/roster changes; the gold
   sets need to grow before smaller effects can be measured.
 
+### Ten-book suite (eval/suite.py)
+
+Tuning on two or three books had over-fitted: a fix for A Christmas Carol's ghosts (exclude every "the X"
+name from roster matching) silently removed "the captain" (Treasure Island) and "the Count" (Dracula) from
+their chapters. The suite (~500 hand-labelled quotes over ten books) exposed it at once.
+
+| Book | first suite run | after general fixes |
+|---|---|---|
+| A Christmas Carol | 93.2% | 93.2% |
+| Alice in Wonderland | 100% | 100% |
+| Dracula | 82.6% | 93.5% |
+| Jane Eyre | 77.8% | 100% |
+| Little Women | 50.8% | 88.5% |
+| Pride and Prejudice | 93.8% | 95.3% |
+| Sherlock Holmes | 97.9% | 95.8% |
+| Tom Sawyer | 75.9% | 89.7% |
+| Treasure Island | 74.0% | 92.0% |
+| Wizard of Oz | 100% | 100% |
+| **pooled** | **85.5%** | **94.8%** |
+
+The fixes were general, each visible in several books:
+- roster matching excludes only names claimed by several characters, not every "the X" title;
+- first-person narrator identified from story chapters at ¼, ½, ¾ — not the first chapter (Jane Eyre's
+  preface is signed "Currer Bell");
+- "narrator" only for words nobody says aloud (written text, a quoted term, a remark never made); speech
+  that is play-acted, sung or read aloud belongs to the character (Tom Sawyer's steamboat game);
+- canonical name = the name the book uses most, upgraded only to a full name containing it. "Prefer a full
+  name" had made Meg "Mrs. John Brooke" and Beth "Miss Elizabeth March", sending Meg's lines to Mrs. March.
+- Easy books (heavily tagged: Alice, Oz) sit at 100% and catch nothing; the informative ones are untagged
+  alternation (Little Women, Tom Sawyer) and first-person/epistolary books.
+
 ## TTS (IndexTTS-2.5 over HTTP)
 
 - Named server-side voices; emotion as free text (`extra_params.emo_text`, `emo_alpha`); `speed`.

@@ -57,7 +57,7 @@ SYSTEM = """You label who speaks each quotation in a passage of a novel, for a m
 Quotations to label are marked ⟦n⟧. For EVERY marker, in order, give:
 - cue: the evidence for the speaker, briefly: the dialogue tag ("tag: said his wife"), or "same paragraph as ⟦n⟧", or "reply to ⟦n⟧ (alternation)", or what the words reveal ("addresses Mr. Bennet").
 - speaker: the id of the character (from CHARACTERS) who says those words aloud. If the speaker is not in CHARACTERS but the passage identifies them by a role or description (a businessman, the charwoman, a boy in the street), use "other". Use "unknown" only when you cannot tell who speaks.
-- speaker "narrator": for quotation marks around words nobody says aloud in the scene: a quoted word or phrase, a title, a sign, a saying, or speech that is only imagined or hypothetical.
+- speaker "narrator": only when nobody in the scene says the words aloud: written text (a letter, note, sign or book being described), a single quoted word or term, or a remark the text says was never made. Words a character says aloud — including play-acting, singing, reading aloud or thinking to themselves — belong to that character.
 - other_role: only when speaker is "other": that person's role in a few words, the same wording every time they speak ("first businessman", "the charwoman"); otherwise "".
 - other_gender: only when speaker is "other": "male", "female" or "unknown"; otherwise "unknown".
 - emotion: a few words for how it is said, as an actor's direction (e.g. "teasing, amused", "sharp irritation", "quiet grief", "eager excitement"), or "neutral".
@@ -102,6 +102,10 @@ def role_key(role: str) -> str:
     return " ".join(words)
 
 
+_FRONT = re.compile(r"(?i)^(front matter|preface|foreword|introduction|note|dedication|contents|author|editor|"
+                    r"translator|advertisement|prologue to the|biographical|transcriber)")
+
+
 def first_person_rate(spans: list[Span]) -> float:
     text = " ".join(s.text for s in spans if s.kind is SpanKind.narration)
     return 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split()))
@@ -129,8 +133,10 @@ def roster_for(chars: CharacterList, chapter_id: str, top: int, full_max: int = 
         words = set(re.findall(r"[a-z]+", low))
         ambiguous = {a.casefold() for a in chars.ambiguous_aliases}
 
-        def distinctive(n: str) -> bool:  # "the Spirit"/"the Ghost" appear everywhere and mean different people
-            return len(n) >= 3 and n.casefold() not in ambiguous and not re.match(r"(?i)^the\s+\w+$", n)
+        def distinctive(n: str) -> bool:
+            # Names claimed by several characters ("the Spirit" in A Christmas Carol) say nothing about who is
+            # present. A title only one character has ("the captain", "the Count") does.
+            return len(n) >= 3 and n.casefold() not in ambiguous
 
         for c in chars.characters:
             if c.origin != "profile":
@@ -328,8 +334,12 @@ class SpeakersAttribute(AttributeMethod):
         if rate < self.settings.first_person_rate:
             ctx.log(f"  third-person narration ({rate:.1f} first-person words per 1000)")
             return None
-        story = [ch for ch in wd.read_chapters().chapters if ch.title != "Front Matter"] or wd.read_chapters().chapters
-        excerpt = " ".join(wd.read_chapter_text(story[0].file).split()[:1500])
+        # Sample the story itself, not prefaces or notes (Jane Eyre's preface is signed by "Currer Bell"):
+        # ~500 words from chapters a quarter, half and three quarters of the way through.
+        chapters = [ch for ch in wd.read_chapters().chapters if not _FRONT.match(ch.title)] or wd.read_chapters().chapters
+        picks = sorted({chapters[int(len(chapters) * f)] .id: chapters[int(len(chapters) * f)] for f in (0.25, 0.5, 0.75)}.values(),
+                       key=lambda c: c.index)
+        excerpt = "\n\n[…]\n\n".join(" ".join(wd.read_chapter_text(c.file).split()[:500]) for c in picks)
         roster = sorted(chars.characters, key=lambda c: -c.mentions)[:15]
         ids = [c.id for c in roster] + [UNNAMED]
         schema = create_model("Narrator", reason=(str, Field(max_length=300)), narrator=(Literal[tuple(ids)], ...))

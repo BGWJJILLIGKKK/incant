@@ -98,6 +98,26 @@ against the hardware below; where something is a judgement rather than a measure
   ("M" + "R. BENNET") and `pg-header`/`pg-footer` boilerplate all need handling.
 - Gutenberg TXT: chapter headings can sit inside `[Illustration: …]` blocks.
 - Dialogue detection covers “curly” and "straight" double quotes only.
+- Front matter: tables of contents and title-page fragments ("IN PROSE", "BY") became chapters in
+  A Christmas Carol; dropped by title ("Contents", "List of Illustrations", also with page numbers) and by
+  "short and contains no sentence".
+
+### PDF (pdfminer.six, MIT — chosen over PyMuPDF, which is AGPL)
+
+- Work from text lines + geometry, not pdfminer's paragraph boxes: on OCR'd scans the boxes scramble
+  reading order ("There is no / The register of his / doubt whatever").
+- Typeset test PDFs (reportlab, with hyphenation, running headers, page numbers, footnote; one- and
+  two-column): 82/82 paragraphs exact, word similarity 1.0000.
+- 1911 scanned edition of A Christmas Carol (archive.org OCR layer): the five staves found; 98.0–98.7%
+  word match against the Gutenberg EPUB per stave (OCR errors + edition differences); ~15% more paragraph
+  breaks than the EPUB.
+- Lessons: running headers on scans sit at 8–11% of page height and OCR reports their capitals ~2x body
+  size; masking roman numerals for recurrence made "Chapter I/II" look like a running header (mask digits
+  only, and key recurrence by size class); the left margin is the *smallest common* left edge, not the most
+  common (dialogue-heavy pages are mostly indents); column detection must allow a short final column;
+  OCR emits old-style running quotes as lone `"` fragments floating between lines — drop them.
+- No OCR is done: PDFs without a text layer are rejected with a pointer to `ocrmypdf`. OCR word errors
+  ("Stave Oxe", "wdth") pass through; an LLM correction pass would be the place to fix them.
 
 ## Casting
 

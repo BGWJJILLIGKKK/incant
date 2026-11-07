@@ -33,7 +33,7 @@ is content-cached per segment, so it always runs but only renders what changed.
 
 | # | Stage | Writes (in `work/<slug>/`) | Methods |
 |---|---|---|---|
-| 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `txt`, `url` |
+| 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `pdf`, `txt`, `url` |
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
 | 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `speakers` (LLM) |
 | 4 | `normalize` | `speech/<chapter>.json` (spans + TTS-ready `say`), `speech/changes.txt` | `rules`, `none` |

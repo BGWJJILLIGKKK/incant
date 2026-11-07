@@ -8,3 +8,4 @@ __pycache__/
 !/voices/voices.json
 incant.local.toml
 /books/
+/logs/

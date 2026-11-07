@@ -31,7 +31,7 @@ class BookMeta(BaseModel):
     author: str | None = None
     language: str = "en"
     source: str  # original path or URL
-    source_format: Literal["txt", "epub", "url", "md"]
+    source_format: Literal["txt", "epub", "url", "md", "pdf"]
     cover: str | None = None  # filename inside the work dir
     series: str | None = None
     series_index: float | None = None

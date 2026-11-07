@@ -29,6 +29,9 @@ _PATTERN = re.compile(
     re.I,
 )
 _DIVISION = re.compile(rf"^(?:part|book|volume)\s+{_NUMBER}\b", re.I)
+_NON_TEXT = re.compile(r"^(table of )?contents\.?$|^list of (illustrations|plates|figures)\.?$|^illustrations\.?$", re.I)
+MIN_LEADING_WORDS = 40
+_SENTENCE = re.compile(r"[a-z][.!?][”’\"']?(\s|$)")  # shorter chapters before the first real one are title-page fragments
 MAX_HEADING_LEN = 80
 MIN_FRONT_MATTER_WORDS = 40  # text before the first heading shorter than this is title-page noise
 
@@ -93,7 +96,19 @@ def _cleanup(chunks: list[_Raw]) -> tuple[list[_Raw], list[str]]:
             break
         out.append(rest[i])
         i += 1
-    return out, notes
+    # Contents / illustration lists are navigation, not text to read aloud.
+    kept = []
+    for c in out:
+        if _NON_TEXT.match(re.sub(r"^(?:[ivxlc]+|\d+)\s+|\s+(?:[ivxlc]+|\d+)$", "", c.title.strip(), flags=re.I)):
+            notes.append(f"dropped '{c.title}' ({c.words} words): table of contents / list")
+        else:
+            kept.append(c)
+    # Title-page fragments ("A CHRISTMAS CAROL" / "IN PROSE", "BY") before the first real chapter: short and
+    # without a single sentence. A short chapter of real prose is kept.
+    while len(kept) > 1 and kept[0].words < MIN_LEADING_WORDS and not any(_SENTENCE.search(p) for p in kept[0].paras):
+        notes.append(f"dropped leading fragment '{kept[0].title}' ({kept[0].words} words)")
+        kept.pop(0)
+    return kept, notes
 
 
 def split_chapters(text: str) -> tuple[list[_Raw], str, list[str]]:

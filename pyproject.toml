@@ -13,6 +13,7 @@ dependencies = [
     "trafilatura>=1.12",
     "num2words>=0.5",
     "numpy>=1.26",
+    "pdfminer.six>=20231228",
 ]
 
 [project.optional-dependencies]
@@ -22,7 +23,7 @@ qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
 incant = "incant.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "reportlab>=4", "pyphen>=0.14"]
 
 [build-system]
 requires = ["hatchling"]

@@ -35,7 +35,7 @@ def test_split_by_pattern_drops_toc_and_short_front_matter():
 
 
 def test_headings_fold_parts_and_drop_other_empty_headings():
-    t = _text("# Contents", "# Part One", "# Chapter 1", "words " * 10, "# Chapter 2", "more " * 10)
+    t = _text("# Contents", "# Part One", "# Chapter 1", "Some words. " * 5, "# Chapter 2", "More words. " * 5)
     chunks, method, notes = split_chapters(t)
     assert method == "headings"
     assert [c.title for c in chunks] == ["Part One: Chapter 1", "Chapter 2"]
@@ -116,3 +116,11 @@ def test_trim_silence_keeps_padding():
     with wave.open(io.BytesIO(out)) as w:
         n = w.getnframes()
     assert n == 100 + 2 * (rate * 40 // 1000)
+
+
+def test_front_matter_fragments_and_contents_dropped():
+    t = _text("# A CHRISTMAS CAROL", "IN PROSE", "# A Ghost Story", "BY", "# CHARLES DICKENS", "Preface. " * 60,
+              "# CONTENTS", "Stave One 1 Stave Two 20 " * 4, "# STAVE ONE.", "marley " * 100)
+    chunks, _, notes = split_chapters(t)
+    assert [c.title for c in chunks] == ["CHARLES DICKENS", "STAVE ONE."]
+    assert any("table of contents" in n for n in notes) and any("leading fragment" in n for n in notes)

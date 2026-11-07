@@ -47,16 +47,22 @@ against the hardware below; where something is a judgement rather than a measure
 - Same-passage co-occurrence is evidence, not a rule (true links co-occur up to 3x).
 - Results: P&P main cast correct (Elizabeth/Lizzy/Eliza/Miss Bennet; Lydia = Mrs. Wickham; Charlotte =
   Mrs. Collins). Holmes harder: anthology casts and bare first names ("John") create false hubs.
-- Known gaps: Kitty/Catherine split; unnamed speakers ("the housekeeper") dropped; ages judged per
-  passage (Mr. Bennet "adult", not older); preface authors listed as characters.
+- Known gaps: Kitty/Catherine split; ages judged per passage (Mr. Bennet "adult", not older); preface
+  authors listed as characters; aliases still land on the wrong person (Bob Cratchit "aka Mr. Scrooge").
+- Role names ("Scrooge's nephew", "the clerk") are kept for characters who speak and linked to named
+  characters through their descriptions. Bare titles ("the Spirit", "the Ghost") are pooled per chapter —
+  globally they merged all of Dickens's ghosts into one.
+- Extraction windows of 5000 words were too big for a 9B model (Dickens: 10 windows, aliases on the wrong
+  people); 2000 is better but slower (P&P parse ~27 min).
 - Cost: ~10 min per novel on this hardware.
 
 ## Attribution (`attribute/speakers`)
 
 | Gold set | Quotes | Accuracy |
 |---|---|---|
-| Pride and Prejudice ch. I–II (third person) | 64 | 93.8% |
-| Sherlock Holmes, "A Scandal in Bohemia" opening (first person) | 48 | 91.7% |
+| Pride and Prejudice ch. I–II (third person) | 64 | 93.8% → 96.9% |
+| Sherlock Holmes, "A Scandal in Bohemia" opening (first person) | 48 | 91.7% → 95.8% |
+| A Christmas Carol, Stave One (unnamed/role speakers) | 59 | 55.9% → 93.2% |
 
 - Whole P&P: 1,792 quotations, 97% attributed, ~8 min.
 - Error types: untagged alternation, addressee mistaken for speaker, letters/notes read aloud, quoted
@@ -64,7 +70,13 @@ against the hardware below; where something is a judgement rather than a measure
 - First-person detection by "I/me/my" per 1000 narration words separates cleanly (P&P 0.8, Holmes 26.7);
   one LLM call names the narrator (Watson, correctly).
 - Stale rosters are dangerous: with the grammar forcing a roster id, a missing character's lines go to
-  someone else entirely.
+  someone else entirely (Christmas Carol: Fred, unnamed in Stave One, lost all 19 lines to Topper).
+- Unnamed speakers: an "other" answer with a role label + gender becomes a minor character per chapter
+  (Christmas Carol unknowns 133 -> 0). A "narrator" answer for quoted words nobody speaks ("nuts", titles).
+  In first-person books "narrator" maps to the narrating character.
+- Roster size matters both ways: every speaking character in every roster fixed Fred but cost P&P
+  95.3% -> 87.5% (distractors). What works: chapter characters + top 10 + anyone named in the chapter text
+  + speaking characters whose described role ("Scrooge's nephew") appears in it ("the nephew").
 
 ## TTS (IndexTTS-2.5 over HTTP)
 

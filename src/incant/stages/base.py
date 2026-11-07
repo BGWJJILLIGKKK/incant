@@ -38,6 +38,7 @@ class Context:
     wd: WorkDir | None = None  # set by ingest (or by the CLI when resuming a book)
     slug: str | None = None
     out: Path | None = None  # final output path override
+    out_dir: Path | None = None  # final output directory (batch runs: <out_dir>/<slug>.<ext>)
     chapters: set[str] | None = None  # restrict per-chapter stages to these ids
     log: Callable[[str], None] = field(default=lambda msg: print(msg, flush=True))
     results: dict[str, object] = field(default_factory=dict)  # stage name -> return value

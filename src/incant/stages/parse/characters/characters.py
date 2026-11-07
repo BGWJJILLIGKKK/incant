@@ -39,7 +39,9 @@ __all__ = ["CharactersParse"]
 
 
 class CharactersSettings(BaseModel):
-    window_words: int = 5000  # chapters longer than this are split for extraction
+    # Chapters longer than this are split for extraction. A 9B model gets sloppy on big windows (aliases
+    # attached to the wrong person, characters missed): 2000 words is close to a typical novel chapter.
+    window_words: int = 2000
     think: bool = False  # for extraction: ~10x slower per window for little gain
     max_tokens: int = 4096
     # Linking: a fast answer is accepted when the names corroborate it ("George Wickham" ⊇ "Wickham");
@@ -79,8 +81,8 @@ class _Link(BaseModel):
 EXTRACT_SYSTEM = """You extract the cast of characters from a passage of a novel, for an audiobook production.
 List every individual person (or individual speaking creature) who appears, speaks, or is referred to by name.
 Rules:
-- name: the name or title the passage uses for the person, exactly as written ("Mr. Darcy", "Lizzy", "the Colonel"). If a person is never named but speaks, use their role as written ("the housekeeper").
-- aliases: other names, nicknames or titles the passage uses for that SAME person, exactly as written. Never pronouns, never descriptions ("a young man", "his wife", "her sister").
+- name: the name or title the passage uses for the person, exactly as written ("Mr. Darcy", "Lizzy", "the Colonel"). If the passage never names someone who speaks, use the role it gives them, exactly as written ("Scrooge's nephew", "the clerk", "the first gentleman").
+- aliases: other names, nicknames or titles the passage uses for that SAME person, exactly as written, including a role the dialogue tags use ("said the nephew", "the Spirit"). Never pronouns, and never references relative to someone else in the scene ("his wife", "her sister", "a young man").
 - Never merge two different people, even relatives who share a surname (Mr. Smith and Mrs. Smith are different people).
 - Do not list groups ("the girls", "the Smiths", "the officers").
 - gender: from pronouns, titles or explicit statements; "unknown" if not evident.
@@ -132,12 +134,28 @@ def _is_bad_name(n: str) -> bool:
     return bool(_GROUP.search(n))
 
 
+_ROLE = re.compile(r"^(?:the|[A-Z][\w.-]*'s)\s+(?:[A-Za-z][\w-]*\s+){0,3}[A-Za-z][\w-]*$")
+_ROLE_STOP = _PRONOUNS | {"and", "one", "other", "others", "same", "two", "three", "people", "men", "women", "ladies",
+                          "gentlemen", "children", "family", "party", "company", "crowd", "girls", "boys"}
+
+
+def is_role(n: str) -> bool:
+    """A role reference that can stand in for an unnamed speaker: "the nephew", "Scrooge's nephew",
+    "the first gentleman". Not groups, not references relative to the scene ("his wife")."""
+    n = _norm(n)
+    if not _ROLE.match(n) or _REFERENCE_PREFIX.match(n) or "(" in n:
+        return False
+    words = [w.casefold() for w in re.findall(r"[A-Za-z]+", n)]
+    return len(words) <= 5 and not any(w in _ROLE_STOP for w in words[1:])
+
+
 def clean_aliases(name: str, aliases: list[str], text: str | None = None) -> list[str]:
-    """Keep real names/titles that occur in `text` (when given); drop pronouns and descriptions."""
+    """Keep real names/titles and role references ("the nephew") that occur in `text` (when given);
+    drop pronouns and scene-relative descriptions."""
     out = []
     for a in aliases:
         a = _norm(a)
-        if a.casefold() == name.casefold() or _is_bad_name(a) or (text is not None and not _occurs(a, text)):
+        if a.casefold() == name.casefold() or (_is_bad_name(a) and not is_role(a)) or (text is not None and not _occurs(a, text)):
             continue
         if a not in out:
             out.append(a)
@@ -162,6 +180,8 @@ class Entry:
     chapters: list[str] = field(default_factory=list)
     mentions: int = 0
     speaks: bool = False
+    role: bool = False  # the name is a role ("Scrooge's nephew"), not a proper name
+    scoped: bool = False  # a bare title ("the Spirit") that means someone different chapter to chapter
 
     @property
     def aliases(self) -> list[str]:
@@ -199,12 +219,26 @@ def pool(mentions: list[tuple[str, str, _Mention]]) -> list[Entry]:
     entries: dict[str, Entry] = {}
     for chapter, text, m in mentions:
         name = _norm(m.name)
-        if _is_bad_name(name) or not _occurs(name, text):
+        role = _is_bad_name(name) and is_role(name)
+        if (_is_bad_name(name) and not role) or not _occurs(name, text):
             continue
         key = " ".join(re.findall(r"[a-z0-9]+", name.casefold()))
-        e = entries.setdefault(key, Entry(name=name))
+        scoped = bool(_BARE_TITLE.match(name))
+        if scoped:  # "the Spirit" in stave two and stave three are different beings: pool per chapter
+            key = f"{key}@{chapter}"
+        e = entries.setdefault(key, Entry(name=name, role=role, scoped=scoped))
         e.add(m, chapter, text)
-    return sorted(entries.values(), key=lambda e: (-e.mentions, e.name))
+    # A role is only worth a character if that person speaks; otherwise it's just a description.
+    return sorted((e for e in entries.values() if not e.role or e.speaks), key=lambda e: (-e.mentions, e.name))
+
+
+_BARE_TITLE = re.compile(r"^the\s+[A-Z][a-z]+$")  # "the Spirit", "the Ghost", "the Colonel", "the Doctor"
+
+
+def role_words(name: str) -> set[str]:
+    """The role nouns of a role name: "Scrooge's nephew" -> {"nephew"}; "the first gentleman" -> {"first", "gentleman"}."""
+    n = re.sub(r"^(the\s+|[\w.-]+'s\s+)", "", _norm(name), flags=re.I)
+    return {w.casefold() for w in re.findall(r"[A-Za-z]{4,}", n)}
 
 
 def confident_gender(genders: Counter) -> str | None:
@@ -230,15 +264,30 @@ def candidates(entries: list[Entry], j: int, limit: int = 6) -> list[int]:
         o = entries[i]
         if not compatible(e.genders, o.genders):
             continue
+        if (e.scoped or o.scoped) and not set(e.chapters) & set(o.chapters):
+            continue  # a bare title only refers to someone in the same chapter
         co = core_tokens(o.name)
         names_i = {o.name.casefold(), *(a.casefold() for a in o.aliases)}
-        if (ct and co and (ct <= co or co <= ct)) or (names_j & names_i):
+        if (ct and co and (ct <= co or co <= ct)) or (names_j & names_i) or _role_described(e, o) or _role_described(o, e):
             out.append(i)
     return out[:limit]
 
 
+def _role_described(role: Entry, other: Entry) -> bool:
+    """A role entry ("Scrooge's nephew") may be a named character whose description has that role ("Fred:
+    Scrooge's cheerful nephew")."""
+    if not role.role or other.role:
+        return False
+    words = role_words(role.name)
+    text = " ".join(other.descriptions + other.aliases).casefold()
+    return bool(words) and all(re.search(rf"\b{re.escape(w)}", text) for w in words)
+
+
 def corroborated(a: Entry, b: Entry) -> bool:
-    """Names alone support a link: one name's core words contain the other's ("George Wickham" ⊇ "Mr. Wickham")."""
+    """Names alone support a link: one name's core words contain the other's ("George Wickham" ⊇ "Mr. Wickham").
+    Roles never corroborate by name ("Scrooge's nephew" contains "Scrooge")."""
+    if a.role or b.role:
+        return False
     ca, cb = core_tokens(a.name), core_tokens(b.name)
     return bool(ca and cb and (ca <= cb or cb <= ca))
 
@@ -283,7 +332,7 @@ def canonical_name(members: list[Entry], aliases: list[str], claims: dict[str, C
         for a, n in e.alias_counts.items():
             if a in aliases and len(claims.get(a, {})) == 1:
                 uses[a] += n
-    return max(uses, key=lambda n: (len(core_tokens(n)) >= 2, uses[n], len(n)))
+    return max(uses, key=lambda n: (not (_is_bad_name(n) and is_role(n)), len(core_tokens(n)) >= 2, uses[n], len(n)))
 
 
 def build_characters(groups: list[list[Entry]]) -> list[Character]:

@@ -12,6 +12,14 @@ def test_numbers_spelled_out():
     assert compare("the two third he danced", "the 2-3rd he danced").edits == 0
 
 
+def test_contractions_and_initials_compare_equal():
+    from incant.qa import compare
+
+    assert compare("What’s today!", "What is today?").edits == 0
+    assert compare("Thank’ee,", "Thank you.").edits == 0
+    assert compare("C. D.", "CD.").edits == 0
+
+
 def test_edit_distance_and_short_line_tolerance():
     assert edit_distance("a b c d".split(), "a x c".split()) == 2
     assert Check(wer=1.0, edits=1, heard="").ok(0.25)          # one-word line misheard: whisper noise

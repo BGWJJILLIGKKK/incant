@@ -280,7 +280,7 @@ function renderCast() {
     const others = (shared[v] || []).filter(x => x !== c.id).map(nameOf);
     const sel = (field, list) => c.id === "narrator" ? "" : `<select data-char="${c.id}" data-field="${field}">${list.map(x => `<option ${x === c[field] ? "selected" : ""}>${x}</option>`).join("")}</select>`;
     return `<tr>
-      <td><span class="swatch" style="--h:${hue(c.id)}"></span><b>${esc(c.canonical_name)}</b>${c.locked ? ` <span class="badge manual">edited</span>` : ""}
+      <td><span class="swatch" style="--h:${hue(c.id)}"></span><b>${esc(c.canonical_name)}</b>${c.locked ? ` <span class="badge manual">edited</span>` : ""}${c.origin === "attribution" ? ` <span class="badge" title="An unnamed speaker identified during attribution, in chapter ${esc((c.chapters || [])[0] || "")}">unnamed · ch ${parseInt((c.chapters || ["0"])[0], 10)}</span>` : ""}
           ${c.aliases?.length ? `<div class="aka">${esc(c.aliases.slice(0, 4).join(", "))}</div>` : ""}</td>
       <td>${sel("gender", b.genders)}</td><td>${sel("age", b.ages)}</td>
       <td>${c.line_count ?? ""}</td>

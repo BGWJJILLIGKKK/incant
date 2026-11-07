@@ -11,13 +11,15 @@ unlabelled context; windows run in parallel (bounded by the LLM token budget).
 from __future__ import annotations
 
 import re
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Literal
 
 from pydantic import BaseModel, Field, create_model
 
 from ....llm import LLM, LLMError
-from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Span, SpanKind
+from ....normalize import slugify
+from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Gender, Span, SpanKind
 from ...base import Context
 from ..base import AttributeMethod
 from ..spans import keep_locked, split_chapter
@@ -25,6 +27,7 @@ from ..spans import keep_locked, split_chapter
 __all__ = ["SpeakersAttribute"]
 
 UNKNOWN = "unknown"
+OTHER = "other"  # an unnamed speaker identified by role ("the charwoman"); becomes a minor character
 UNNAMED = "unnamed"
 _FIRST_PERSON = re.compile(r"\b(I|me|my|myself)\b")
 _NEUTRAL = re.compile(r"^\s*(neutral|plain|normal|calm|none|flat|matter[- ]of[- ]fact)\s*$", re.I)
@@ -35,6 +38,10 @@ class SpeakersSettings(BaseModel):
     max_window_words: int = 2500
     context_paragraphs: int = 4  # unlabelled paragraphs shown before each window
     roster_top: int = 10  # always include the N most-mentioned characters, besides those in the chapter
+    # Books with at most this many speaking characters put all of them in every roster. Off by default:
+    # extra names are distractors (P&P ch. I-II: 95.3% -> 87.5% with all 36). The text-based additions in
+    # roster_for() cover characters the per-chapter data misses without that cost.
+    full_roster_max: int = 0
     think: bool = False
     max_tokens: int = 4096
     max_tokens_thinking: int = 8192
@@ -49,7 +56,10 @@ class SpeakersSettings(BaseModel):
 SYSTEM = """You label who speaks each quotation in a passage of a novel, for a multi-voice audiobook.
 Quotations to label are marked ⟦n⟧. For EVERY marker, in order, give:
 - cue: the evidence for the speaker, briefly: the dialogue tag ("tag: said his wife"), or "same paragraph as ⟦n⟧", or "reply to ⟦n⟧ (alternation)", or what the words reveal ("addresses Mr. Bennet").
-- speaker: the id of the character (from CHARACTERS) who says those words aloud, or "unknown" if it cannot be determined or the speaker is not listed.
+- speaker: the id of the character (from CHARACTERS) who says those words aloud. If the speaker is not in CHARACTERS but the passage identifies them by a role or description (a businessman, the charwoman, a boy in the street), use "other". Use "unknown" only when you cannot tell who speaks.
+- speaker "narrator": for quotation marks around words nobody says aloud in the scene: a quoted word or phrase, a title, a sign, a saying, or speech that is only imagined or hypothetical.
+- other_role: only when speaker is "other": that person's role in a few words, the same wording every time they speak ("first businessman", "the charwoman"); otherwise "".
+- other_gender: only when speaker is "other": "male", "female" or "unknown"; otherwise "unknown".
 - emotion: a few words for how it is said, as an actor's direction (e.g. "teasing, amused", "sharp irritation", "quiet grief", "eager excitement"), or "neutral".
 - intensity: 0.0 to 1.0, how strongly that emotion colours the delivery (0.2 slight, 0.5 clear, 0.8 strong).
 Deciding the speaker:
@@ -84,18 +94,47 @@ who the narrator ("I") is. Give a one-sentence reason, then the character id, or
 never named or is not in the list."""
 
 
+def role_key(role: str) -> str:
+    """Normalised role for grouping: "The Charwoman" / "a charwoman" / "charwoman," -> "charwoman"."""
+    words = re.findall(r"[a-z0-9'’-]+", role.casefold())
+    while words and words[0] in ("the", "a", "an"):
+        words = words[1:]
+    return " ".join(words)
+
+
 def first_person_rate(spans: list[Span]) -> float:
     text = " ".join(s.text for s in spans if s.kind is SpanKind.narration)
     return 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split()))
 
 
-def roster_for(chars: CharacterList, chapter_id: str, top: int) -> list[Character]:
-    """The chapter's characters plus the book's `top` most-mentioned. Without per-chapter data (older
-    characters.json) every speaking character is included, so nobody who talks is missing."""
+# Relationship/role nouns that dialogue tags use for characters ("said the nephew", "his clerk").
+ROLE_NOUNS = {"nephew", "niece", "uncle", "aunt", "cousin", "brother", "sister", "mother", "father", "son", "daughter",
+              "wife", "husband", "widow", "clerk", "servant", "maid", "housekeeper", "butler", "landlord", "landlady",
+              "master", "mistress", "doctor", "captain", "colonel", "inspector", "constable", "governess", "nurse",
+              "coachman", "footman", "porter", "lawyer", "partner", "girl", "boy", "child", "grandmother", "grandfather"}
+
+
+def roster_for(chars: CharacterList, chapter_id: str, top: int, full_max: int = 0, text: str = "") -> list[Character]:
+    """The chapter's characters, the book's `top` most-mentioned, and — from the chapter text — anyone named
+    there (by name or alias) and speaking characters whose described role appears there ("Scrooge's nephew"
+    for a stave that only says "the nephew"). Without per-chapter data, or for small casts when full_max
+    allows, every speaking character."""
     ranked = sorted(chars.characters, key=lambda c: -c.mentions)
     keep = {c.id for c in ranked[:top]} | {c.id for c in chars.characters if chapter_id in c.chapters}
-    if not any(c.chapters for c in chars.characters):
-        keep |= {c.id for c in chars.characters if c.speaks}
+    if text:
+        low = text.casefold()
+        words = set(re.findall(r"[a-z]+", low))
+        for c in chars.characters:
+            if c.origin != "profile":
+                continue
+            if any(len(n) >= 3 and re.search(rf"(?<!\w){re.escape(n.casefold())}(?!\w)", low)
+                   for n in (c.canonical_name, *c.aliases)):
+                keep.add(c.id)
+            elif c.speaks and c.description and (set(re.findall(r"[a-z]+", c.description.casefold())) & ROLE_NOUNS & words):
+                keep.add(c.id)
+    speaking = {c.id for c in chars.characters if c.speaks and c.origin == "profile"}
+    if not any(c.chapters for c in chars.characters) or len(speaking) <= full_max:
+        keep |= speaking
     return [c for c in ranked if c.id in keep]
 
 
@@ -111,9 +150,11 @@ def roster_text(roster: list[Character], narrator: str | None = None) -> str:
 
 
 def label_schema(n: int, ids: list[str]) -> type[BaseModel]:
-    speaker_t = Literal[tuple(ids + [UNKNOWN])]  # type: ignore[valid-type]
+    speaker_t = Literal[tuple(ids + [OTHER, UNKNOWN])]  # type: ignore[valid-type]
     marker_t = Literal[tuple(range(1, n + 1))]  # type: ignore[valid-type]
     Label = create_model("Label", id=(marker_t, ...), cue=(str, Field(max_length=80)), speaker=(speaker_t, ...),
+                         other_role=(str, Field(max_length=40)),
+                         other_gender=(Literal["male", "female", "unknown"], ...),
                          emotion=(str, Field(max_length=40)), intensity=(float, Field(ge=0.0, le=1.0)))
     return create_model("Labels", quotes=(list[Label], Field(min_length=n, max_length=n)))
 
@@ -159,6 +200,8 @@ class SpeakersAttribute(AttributeMethod):
         if not chars or not chars.characters:
             raise RuntimeError("speakers needs characters.json — run the parse stage with the 'characters' method")
         llm = LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
+        # Unnamed speakers from a previous run are rebuilt below (hand-edited ones are kept).
+        chars.characters = [c for c in chars.characters if c.origin != "attribution" or c.locked]
         chars.narrator = self._find_narrator(llm, wd, chars, ctx)
         wd.write_characters(chars)
 
@@ -176,13 +219,14 @@ class SpeakersAttribute(AttributeMethod):
                 if not paras or paras[-1][0].para != s.para:
                     paras.append([])
                 paras[-1].append(s)
-            roster = roster_for(chars, ch.id, self.settings.roster_top)
+            roster = roster_for(chars, ch.id, self.settings.roster_top, self.settings.full_roster_max,
+                                text=wd.read_chapter_text(ch.file))
             if chars.narrator and chars.narrator != NARRATOR_ID and chars.narrator not in {c.id for c in roster}:
                 roster.insert(0, next(c for c in chars.characters if c.id == chars.narrator))
             for a, b in windows(paras, self.settings.max_quotes, self.settings.max_window_words):
                 jobs.append((ch.id, paras[max(0, a - self.settings.context_paragraphs):a], paras[a:b], roster, chars.narrator))
 
-        labels: dict[str, tuple[str, Emotion | None]] = {}
+        labels: dict[str, tuple] = {}
         failed = 0
         with ThreadPoolExecutor(max_workers=max(1, self.cfg.llm.concurrency)) as ex:
             futs = [ex.submit(self._label, llm, *j) for j in jobs]
@@ -195,13 +239,18 @@ class SpeakersAttribute(AttributeMethod):
                 if done % 20 == 0 or done == len(jobs):
                     ctx.log(f"  labelled {done}/{len(jobs)} windows")
 
+        minor = self._minor_characters(chars, labels, book)
         counts: dict[str, int] = {}
         total = unknown = locked = 0
         for cid, spans in book.items():
             for s in spans:
                 if s.kind is SpanKind.dialogue:
                     total += 1
-                    who, emo = labels.get(s.id, (UNKNOWN, None))
+                    who, emo, role, _ = labels.get(s.id, (UNKNOWN, None, "", "unknown"))
+                    if who == OTHER:
+                        who = minor.get((cid, role_key(role)), UNKNOWN)
+                    elif who == NARRATOR_ID and chars.narrator and chars.narrator != NARRATOR_ID:
+                        who = chars.narrator  # first person: the narrator *is* that character (same voice)
                     s.speaker = None if who == UNKNOWN else who
                     s.emotion = emo
             locked += keep_locked(wd, cid, spans)  # hand-reviewed labels win
@@ -218,11 +267,48 @@ class SpeakersAttribute(AttributeMethod):
             for c in chars.characters:
                 c.line_count = counts.get(c.id, 0)
             wd.write_characters(chars)
+        n_minor = len(set(minor.values()))
         ctx.log(f"  {total:,} quotations: {total - unknown:,} attributed, {unknown:,} unknown"
+                + (f"; {n_minor} unnamed speakers added as minor characters" if n_minor else "")
                 + (f"; WARNING {failed} windows failed" if failed else ""))
         top = sorted(counts.items(), key=lambda kv: -kv[1])[:10]
         ctx.log("  most lines: " + ", ".join(f"{k} {v}" for k, v in top))
         return counts
+
+    @staticmethod
+    def _minor_characters(chars: CharacterList, labels: dict[str, tuple], book: dict[str, list[Span]]) -> dict:
+        """Turn "other" labels into minor characters, one per (chapter, role). A role that names an existing
+        character's alias maps to that character instead. Returns {(chapter, role key): character id}."""
+        by_alias = {}
+        for c in chars.characters:
+            for n in (c.canonical_name, *c.aliases):
+                by_alias.setdefault(role_key(n), c.id)
+        roles: dict[tuple[str, str], dict] = {}
+        for cid, spans in book.items():
+            for s in spans:
+                who, _, role, gender = labels.get(s.id, (UNKNOWN, None, "", "unknown"))
+                k = role_key(role)
+                if who == OTHER and k:
+                    r = roles.setdefault((cid, k), {"label": role.strip(), "genders": Counter()})
+                    r["genders"][gender] += 1
+        out: dict[tuple[str, str], str] = {}
+        existing = {c.id for c in chars.characters}
+        for (cid, k), r in roles.items():
+            if k in by_alias:
+                out[(cid, k)] = by_alias[k]
+                continue
+            mid = f"minor-{cid}-{slugify(k)}"
+            out[(cid, k)] = mid
+            if mid in existing:  # a hand-edited (locked) one from a previous run
+                continue
+            known = {g: n for g, n in r["genders"].items() if g != "unknown"}
+            gender = max(known, key=known.get) if known else "unknown"
+            label = r["label"][0].upper() + r["label"][1:]
+            chars.characters.append(Character(id=mid, canonical_name=label, gender=Gender(gender), chapters=[cid],
+                                              first_chapter=cid, speaks=True, origin="attribution",
+                                              description="unnamed speaker identified during attribution"))
+            existing.add(mid)
+        return out
 
     def _find_narrator(self, llm: LLM, wd, chars: CharacterList, ctx: Context) -> str | None:
         """None for third-person books; else the narrating character's id (or NARRATOR_ID if unnamed)."""
@@ -247,7 +333,7 @@ class SpeakersAttribute(AttributeMethod):
     def _label(self, llm: LLM, chapter: str, context, window, roster: list[Character],
                narrator: str | None = None) -> dict[str, tuple[str, Emotion | None]]:
         text, markers = render_passage(context, window)
-        ids = [c.id for c in roster] + ([NARRATOR_ID] if narrator == NARRATOR_ID else [])
+        ids = [c.id for c in roster] + [NARRATOR_ID]
         schema = label_schema(len(markers), ids)
         note = ""
         if narrator:
@@ -261,7 +347,7 @@ class SpeakersAttribute(AttributeMethod):
         for q in r.quotes:
             sid = markers.get(q.id)
             if sid and sid not in out:
-                out[sid] = (q.speaker, self.emotion(q.emotion, q.intensity))
+                out[sid] = (q.speaker, self.emotion(q.emotion, q.intensity), q.other_role, q.other_gender)
         return out
 
 

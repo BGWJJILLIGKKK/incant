@@ -88,6 +88,9 @@ class Character(BaseModel):
     speaks: bool = False  # has quoted dialogue somewhere
     line_count: int = 0  # dialogue spans attributed (filled by attribution); drives voice pooling
     locked: bool = False  # set by a human: re-runs must not overwrite
+    # "profile": found by character profiling; "attribution": an unnamed speaker created while attributing
+    # dialogue ("the charwoman"), scoped to one chapter and rebuilt on every attribution run
+    origin: Literal["profile", "attribution"] = "profile"
 
 
 class CharacterList(BaseModel):

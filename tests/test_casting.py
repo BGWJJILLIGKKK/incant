@@ -55,3 +55,21 @@ def test_auto_roles_recast_but_manual_edits_kept():
     auto_cast(cast, chars, spans, better)
     assert cast.roles["b"] == "f_teen" and "b" not in cast.auto  # manual kept
     assert cast.roles["a"] == "m_new" and cast.auto["a"] == "m_new"  # auto recomputed with new voice
+
+
+def test_unnamed_speakers_become_minor_characters():
+    from incant.schemas import CharacterList
+    from incant.stages.attribute.speakers.speakers import OTHER, SpeakersAttribute, role_key
+
+    assert role_key("The Charwoman,") == role_key("a charwoman") == "charwoman"
+    chars = CharacterList(characters=[Character(id="fred", canonical_name="Fred", aliases=["the nephew"])])
+    book = {"0004": lines("0004", None, None, None, None)}
+    ids = [s.id for s in book["0004"]]
+    labels = {ids[0]: (OTHER, None, "the charwoman", "female"), ids[1]: (OTHER, None, "Charwoman", "unknown"),
+              ids[2]: (OTHER, None, "first businessman", "male"), ids[3]: (OTHER, None, "the nephew", "male")}
+    out = SpeakersAttribute._minor_characters(chars, labels, book)
+    assert out[("0004", "charwoman")] == "minor-0004-charwoman"
+    assert out[("0004", "nephew")] == "fred"  # a known alias maps to the existing character
+    made = {c.id: c for c in chars.characters if c.origin == "attribution"}
+    assert set(made) == {"minor-0004-charwoman", "minor-0004-first-businessman"}
+    assert made["minor-0004-charwoman"].gender.value == "female" and made["minor-0004-charwoman"].chapters == ["0004"]

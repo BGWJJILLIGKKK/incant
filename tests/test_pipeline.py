@@ -210,3 +210,22 @@ def test_review_book_api(setup):
     assert book.save_cast({"character": "narrator", "voice": None})["roles"].get("narrator") is None
     book.save_lexicon({"Ann": "Anne", " ": "x"})
     assert tomllib.loads((tmp / "work" / "test-book" / "lexicon.toml").read_text())["words"] == {"Ann": "Anne"}
+
+
+@pytest.mark.skipif(not HAVE_FFMPEG, reason="ffmpeg not installed")
+def test_batch_directory(setup, capsys):
+    tmp, src, conf = setup
+    books = tmp / "books"
+    books.mkdir()
+    src.rename(books / "a.epub")
+    (books / "b.txt").write_text("Title: Little Book\n\nChapter 1\n\nIt was short. “Yes,” said Bo.\n\nChapter 2\n\nThe end came.\n")
+    (books / "notes.docx").write_bytes(b"x")       # unsupported: skipped
+    (books / "c.epub").write_bytes(b"not an epub")  # fails: reported, batch continues
+    outs = tmp / "audiobooks"
+    rc = main([str(books), "-c", str(conf), "-o", str(outs)])
+    log = capsys.readouterr()
+    assert rc == 1  # one failure
+    assert "skip: notes.docx" in log.out and "batch finished: 2 ok, 1 failed" in log.out
+    assert sorted(p.name for p in outs.iterdir()) == ["little-book.m4b", "test-book.m4b"]
+    assert main([str(books), "-c", str(conf), "--slug", "x"]) == 2
+    assert main([str(books), "-c", str(conf), "-o", str(tmp / "one.m4b")]) == 2

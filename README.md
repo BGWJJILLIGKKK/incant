@@ -13,6 +13,7 @@ The pipeline is spelled out on the command line, one method per stage:
 ./incant book.epub dummy out/test.m4b                  # override one stage; trailing path = output file
 ./incant book.epub synthesize=indextts                 # stage=method when a name is ambiguous
 ./incant pride-and-prejudice --from synthesize         # resume a book already in work/
+./incant books/ -o audiobooks/                         # batch: every epub/pdf/txt in books/, one by one
 ./incant --list                                        # stages and their methods
 ./incant book.epub --check                             # endpoints, voices, ffmpeg for the resolved plan
 ```
@@ -95,7 +96,8 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
 ## Quality checks
 
 - `eval/attribution.py eval/gold/<book>.json` scores speaker attribution against hand labels
-  (qwen3.5-9b: Pride and Prejudice ch. I–II 93.8%; Sherlock Holmes "A Scandal in Bohemia" opening 91.7%).
+  (qwen3.5-9b: Pride and Prejudice ch. I–II 96.9%; Sherlock Holmes "A Scandal in Bohemia" opening 95.8%;
+  A Christmas Carol Stave One 93.2%).
 - Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
   re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.
 

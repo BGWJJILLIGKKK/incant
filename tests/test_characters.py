@@ -124,3 +124,37 @@ def test_token_budget_limits_concurrency():
     [t.join() for t in ts]
     assert peak[0] == 2 and b.free == 100
     assert b.acquire(500) == 100  # oversized request is capped, runs alone
+
+
+def test_roles_kept_for_speakers_and_linked_by_description():
+    from incant.stages.parse.characters.characters import corroborated, is_role
+
+    assert is_role("Scrooge's nephew") and is_role("the nephew") and is_role("the first gentleman")
+    assert not is_role("his wife") and not is_role("the two Netherfield gentlemen") and not is_role("the girls")
+    text = "Fred, Scrooge's nephew, came in. “Merry Christmas!” said Scrooge's nephew. The nephew laughed."
+    entries = pool([("1", text, m("Fred", "male", desc="Scrooge's cheerful nephew")),
+                    ("1", text, m("Fred", "male")),
+                    ("2", text, m("Scrooge's nephew", "male", ["the nephew"], speaks=True)),
+                    ("2", text, m("the clerk", "male"))])  # a role that never speaks is dropped
+    by = {e.name: e for e in entries}
+    assert set(by) == {"Fred", "Scrooge's nephew"} and by["Scrooge's nephew"].role
+    assert "the nephew" in by["Scrooge's nephew"].aliases
+    j = [i for i, e in enumerate(entries) if e.role][0]
+    assert [entries[i].name for i in candidates(entries, j)] == ["Fred"]
+    assert not corroborated(by["Scrooge's nephew"], by["Fred"])  # a role link always gets the thinking check
+    chars = build_characters(clusters_from_links(entries, {j: 0}, lambda *_: None))
+    assert [c.canonical_name for c in chars] == ["Fred"] and "Scrooge's nephew" in chars[0].aliases
+
+
+def test_bare_titles_are_scoped_per_chapter():
+    text = "The Spirit spoke. The Ghost of Christmas Past and the Ghost of Christmas Present."
+    entries = pool([("0003", text, m("the Spirit", speaks=True)), ("0004", text, m("the Spirit", speaks=True)),
+                    ("0003", text, m("the Ghost of Christmas Past", aliases=["the Spirit"])),
+                    ("0004", text, m("the Ghost of Christmas Present", aliases=["the Spirit"]))])
+    spirits = [i for i, e in enumerate(entries) if e.name == "the Spirit"]
+    assert len(spirits) == 2 and all(entries[i].scoped for i in spirits)
+    for i in spirits:
+        e = entries[i]
+        cands = {entries[c].name for c in candidates(entries, i)} | {entries[k].name for k in range(len(entries)) if i in candidates(entries, k)}
+        ghost = "the Ghost of Christmas Past" if e.chapters == ["0003"] else "the Ghost of Christmas Present"
+        assert ghost in cands and len(cands - {ghost}) == 0

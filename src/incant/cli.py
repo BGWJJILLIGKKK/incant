@@ -8,7 +8,13 @@ The pipeline is spelled out by method names, one per stage, in stage order:
     ./incant pride-and-prejudice synthesize=indextts --from synthesize   # resume an ingested book
     ./incant pride-and-prejudice --review --host 0.0.0.0                  # review/edit page
 
-INPUT is a file, a URL, an existing book slug under work/, or a book work directory.
+INPUT is a file, a URL, an existing book slug under work/, or a book work directory. A directory of
+source files (no meta.json in it) is a batch: every supported file in it, by name, one after another,
+each through the whole pipeline; a failing book is reported and the batch continues.
+
+    ./incant books/                            # every epub/pdf/txt in books/
+    ./incant books/ dummy --until synthesize   # same methods/options for each
+    ./incant books/ -o audiobooks/             # outputs collected in one directory
 """
 
 from __future__ import annotations
@@ -63,7 +69,7 @@ def _plan_str(steps: list[Step]) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="incant", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("input", nargs="?", help="file, URL, book slug, or book work dir")
+    ap.add_argument("input", nargs="?", help="file, URL, book slug, book work dir, or a directory of files (batch)")
     ap.add_argument("methods", nargs="*", help="method per stage (bare name or stage=method); optional trailing output path")
     ap.add_argument("-c", "--config", type=Path, help="config TOML (default: incant.toml in cwd or $INCANT_HOME)")
     ap.add_argument("-o", "--out", type=Path, help="final output path")
@@ -85,8 +91,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.list:
         return cmd_list(stages, cfg)
 
-    # INPUT: new source, or an existing book (slug or work dir) to resume
+    # INPUT: new source, an existing book (slug or work dir) to resume, or a directory of sources (batch)
     source: str | None = args.input
+    if source and Path(source).is_dir() and not (Path(source) / "meta.json").exists():
+        if args.review:
+            print("error: --review needs one existing book, not a directory of sources", file=sys.stderr)
+            return 2
+        return run_batch(args, cfg, stages, Path(source))
     wd: WorkDir | None = None
     if source and not source.startswith(("http://", "https://")):
         p = Path(source)
@@ -144,6 +155,61 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {e}", file=sys.stderr)
         return 2
     return 0
+
+
+def run_batch(args, cfg, stages, folder: Path) -> int:
+    """Run the pipeline for every supported file in `folder` (not recursive), sequentially."""
+    if args.slug:
+        print("error: --slug names one book; a batch names each book from its title", file=sys.stderr)
+        return 2
+    files = sorted((f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")), key=lambda f: f.name.casefold())
+    plans: list[tuple[Path, list[Step], Path | None]] = []
+    for f in files:
+        try:
+            steps, out_path = resolve(args.methods, str(f), cfg, stages)
+        except ResolveError as e:
+            if "no method accepts" in str(e):
+                print(f"skip: {f.name} (not a supported source)")
+                continue
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+        plans.append((f, steps, out_path))
+    if not plans:
+        print(f"error: no supported source files in {folder}", file=sys.stderr)
+        return 2
+    out_dir = args.out or plans[0][2]
+    if out_dir is not None and out_dir.suffix and not out_dir.is_dir():
+        print(f"error: a batch writes one file per book — give an output directory, not '{out_dir}'", file=sys.stderr)
+        return 2
+    print(f"batch: {len(plans)} books from {folder}")
+    if args.dry_run:
+        for f, steps, _ in plans:
+            print(f"  {f.name}: {_plan_str(steps)}")
+        return 0
+    if out_dir:
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+    force = {x.strip() for x in args.force.split(",") if x.strip()}
+    done: list[tuple[str, object]] = []
+    failed: list[tuple[str, str]] = []
+    for n, (f, steps, _) in enumerate(plans, 1):
+        print(f"\n=== [{n}/{len(plans)}] {f.name}", flush=True)
+        print(f"plan: {_plan_str(steps)}", flush=True)
+        ctx = Context(cfg=cfg, source=str(f), out_dir=out_dir, chapters=_parse_chapters(args.chapters))
+        try:
+            run_pipeline(steps, ctx, start=args.start, stop=args.stop, force=force)
+            done.append((f.name, ctx.results.get("output") or (ctx.wd.root if ctx.wd else "")))
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:  # noqa: BLE001 — one bad book shouldn't stop the batch
+            failed.append((f.name, f"{type(e).__name__}: {e}"))
+            print(f"FAILED {f.name}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+    print(f"\nbatch finished: {len(done)} ok, {len(failed)} failed")
+    for name, result in done:
+        print(f"  ok    {name} -> {result}")
+    for name, err in failed:
+        print(f"  FAIL  {name}: {err[:200]}")
+    return 0 if not failed else 1
 
 
 if __name__ == "__main__":

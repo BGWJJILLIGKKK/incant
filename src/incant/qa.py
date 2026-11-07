@@ -26,9 +26,29 @@ def _spell(m: re.Match) -> str:
     return " " + num2words(n, to="ordinal" if m.group(2) else "cardinal") + " "
 
 
+_CONTRACTIONS = {
+    "what's": "what is", "who's": "who is", "that's": "that is", "it's": "it is", "there's": "there is",
+    "here's": "here is", "he's": "he is", "she's": "she is", "where's": "where is", "how's": "how is",
+    "let's": "let us", "i'm": "i am", "you're": "you are", "we're": "we are", "they're": "they are",
+    "i've": "i have", "you've": "you have", "we've": "we have", "they've": "they have", "i'll": "i will",
+    "you'll": "you will", "he'll": "he will", "she'll": "she will", "we'll": "we will", "they'll": "they will",
+    "i'd": "i would", "you'd": "you would", "he'd": "he would", "she'd": "she would", "we'd": "we would",
+    "won't": "will not", "can't": "cannot", "don't": "do not", "doesn't": "does not", "didn't": "did not",
+    "isn't": "is not", "aren't": "are not", "wasn't": "was not", "weren't": "were not", "shan't": "shall not",
+    "couldn't": "could not", "wouldn't": "would not", "shouldn't": "should not", "haven't": "have not",
+    "hasn't": "has not", "hadn't": "had not", "ain't": "is not", "thank'ee": "thank you", "'em": "them",
+}
+_CONTRACTION_RE = re.compile(r"(?<![\w'])(" + "|".join(re.escape(k) for k in sorted(_CONTRACTIONS, key=len, reverse=True)) + r")(?![\w'])")
+_INITIALS = re.compile(r"\b((?:[a-z]\.\s*){2,})")
+
+
 def words(text: str) -> list[str]:
-    t = _NUMBER.sub(_spell, text.casefold())
-    t = t.replace("’", "").replace("'", "").replace("-", " ").replace("—", " ")
+    """Comparable words: whisper expands contractions ("What's" -> "What is"), writes numbers as digits and
+    initials without stops ("C. D." -> "CD"); both sides are brought to the same form."""
+    t = _NUMBER.sub(_spell, text.casefold()).replace("’", "'")
+    t = _CONTRACTION_RE.sub(lambda m: _CONTRACTIONS[m.group(1)], t)
+    t = _INITIALS.sub(lambda m: re.sub(r"[.\s]", "", m.group(1)) + " ", t)
+    t = t.replace("'", "").replace("-", " ").replace("—", " ")
     return _WORD.findall(t)
 
 

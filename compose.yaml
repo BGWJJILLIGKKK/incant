@@ -1,14 +1,20 @@
-# docker compose run --rm incant books/book.epub          (any incant arguments)
+# The data directory (books, work/, output/, incant.local.toml, cookies) is mounted at /data. Set it, and
+# your uid/gid, in this project's .env — the same file ./incant and the config loader read:
+#   INCANT_DATA=/srv/audiobooks
+#   UID=1000
+#   GID=1000
+#
+# docker compose run --rm incant books/book.epub          (paths relative to the data directory)
 # docker compose run --rm incant --check
-# docker compose run --rm --service-ports incant pride-and-prejudice --review
+# docker compose run --rm incant pride-and-prejudice --review
 services:
   incant:
     build: .
     image: incant
-    user: "${UID:-1000}:${GID:-1000}"   # files in ./work and ./output stay yours: export UID GID, or put them in .env
-    network_mode: host                  # reach the LLM/TTS servers by the names the host uses (localhost:8080)
+    user: "${UID:-1000}:${GID:-1000}"     # files written to the data directory stay yours
+    network_mode: host                    # reach the LLM/TTS servers by the names the host uses (localhost:8080)
     volumes:
-      - ${INCANT_DATA_DIR:-.}:/data   # books, work/, output/, incant.local.toml, cookies
+      - ${INCANT_DATA:-.}:/data
     # Without host networking (Docker Desktop): drop network_mode, add
     #   ports: ["8765:8765"]   and   extra_hosts: ["llm-host:host-gateway"]
     # and set [review] host = "0.0.0.0" in incant.local.toml.

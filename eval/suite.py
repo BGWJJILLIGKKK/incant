@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from attribution import gold_chapters, score  # noqa: E402
+from incant.config import load_config  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 GOLD = ROOT / "eval" / "gold"
@@ -56,7 +57,7 @@ def main() -> int:
     for g in golds:
         gold = json.loads(g.read_text())
         book = gold["book"]
-        if not (ROOT / "work" / book / "characters.json").exists():
+        if not (load_config().paths.work_dir / book / "characters.json").exists():
             rows.append((book, None, "no characters.json (run parse=characters)"))
             continue
         t = time.time()

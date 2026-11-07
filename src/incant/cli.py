@@ -8,7 +8,9 @@ The pipeline is spelled out by method names, one per stage, in stage order:
     ./incant pride-and-prejudice synthesize=indextts --from synthesize   # resume an ingested book
     ./incant pride-and-prejudice --review --host 0.0.0.0                  # review/edit page
 
-INPUT is a file, a URL, an existing book slug under work/, or a book work directory. A directory of
+INPUT is a file, a URL, an existing book slug under work/, or a book work directory. A relative path that
+doesn't exist where you are is looked up in the data directory ($INCANT_DATA / .env), so
+`./incant books/x.epub` finds <data>/books/x.epub. A directory of
 source files (no meta.json in it) is a batch: every supported file in it, by name, one after another,
 each through the whole pipeline; a failing book is reported and the batch continues.
 
@@ -183,6 +185,9 @@ def main(argv: list[str] | None = None) -> int:
 
     # INPUT: new source, an existing book (slug or work dir) to resume, or a directory of sources (batch)
     source: str | None = args.input
+    if source and not source.startswith(("http://", "https://")) and not Path(source).exists() \
+            and (cfg.paths.data_dir / source).exists():
+        source = str(cfg.paths.data_dir / source)  # "books/x.epub" from anywhere: it's in the data directory
     if source and Path(source).is_dir() and not (Path(source) / "meta.json").exists():
         if args.review:
             print("error: --review needs one existing book, not a directory of sources", file=sys.stderr)

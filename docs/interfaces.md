@@ -5,9 +5,11 @@ Stages share data only through files in the book's work directory. No data passe
 `WorkDir` (`src/incant/workdir.py`).
 
 General rules for every file below:
-- **Data directory:** `[paths] data_dir` (default: the config's directory), overridden by `$INCANT_DATA`. `work_dir` and
-  `output_dir` resolve against it; `voices_dir` and the lexicon against the config. A `incant.local.toml` in
-  `$INCANT_DATA` is read after the config's own (container: program in `/app`, data in `/data`).
+- **Data directory:** `$INCANT_DATA`, else `INCANT_DATA=` in the `.env` beside `incant.toml` (also read by
+  `./incant` and `docker compose`), else `[paths] data_dir`, else the config's directory; `~` is expanded.
+  `work_dir` and `output_dir` resolve against it; `voices_dir` and the lexicon against the config. Its
+  `incant.local.toml` is read last. Relative CLI inputs missing from the cwd and relative `cookies` paths
+  resolve in it. Container: program in `/app`, data mounted at `/data`.
 - **Location:** `<work_dir>/<slug>/`, where `work_dir` is `[paths] work_dir` (default `work/`, relative to
   the project home) and `slug` is the ingested title, slugified (or `--slug`). If a *different* source already
   owns that slug, `-2`, `-3`… is appended; re-ingesting the same source (same `meta.source`) reuses its directory, whatever its slug (a changed title doesn't fork the book).

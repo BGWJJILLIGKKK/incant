@@ -6,7 +6,12 @@ Standard library only, so it works under any system Python 3.8+.
 
   - With uv on PATH: `uv run` (keeps dependencies in sync with pyproject.toml/uv.lock first).
   - Without uv: the project's .venv directly, if it exists.
+Data (books, work/, output/, incant.local.toml, cookies) lives in the data directory: $INCANT_DATA,
+else INCANT_DATA=… in this project's .env (the file docker compose reads too). Without either, the project
+directory itself. Relative input paths that don't exist where you are resolve there (books/x.epub).
+
 Environment:
+  INCANT_DATA        the data directory (overrides .env)
   INCANT_NO_SYNC=1   skip uv's dependency sync and run the .venv directly (faster startup)
   INCANT_EXTRAS      comma-separated optional extras to include (default: qa,browser,kokoro)
 """
@@ -22,8 +27,23 @@ HOME = Path(__file__).resolve().parent
 VENV_PYTHON = HOME / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
 
+def env_file(path: Path) -> dict:
+    """KEY=VALUE lines of a .env file (same format docker compose reads)."""
+    out = {}
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                out[k.strip().replace("export ", "", 1).strip()] = v.strip().strip("'\"")
+    return out
+
+
 def main() -> None:
     os.environ.setdefault("INCANT_HOME", str(HOME))
+    data = env_file(HOME / ".env").get("INCANT_DATA")
+    if data:
+        os.environ.setdefault("INCANT_DATA", os.path.expanduser(data))  # visible to anything the run starts
     args = sys.argv[1:]
     uv = shutil.which("uv")
     no_sync = os.environ.get("INCANT_NO_SYNC") == "1"

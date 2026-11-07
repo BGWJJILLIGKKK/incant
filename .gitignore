@@ -11,3 +11,4 @@ incant.local.toml
 /logs/
 /eval/results/
 /output/
+.env

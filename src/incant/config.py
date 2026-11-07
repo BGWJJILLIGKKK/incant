@@ -11,6 +11,10 @@ Layout:
   [pipeline]            default method per stage when the CLI omits it
   [llm] [audio] [paths] [cast]   shared settings
   [<stage>.<method>]    per-method settings, validated by that method's Settings model
+
+Data (books, work/, output/, cookies, personal settings) lives in the data directory: $INCANT_DATA, else
+INCANT_DATA=… in the .env next to incant.toml (docker compose reads the same file), else [paths] data_dir,
+else the config's own directory. A incant.local.toml in the data directory is read last.
 """
 
 from __future__ import annotations
@@ -114,6 +118,18 @@ class Config(BaseModel):
         return p if p.is_absolute() else (self.base_dir / p)
 
 
+def env_file(path: Path) -> dict[str, str]:
+    """KEY=VALUE lines of a .env file (the one docker compose also reads); {} if there is none."""
+    out: dict[str, str] = {}
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                out[k.strip().removeprefix("export ").strip()] = v.strip().strip("'\"")
+    return out
+
+
 def _deep_merge(base: dict, over: dict) -> dict:
     out = dict(base)
     for k, v in over.items():
@@ -129,7 +145,8 @@ def load_config(path: Path | None = None) -> Config:
         dirs = [Path.cwd()] + ([Path(os.environ["INCANT_HOME"])] if os.environ.get("INCANT_HOME") else [])
         base = next((d for d in dirs if (d / "incant.toml").exists()), Path.cwd())
         files = [base / "incant.toml", base / "incant.local.toml"]
-    data_env = os.environ.get("INCANT_DATA")
+    data_env = os.environ.get("INCANT_DATA") or env_file(base / ".env").get("INCANT_DATA")
+    data_env = str(Path(data_env).expanduser()) if data_env else None
     if data_env and (extra := Path(data_env) / "incant.local.toml") not in files:
         files.append(extra)  # the user's own settings and secrets, outside the program's directory
     data: dict = {}
@@ -141,7 +158,7 @@ def load_config(path: Path | None = None) -> Config:
     cfg = Config.model_validate({**data, "base_dir": base.resolve(), "files": used})
     if data_env:
         cfg.paths.data_dir = Path(data_env)
-    cfg.paths.data_dir = cfg.resolve(cfg.paths.data_dir).resolve()
+    cfg.paths.data_dir = cfg.resolve(cfg.paths.data_dir.expanduser()).resolve()
     cfg.paths.work_dir = cfg.paths.data_dir / cfg.paths.work_dir  # (an absolute path stays as it is)
     cfg.paths.output_dir = cfg.paths.data_dir / cfg.paths.output_dir
     cfg.paths.voices_dir = cfg.resolve(cfg.paths.voices_dir)

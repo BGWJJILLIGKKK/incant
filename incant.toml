@@ -16,8 +16,10 @@ output = "m4b"               # "mp3" = one chaptered mp3; "chapters" = a file pe
 cleanup_failed = "new"       # a failed run deletes a book it created ("never" keeps it); never books with audio
 
 [paths]
+# Data directory (books/, work/, output/, incant.local.toml, cookies): INCANT_DATA=… in .env next to this
+# file, or $INCANT_DATA; else data_dir here; else this directory. work_dir and output_dir are inside it.
 work_dir = "work"
-voices_dir = "voices"
+voices_dir = "voices"         # (relative to this file: the program's voice list)
 output_dir = "output"         # finished books: output/<author>/<title>/<title>.m4b
 
 [cast]

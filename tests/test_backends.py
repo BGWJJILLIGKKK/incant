@@ -258,3 +258,22 @@ def test_data_dir_holds_books_and_user_settings(tmp_path, monkeypatch):
     assert cfg.paths.work_dir == data / "work" and cfg.paths.output_dir == data / "output"
     assert cfg.paths.voices_dir == app / "voices"  # the program's voice list stays with the program
     assert cfg.llm.model == "m2"  # the data directory's settings are read last
+
+
+def test_env_file_names_the_data_dir_and_paths_resolve_there(tmp_path, monkeypatch, capsys):
+    monkeypatch.delenv("INCANT_DATA", raising=False)
+    app, data = tmp_path / "app", tmp_path / "data"
+    (data / "books").mkdir(parents=True)
+    app.mkdir()
+    (app / "incant.toml").write_text('[pipeline]\nparse = "basic"\n')
+    (app / ".env").write_text(f"# personal\nINCANT_DATA='{data}'\nUID=1000\n")
+    (data / "incant.local.toml").write_text('[ingest.url.sites."ex.test"]\ncookies = "cookies.txt"\n')
+    (data / "cookies.txt").write_text("# Netscape HTTP Cookie File\n.ex.test\tTRUE\t/\tTRUE\t0\ts\tv\n")
+    (data / "books" / "b.txt").write_text("Title: B\n\nChapter 1\n\nHi.\n")
+    cfg = load_config(app / "incant.toml")
+    assert cfg.paths.work_dir == data / "work"
+    url = instantiate(cfg, {s.name: s for s in discover()}["ingest"], "url")
+    assert url.check() == [(True, f"ex.test: cookies file {data / 'cookies.txt'}")]  # relative to the data dir
+    monkeypatch.chdir(tmp_path)  # books/b.txt isn't here: it's found in the data directory
+    assert main(["books/b.txt", "--until", "parse", "-c", str(app / "incant.toml")]) == 0
+    assert (data / "work" / "b" / "chapters.json").exists()

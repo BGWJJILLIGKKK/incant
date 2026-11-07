@@ -7,7 +7,8 @@
 #   docker build -t incant:lean --build-arg BAKE_MODELS=0 .    # models download on first use into /data
 #   docker build -t incant:min --build-arg EXTRAS="" .         # no browser, QA or Kokoro (HTTP TTS only, ~1.1 GB)
 #
-#   docker run --rm -it --network host --user "$(id -u):$(id -g)" -v "$PWD:/data" incant books/b.epub
+#   docker compose run --rm incant books/b.epub     # data directory from .env (INCANT_DATA=…)
+#   docker run --rm -it --network host --user "$(id -u):$(id -g)" -v /srv/audiobooks:/data incant books/b.epub
 #
 # /data holds books, work/, output/ and your incant.local.toml (settings, secrets, cookies paths).
 

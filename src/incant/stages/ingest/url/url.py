@@ -7,7 +7,8 @@ Credentials (all optional) go in incant.local.toml (git-ignored) or come from en
     password_env = "EXAMPLE_PASSWORD"         # or: password = "…"   (HTTP Basic)
     # bearer_env = "EXAMPLE_TOKEN"            # or: bearer = "…"     (Authorization: Bearer)
     # headers = { "X-Api-Key" = "…" }        # any extra request headers
-    # cookies = "~/cookies/example.txt"       # cookies.txt (Netscape format) exported from a logged-in browser
+    # cookies = "cookies.txt"                 # cookies.txt (Netscape format) from a logged-in browser; relative
+    #                                         # paths are in the data directory
 
 Hosts without an entry fall back to ~/.netrc (`netrc = true`). Credentials are attached only to requests
 for the site they belong to, including across redirects, and never reach logs, pipeline.json or meta.json.
@@ -88,16 +89,22 @@ def _env(name: str | None, what: str, host: str) -> str | None:
     return v
 
 
+def cookies_path(value: str, base: Path | None) -> Path:
+    """A cookies file setting: absolute or ~ as given; relative to the data directory (base), else the cwd."""
+    p = Path(value).expanduser()
+    return p if p.is_absolute() or base is None else base / p
+
+
 class Fetcher:
     """GET with per-site credentials. Credentials go only to their own site: redirects are followed by hand
     and each hop gets the credentials of *its* host (cookies are domain-scoped by the jar itself)."""
 
-    def __init__(self, settings: UrlSettings, transport: httpx.BaseTransport | None = None):
+    def __init__(self, settings: UrlSettings, transport: httpx.BaseTransport | None = None, base: Path | None = None):
         self.s = settings
         self.jar = MozillaCookieJar()
         for host, site in settings.sites.items():
             if site.cookies:
-                p = Path(site.cookies).expanduser()
+                p = cookies_path(site.cookies, base)
                 try:
                     self.jar.load(str(p), ignore_discard=True, ignore_expires=True)
                 except FileNotFoundError:
@@ -344,7 +351,7 @@ class UrlIngest(IngestMethod):
                 if var:
                     out.append((var in os.environ, f"{host}: environment variable {var}"))
             if site.cookies:
-                p = Path(site.cookies).expanduser()
+                p = cookies_path(site.cookies, self.cfg.paths.data_dir)
                 out.append((p.is_file(), f"{host}: cookies file {p}"))
         return out
 
@@ -356,7 +363,7 @@ class UrlIngest(IngestMethod):
         return None
 
     def load(self, source: str) -> Ingested:
-        fetcher = Fetcher(self.settings)
+        fetcher = Fetcher(self.settings, base=self.cfg.paths.data_dir)
         page = fetch_page(source, fetcher)
         found = self.series(page, fetcher)
         if not found or len(found.parts) < 2:

@@ -115,7 +115,7 @@ incant <input|slug|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug] [--from
 | GET | `/api/chapter/NNNN` | spans (+ say, segment keys, QA) |
 | GET | `/api/lexicon` | `{word: say}` (book) |
 | POST | `/api/span` | `{id, speaker?, emotion?, say?}` → locks span; `say` → `say_overrides.json` |
-| POST | `/api/cast` | `{character, voice}` (voice null → = back to auto); sets role, drops from `cast.auto` |
+| POST | `/api/cast` | `{character, voice}` sets role (null = back to auto); drops from `cast.auto` |
 | POST | `/api/character` | `{id, canonical_name?, gender?, age?}` → locks character |
 | POST | `/api/lexicon` | `{word: say}` → `<book>/lexicon.toml` |
 | GET | `/audio/segment/<key>.wav`, `/audio/chapter/NNNN.wav`, `/audio/voice/<id>.wav` | audio |

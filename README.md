@@ -71,7 +71,7 @@ shared helpers, not methods. A new stage is a new directory with `ORDER`,
 ## Quality checks
 
 - `eval/attribution.py eval/gold/<book>.json` scores speaker attribution against hand labels
-  (Pride and Prejudice ch. I–II: 93.8% with qwen3.5-9b).
+  (qwen3.5-9b: Pride and Prejudice ch. I–II 93.8%; Sherlock Holmes "A Scandal in Bohemia" opening 91.7%).
 - Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
   re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.
 

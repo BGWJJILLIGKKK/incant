@@ -42,3 +42,16 @@ def test_existing_roles_kept_and_scene_partners_dont_share():
     # pool exhausted for c: shares with b (no common chapters), never with main character a
     assert cast.roles["c"] == "m_adult"
     assert ("c", "m_adult", "shared with b") in new
+
+
+def test_auto_roles_recast_but_manual_edits_kept():
+    chars = [ch("a", "male"), ch("b", "female")]
+    spans = {"1": lines("1", "a", "b")}
+    cast = Cast(roles={"narrator": "narr"})
+    auto_cast(cast, chars, spans, VOICES)
+    assert cast.auto == {"a": "m_adult", "b": "f_adult"}
+    cast.roles["b"] = "f_teen"  # hand edit
+    better = dict(VOICES, m_new=Voice(id="m_new", gender="male", age="adult", tone="neutral"))
+    auto_cast(cast, chars, spans, better)
+    assert cast.roles["b"] == "f_teen" and "b" not in cast.auto  # manual kept
+    assert cast.roles["a"] == "m_new" and cast.auto["a"] == "m_new"  # auto recomputed with new voice

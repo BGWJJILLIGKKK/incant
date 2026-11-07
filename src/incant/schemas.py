@@ -95,6 +95,8 @@ class CharacterList(BaseModel):
     characters: list[Character]
     # alias -> character ids that all claim it (e.g. "Miss Bennet"); attribution must use context
     ambiguous_aliases: dict[str, list[str]] = Field(default_factory=dict)
+    # First-person books: the character id who narrates ("I"), or NARRATOR_ID if unnamed. None = third person.
+    narrator: str | None = None
 
 
 # ---------------------------------------------------------------- stage 3
@@ -159,6 +161,9 @@ class Cast(BaseModel):
     schema_version: int = SCHEMA_VERSION
     roles: dict[str, str]  # must include NARRATOR_ID
     default_voice: str | None = None  # fallback for unattributed / uncast speakers
+    # What automatic casting last chose. A role equal to its auto pick is recomputed on every run (so new
+    # voice tags take effect); a role you changed (or added) differs from it and is kept as-is.
+    auto: dict[str, str] = Field(default_factory=dict)
 
     def voice_for(self, speaker: str | None) -> str | None:
         if speaker and speaker in self.roles:

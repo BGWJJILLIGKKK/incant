@@ -17,7 +17,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, create_model
 
 from ....llm import LLM, LLMError
-from ....schemas import Character, CharacterList, Emotion, Span, SpanKind
+from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Span, SpanKind
 from ...base import Context
 from ..base import AttributeMethod
 from ..spans import split_chapter
@@ -25,6 +25,8 @@ from ..spans import split_chapter
 __all__ = ["SpeakersAttribute"]
 
 UNKNOWN = "unknown"
+UNNAMED = "unnamed"
+_FIRST_PERSON = re.compile(r"\b(I|me|my|myself)\b")
 _NEUTRAL = re.compile(r"^\s*(neutral|plain|normal|calm|none|flat|matter[- ]of[- ]fact)\s*$", re.I)
 
 
@@ -40,6 +42,8 @@ class SpeakersSettings(BaseModel):
     emotion_scale: float = 0.8
     max_alpha: float = 0.8
     min_intensity: float = 0.3
+    # First-person detection: "I/me/my" per 1000 words of narration (third person ~1, first person ~25).
+    first_person_rate: float = 8.0
 
 
 SYSTEM = """You label who speaks each quotation in a passage of a novel, for a multi-voice audiobook.
@@ -75,14 +79,30 @@ def render_passage(context: list[list[Span]], window: list[list[Span]]) -> tuple
     return "\n\n".join(lines), markers
 
 
+NARRATOR_SYSTEM = """This novel is narrated in the first person. From the passage and the character list, decide
+who the narrator ("I") is. Give a one-sentence reason, then the character id, or "unnamed" if the narrator is
+never named or is not in the list."""
+
+
+def first_person_rate(spans: list[Span]) -> float:
+    text = " ".join(s.text for s in spans if s.kind is SpanKind.narration)
+    return 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split()))
+
+
 def roster_for(chars: CharacterList, chapter_id: str, top: int) -> list[Character]:
+    """The chapter's characters plus the book's `top` most-mentioned. Without per-chapter data (older
+    characters.json) every speaking character is included, so nobody who talks is missing."""
     ranked = sorted(chars.characters, key=lambda c: -c.mentions)
     keep = {c.id for c in ranked[:top]} | {c.id for c in chars.characters if chapter_id in c.chapters}
+    if not any(c.chapters for c in chars.characters):
+        keep |= {c.id for c in chars.characters if c.speaks}
     return [c for c in ranked if c.id in keep]
 
 
-def roster_text(roster: list[Character]) -> str:
+def roster_text(roster: list[Character], narrator: str | None = None) -> str:
     lines = []
+    if narrator == NARRATOR_ID:
+        lines.append(f"{NARRATOR_ID}: the unnamed first-person narrator (\"I\")")
     for c in roster:
         al = f"; also {', '.join(c.aliases[:6])}" if c.aliases else ""
         desc = f" — {c.description[:100]}" if c.description else ""
@@ -139,6 +159,8 @@ class SpeakersAttribute(AttributeMethod):
         if not chars or not chars.characters:
             raise RuntimeError("speakers needs characters.json — run the parse stage with the 'characters' method")
         llm = LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
+        chars.narrator = self._find_narrator(llm, wd, chars, ctx)
+        wd.write_characters(chars)
 
         book: dict[str, list[Span]] = {}
         jobs = []
@@ -155,8 +177,10 @@ class SpeakersAttribute(AttributeMethod):
                     paras.append([])
                 paras[-1].append(s)
             roster = roster_for(chars, ch.id, self.settings.roster_top)
+            if chars.narrator and chars.narrator != NARRATOR_ID and chars.narrator not in {c.id for c in roster}:
+                roster.insert(0, next(c for c in chars.characters if c.id == chars.narrator))
             for a, b in windows(paras, self.settings.max_quotes, self.settings.max_window_words):
-                jobs.append((ch.id, paras[max(0, a - self.settings.context_paragraphs):a], paras[a:b], roster))
+                jobs.append((ch.id, paras[max(0, a - self.settings.context_paragraphs):a], paras[a:b], roster, chars.narrator))
 
         labels: dict[str, tuple[str, Emotion | None]] = {}
         failed = 0
@@ -195,11 +219,37 @@ class SpeakersAttribute(AttributeMethod):
         ctx.log("  most lines: " + ", ".join(f"{k} {v}" for k, v in top))
         return counts
 
-    def _label(self, llm: LLM, chapter: str, context, window, roster: list[Character]) -> dict[str, tuple[str, Emotion | None]]:
+    def _find_narrator(self, llm: LLM, wd, chars: CharacterList, ctx: Context) -> str | None:
+        """None for third-person books; else the narrating character's id (or NARRATOR_ID if unnamed)."""
+        sample: list[Span] = []
+        for ch in wd.read_chapters().chapters:
+            sample += split_chapter(ch.id, wd.read_chapter_text(ch.file))
+        rate = first_person_rate(sample)
+        if rate < self.settings.first_person_rate:
+            ctx.log(f"  third-person narration ({rate:.1f} first-person words per 1000)")
+            return None
+        story = [ch for ch in wd.read_chapters().chapters if ch.title != "Front Matter"] or wd.read_chapters().chapters
+        excerpt = " ".join(wd.read_chapter_text(story[0].file).split()[:1500])
+        roster = sorted(chars.characters, key=lambda c: -c.mentions)[:15]
+        ids = [c.id for c in roster] + [UNNAMED]
+        schema = create_model("Narrator", reason=(str, Field(max_length=300)), narrator=(Literal[tuple(ids)], ...))
+        r = llm.chat_json(NARRATOR_SYSTEM, f"CHARACTERS:\n{roster_text(roster)}\n\nPASSAGE:\n{excerpt}", schema,
+                          think=False, max_tokens=1024)
+        who = NARRATOR_ID if r.narrator == UNNAMED else r.narrator
+        ctx.log(f"  first-person narration ({rate:.1f}/1000): narrator = {who} — {r.reason}")
+        return who
+
+    def _label(self, llm: LLM, chapter: str, context, window, roster: list[Character],
+               narrator: str | None = None) -> dict[str, tuple[str, Emotion | None]]:
         text, markers = render_passage(context, window)
-        ids = [c.id for c in roster]
+        ids = [c.id for c in roster] + ([NARRATOR_ID] if narrator == NARRATOR_ID else [])
         schema = label_schema(len(markers), ids)
-        prompt = f"CHARACTERS:\n{roster_text(roster)}\n\nPASSAGE:\n{text}"
+        note = ""
+        if narrator:
+            who = "an unnamed narrator (id narrator)" if narrator == NARRATOR_ID else f"{narrator}"
+            note = (f"NOTE: this book is narrated in the first person by {who}. \"I\"/\"me\" in the narration is that "
+                    f"character, so quotations the narrator speaks (\"said I\", \"I answered\") belong to {narrator}.\n\n")
+        prompt = f"{note}CHARACTERS:\n{roster_text(roster, narrator)}\n\nPASSAGE:\n{text}"
         s = self.settings
         r = llm.chat_json(SYSTEM, prompt, schema, think=s.think, max_tokens=s.max_tokens_thinking if s.think else s.max_tokens)
         out = {}

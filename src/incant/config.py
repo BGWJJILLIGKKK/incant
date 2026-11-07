@@ -57,6 +57,8 @@ class PathsConfig(BaseModel):
 class CastConfig(BaseModel):
     narrator: str | None = None  # voice id for the narrator and fallback for uncast speakers
     main_unique: int = 8  # the N speakers with most lines never share a voice
+    # First-person books: narrate in the narrating character's own voice ("character") or the narrator voice.
+    first_person_narration: str = "character"
 
 
 class Config(BaseModel):

@@ -106,97 +106,154 @@
   "ben_tucker": {
     "voice": "ben_tucker",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "older",
+    "tone": "neutral"
   },
   "bev_j_stevens": {
     "voice": "bev_j_stevens",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "neutral"
   },
   "bill_boerst": {
     "voice": "bill_boerst",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "neutral"
   },
   "bill_mosley": {
     "voice": "bill_mosley",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "neutral"
   },
   "brett_condron": {
     "voice": "brett_condron",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "neutral",
+    "tone": "high"
   },
   "bridget_gaige": {
     "voice": "bridget_gaige",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "teen",
+    "tone": "neutral"
   },
   "browneyedgirl32382": {
     "voice": "browneyedgirl32382",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "teen",
+    "tone": "deep"
   },
   "caden_vaughn_clegg-gravel": {
     "voice": "caden_vaughn_clegg-gravel",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "older",
+    "tone": "deep"
   },
   "caden_vaughn_clegg": {
     "voice": "caden_vaughn_clegg",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "deep"
   },
   "caprisha_page": {
     "voice": "caprisha_page",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "neutral",
+    "tone": "high"
   },
   "caro_davy": {
     "voice": "caro_davy",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "older",
+    "tone": "neutral"
   },
   "carrie_mae_streb": {
     "voice": "carrie_mae_streb",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "neutral"
   },
   "christine_blachford": {
     "voice": "christine_blachford",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "neutral"
   },
   "claudia_salto": {
     "voice": "claudia_salto",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "older",
+    "tone": "neutral"
   },
   "clayton_j_smith": {
     "voice": "clayton_j_smith",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "high"
   },
   "cori_samuel": {
     "voice": "cori_samuel",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "female",
+    "age": "adult",
+    "tone": "neutral"
   },
   "dan_mason": {
     "voice": "dan_mason",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "deep"
   },
   "dave_chase": {
     "voice": "dave_chase",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "older",
+    "tone": "deep"
   },
   "david_clark": {
     "voice": "david_clark",
     "source": "voice-zero",
-    "default_emotion": "calm"
+    "default_emotion": "calm",
+    "gender": "male",
+    "age": "adult",
+    "tone": "neutral"
   },
   "david_cole": {
     "voice": "david_cole",

@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING
 from ...audio import loudnorm, to_canonical_wav, trim_silence, wav_duration_ms
 from ...config import Config
 from ...normalize import is_scene_break
-from ...qa import Transcriber
+from ...qa import Transcriber, compare
 from ...schemas import NARRATOR_ID, AudioManifest, Cast, Chapter, ChapterAudio, Emotion, Segment, Voice
 from ...textprep import chunk
 from ...voices import VoiceLibrary
@@ -150,6 +150,11 @@ class Renderer:
         path, qa_path = self._cache_path(seg.cache_key), self._qa_path(seg.cache_key)
         if path.exists() and (self.qa is None or qa_path.exists()):
             rec = json.loads(qa_path.read_text()) if qa_path.exists() else None
+            if rec and not rec["ok"]:  # re-score the stored transcript: the comparison may have improved
+                chk = compare(rec["text"], rec["heard"])
+                if chk.ok(self.backend.settings.qa_max_wer):
+                    rec.update(ok=True, wer=round(chk.wer, 3))
+                    atomic_write(qa_path, json.dumps(rec) + "\n")
             return rec if rec and not rec["ok"] else None
         st = self.backend.settings
         best: tuple[float, bytes, dict] | None = None

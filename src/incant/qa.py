@@ -13,10 +13,22 @@ import threading
 from dataclasses import dataclass
 
 _WORD = re.compile(r"[a-z0-9]+")
+_NUMBER = re.compile(r"(\d[\d,]*)(st|nd|rd|th)?")
+
+
+def _spell(m: re.Match) -> str:
+    """Whisper writes "10,000" and "3rd"; the text says "ten thousand" and "third"."""
+    try:
+        from num2words import num2words
+    except ImportError:
+        return m.group(0)
+    n = int(m.group(1).replace(",", ""))
+    return " " + num2words(n, to="ordinal" if m.group(2) else "cardinal") + " "
 
 
 def words(text: str) -> list[str]:
-    t = text.casefold().replace("’", "").replace("'", "").replace("-", "").replace("—", " ")
+    t = _NUMBER.sub(_spell, text.casefold())
+    t = t.replace("’", "").replace("'", "").replace("-", "").replace("—", " ")
     return _WORD.findall(t)
 
 
@@ -75,7 +87,10 @@ class Transcriber:
         model = self._get()
         segments, _ = model.transcribe(self._pcm16k(wav), language="en", beam_size=1, vad_filter=False,
                                        condition_on_previous_text=False)
-        heard = " ".join(s.text.strip() for s in segments)
-        ref, hyp = words(text), words(heard)
-        edits = edit_distance(ref, hyp)
-        return Check(wer=edits / max(1, len(ref)), edits=edits, heard=heard)
+        return compare(text, " ".join(s.text.strip() for s in segments))
+
+
+def compare(text: str, heard: str) -> Check:
+    ref, hyp = words(text), words(heard)
+    edits = edit_distance(ref, hyp)
+    return Check(wer=edits / max(1, len(ref)), edits=edits, heard=heard)

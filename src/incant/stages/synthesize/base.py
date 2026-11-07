@@ -60,8 +60,13 @@ class SynthesizeMethod(Method):
         if chars and self.NEEDS_VOICE_LIBRARY:
             spans = {ch.id: wd.read_spans(ch.id) for ch in wd.read_chapters().chapters if wd.spans_path(ch.id).exists()}
             new = auto_cast(cast, chars.characters, spans, self.voices().voices, self.cfg.cast.main_unique)
+            nc = chars.narrator
+            if nc and nc != NARRATOR_ID and self.cfg.cast.first_person_narration == "character" and nc in cast.roles:
+                if cast.roles.get(NARRATOR_ID) != cast.roles[nc] and log:
+                    log(f"  first-person book: narration uses {nc}'s voice ({cast.roles[nc]})")
+                cast.roles[NARRATOR_ID] = cast.roles[nc]
             if log and new:
-                log(f"  cast {len(new)} new speaking characters:")
+                log(f"  cast {len(new)} speaking characters automatically (hand-edited roles kept):")
                 for cid, vid, note in new[:20]:
                     log(f"    {cid:<28} -> {vid}" + (f"  [{note}]" if note else ""))
                 if len(new) > 20:

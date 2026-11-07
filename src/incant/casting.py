@@ -1,7 +1,7 @@
 """Automatic casting: speaking characters -> voices from the library's gender/age tags.
 
-Only characters missing from cast.json are cast, so assignments are stable across re-runs and hand
-edits are never overwritten. Most lines first; for each character the best voice minimises, in order:
+Roles still equal to their previous automatic pick (cast.auto) are recomputed each run, so newly tagged
+voices take effect; roles a person changed or added are kept and count as fixed usage. Most lines first; for each character the best voice minimises, in order:
   1. chapters shared with characters already using that voice (two people in one scene shouldn't sound alike)
   2. sharing with a main character (the top `main_unique` speakers keep a voice to themselves)
   3. reuse at all (spread over the library before doubling up)
@@ -60,7 +60,11 @@ def speaking_stats(spans_by_chapter: dict[str, list[Span]]) -> tuple[dict[str, i
 
 def auto_cast(cast: Cast, characters: list[Character], spans_by_chapter: dict[str, list[Span]],
               voices: dict[str, Voice], main_unique: int = 8) -> list[tuple[str, str, str]]:
-    """Fill cast.roles for uncast speaking characters. Returns [(character id, voice id, note)] for new roles."""
+    """Recast automatic roles and fill uncast speaking characters. Returns [(character id, voice id, note)]."""
+    for cid, vid in list(cast.auto.items()):
+        if cast.roles.get(cid) == vid:
+            del cast.roles[cid]  # still the automatic pick: recompute it
+    cast.auto = {}
     lines, chapters = speaking_stats(spans_by_chapter)
     by_id = {c.id: c for c in characters}
     pool = {vid: v for vid, v in voices.items() if (v.gender or "").lower() in ("male", "female")}
@@ -105,6 +109,7 @@ def auto_cast(cast: Cast, characters: list[Character], spans_by_chapter: dict[st
         overlap = len(mine & u.chapters)
         note = "" if not u.chars else f"shared with {', '.join(u.chars[:3])}" + (f" ({overlap} common chapters)" if overlap else "")
         cast.roles[cid] = v.id
+        cast.auto[cid] = v.id
         u.chars.append(cid)
         u.chapters |= mine
         u.lines += lines[cid]

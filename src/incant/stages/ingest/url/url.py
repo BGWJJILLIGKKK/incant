@@ -29,6 +29,7 @@ from pydantic import BaseModel, Field
 
 from ....normalize import clean_unicode, paragraphs_from_plain
 from ..base import Ingested, IngestMethod
+from .embedded import embedded_text
 
 __all__ = ["UrlIngest"]
 
@@ -60,6 +61,10 @@ class UrlSettings(BaseModel):
     sites: dict[str, Site] = Field(default_factory=dict)
     # Pages with less extracted text than this are refused: almost always a gate or an empty shell, not a story.
     min_words: int = 100
+    # JavaScript-built pages often carry the article as JSON inside <script> (Next.js, Nuxt, Remix, JSON-LD).
+    # Used when the markup has too little text. Higher bar than min_words: comments and blurbs live there too.
+    embedded: bool = True
+    embedded_min_words: int = 400
 
 
 class FetchError(RuntimeError):
@@ -184,6 +189,13 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
         why = ("the credentials/cookies didn't log in (expired session?)" if used else
                f'add credentials or cookies under [ingest.url.sites."{host}"] in incant.local.toml')
         raise FetchError(f"{url} returned a login page ({final}) — {why}")
+    notes = ["URL ingest reads a single page only."]
+    if words < fetcher.s.min_words and fetcher.s.embedded:
+        if found := embedded_text(html, fetcher.s.embedded_min_words):
+            text = found
+            words = len(text.split())
+            notes.append(f"text taken from data embedded in the page's scripts ({words:,} words); check it is "
+                         "the article, not a comment or summary")
     if words < fetcher.s.min_words:
         gate = _GATE.search(text)  # in the extracted text: what the page shows instead of the content
         label = " ".join(gate.group(0).split()) if gate else ""
@@ -194,20 +206,23 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
             what = (f'a gate page ("{label}") — if your browser session sees the text, '
                     f'export its cookies and set cookies = "…" under [ingest.url.sites."{host}"] in incant.local.toml')
         elif used:
-            what = ("no article text although your credentials/cookies were sent: the page probably loads its "
-                    "text with JavaScript, which the url method doesn't run; this site needs its own ingest method")
+            what = ("no article text in the page or its embedded data although your credentials/cookies were sent: "
+                    "the page probably fetches its text with JavaScript after loading, which needs a browser")
         else:
-            what = "no readable text: the page may build its content with JavaScript, or need a login"
+            what = ("no readable text in the page or its embedded data: it may fetch its content with JavaScript "
+                    "after loading, or need a login")
         raise FetchError(f"{url}: only {words} words extracted — {what}. Nothing ingested.")
     md = trafilatura.extract_metadata(html)
-    # trafilatura emits one paragraph per line; make them blank-line separated
-    text = "\n\n".join(clean_unicode(text).splitlines())
+    if len(notes) == 1:  # trafilatura emits one paragraph per line; make them blank-line separated
+        text = "\n\n".join(clean_unicode(text).splitlines())
+    else:  # embedded text already has blank lines between paragraphs
+        text = clean_unicode(text)
     return Ingested(
         title=(md.title if md and md.title else url),
         author=(md.author if md else None),
         paragraphs=paragraphs_from_plain(text),
         source_format="url",
-        warnings=["URL ingest reads a single page only."],
+        warnings=notes,
     )
 
 

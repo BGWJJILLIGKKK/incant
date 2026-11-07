@@ -9,3 +9,4 @@ __pycache__/
 incant.local.toml
 /books/
 /logs/
+/eval/results/

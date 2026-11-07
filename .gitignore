@@ -7,3 +7,4 @@ __pycache__/
 !/voices/README.md
 !/voices/voices.json
 incant.local.toml
+/books/

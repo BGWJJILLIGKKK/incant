@@ -15,6 +15,12 @@ each through the whole pipeline; a failing book is reported and the batch contin
     ./incant books/                            # every epub/pdf/txt in books/
     ./incant books/ dummy --until synthesize   # same methods/options for each
     ./incant books/ -o audiobooks/             # outputs collected in one directory
+
+A container file (a browser bookmark export) is a batch too: each page in it is its own book. Inside a
+batch directory, containers are expanded in place. Two sources with the same title get separate books
+(slug, slug-2, …); re-running the same source reuses its book.
+
+    ./incant bookmarks.html --until attribute
 """
 
 from __future__ import annotations
@@ -22,6 +28,7 @@ from __future__ import annotations
 import argparse
 import inspect
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from .config import load_config
@@ -63,6 +70,67 @@ def cmd_list(stages: list[StageInfo], cfg) -> int:
     return 0
 
 
+@dataclass
+class BatchItem:
+    label: str  # shown in progress and the summary
+    source: str
+    title: str | None = None  # title hint from a container
+
+
+def _expanders(stages: list[StageInfo]) -> dict[str, type]:
+    """Ingest methods that are containers (override `expand`)."""
+    ingest = next((s for s in stages if s.name == "ingest"), None)
+    if ingest is None:
+        return {}
+    base = ingest.module.Base
+    out = {}
+    for m in ingest.methods:
+        try:
+            cls = load_method_class(ingest, m)
+        except Exception:  # noqa: BLE001 — a broken method shouldn't stop other inputs
+            continue
+        if cls.expand.__func__ is not base.expand.__func__:
+            out[m] = cls
+    return out
+
+
+def _ingest_tokens(tokens: list[str], stages: list[StageInfo]) -> set[str]:
+    """Ingest method names the user spelled out (bare or ingest=…)."""
+    ingest = next((s for s in stages if s.name == "ingest"), None)
+    if ingest is None:
+        return set()
+    out = set()
+    for t in tokens:
+        st, sep, m = t.partition("=") if "=" in t else t.partition(":")
+        if sep and st == "ingest":
+            out.add(m)
+        elif not sep and t in ingest.methods:
+            out.add(t)
+    return out
+
+
+def expand_source(source: str, tokens: list[str], stages: list[StageInfo]) -> list[BatchItem] | None:
+    """Items inside a container source, or None if `source` isn't one (or the user named another ingest
+    method for it)."""
+    exp = _expanders(stages)
+    named = _ingest_tokens(tokens, stages)
+    if named and not named & set(exp):
+        return None
+    for name, cls in exp.items():
+        if (not named or name in named) and cls.accepts(source):
+            items = cls.expand(source) or []
+            base = Path(source).name
+            return [BatchItem(f"{base} [{i}/{len(items)}] {it.title or it.source}", it.source, it.title)
+                    for i, it in enumerate(items, 1)]
+    return None
+
+
+def _child_tokens(tokens: list[str], stages: list[StageInfo]) -> list[str]:
+    """Method tokens for a container's items: without the container's own ingest method."""
+    exp = set(_expanders(stages))
+    return [t for t in tokens if t not in exp and not (t.startswith(("ingest=", "ingest:")) and t[7:] in exp)]
+
+
 def _plan_str(steps: list[Step]) -> str:
     return " -> ".join(f"{s.stage.name}={s.method}" + ("" if s.why == "cli" else f" ({s.why})") for s in steps)
 
@@ -97,7 +165,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.review:
             print("error: --review needs one existing book, not a directory of sources", file=sys.stderr)
             return 2
-        return run_batch(args, cfg, stages, Path(source))
+        return run_batch(args, cfg, stages, _folder_items(Path(source), args.methods, stages), source)
+    if source and Path(source).is_file() and (items := expand_source(source, args.methods, stages)) is not None:
+        if args.review:
+            print("error: --review needs one existing book, not a file of sources", file=sys.stderr)
+            return 2
+        return run_batch(args, cfg, stages, items, source, tokens=_child_tokens(args.methods, stages))
     wd: WorkDir | None = None
     if source and not source.startswith(("http://", "https://")):
         p = Path(source)
@@ -157,34 +230,48 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def run_batch(args, cfg, stages, folder: Path) -> int:
-    """Run the pipeline for every supported file in `folder` (not recursive), sequentially."""
+def _folder_items(folder: Path, tokens: list[str], stages: list[StageInfo]) -> list[BatchItem]:
+    """Files in `folder` (not recursive) by name; container files are replaced by their items."""
+    items: list[BatchItem] = []
+    files = sorted((f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")), key=lambda f: f.name.casefold())
+    for f in files:
+        inner = expand_source(str(f), tokens, stages)
+        items += inner if inner is not None else [BatchItem(f.name, str(f))]
+    return items
+
+
+def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: list[str] | None = None) -> int:
+    """Run the pipeline for each item, sequentially; a failing item is reported and the batch continues."""
     if args.slug:
         print("error: --slug names one book; a batch names each book from its title", file=sys.stderr)
         return 2
-    files = sorted((f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")), key=lambda f: f.name.casefold())
-    plans: list[tuple[Path, list[Step], Path | None]] = []
-    for f in files:
+    tokens = _child_tokens(args.methods, stages) if tokens is None else tokens
+    seen: set[str] = set()
+    plans: list[tuple[BatchItem, list[Step], Path | None]] = []
+    for it in items:
+        if it.source in seen:  # the same page bookmarked twice, or in two bookmark files
+            continue
+        seen.add(it.source)
         try:
-            steps, out_path = resolve(args.methods, str(f), cfg, stages)
+            steps, out_path = resolve(tokens, it.source, cfg, stages)
         except ResolveError as e:
             if "no method accepts" in str(e):
-                print(f"skip: {f.name} (not a supported source)")
+                print(f"skip: {it.label} (not a supported source)")
                 continue
             print(f"error: {e}", file=sys.stderr)
             return 2
-        plans.append((f, steps, out_path))
+        plans.append((it, steps, out_path))
     if not plans:
-        print(f"error: no supported source files in {folder}", file=sys.stderr)
+        print(f"error: no supported sources in {origin}", file=sys.stderr)
         return 2
     out_dir = args.out or plans[0][2]
     if out_dir is not None and out_dir.suffix and not out_dir.is_dir():
         print(f"error: a batch writes one file per book — give an output directory, not '{out_dir}'", file=sys.stderr)
         return 2
-    print(f"batch: {len(plans)} books from {folder}")
+    print(f"batch: {len(plans)} books from {origin}")
     if args.dry_run:
-        for f, steps, _ in plans:
-            print(f"  {f.name}: {_plan_str(steps)}")
+        for it, steps, _ in plans:
+            print(f"  {it.label}: {_plan_str(steps)}")
         return 0
     if out_dir:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -192,18 +279,18 @@ def run_batch(args, cfg, stages, folder: Path) -> int:
     force = {x.strip() for x in args.force.split(",") if x.strip()}
     done: list[tuple[str, object]] = []
     failed: list[tuple[str, str]] = []
-    for n, (f, steps, _) in enumerate(plans, 1):
-        print(f"\n=== [{n}/{len(plans)}] {f.name}", flush=True)
+    for n, (it, steps, _) in enumerate(plans, 1):
+        print(f"\n=== [{n}/{len(plans)}] {it.label}", flush=True)
         print(f"plan: {_plan_str(steps)}", flush=True)
-        ctx = Context(cfg=cfg, source=str(f), out_dir=out_dir, chapters=_parse_chapters(args.chapters))
+        ctx = Context(cfg=cfg, source=it.source, title=it.title, out_dir=out_dir, chapters=_parse_chapters(args.chapters))
         try:
             run_pipeline(steps, ctx, start=args.start, stop=args.stop, force=force)
-            done.append((f.name, ctx.results.get("output") or (ctx.wd.root if ctx.wd else "")))
+            done.append((it.label, ctx.results.get("output") or (ctx.wd.root if ctx.wd else "")))
         except KeyboardInterrupt:
             raise
         except Exception as e:  # noqa: BLE001 — one bad book shouldn't stop the batch
-            failed.append((f.name, f"{type(e).__name__}: {e}"))
-            print(f"FAILED {f.name}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            failed.append((it.label, f"{type(e).__name__}: {e}"))
+            print(f"FAILED {it.label}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
     print(f"\nbatch finished: {len(done)} ok, {len(failed)} failed")
     for name, result in done:
         print(f"  ok    {name} -> {result}")

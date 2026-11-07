@@ -6,7 +6,8 @@ Stages share data only through files in the book's work directory. No data passe
 
 General rules for every file below:
 - **Location:** `<work_dir>/<slug>/`, where `work_dir` is `[paths] work_dir` (default `work/`, relative to
-  the project home) and `slug` is the ingested title, slugified (or `--slug`).
+  the project home) and `slug` is the ingested title, slugified (or `--slug`). If a *different* source already
+  owns that slug, `-2`, `-3`… is appended; re-ingesting the same source (same `meta.source`) reuses its directory.
 - **Writes are atomic:** temp file plus rename, via `workdir.atomic_write`. Half-written files never exist.
 - **JSON:** UTF-8, 2-space indent, fields that are `null` are **omitted** (`exclude_none`). Readers must treat
   a missing optional field as its default.
@@ -95,8 +96,18 @@ UTF-8 plain text. The paragraph and heading conventions are produced by `normali
 ### `cover.<ext>`
 An image (`jpg`/`png`) attached as m4b cover art. Optional.
 
+### Container sources (`expand`)
+A method that overrides `expand(source) -> list[SourceItem] | None` is a container (today: `bookmark`).
+- The CLI runs each item as its own book, exactly like a directory batch.
+- Containers inside a batch directory are expanded in place.
+- Duplicate sources across the batch are run once.
+- Children resolve their own ingest method (`auto`, normally `url`); the container's own method token is dropped.
+- `SourceItem(source, title?)`: `title` reaches ingest as `Context.title` and is used only when the source has no title of its own (empty, or equal to the URL).
+- `expand` returns None for files it doesn't recognise. `load()`/`run()` on a container raise an error.
+
 **Requirements for a new ingester:**
-- `accepts(source)` must be cheap: check the extension or URL scheme, not the content.
+- `accepts(source)` must be cheap and must never claim another method's input: check the extension or URL
+  scheme. Shared extensions (`.html`, `.json`) need a cheap content sniff, as bookmark does on the first 4 KB.
 - Emit chapter boundaries as `# ` headings if the source has structure (EPUB toc, PDF headings).
   Without them, parse falls back to pattern detection.
 - Never emit text that shouldn't be read aloud.
@@ -395,6 +406,7 @@ The m4b file:
 | source | str | CLI input (ingest only) |
 | wd | WorkDir | set by ingest, or by the CLI when resuming |
 | slug | str | `--slug` override |
+| title | str | title hint from a container item (bookmark title) |
 | out / out_dir | Path | output path / batch output directory |
 | chapters | set[str]\|None | `--chapters` restriction; None = all |
 | log | callable | progress lines |
@@ -457,6 +469,7 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
   - A bare name belongs to its unique stage; a name several stages share goes to the next of them after the previous token's stage.
   - Stages left over take `[pipeline]`, then `auto`, then the stage's only method.
 - **Input:** a directory without `meta.json` is a batch. Its files are processed in sorted order, failures are reported and the run continues.
+  A container file (bookmark export) is a batch of its items; inside a directory it is expanded in place.
 - **Exit code:** non-zero on any failure.
 
 ## Review server (`--review`)

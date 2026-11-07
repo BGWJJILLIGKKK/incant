@@ -14,6 +14,7 @@ The pipeline is spelled out on the command line, one method per stage:
 ./incant book.epub synthesize=indextts                 # stage=method when a name is ambiguous
 ./incant pride-and-prejudice --from synthesize         # resume a book already in work/
 ./incant books/ -o audiobooks/                         # batch: every epub/pdf/txt in books/, one by one
+./incant bookmarks.html --until attribute              # batch: every page in a browser bookmark export
 ./incant --list                                        # stages and their methods
 ./incant book.epub --check                             # endpoints, voices, ffmpeg for the resolved plan
 ```

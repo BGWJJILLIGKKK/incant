@@ -105,7 +105,8 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
 ## Setup
 
 ```sh
-uv sync --extra qa
+uv sync --extra qa --extra browser
+.venv/bin/playwright install chromium   # headless browser for web pages that load their text with JavaScript
 ./incant --check
 uv run pytest
 ```

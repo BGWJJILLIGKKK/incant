@@ -119,6 +119,13 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
     page's `<script>` JSON is searched for the longest string that reads as prose and has at least `embedded_min_words` (400) words.
     Nested JSON strings and HTML fragments are decoded. This covers Next.js, Nuxt, Remix and JSON-LD `articleBody`.
     It doesn't cover pages that fetch their text after loading; those need a browser.
+  - **Browser fallback** (`render = "auto"`, default; `"always"`, `"never"`; `render_timeout_s` 45): if there is still too
+    little text, the page is rendered in headless Chromium (Playwright, `browser` extra) and extracted again.
+    - The browser gets the site's cookies with their own domains.
+    - Basic/bearer/header credentials are injected per request, only into requests for the configured site; third-party requests get none.
+    - Images, media and fonts are skipped.
+    - About 5–10 s per page.
+    - Without Playwright the error says so and the run continues without rendering.
   - A page with under `min_words` (100) words of text is refused. The error names the gate it found (age/consent/bot check,
     "enable JavaScript") or says there was no readable text, and how to supply cookies.
 
@@ -491,7 +498,7 @@ class Method:
 | LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions` with `response_format: json_schema` (strict) and `chat_template_kwargs.enable_thinking`; `/v1/models` for `--check`. Shared 32K context (`[llm] context_tokens`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |
 | ffmpeg | on PATH: decode, resample, ebur128, loudnorm, AAC/mp4 mux |
-| Web (url ingest) | HTTP GET via httpx, manual redirects (≤ 10), per-site credentials as above; HTML → trafilatura |
+| Web (url ingest) | HTTP GET via httpx, manual redirects (≤ 10), per-site credentials as above; HTML → trafilatura → embedded script data → headless Chromium (Playwright) |
 
 ## CLI
 ```

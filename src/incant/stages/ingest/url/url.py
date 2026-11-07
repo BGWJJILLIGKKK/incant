@@ -21,6 +21,7 @@ import os
 import re
 from http.cookiejar import LoadError, MozillaCookieJar
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urljoin, urlsplit
 
 import httpx
@@ -30,6 +31,7 @@ from pydantic import BaseModel, Field
 from ....normalize import clean_unicode, paragraphs_from_plain
 from ..base import Ingested, IngestMethod
 from .embedded import embedded_text
+from . import render as render_mod
 
 __all__ = ["UrlIngest"]
 
@@ -65,6 +67,10 @@ class UrlSettings(BaseModel):
     # Used when the markup has too little text. Higher bar than min_words: comments and blurbs live there too.
     embedded: bool = True
     embedded_min_words: int = 400
+    # Last resort for pages that fetch their text with JavaScript after loading: render in headless Chromium
+    # (needs the `browser` extra). "auto": only when the page and its embedded data have too little text.
+    render: Literal["auto", "always", "never"] = "auto"
+    render_timeout_s: float = 45.0
 
 
 class FetchError(RuntimeError):
@@ -179,26 +185,47 @@ class Fetcher:
         raise FetchError(f"{url}: more than {MAX_REDIRECTS} redirects")
 
 
+def _extract(html: str, s: UrlSettings) -> tuple[str, str | None]:
+    """(text with blank lines between paragraphs, how it was found if not from the markup)."""
+    text = trafilatura.extract(html, include_comments=False, include_tables=False, favor_precision=True) or ""
+    text = "\n\n".join(clean_unicode(text).splitlines())  # trafilatura: one paragraph per line
+    if len(text.split()) < s.min_words and s.embedded:
+        if found := embedded_text(html, s.embedded_min_words):
+            return clean_unicode(found), "data embedded in the page's scripts"
+    return text, None
+
+
 def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
     fetcher = fetcher or Fetcher(UrlSettings())
+    s = fetcher.s
+    notes = ["URL ingest reads a single page only."]
     final, html, used = fetcher.get(url)
     host = urlsplit(final).hostname
-    text = trafilatura.extract(html, include_comments=False, include_tables=False, favor_precision=True) or ""
+    text, how = _extract(html, s)
     words = len(text.split())
     if _PASSWORD_FIELD.search(html) and words < LOGIN_PAGE_MAX_WORDS:
         why = ("the credentials/cookies didn't log in (expired session?)" if used else
                f'add credentials or cookies under [ingest.url.sites."{host}"] in incant.local.toml')
         raise FetchError(f"{url} returned a login page ({final}) — {why}")
-    notes = ["URL ingest reads a single page only."]
-    if words < fetcher.s.min_words and fetcher.s.embedded:
-        if found := embedded_text(html, fetcher.s.embedded_min_words):
-            text = found
-            words = len(text.split())
-            notes.append(f"text taken from data embedded in the page's scripts ({words:,} words); check it is "
-                         "the article, not a comment or summary")
-    if words < fetcher.s.min_words:
+
+    render_note = ""
+    if s.render == "always" or (s.render == "auto" and words < s.min_words):
+        try:
+            r_final, r_html = render_mod.render(final, fetcher, s.render_timeout_s)
+            r_text, r_how = _extract(r_html, s)
+            if len(r_text.split()) > words:
+                final, html, text, how = r_final, r_html, r_text, r_how or "the page rendered in a browser"
+                words = len(text.split())
+        except render_mod.RenderUnavailable as e:
+            render_note = f" (browser rendering unavailable: {e})"
+    if how:
+        notes.append(f"text taken from {how} ({words:,} words); check it is the article, not a comment or summary")
+
+    if words < s.min_words:
         gate = _GATE.search(text)  # in the extracted text: what the page shows instead of the content
         label = " ".join(gate.group(0).split()) if gate else ""
+        tried = ("the page or its embedded data" if render_note or s.render == "never"
+                 else "the page, its embedded data or a browser render")
         if gate and used:
             what = (f'a gate page ("{label}") even with your credentials/cookies — '
                     "the session may have expired; export fresh cookies")
@@ -206,17 +233,14 @@ def ingest_url(url: str, fetcher: Fetcher | None = None) -> Ingested:
             what = (f'a gate page ("{label}") — if your browser session sees the text, '
                     f'export its cookies and set cookies = "…" under [ingest.url.sites."{host}"] in incant.local.toml')
         elif used:
-            what = ("no article text in the page or its embedded data although your credentials/cookies were sent: "
-                    "the page probably fetches its text with JavaScript after loading, which needs a browser")
+            what = f"no article text in {tried}, although your credentials/cookies were sent"
+        elif render_note or s.render == "never":
+            what = (f"no readable text in {tried}: the page may load its text with JavaScript (browser rendering "
+                    "is off or unavailable), or need a login")
         else:
-            what = ("no readable text in the page or its embedded data: it may fetch its content with JavaScript "
-                    "after loading, or need a login")
-        raise FetchError(f"{url}: only {words} words extracted — {what}. Nothing ingested.")
+            what = f"no readable text in {tried}: the page may need a login"
+        raise FetchError(f"{url}: only {words} words extracted — {what}{render_note}. Nothing ingested.")
     md = trafilatura.extract_metadata(html)
-    if len(notes) == 1:  # trafilatura emits one paragraph per line; make them blank-line separated
-        text = "\n\n".join(clean_unicode(text).splitlines())
-    else:  # embedded text already has blank lines between paragraphs
-        text = clean_unicode(text)
     return Ingested(
         title=(md.title if md and md.title else url),
         author=(md.author if md else None),

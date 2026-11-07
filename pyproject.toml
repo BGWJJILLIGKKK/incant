@@ -18,6 +18,7 @@ dependencies = [
 
 [project.optional-dependencies]
 qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
+browser = ["playwright>=1.47"]  # render JavaScript-built pages (then: playwright install chromium)
 
 [project.scripts]
 incant = "incant.cli:main"

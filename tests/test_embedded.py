@@ -15,7 +15,7 @@ SHELL = '<html><head><title>{t}</title></head><body><div id="root"></div>{s}</bo
 
 
 def fetch(page):
-    return Fetcher(UrlSettings(netrc=False), transport=httpx.MockTransport(lambda r: httpx.Response(200, html=page)))
+    return Fetcher(UrlSettings(netrc=False, render="never"), transport=httpx.MockTransport(lambda r: httpx.Response(200, html=page)))
 
 
 def test_next_data():

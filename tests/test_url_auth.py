@@ -32,7 +32,7 @@ class Recorder:
 
 def fetcher(sites=None, routes=None, netrc=False):
     rec = Recorder(routes or (lambda r: httpx.Response(200, html=ARTICLE)))
-    s = UrlSettings(sites=sites or {}, netrc=netrc)
+    s = UrlSettings(sites=sites or {}, netrc=netrc, render="never")
     return Fetcher(s, transport=httpx.MockTransport(rec)), rec
 
 
@@ -158,7 +158,7 @@ def test_cookie_session_counts_as_credentials(tmp_path):
     f, _ = fetcher({"stories.test": {"cookies": str(jar)}}, routes=lambda r: httpx.Response(200, html=page))
     with pytest.raises(FetchError) as e:
         ingest_url("https://stories.test/s/3", f)
-    assert "were sent" in str(e.value) and "JavaScript" in str(e.value) and "gate" not in str(e.value)
+    assert "were sent" in str(e.value) and "gate" not in str(e.value) and "cookies = " not in str(e.value)
 
 
 def test_bad_cookie_file_error_does_not_echo_contents(tmp_path):

@@ -41,6 +41,15 @@ true_peak_db = -3.0
 
 # ---- per-method settings: [<stage>.<method>] ----
 
+[ingest.url]                 # web pages (also every page of a bookmark file)
+timeout_s = 30
+netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
+# Logins: put these in incant.local.toml (git-ignored), never here. Sent only to that host (and subdomains).
+# [ingest.url.sites."example.com"]
+# username = "me"
+# password_env = "EXAMPLE_PASSWORD"       # or password = "…"; or bearer / bearer_env; or headers = {…}
+# cookies = "~/cookies/example.txt"       # cookies.txt exported from a logged-in browser
+
 [parse.characters]
 window_words = 5000          # chapters longer than this are split for extraction
 think = false                # thinking for extraction: ~10x slower, little gain

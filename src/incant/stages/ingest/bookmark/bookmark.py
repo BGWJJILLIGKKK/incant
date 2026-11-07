@@ -8,7 +8,7 @@ Formats (recognised by content, not just extension, so an ordinary .html/.json f
   * A plain JSON list of {"url"|"href"|"uri", "title"|"name"} objects, or {"bookmarks": [...]}
 
 Only http(s) links are kept (no javascript:, place:, file:); duplicates (ignoring #fragments) keep their
-first title. Pages behind a login aren't supported: the url method fetches anonymously.
+first title. Pages behind a login use the url method's per-site credentials ([ingest.url.sites."host"]).
 """
 
 from __future__ import annotations

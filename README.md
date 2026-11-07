@@ -113,5 +113,7 @@ uv run pytest
 `./incant` is a small Python launcher (stdlib only) that runs the package through `uv run` from any
 directory; `INCANT_NO_SYNC=1` skips uv's dependency check and uses `.venv` directly.
 
-Config: `incant.toml`, overridden by `incant.local.toml`. Voice library format:
+Config: `incant.toml`, overridden by `incant.local.toml`. Logins for web pages behind a paywall or
+sign-in go in the local file, under `[ingest.url.sites."host"]`: username/password, a bearer token, headers,
+or a browser-exported `cookies.txt`; `~/.netrc` also works. See `docs/interfaces.md`. Voice library format:
 `voices/README.md`.

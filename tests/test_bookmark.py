@@ -111,7 +111,7 @@ def fake_web(monkeypatch):
         "http://example.org/untitled": (None, "A page with no title of its own."),
     }
 
-    def fetch(url):
+    def fetch(url, fetcher=None):
         if url not in pages:
             raise RuntimeError(f"could not fetch {url}")
         title, body = pages[url]

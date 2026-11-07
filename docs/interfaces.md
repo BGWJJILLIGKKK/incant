@@ -96,6 +96,25 @@ UTF-8 plain text. The paragraph and heading conventions are produced by `normali
 ### `cover.<ext>`
 An image (`jpg`/`png`) attached as m4b cover art. Optional.
 
+### Web pages (`url`) and credentials
+`[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), and `sites`: `{host: Site}`.
+- A `sites` key matches that host and its subdomains; the most specific key wins.
+- `Site` fields (all optional):
+  - `username` + `password` | `password_env` → HTTP Basic
+  - `bearer` | `bearer_env` → `Authorization: Bearer`
+  - `headers` {name: value}
+  - `cookies`: path to a Netscape `cookies.txt` (browser export)
+- Hosts without an entry use `~/.netrc` (`$NETRC`) when `netrc = true`.
+- **Where secrets go:** `incant.local.toml` (git-ignored) or environment variables (`*_env`).
+- **Rules:**
+  - Credentials are sent only to their own host. Redirects are followed by hand, and each hop gets its own host's credentials; cookies are scoped by domain.
+  - No credentials over plain http, except to localhost.
+  - Secrets are left out of the method fingerprint (`pipeline.json`), logs, errors and `meta.json`.
+  - `--check` reports missing `*_env` variables and missing cookie files.
+- **Errors:**
+  - 401/403/407 → names the `[ingest.url.sites."host"]` entry to add, or says the credentials were rejected.
+  - A page with a password field and under 300 words of text is reported as a login wall, not ingested.
+
 ### Container sources (`expand`)
 A method that overrides `expand(source) -> list[SourceItem] | None` is a container (today: `bookmark`).
 - The CLI runs each item as its own book, exactly like a directory batch.
@@ -457,6 +476,7 @@ class Method:
 | LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions` with `response_format: json_schema` (strict) and `chat_template_kwargs.enable_thinking`; `/v1/models` for `--check`. Shared 32K context (`[llm] context_tokens`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |
 | ffmpeg | on PATH: decode, resample, ebur128, loudnorm, AAC/mp4 mux |
+| Web (url ingest) | HTTP GET via httpx, manual redirects (≤ 10), per-site credentials as above; HTML → trafilatura |
 
 ## CLI
 ```

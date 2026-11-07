@@ -131,6 +131,16 @@ class Span(BaseModel):
     emotion: Emotion | None = None
     confidence: float | None = None
     locked: bool = False
+    say: str | None = None  # TTS-ready text, set by the normalize stage (text itself is never changed)
+
+
+class ChapterSpeech(BaseModel):
+    """normalize stage output (speech/<chapter>.json): spans with `say`, plus the spoken chapter title."""
+
+    schema_version: int = SCHEMA_VERSION
+    chapter_id: str
+    title_say: str
+    spans: list[Span]
 
 
 # ---------------------------------------------------------------- casting

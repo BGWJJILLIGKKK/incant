@@ -8,7 +8,7 @@ local LLM for character analysis and speaker attribution, and IndexTTS for voice
 The pipeline is spelled out on the command line, one method per stage:
 
 ```sh
-./incant book.epub epub basic narrator indextts m4b    # fully explicit
+./incant book.epub epub characters speakers rules indextts m4b   # fully explicit
 ./incant book.epub                                     # everything from [pipeline] defaults / auto-detect
 ./incant book.epub dummy out/test.m4b                  # override one stage; trailing path = output file
 ./incant book.epub synthesize=indextts                 # stage=method when a name is ambiguous
@@ -36,8 +36,15 @@ is content-cached per segment, so it always runs but only renders what changed.
 | 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `txt`, `url` |
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
 | 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `speakers` (LLM) |
-| 4 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `indextts`, `dummy` |
-| 5 | `output` | `out/<slug>.m4b` | `m4b` |
+| 4 | `normalize` | `speech/<chapter>.json` (spans + TTS-ready `say`), `speech/changes.txt` | `rules`, `none` |
+| 5 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `indextts`, `dummy` |
+| 6 | `output` | `out/<slug>.m4b` | `m4b` |
+
+**Normalisation** (`rules`) spells out what a TTS is likely to misread — Roman numerals in titles,
+section words and regnal names ("Henry VIII"), years/numbers/money/times, abbreviations ("Mr.", "St."),
+ALL-CAPS runs, symbols, archaic hyphenation — conservatively, leaving the pronoun "I" and real acronyms
+alone. Every change is listed in `speech/changes.txt`. Pronunciations go in `lexicon.toml` (project) or
+`work/<book>/lexicon.toml` as `[words] Name = "respelling"`; book text itself is never changed.
 
 ## Adding a method
 
@@ -82,6 +89,9 @@ uv sync --extra qa
 ./incant --check
 uv run pytest
 ```
+
+`./incant` is a small Python launcher (stdlib only) that runs the package through `uv run` from any
+directory; `INCANT_NO_SYNC=1` skips uv's dependency check and uses `.venv` directly.
 
 Config: `incant.toml`, overridden by `incant.local.toml`. Voice library format:
 `voices/README.md`.

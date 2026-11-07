@@ -1,5 +1,49 @@
-#!/usr/bin/env bash
-# ./incant INPUT [METHOD ...] [OUTPUT] [options]   — see ./incant --help / --list
-here="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-export INCANT_HOME="$here"
-exec uv run --quiet --extra qa --project "$here" python -m incant "$@"
+#!/usr/bin/env python3
+"""incant launcher: ./incant INPUT [METHOD ...] [OUTPUT] [options]  (see --help, --list)
+
+Runs the incant package inside this project's environment, from anywhere (symlinks resolved).
+Standard library only, so it works under any system Python 3.8+.
+
+  - With uv on PATH: `uv run` (keeps dependencies in sync with pyproject.toml/uv.lock first).
+  - Without uv: the project's .venv directly, if it exists.
+Environment:
+  INCANT_NO_SYNC=1   skip uv's dependency sync and run the .venv directly (faster startup)
+  INCANT_EXTRAS      comma-separated optional extras to include (default: qa)
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import sys
+from pathlib import Path
+
+HOME = Path(__file__).resolve().parent
+VENV_PYTHON = HOME / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+
+def main() -> None:
+    os.environ.setdefault("INCANT_HOME", str(HOME))
+    args = sys.argv[1:]
+    uv = shutil.which("uv")
+    no_sync = os.environ.get("INCANT_NO_SYNC") == "1"
+
+    if uv and not no_sync:
+        extras = [e.strip() for e in os.environ.get("INCANT_EXTRAS", "qa").split(",") if e.strip()]
+        cmd = [uv, "run", "--quiet", "--project", str(HOME)]
+        for e in extras:
+            cmd += ["--extra", e]
+        cmd += ["python", "-m", "incant", *args]
+    elif VENV_PYTHON.exists():
+        cmd = [str(VENV_PYTHON), "-m", "incant", *args]
+    else:
+        sys.exit(f"incant: no environment found. Install uv (https://docs.astral.sh/uv/) or run\n"
+                 f"  cd {HOME} && uv sync --extra qa")
+    try:
+        os.execv(cmd[0], cmd)  # replace this process: signals and exit codes pass straight through
+    except OSError as e:
+        sys.exit(f"incant: cannot run {cmd[0]}: {e}")
+
+
+if __name__ == "__main__":
+    main()

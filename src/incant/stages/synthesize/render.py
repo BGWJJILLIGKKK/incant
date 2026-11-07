@@ -86,18 +86,21 @@ class Renderer:
         same emotion, so e.g. quote + dialogue tag + quote is one TTS call with natural prosody
         when a single voice reads all three. None marks a scene break."""
         out: list[_Group | None] = []
-        for s in self.wd.read_spans(ch.id):
+        speech = self.wd.read_speech(ch.id)
+        spans = speech.spans if speech else self.wd.read_spans(ch.id)  # (no normalize stage output: raw text)
+        for s in spans:
             if is_scene_break(s.text):
                 out.append(None)
                 continue
             emo = s.emotion.model_dump() if s.emotion else None
             key = (s.para, self.cast.voice_for(s.speaker), json.dumps(emo, sort_keys=True))
             last = out[-1] if out else None
+            words = s.say if s.say is not None else s.text  # `say` is trimmed: join pieces with a space
             if last is not None and last.key == key:
-                last.text += s.text
+                last.text += (" " if s.say is not None else "") + words
                 last.span_ids.append(s.id)
             else:
-                out.append(_Group(key, s.para, s.speaker, s.emotion, s.text, [s.id]))
+                out.append(_Group(key, s.para, s.speaker, s.emotion, words, [s.id]))
         return out
 
     def plan(self, ch: Chapter) -> list[Segment]:
@@ -110,7 +113,8 @@ class Renderer:
                                 cache_key=self._key(text, voice, emotion), pause_after_ms=pause_ms))
 
         if ch.speak_title:
-            for t in chunk(ch.title, self.backend.settings.max_segment_chars):
+            speech = self.wd.read_speech(ch.id)
+            for t in chunk(speech.title_say if speech else ch.title, self.backend.settings.max_segment_chars):
                 add([f"{ch.id}-title"], t, NARRATOR_ID, None, a.pause_title_ms)
 
         groups = self._groups(ch)

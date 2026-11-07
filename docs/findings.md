@@ -108,3 +108,7 @@ BOHEMIA") and regnal names; numbers and years ("1888", "10,000", "two third"); a
 "Dr.", "St.", "&c."); ALL-CAPS runs from drop-caps and letters ("MR. BENNET", "IRENE NORTON, *née*
 ADLER") that a TTS may spell letter by letter; archaic hyphenation ("to-morrow"); long dash runs
 ("——"); symbols (£, &, %).
+
+Implemented as the `normalize` stage (2026-11-06). On the test books: 788 of 3,197 P&P spans and 444 of
+3,805 Holmes spans respelled; QA runs the same rules over the whisper transcript so "Mr."/"Mister" and
+"1888"/"eighteen eighty-eight" aren't counted as mismatches.

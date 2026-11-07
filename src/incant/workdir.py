@@ -8,11 +8,13 @@ work/<slug>/
   chapters/<id>.txt    stage 2  one file per chapter
   characters.json      stage 2  CharacterList
   spans/<id>.jsonl     stage 3  Span per line (per chapter, so chapters can pipeline)
+  speech/<id>.json     stage 4  ChapterSpeech: spans + TTS-ready `say` text
+  lexicon.toml                  optional per-book pronunciations (see normalize stage)
   cast.json                     Cast
-  audio/cache/<key>.wav stage 4 content-addressed segment cache
-  audio/chapters/<id>.wav stage 4 assembled, loudness-normalized chapter
-  audio/manifest.json  stage 4  AudioManifest
-  out/<slug>.m4b       stage 5
+  audio/cache/<key>.wav stage 5 content-addressed segment cache
+  audio/chapters/<id>.wav stage 5 assembled, loudness-normalized chapter
+  audio/manifest.json  stage 5  AudioManifest
+  out/<slug>.m4b       stage 6
 """
 
 from __future__ import annotations
@@ -24,7 +26,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from .schemas import AudioManifest, BookMeta, Cast, ChapterList, CharacterList, Span
+from .schemas import AudioManifest, BookMeta, Cast, ChapterList, ChapterSpeech, CharacterList, Span
 
 M = TypeVar("M", bound=BaseModel)
 
@@ -63,6 +65,16 @@ class WorkDir:
 
     def spans_path(self, chapter_id: str) -> Path:
         return self.root / "spans" / f"{chapter_id}.jsonl"
+
+    def speech_path(self, chapter_id: str) -> Path:
+        return self.root / "speech" / f"{chapter_id}.json"
+
+    def read_speech(self, chapter_id: str) -> ChapterSpeech | None:
+        p = self.speech_path(chapter_id)
+        return ChapterSpeech.model_validate_json(p.read_text()) if p.exists() else None
+
+    def write_speech(self, sp: ChapterSpeech) -> None:
+        self._write(self.speech_path(sp.chapter_id), sp)
 
     # generic json io
     def _read(self, path: Path, model: type[M]) -> M:

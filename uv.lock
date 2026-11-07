@@ -662,6 +662,7 @@ dependencies = [
     { name = "ebooklib" },
     { name = "httpx" },
     { name = "lxml" },
+    { name = "num2words" },
     { name = "pydantic" },
     { name = "trafilatura" },
 ]
@@ -669,7 +670,6 @@ dependencies = [
 [package.optional-dependencies]
 qa = [
     { name = "faster-whisper" },
-    { name = "num2words" },
 ]
 
 [package.dev-dependencies]
@@ -684,7 +684,7 @@ requires-dist = [
     { name = "faster-whisper", marker = "extra == 'qa'", specifier = ">=1.1" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "lxml", specifier = ">=5.0" },
-    { name = "num2words", marker = "extra == 'qa'", specifier = ">=0.5" },
+    { name = "num2words", specifier = ">=0.5" },
     { name = "pydantic", specifier = ">=2.9" },
     { name = "trafilatura", specifier = ">=1.12" },
 ]

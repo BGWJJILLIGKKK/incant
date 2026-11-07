@@ -46,7 +46,7 @@ def setup(tmp_path):
     src = tmp_path / "t.epub"
     make_epub(src)
     conf = tmp_path / "incant.toml"
-    conf.write_text('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nattribute = "narrator"\nsynthesize = "dummy"\n')
+    conf.write_text('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nattribute = "narrator"\nnormalize = "rules"\nsynthesize = "dummy"\n')
     return tmp_path, src, conf
 
 
@@ -55,7 +55,7 @@ def setup(tmp_path):
 
 def test_discovery_finds_stages_and_methods_in_order():
     stages = discover()
-    assert [s.name for s in stages] == ["ingest", "parse", "attribute", "synthesize", "output"]
+    assert [s.name for s in stages] == ["ingest", "parse", "attribute", "normalize", "synthesize", "output"]
     by = {s.name: s for s in stages}
     assert {"epub", "txt", "url"} <= set(by["ingest"].methods)
     for s in stages:
@@ -67,7 +67,7 @@ def test_discovery_finds_stages_and_methods_in_order():
 def test_resolve_out_of_order_explicit_and_output_path(setup):
     _, src, _ = setup
     stages = discover()
-    steps, out = resolve(["m4b", "dummy", "parse=basic", "narrator", "final.m4b"], str(src), Config(), stages)
+    steps, out = resolve(["m4b", "dummy", "parse=basic", "narrator", "rules", "final.m4b"], str(src), Config(), stages)
     plan = {s.stage.name: (s.method, s.why) for s in steps}
     assert plan["ingest"] == ("epub", "auto")
     assert plan["synthesize"] == ("dummy", "cli") and plan["output"] == ("m4b", "cli")
@@ -87,7 +87,7 @@ def test_resolve_errors(setup):
 
 def test_resolve_uses_config_default(setup):
     _, src, _ = setup
-    steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "attribute": "narrator", "synthesize": "dummy"}), discover())
+    steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "attribute": "narrator", "normalize": "rules", "synthesize": "dummy"}), discover())
     assert [(s.stage.name, s.why) for s in steps if s.stage.name == "synthesize"] == [("synthesize", "config")]
 
 
@@ -113,7 +113,7 @@ def test_epub_ingest_structure(setup):
 def test_end_to_end_dummy_and_resume(setup, capsys):
     tmp, src, conf = setup
     out = tmp / "book.m4b"
-    assert main([str(src), "epub", "basic", "narrator", "dummy", "m4b", str(out), "-c", str(conf)]) == 0
+    assert main([str(src), "epub", "basic", "narrator", "rules", "dummy", "m4b", str(out), "-c", str(conf)]) == 0
     probe = json.loads(subprocess.run(["ffprobe", "-v", "error", "-show_chapters", "-show_format", "-of", "json", str(out)],
                                       capture_output=True, check=True).stdout)
     assert [c["tags"]["title"] for c in probe["chapters"]] == ["Chapter One", "Chapter Two"]

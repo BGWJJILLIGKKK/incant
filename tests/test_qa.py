@@ -2,7 +2,7 @@ from incant.qa import Check, edit_distance, words
 
 
 def test_words_normalise_case_punctuation_hyphens():
-    assert words("“To-morrow fortnight,” said Mr. Bennet’s wife.") == ["tomorrow", "fortnight", "said", "mr", "bennets", "wife"]
+    assert words("“Good-humoured,” said Mr. Bennet’s wife.") == ["good", "humoured", "said", "mr", "bennets", "wife"]
 
 
 def test_numbers_spelled_out():
@@ -48,3 +48,11 @@ def test_renderer_retries_failed_take_and_keeps_best(tmp_path):
     assert r._qa_path(seg.cache_key).exists()
     # cached + checked: no new work
     assert r.synthesize([seg]) == [] and takes == [0, 1]
+
+
+def test_transcript_normalised_like_the_text():
+    from incant.qa import compare
+    from incant.speech import normalize
+
+    said = normalize("“To-morrow,” said Mr. Bennet, “in 1888.”")
+    assert compare(said, "Tomorrow, said Mr. Bennet, in 1888.").edits == 0

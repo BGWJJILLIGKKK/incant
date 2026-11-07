@@ -1,0 +1,6 @@
+# Project-wide pronunciation lexicon, applied by the normalize stage after its rules.
+# Whole words, case-insensitive. Per-book entries go in work/<book>/lexicon.toml and win over these.
+# Write the respelling the TTS should read, e.g.:
+#   Hermione = "Her-my-oh-nee"
+#   Sauron = "Sow-ron"
+[words]

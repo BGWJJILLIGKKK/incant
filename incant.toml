@@ -7,6 +7,7 @@
 ingest = "auto"
 parse = "characters"         # LLM character profiles (~10 min/book); "basic" = chapters only
 attribute = "speakers"       # LLM speaker + emotion per quote (~8 min/book); "narrator" = one voice
+normalize = "rules"          # spell out numerals/numbers/abbreviations/caps for the TTS; "none" = markup only
 synthesize = "indextts"
 output = "m4b"
 
@@ -46,6 +47,9 @@ max_tokens_thinking = 6144
 max_quotes = 25              # quotations per request
 emotion_scale = 0.8          # intensity -> IndexTTS emo_alpha
 min_intensity = 0.3          # weaker emotions are rendered neutral
+
+[normalize.rules]
+lexicon = "lexicon.toml"     # [words] Name = "respelling"; plus <work>/<book>/lexicon.toml
 
 [synthesize.indextts]
 base_url = "http://localhost:8080/v1"

@@ -28,7 +28,7 @@ def _spell(m: re.Match) -> str:
 
 def words(text: str) -> list[str]:
     t = _NUMBER.sub(_spell, text.casefold())
-    t = t.replace("’", "").replace("'", "").replace("-", "").replace("—", " ")
+    t = t.replace("’", "").replace("'", "").replace("-", " ").replace("—", " ")
     return _WORD.findall(t)
 
 
@@ -91,6 +91,14 @@ class Transcriber:
 
 
 def compare(text: str, heard: str) -> Check:
-    ref, hyp = words(text), words(heard)
+    """`text` is what the TTS was given (already normalised); whisper writes "Mr." and "1888", so the
+    transcript goes through the same normalisation before comparing."""
+    try:
+        from .speech import normalize
+
+        heard_n = normalize(heard)
+    except Exception:  # noqa: BLE001 — never let QA crash a render
+        heard_n = heard
+    ref, hyp = words(text), words(heard_n)
     edits = edit_distance(ref, hyp)
     return Check(wer=edits / max(1, len(ref)), edits=edits, heard=heard)

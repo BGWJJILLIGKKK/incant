@@ -1,0 +1,14 @@
+# docker compose run --rm incant books/book.epub          (any incant arguments)
+# docker compose run --rm incant --check
+# docker compose run --rm --service-ports incant pride-and-prejudice --review
+services:
+  incant:
+    build: .
+    image: incant
+    user: "${UID:-1000}:${GID:-1000}"   # files in ./work and ./output stay yours: export UID GID, or put them in .env
+    network_mode: host                  # reach the LLM/TTS servers by the names the host uses (localhost:8080)
+    volumes:
+      - ${INCANT_DATA_DIR:-.}:/data   # books, work/, output/, incant.local.toml, cookies
+    # Without host networking (Docker Desktop): drop network_mode, add
+    #   ports: ["8765:8765"]   and   extra_hosts: ["llm-host:host-gateway"]
+    # and set [review] host = "0.0.0.0" in incant.local.toml.

@@ -246,3 +246,15 @@ def test_check_on_a_batch_only_checks(tmp_path, capsys):
     main([str(books), "dummy", "-c", str(conf), "--check"])
     assert "ok  ffmpeg" in capsys.readouterr().out or not HAVE_FFMPEG
     assert not (tmp_path / "work").exists()  # nothing ingested
+
+
+def test_data_dir_holds_books_and_user_settings(tmp_path, monkeypatch):
+    app, data = tmp_path / "app", tmp_path / "data"
+    app.mkdir(), data.mkdir()
+    (app / "incant.toml").write_text('[paths]\nvoices_dir = "voices"\n[llm]\nmodel = "m1"\n')
+    (data / "incant.local.toml").write_text('[llm]\nmodel = "m2"\n')
+    monkeypatch.setenv("INCANT_DATA", str(data))
+    cfg = load_config(app / "incant.toml")
+    assert cfg.paths.work_dir == data / "work" and cfg.paths.output_dir == data / "output"
+    assert cfg.paths.voices_dir == app / "voices"  # the program's voice list stays with the program
+    assert cfg.llm.model == "m2"  # the data directory's settings are read last

@@ -66,6 +66,9 @@ class AudioConfig(BaseModel):
 
 
 class PathsConfig(BaseModel):
+    # Where books and audio live: work_dir and output_dir resolve against it (default: the config's directory).
+    # $INCANT_DATA overrides it, and a incant.local.toml there is read last (containers: /data).
+    data_dir: Path = Path(".")
     work_dir: Path = Path("work")
     voices_dir: Path = Path("voices")
     output_dir: Path = Path("output")  # finished books: <output_dir>/<author>/<title>/<title>.<ext>
@@ -126,6 +129,9 @@ def load_config(path: Path | None = None) -> Config:
         dirs = [Path.cwd()] + ([Path(os.environ["INCANT_HOME"])] if os.environ.get("INCANT_HOME") else [])
         base = next((d for d in dirs if (d / "incant.toml").exists()), Path.cwd())
         files = [base / "incant.toml", base / "incant.local.toml"]
+    data_env = os.environ.get("INCANT_DATA")
+    if data_env and (extra := Path(data_env) / "incant.local.toml") not in files:
+        files.append(extra)  # the user's own settings and secrets, outside the program's directory
     data: dict = {}
     used = []
     for f in files:
@@ -133,7 +139,10 @@ def load_config(path: Path | None = None) -> Config:
             data = _deep_merge(data, tomllib.loads(f.read_text()))
             used.append(f)
     cfg = Config.model_validate({**data, "base_dir": base.resolve(), "files": used})
-    cfg.paths.work_dir = cfg.resolve(cfg.paths.work_dir)
+    if data_env:
+        cfg.paths.data_dir = Path(data_env)
+    cfg.paths.data_dir = cfg.resolve(cfg.paths.data_dir).resolve()
+    cfg.paths.work_dir = cfg.paths.data_dir / cfg.paths.work_dir  # (an absolute path stays as it is)
+    cfg.paths.output_dir = cfg.paths.data_dir / cfg.paths.output_dir
     cfg.paths.voices_dir = cfg.resolve(cfg.paths.voices_dir)
-    cfg.paths.output_dir = cfg.resolve(cfg.paths.output_dir)
     return cfg

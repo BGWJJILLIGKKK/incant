@@ -13,12 +13,14 @@ No emotion control: emotions are ignored.
 from __future__ import annotations
 
 import io
+import os
 import threading
 import wave
 from pathlib import Path
 from typing import Literal
 
 import httpx
+from pydantic import Field
 
 from ....schemas import Emotion, Voice
 from ....voices import VoiceLibrary
@@ -35,7 +37,7 @@ PROTOCOL = 1  # bump when synthesis changes for the same settings (invalidates t
 
 class KokoroSettings(SynthSettings):
     model: Literal["fp32", "int8"] = "fp32"
-    model_dir: Path = Path("~/.cache/incant/kokoro")
+    model_dir: Path = Field(default_factory=lambda: Path(os.environ.get("INCANT_KOKORO_DIR", "~/.cache/incant/kokoro")))
     download: bool = True  # fetch missing model files from the kokoro-onnx release
     speed: float = 1.0
     threads: int = 0  # onnxruntime threads per segment; 0 = all cores

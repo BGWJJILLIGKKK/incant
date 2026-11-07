@@ -124,6 +124,26 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
 - Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
   re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.
 
+## Run with Docker
+
+Everything but the GPU servers (LLM, IndexTTS) is in the image: Python and its packages, ffmpeg, headless
+Chromium, the speech-to-text QA model and Kokoro's voices (baked in, so it also runs offline). Your books,
+`work/`, `output/`, `incant.local.toml` and cookies stay outside, in the directory mounted at `/data`.
+
+```sh
+docker compose build                                  # or: docker build -t incant .
+docker compose run --rm incant --check             # reaches localhost:8080 through host networking
+docker compose run --rm incant books/book.epub     # paths relative to the mounted directory
+docker compose run --rm incant book-slug --review  # host networking: http://127.0.0.1:8765
+```
+
+- `compose.yaml` mounts the current directory (or `$INCANT_DATA_DIR`) and runs as `$UID:$GID`, so files stay yours.
+- Cookies files must be inside `/data` (e.g. `cookies = "cookies.txt"` in `incant.local.toml`).
+- Lighter images: `--build-arg BAKE_MODELS=0` (models download on first use) or `--build-arg EXTRAS=""`
+  (no browser, QA or Kokoro: ~280 MB instead of ~3.3 GB).
+- Outside Docker, `[paths] data_dir` / `$INCANT_DATA` does the same: work and output there, plus a
+  `incant.local.toml` read last.
+
 ## Setup
 
 ```sh

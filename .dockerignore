@@ -1,0 +1,16 @@
+# Only the program goes into the image. Books, work, output, logs, secrets and cookies are mounted at run time.
+.git
+.venv
+**/__pycache__
+.pytest_cache
+work
+output
+books
+logs
+eval/results
+incant.local.toml
+*.local.toml
+cookies*.txt
+voices/*
+!voices/README.md
+!voices/voices.json

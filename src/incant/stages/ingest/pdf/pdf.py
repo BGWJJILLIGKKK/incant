@@ -261,7 +261,7 @@ def _join(prev: str, nxt: str, vocab: Counter) -> str:
 
 
 def _column_geometry(lines: list[Line], body_size: float, em: float) -> tuple[float, float, float, float]:
-    """(left margin, right margin, normal line gap) of one column. The left margin is the smallest left
+    """(left margin, right margin, normal line gap, extra gap that starts a paragraph) of one column. The left margin is the smallest left
     edge used by a fair share of lines — not the most common one, which on dialogue-heavy pages is the
     paragraph indent."""
     body = [ln for ln in lines if ln.size < body_size * HEADING_RATIO] or lines

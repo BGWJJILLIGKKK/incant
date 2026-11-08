@@ -12,7 +12,8 @@ from .schemas import Voice
 # Kokoro-82M v1.0. Id = <language><gender>_<name>; the first letter picks the accent/language.
 KOKORO_LANG = {"a": "en-us", "b": "en-gb", "e": "es", "f": "fr-fr", "h": "hi", "i": "it", "j": "ja",
                "p": "pt-br", "z": "cmn"}
-# Grades from the model card (A best … F); D-and-better English voices are cast automatically.
+# Grades from the model card (A best … F); D-and-better English voices (except the
+# whispery af_nicole) are cast automatically.
 _KOKORO_EN = {
     "af_heart": ("A", None, None), "af_bella": ("A-", None, None), "af_nicole": ("B-", None, "whisper"),
     "af_aoede": ("C+", None, None), "af_kore": ("C+", None, None), "af_sarah": ("C+", None, None),

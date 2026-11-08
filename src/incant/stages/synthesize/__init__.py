@@ -1,7 +1,8 @@
 """Stage 5 — synthesize: speech (normalized spans) + cast -> audio/chapters/<id>.wav + audio/manifest.json.
 
 A method is a TTS backend: implement `identity()` and `synthesize(text, voice, emotion) -> wav bytes`.
-The shared renderer (render.py) does casting, chunking, caching, pauses and loudness normalization.
+The base class casts voices (casting.py); the shared renderer (render.py) does chunking, caching, pauses,
+level matching and loudness normalization.
 """
 
 from .base import SynthesizeMethod as Base

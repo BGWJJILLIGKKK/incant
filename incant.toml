@@ -27,10 +27,8 @@ output_dir = "output"         # finished books: output/<author>/<title>/<title>.
 # narrator = "…"             # one voice id for every backend; normally set per backend ([synthesize.<name>] narrator)
 main_unique = 8              # the N characters with most lines never share a voice
 # Speaking characters are cast automatically into the book's cast.json from voice gender/age/tone tags;
-# existing entries there are never changed, so edit cast.json to recast.
+# automatic picks are redone each run, while roles you set by hand (cast.json or the review page) are kept.
 
-# All LLM stages run over the whole book before synthesis starts, so one GPU can serve the LLM and then the
-# TTS (llama-swap swaps models on demand).
 # [credits]                  # terms you know, for credits.txt beside each audiobook (README: "Credits")
 # llm = "provider terms: Qwen license"
 # "synthesize.indextts" = "non-commercial: check your checkpoint's license"
@@ -39,6 +37,8 @@ main_unique = 8              # the N characters with most lines never share a vo
 host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
 port = 8765
 
+# All LLM stages run over the whole book before synthesis starts, so one GPU can serve the LLM and then the
+# TTS (llama-swap swaps models on demand).
 [llm]                        # for parse = "characters" / attribute = "speakers" (README: "Configuration")
 base_url = "http://localhost:8080/v1"
 # dialect = "llama.cpp" (default) | "openai" (Ollama, LM Studio, OpenRouter, OpenAI, Gemini) | "anthropic" (Claude);
@@ -82,7 +82,7 @@ min_intensity = 0.3          # weaker emotions are rendered neutral
 [normalize.rules]
 lexicon = "lexicon.toml"     # [words] Name = "respelling"; plus <work>/<book>/lexicon.toml
 
-[synthesize.indextts]          # an IndexTTS-2 server with an OpenAI-style API (voices: voices/voices.json)
+[synthesize.indextts]        # an IndexTTS-2 server with an OpenAI-style API (voices: voices/voices.json)
 narrator = "a_janelle_risa"
 base_url = "http://localhost:8080/v1"
 model = "indextts-2.5"

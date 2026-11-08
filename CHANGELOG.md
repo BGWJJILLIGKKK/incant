@@ -5,6 +5,8 @@ and versions follow [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+## 0.3.0 — 2026-11-08
+
 First public release.
 
 ### Changed
@@ -27,6 +29,10 @@ First public release.
 - CI: tests and lint on every push and pull request; release images for each `v*` tag, built from a clean
   checkout and pushed to the GitHub Container Registry (and Docker Hub when configured).
   `tools/build-images.sh` builds them locally from committed files only.
+
+- Mac and Windows via Docker Desktop: `compose.desktop.yaml` (normal networking, the review page published on
+  127.0.0.1, host servers at `host.docker.internal`), quickstart steps for each, and `INCANT_REVIEW_HOST`.
+- Release images for `linux/arm64` as well as `linux/amd64`, each built on a native runner.
 
 ### Fixed
 - A test that needed the `anthropic` extra now skips without it.

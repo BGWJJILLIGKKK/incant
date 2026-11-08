@@ -76,7 +76,7 @@ def repair_breaks(paras: list[str]) -> list[str]:
 
 
 class DoclingIngest(PdfIngest):
-    LICENSE = "project code; Docling and its models (MIT)"
+    LICENSE = "project code; Docling (MIT), its layout and RapidOCR models (Apache-2.0)"
     OUTPUT_TERMS = "none"
     Settings = DoclingSettings
     settings: DoclingSettings

@@ -1,7 +1,8 @@
 """LLM speaker attribution + delivery (emotion) for every quotation. Needs characters.json (parse=characters).
 
 Spans are still cut deterministically (spans.py). The model sees a passage with each quotation marked
-⟦n⟧ and returns, per marker, a character id (constrained by the JSON grammar to the roster, or "unknown")
+⟦n⟧ and returns, per marker, a character id (constrained by the JSON grammar to the roster, "narrator",
+"other" — an unnamed speaker by role — or "unknown")
 plus a short delivery description and intensity. It never writes book text.
 
 Chapters are cut into windows of at most `max_quotes` quotations, each preceded by a few paragraphs of

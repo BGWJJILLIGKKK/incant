@@ -31,13 +31,13 @@ class Book:
     def __init__(self, cfg: Config, wd: WorkDir):
         self.cfg, self.wd = cfg, wd
         self._renderer = None
-        self.voices = self.synth().voices()  # the configured backend's voices
+        self.voices = self.synth().voices()  # the configured backend's voices (the stage default if none)
 
     def synth(self):
         from ..pipeline import discover, instantiate
 
         stage = {s.name: s for s in discover()}["synthesize"]
-        return instantiate(self.cfg, stage, self.cfg.pipeline.get("synthesize", "indextts"))
+        return instantiate(self.cfg, stage, self.cfg.pipeline.get("synthesize") or stage.module.DEFAULT)
 
     # ------------------------------------------------------------ reads
 
@@ -276,11 +276,15 @@ def make_handler(book: Book):
     return Handler
 
 
-def serve(cfg: Config, wd: WorkDir, host: str, port: int) -> None:
+def serve(cfg: Config, wd: WorkDir, host: str, port: int, published: bool = False) -> None:
+    """published: running in a container whose port compose publishes on the host (compose.desktop.yaml), so
+    the page is opened at the host's localhost, and who can reach it is decided by the port mapping."""
     httpd = ThreadingHTTPServer((host, port), make_handler(Book(cfg, wd)))
-    shown = "localhost" if host in ("127.0.0.1", "localhost") else host
+    shown = "localhost" if published or host in ("127.0.0.1", "localhost") else host
     print(f"review page for '{wd.read_meta().title}': http://{shown}:{port}/   (Ctrl-C to stop)", flush=True)
-    if host in ("0.0.0.0", "::"):
+    if published:
+        print("  (from the container; open it on this computer — needs `docker compose run --service-ports`)", flush=True)
+    elif host in ("0.0.0.0", "::"):
         print("  note: listening on all interfaces with no authentication — anyone on the network can edit", flush=True)
     try:
         httpd.serve_forever()

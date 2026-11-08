@@ -1,4 +1,4 @@
-"""Kindle books (mobi, azw, azw3, prc) without Calibre — child of `ebook` (and so of `epub`).
+"""Kindle books (mobi, azw, azw3, prc, kf8) without Calibre — child of `ebook` (and so of `epub`).
 
 The `mobi` package (KindleUnpack, GPL-3.0; a tool — it puts no terms on the audiobook) unpacks the file:
   KF8 / AZW3   -> an EPUB, read by `epub`
@@ -6,7 +6,8 @@ The `mobi` package (KindleUnpack, GPL-3.0; a tool — it puts no terms on the au
                   separated by <mbp:pagebreak>, the table of contents is a table. Read here; the book's
                   content.opf gives title, author and cover.
 Project Gutenberg boilerplate is removed in both cases. DRM-protected books can't be read.
-Without the `mobi` package (extra: mobi), `ebook` converts these files with Calibre instead.
+Without the `mobi` package (extra: mobi), `ebook` converts mobi/azw/azw3 with Calibre instead (prc/kf8 need
+this method).
 """
 
 from __future__ import annotations

@@ -1,9 +1,9 @@
-"""Stage 4: spans + cast -> per-segment cached WAVs -> per-chapter normalized WAVs + manifest.
+"""Stage 5 (synthesize): speech (spans with `say`) + cast -> per-segment cached WAVs -> per-chapter normalized WAVs + manifest.
 
 Segments are content-addressed (backend identity, voice + its reference audio,
 emotion, text, sample rate), so editing one line or recasting one character
-re-renders only the affected segments. Chapters are independent, which is what
-lets attribution of chapter N+1 overlap rendering of chapter N.
+re-renders only the affected segments. Chapters are rendered independently, so
+--chapters can re-render a subset.
 """
 
 from __future__ import annotations

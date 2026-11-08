@@ -19,7 +19,7 @@ incant runs locally on your own files, but some parts handle untrusted input or 
   host (and its subdomains); API keys must never be logged, cached or written to the work directory.
 - **The review page** (`--review`): it has no authentication and listens on 127.0.0.1 by default. Anyone who can
   reach it can edit a book's script and casting, so binding it to another address (`--host 0.0.0.0`) is at your
-  own risk. Bugs that let a web page you visit reach it, or that escape the book's work directory, are in scope.
+  own risk. (`compose.desktop.yaml` binds it inside the container only and publishes it on 127.0.0.1.) Bugs that let a web page you visit reach it, or that escape the book's work directory, are in scope.
 - **The Docker images**: anything that lets content in a book or page affect the host beyond the mounted data
   directory.
 

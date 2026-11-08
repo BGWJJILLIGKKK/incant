@@ -14,7 +14,7 @@ doesn't exist where you are is looked up in the data directory ($INCANT_DATA / .
 source files (no meta.json in it) is a batch: every supported file in it, by name, one after another,
 each through the whole pipeline; a failing book is reported and the batch continues.
 
-    ./incant books/                            # every epub/pdf/txt in books/
+    ./incant books/                            # every supported file in books/
     ./incant books/ dummy --until synthesize   # same methods/options for each
     ./incant books/ -o audiobooks/             # output tree under audiobooks/ instead of output/
 
@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import inspect
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -177,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--licenses", action="store_true", help="known license terms per method, and gaps")
     ap.add_argument("--check", action="store_true", help="check readiness of the resolved methods (endpoints, voices, tools)")
     ap.add_argument("--review", action="store_true", help="serve the review/edit page for an existing book")
-    ap.add_argument("--host", help="review page bind address (default [review] host, 127.0.0.1)")
+    ap.add_argument("--host", help="review page bind address (default: $INCANT_REVIEW_HOST, else [review] host, 127.0.0.1)")
     ap.add_argument("--port", type=int, help="review page port (default [review] port, 8765)")
     args = ap.parse_args(argv)
 
@@ -228,7 +229,11 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         from .review.server import serve
 
-        serve(cfg, wd, args.host or cfg.review.host, args.port or cfg.review.port)
+        # INCANT_REVIEW_HOST: set by compose.desktop.yaml, where the page must listen on the container's own
+        # interfaces and compose publishes the port on the host's 127.0.0.1 only.
+        env_host = os.environ.get("INCANT_REVIEW_HOST")
+        host = args.host or env_host or cfg.review.host
+        serve(cfg, wd, host, args.port or cfg.review.port, published=bool(env_host) and not args.host)
         return 0
 
     try:

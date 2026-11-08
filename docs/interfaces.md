@@ -10,8 +10,8 @@ General rules for every file below:
   `work_dir` and `output_dir` resolve against it; `voices_dir` and the lexicon against the config. Its
   `incant.local.toml` is read last. Relative CLI inputs missing from the cwd and relative `cookies` paths
   resolve in it. Container: program in `/app`, data mounted at `/data`.
-- **Location:** `<work_dir>/<slug>/`, where `work_dir` is `[paths] work_dir` (default `work/`, relative to
-  the project home) and `slug` is the ingested title, slugified (or `--slug`). If a *different* source already
+- **Location:** `<work_dir>/<slug>/`, where `work_dir` is `[paths] work_dir` (default `work/`, in the
+  data directory) and `slug` is the ingested title, slugified (or `--slug`). If a *different* source already
   owns that slug, `-2`, `-3`… is appended; re-ingesting the same source (same `meta.source`) reuses its directory, whatever its slug (a changed title doesn't fork the book).
 - **Writes are atomic:** temp file plus rename, via `workdir.atomic_write`. Half-written files never exist.
 - **JSON:** UTF-8, 2-space indent, fields that are `null` are **omitted** (`exclude_none`). Readers must treat
@@ -395,7 +395,7 @@ Casting (`casting.auto_cast`):
 - Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`, OpenAI `nova`).
 - **Switching backends:** `cast.json` belongs to one voice space. A backend with another space moves it to `cast.<old>.json` and restores `cast.<new>.json` if present, so hand edits for each backend survive switching back and forth.
 - The `[cast] main_unique` characters with the most lines never share a voice, and scene partners avoid sharing one.
-- First-person books (with `[cast] first_person_narration = "character"`): the `narrator` role takes the narrating character's voice.
+- First-person books (`[cast] first_person_narration = "character"`, the default): the `narrator` role takes the narrating character's voice.
 
 ### Voice library: per backend
 - `indextts`: `voices/voices.json` (+ optional `voices/<id>.json` overrides).
@@ -615,7 +615,7 @@ class Method:
 ## External services
 | Service | Contract |
 |---|---|
-| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `schema_style = "simple"`: `$defs` inlined and length/format limits dropped, for servers that reject them (Gemini); answers are still validated against the full schema. `reasoning_effort` (openai dialect) and `min_max_tokens` (a floor on every request's `max_tokens`) for reasoning models whose hidden tokens count against `max_tokens`; all three are added only when set, so other requests and their cache keys don't change. `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
+| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `schema_style = "simple"`: `$defs` inlined and length/format limits dropped, for servers that reject them (Gemini); answers are still validated against the full schema. `reasoning_effort` (openai dialect) and `min_max_tokens` (a floor on every request's `max_tokens`) for reasoning models whose hidden tokens count against `max_tokens`; all three are added only when set, so other requests and their cache keys don't change. `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). |
 | TTS (`openai`) | `POST /v1/audio/speech` `{model, input, voice, response_format, speed?, instructions?}` → audio. 4xx fatal; 5xx/network retried. |
 | TTS (`kokoro`) | none: kokoro-onnx in-process; model files from the kokoro-onnx GitHub release into `model_dir` (`~/.cache/incant/kokoro`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |
@@ -639,7 +639,9 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
 - **Exit code:** non-zero on any failure.
 
 ## Review server (`--review`)
-Localhost only; no authentication.
+No authentication; localhost by default. Bind address: `--host`, else `$INCANT_REVIEW_HOST`, else `[review] host`
+(127.0.0.1). `compose.desktop.yaml` sets `INCANT_REVIEW_HOST=0.0.0.0` inside the container and publishes the port
+on the host's 127.0.0.1 only (`docker compose run --service-ports`).
 
 | Method | Path | Body → effect |
 |---|---|---|

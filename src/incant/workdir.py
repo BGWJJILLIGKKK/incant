@@ -1,4 +1,4 @@
-"""Layout of a book's work directory. All stages go through this — no ad-hoc paths.
+"""Layout of a book's work directory (main files; docs/interfaces.md has them all).
 
 work/<slug>/
   meta.json            stage 1  BookMeta
@@ -11,7 +11,7 @@ work/<slug>/
   speech/<id>.json     stage 4  ChapterSpeech: spans + TTS-ready `say` text
   lexicon.toml                  optional per-book pronunciations (see normalize stage)
   cast.json                     Cast
-  audio/cache/<key>.wav stage 5 content-addressed segment cache
+  audio/cache/<k2>/<key>.wav  stage 5  content-addressed segment cache (+ .lvl.json loudness, .qa.json check)
   audio/chapters/<id>.wav stage 5 assembled, loudness-normalized chapter
   audio/manifest.json  stage 5  AudioManifest
   output.json          stage 6  {"files": [absolute paths written]}; the files live in the output tree

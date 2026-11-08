@@ -1,7 +1,6 @@
 """Score any parse x attribute combination on the gold books, in scratch copies (the data directory is never
 written).
 
-    uv run python eval/compare.py --parse names --attribute tags
     uv run python eval/compare.py --parse keep --attribute tags      # keep each book's characters.json (LLM)
     uv run python eval/compare.py --parse basic --attribute tags --books dracula,tom-sawyer
 
@@ -70,11 +69,11 @@ def loose(gold: dict, wd: WorkDir, real: WorkDir) -> tuple[int, int]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--parse", default="keep", help="keep (copy characters.json) | basic | names | characters | …")
+    ap.add_argument("--parse", default="keep", help="keep (copy characters.json) | basic | characters")
     ap.add_argument("--attribute", default="tags")
     ap.add_argument("--books", help="comma-separated subset of eval/gold")
     ap.add_argument("--set", action="append", default=[], metavar="TOML",
-                    help='extra config, e.g. --set \'[parse.booknlp]\nmodel = "small"\'')
+                    help="extra config, e.g. --set '[parse.characters]\nwindow_words = 3000'")
     ap.add_argument("--keep-dir", type=Path, help="keep the scratch copy here (default: a temp dir, removed)")
     args = ap.parse_args()
     cfg = load_config()

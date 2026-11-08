@@ -19,7 +19,7 @@ git clone https://github.com/BGWJJILLIGKKK/incant.git && cd incant
 Out of the box everything runs on the CPU with what's bundled; an LLM (local server or cloud key) and speech
 servers are opt-in (**Configuration**). The result lands in `output/<author>/<title>/` of your data directory
 (see **Where things live**).
-Step by step with Docker, from a fresh clone: [docs/quickstart.md](docs/quickstart.md).
+Step by step with Docker on Linux, Mac or Windows, from a fresh clone: [docs/quickstart.md](docs/quickstart.md).
 
 ## Usage
 
@@ -76,7 +76,7 @@ Code (this repository) and data are kept apart. The data directory is named in t
   books/                    your source files
   work/<book>/              per-book state (docs/interfaces.md)
   output/<author>/<title>/  finished audiobooks, each with credits.txt
-  incant.local.toml      your settings: logins, model choices, overrides (read last)
+  incant.local.toml         your settings: logins, model choices, overrides (read last)
   .env                      API keys (chmod 600; --check warns otherwise)
   cookies.txt               browser cookies for sites you log in to
 ```
@@ -144,7 +144,7 @@ Voice libraries: `voices/README.md`. Every setting: `docs/interfaces.md`.
 
 The script with every quotation coloured by speaker: change a line's speaker, delivery or spoken text and play
 its segment; pick voices per character; edit pronunciations; see lines that failed the speech-to-text check.
-Edits survive re-runs. The page doesn't render; re-render with `./incant <book> --from normalize --chapters N`.
+Edits survive re-runs. The page doesn't render audio itself; re-render with `./incant <book> --from normalize --chapters N`.
 
 ## Docker
 
@@ -160,9 +160,15 @@ docker compose run --rm incant books/book.epub
 - About 3.7 GB. Build args: `BAKE_MODELS=0` (models download on first use), `EXTRAS=""` (no browser, QA or
   Kokoro), `CONVERTERS=pandoc` or `calibre` (for `ebook`).
 - `incant_local` (about 6.7 GB) adds CPU-only PyTorch and Docling, which OCRs scanned PDFs without a text
-  layer: `docker compose --profile local build incant_local`. Outside Docker: `uv sync --extra torch`.
-- Release images are built by CI from a clean checkout of each `v*` tag (`.github/workflows/images.yml`);
-  `tools/build-images.sh [local]` does the same locally, from committed files only.
+  layer: `docker compose --profile local build incant_local`. Outside Docker:
+  `INCANT_EXTRAS=qa,browser,kokoro,anthropic,nlp,mobi,torch ./incant …`.
+- Mac and Windows (Docker Desktop): add `compose.desktop.yaml` (`COMPOSE_FILE=compose.yaml:compose.desktop.yaml`
+  in `.env`; `;` on Windows). It replaces host networking: servers on your computer are at
+  `host.docker.internal`, and the review page needs `docker compose run --service-ports`
+  ([docs/quickstart.md](docs/quickstart.md)).
+- Release images are built by CI from a clean checkout of each `v*` tag (`.github/workflows/images.yml`), for
+  `linux/amd64` and `linux/arm64` (Apple Silicon); `tools/build-images.sh [local]` builds them locally for
+  your own architecture, from committed files only.
 
 ## Quality checks
 

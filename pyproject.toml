@@ -1,6 +1,6 @@
 [project]
 name = "incant"
-version = "0.2.0"
+version = "0.3.0"
 description = "Ingest Novels, Cast Actors, Narrate Tales: multi-voice audiobooks from EPUB, Kindle, PDF, Word and web pages, with local or cloud LLMs and TTS."
 readme = "README.md"
 license = "BSD-3-Clause"

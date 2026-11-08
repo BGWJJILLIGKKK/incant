@@ -7,8 +7,8 @@ Standard library only, so it works under any system Python 3.8+.
   - With uv on PATH: `uv run` (keeps dependencies in sync with pyproject.toml/uv.lock first).
   - Without uv: the project's .venv directly, if it exists.
 Data (books, work/, output/, incant.local.toml, cookies) lives in the data directory: $INCANT_DATA,
-else INCANT_DATA=… in this project's .env (the file docker compose reads too). Without either, the project
-directory itself. Relative input paths that don't exist where you are resolve there (books/x.epub).
+else INCANT_DATA=… in this project's .env (the file docker compose reads too). Without either, [paths] data_dir
+in incant.toml, else the project directory. Relative input paths that don't exist where you are resolve there (books/x.epub).
 
 Environment:
   INCANT_DATA        the data directory (overrides .env)

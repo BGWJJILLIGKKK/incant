@@ -1,11 +1,13 @@
 """Configuration.
 
 Search order (later files override earlier ones):
-  --config FILE                         if given, only this file (+ its .local sibling)
+  --config FILE                         if given, this file and its .local sibling (plus the data
+                                        directory's incant.local.toml)
   otherwise the first directory of [cwd, $INCANT_HOME] containing incant.toml,
   reading incant.toml then incant.local.toml from it.
 
-Relative paths in [paths] resolve against the directory of the config file.
+Relative data_dir and voices_dir resolve against the config file's directory; work_dir and output_dir
+against the data directory.
 
 Layout:
   [pipeline]            default method per stage when the CLI omits it
@@ -14,7 +16,7 @@ Layout:
 
 Data (books, work/, output/, cookies, personal settings) lives in the data directory: $INCANT_DATA, else
 INCANT_DATA=… in the .env next to incant.toml (docker compose reads the same file), else [paths] data_dir,
-else the config's own directory. A incant.local.toml in the data directory is read last.
+else the config's own directory. An incant.local.toml in the data directory is read last.
 """
 
 from __future__ import annotations
@@ -82,7 +84,7 @@ class AudioConfig(BaseModel):
 
 class PathsConfig(BaseModel):
     # Where books and audio live: work_dir and output_dir resolve against it (default: the config's directory).
-    # $INCANT_DATA overrides it, and a incant.local.toml there is read last (containers: /data).
+    # $INCANT_DATA overrides it, and an incant.local.toml there is read last (containers: /data).
     data_dir: Path = Path(".")
     work_dir: Path = Path("work")
     voices_dir: Path = Path("voices")

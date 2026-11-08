@@ -1,6 +1,10 @@
 # Release images, built from a fresh checkout of the tagged commit: only committed files reach the build
 # context, whatever else exists in anyone's working copy.
 #
+# Two architectures, each built natively on its own runner (no emulation: the images are 4-7 GB), pushed by
+# digest only, then joined into one multi-arch tag per image: linux/amd64 (Intel/AMD) and linux/arm64
+# (Apple Silicon under Docker Desktop, ARM servers).
+#
 # Pushes to the GitHub Container Registry (ghcr.io/<owner>/incant, ghcr.io/<owner>/incant_local) with the
 # workflow's own token. Docker Hub too when the repository has the secrets DOCKERHUB_USERNAME and
 # DOCKERHUB_TOKEN (pushed as <DOCKERHUB_USERNAME>/incant…).
@@ -15,19 +19,28 @@ permissions:
   contents: read
   packages: write
 
+env:
+  HAVE_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+
 jobs:
-  image:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
+        image: [incant, incant_local]
+        platform: [linux/amd64, linux/arm64]
         include:
-          - name: incant
+          - image: incant
             extras: "qa browser kokoro anthropic nlp mobi"
-          - name: incant_local
+          - image: incant_local
             extras: "qa browser kokoro anthropic nlp mobi torch"
-    env:
-      HAVE_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
     steps:
       - name: Free disk space (the images are 4-7 GB)
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
@@ -37,21 +50,18 @@ jobs:
       - id: names
         run: |
           owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-          images="ghcr.io/$owner/${{ matrix.name }}"
+          names="ghcr.io/$owner/${{ matrix.image }}"
           if [ "$HAVE_DOCKERHUB" = "true" ]; then
-            images="$images"$'\n'"$(echo '${{ secrets.DOCKERHUB_USERNAME }}' | tr '[:upper:]' '[:lower:]')/${{ matrix.name }}"
+            names="$names,$(echo '${{ secrets.DOCKERHUB_USERNAME }}' | tr '[:upper:]' '[:lower:]')/${{ matrix.image }}"
           fi
-          { echo "images<<EOF"; echo "$images"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+          echo "names=$names" >> "$GITHUB_OUTPUT"
 
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ steps.names.outputs.images }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=ref,event=branch
+          images: ${{ steps.names.outputs.names }}
+
+      - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
         with:
@@ -65,10 +75,85 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v6
+      - id: build
+        uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: ${{ matrix.platform }}
           build-args: EXTRAS=${{ matrix.extras }}
-          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          push: true
+          outputs: type=image,"name=${{ steps.names.outputs.names }}",push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digest
+        run: |
+          mkdir -p "${{ runner.temp }}/digests"
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.image }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [incant, incant_local]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ matrix.image }}-*
+          merge-multiple: true
+
+      - id: names
+        run: |
+          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          names="ghcr.io/$owner/${{ matrix.image }}"
+          if [ "$HAVE_DOCKERHUB" = "true" ]; then
+            names="$names"$'\n'"$(echo '${{ secrets.DOCKERHUB_USERNAME }}' | tr '[:upper:]' '[:lower:]')/${{ matrix.image }}"
+          fi
+          { echo "names<<EOF"; echo "$names"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.names.outputs.names }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=ref,event=branch
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - if: env.HAVE_DOCKERHUB == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # One multi-arch tag set per registry, from that registry's own per-arch digests.
+      - name: Create the multi-arch manifests
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          NAMES: ${{ steps.names.outputs.names }}
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          for name in $NAMES; do
+            tags="$(printf '%s\n' $TAGS | grep "^$name:" | sed 's/^/-t /' | tr '\n' ' ')"
+            [ -n "$tags" ] || { echo "no tags for $name" >&2; exit 1; }
+            docker buildx imagetools create $tags $(printf "$name@sha256:%s " *)
+            docker buildx imagetools inspect "$(printf '%s\n' $TAGS | grep "^$name:" | head -1)"
+          done

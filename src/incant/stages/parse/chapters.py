@@ -1,10 +1,9 @@
 """Stage 2a: deterministic chapter splitting of text.md.
 
 Order of preference:
-  1. '# ' headings emitted by ingest (EPUB structure)
+  1. '# ' headings emitted by ingest (EPUB/PDF/Kindle structure, web series parts)
   2. heading-like paragraphs matching common patterns ("Chapter 12", "CHAPTER XII.", "Prologue")
   3. the whole book as one chapter
-An LLM fallback for books with no recognisable structure is future work.
 """
 
 from __future__ import annotations
@@ -31,8 +30,8 @@ _PATTERN = re.compile(
 )
 _DIVISION = re.compile(rf"^(?:part|book|volume)\s+{_NUMBER}\b", re.I)
 _NON_TEXT = re.compile(r"^(table of )?contents\.?$|^list of (illustrations|plates|figures)\.?$|^illustrations\.?$", re.I)
-MIN_LEADING_WORDS = 40
-_SENTENCE = re.compile(r"[a-z][.!?][”’\"']?(\s|$)")  # shorter chapters before the first real one are title-page fragments
+MIN_LEADING_WORDS = 40  # shorter chapters before the first real one are title-page fragments
+_SENTENCE = re.compile(r"[a-z][.!?][”’\"']?(\s|$)")  # a sentence end: lowercase letter + . ! ?
 MAX_HEADING_LEN = 80
 MIN_FRONT_MATTER_WORDS = 40  # text before the first heading shorter than this is title-page noise
 

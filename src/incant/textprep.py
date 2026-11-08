@@ -1,8 +1,8 @@
 """Turn span text into TTS-ready chunks.
 
 Currently: strip markup and quote marks, collapse whitespace, and split into
-sentence-packed chunks under a character budget. Number/abbreviation expansion
-and the pronunciation lexicon belong here too (future work).
+sentence-packed chunks under a character budget. Number/abbreviation expansion is
+in speech.py, and the lexicon is applied by the normalize stage.
 """
 
 from __future__ import annotations

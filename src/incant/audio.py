@@ -67,8 +67,8 @@ def trim_silence(data: bytes, pad_ms: int = 40, threshold_db: float = -45.0) -> 
 def measure_lufs(path: Path) -> float | None:
     """Integrated loudness (EBU R128) of a clip; None if it can't be measured (too short, silent, or ffmpeg failed).
 
-    ffmpeg < 6 rejects ebur128's framelog=quiet and then prints a summary of zeros: only a successful run's
-    Summary block counts, and without framelog support the per-frame log is skipped by reading that block."""
+    ffmpeg < 6 rejects framelog=quiet and still prints an all-zero summary, so only a successful run counts;
+    it then retries with plain ebur128 and reads only the final Summary block."""
     for af in ("ebur128=framelog=quiet", "ebur128"):
         p = subprocess.run(["ffmpeg", "-nostats", "-hide_banner", "-i", str(path), "-af", af, "-f", "null", "-"],
                            capture_output=True, text=True)

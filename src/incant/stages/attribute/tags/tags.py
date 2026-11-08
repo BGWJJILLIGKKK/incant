@@ -1,11 +1,14 @@
 """Rule-based speaker attribution: dialogue tags, pronouns and turn-taking. No LLM; seconds per book.
 
 For each quotation, in order of trust:
+  0. a speaker announced at the end of the previous paragraph ("…he replied:—");
   1. its dialogue tag: `"…," said Elizabeth` / `Elizabeth replied` / `said he` / `the Hatter asked`;
      a pronoun resolves to the matching-gender character named nearest before it, or in the conversation;
   2. the tag of another quotation in the same paragraph;
   3. an action beat: the paragraph's narration names exactly one character;
-  4. turn-taking: in an untagged run of dialogue paragraphs, speakers alternate.
+  4. a vocative: someone addressed by name is not the speaker, so the other party is;
+  5. turn-taking: in an untagged run of dialogue paragraphs, speakers alternate (this also fills an untagged
+     paragraph just before an A, B exchange).
 Anything else is left unattributed (narrator's voice). Delivery comes from the tag's verb ("whispered").
 
 Characters: uses characters.json from parse=characters when present. Without it (parse=basic), builds one from
@@ -248,7 +251,6 @@ def roster_from_names(names: list[str], counts: Counter, text: str, speaking: se
     """One character per person from name strings: bare first names / surnames merged into the one longer name
     they belong to ("Elizabeth" -> "Elizabeth Bennet"), gender from titles, role nouns or the pronouns that
     follow the name in `text`; mentions from `counts`; speaks if any alias is in `speaking`."""
-    # Merge bare first names / surnames into the one longer name they belong to ("Elizabeth" -> "Elizabeth Bennet").
     groups: dict[str, set[str]] = {}
     for n in sorted(names, key=lambda x: (-len(x.split()), -counts[x])):
         toks = re.sub(rf"^{_HON}\.?\s+", "", n).split()
@@ -332,7 +334,7 @@ class TagsAttribute(AttributeMethod):
     OUTPUT_TERMS = 'none'
     Settings = TagsSettings
     settings: TagsSettings
-    trace: list | None = None  # debugging: (first quote id, rule, speaker, per-quote tags) per paragraph
+    trace: list | None = None  # set to [] to record (first quote id, rule, speaker, per-quote tags) per paragraph
 
     def run(self, ctx: Context):
         wd = ctx.need_wd()

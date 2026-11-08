@@ -1,0 +1,38 @@
+# Docker Desktop (Mac, Windows), or Linux without host networking: an override for compose.yaml.
+#
+# compose.yaml shares the host's network (network_mode: host), so the container reaches LLM and speech servers
+# at localhost and you open the review page at localhost. Docker Desktop keeps host networking off by
+# default, and without it "localhost" in the container is the container itself. This file switches to
+# Docker's normal networking instead:
+#
+# - The review page: the container listens on all its own interfaces, and its port 8765 is published on
+#   this computer's 127.0.0.1 only, so other machines can't reach it. `docker compose run` publishes ports
+#   only with --service-ports:
+#     docker compose run --rm --service-ports incant <book> --review      # http://localhost:8765/
+#   (with --port N, change both 8765s below to N).
+# - Servers on this computer (Ollama, LM Studio, llama.cpp, an IndexTTS server) are at host.docker.internal,
+#   not localhost: in <data>/incant.local.toml, e.g.
+#     [llm]
+#     base_url = "http://host.docker.internal:11434/v1"
+#   Servers on other machines and cloud APIs work unchanged.
+#
+# Use it by listing both files in this project's .env (docs/quickstart.md):
+#   COMPOSE_FILE=compose.yaml:compose.desktop.yaml        # Mac, Linux
+#   COMPOSE_FILE=compose.yaml;compose.desktop.yaml        # Windows
+# or per command: docker compose -f compose.yaml -f compose.desktop.yaml run --rm incant …
+
+services:
+  incant:
+    network_mode: bridge
+    ports: ["127.0.0.1:8765:8765"]
+    extra_hosts: ["host.docker.internal:host-gateway"]   # built into Docker Desktop; on Linux this adds it,
+                                                         # and the server must listen beyond 127.0.0.1
+    environment:
+      INCANT_REVIEW_HOST: 0.0.0.0
+
+  incant_local:
+    network_mode: bridge
+    ports: ["127.0.0.1:8765:8765"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    environment:
+      INCANT_REVIEW_HOST: 0.0.0.0

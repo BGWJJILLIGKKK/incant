@@ -1,7 +1,8 @@
 """Automatic casting: speaking characters -> voices from the library's gender/age tags.
 
 Roles still equal to their previous automatic pick (cast.auto) are recomputed each run, so newly tagged
-voices take effect; roles a person changed or added are kept and count as fixed usage. Most lines first; for each character the best voice minimises, in order:
+voices take effect; roles a person changed or added are kept and count as fixed usage.
+Most lines first; for each character the best voice minimises, in order:
   1. chapters shared with characters already using that voice (two people in one scene shouldn't sound alike)
   2. sharing with a main character (the top `main_unique` speakers keep a voice to themselves)
   3. reuse at all (spread over the library before doubling up)

@@ -3,9 +3,9 @@
 # faster-whisper (speech-to-text QA) and Kokoro (CPU voices), with their models baked in.
 # Not included: the GPU services (LLM, IndexTTS) — the container reaches them over HTTP like any client.
 #
-#   docker build -t incant .                                   # everything (~3.3 GB)
+#   docker build -t incant .                                   # everything (~3.7 GB)
 #   docker build -t incant:lean --build-arg BAKE_MODELS=0 .    # models download on first use into /data
-#   docker build -t incant --build-arg CONVERTERS=pandoc .    # + docx/odt/rtf/fb2/html (calibre: + Kindle)
+#   docker build -t incant --build-arg CONVERTERS=pandoc .    # + docx/odt/rtf/fb2/html (calibre: also lit/pdb)
 #   docker build -t incant_local --build-arg EXTRAS="qa browser kokoro anthropic nlp mobi torch" .
 #                                       # + PyTorch (CPU) and Docling: OCR for scanned PDFs (compose: incant_local)
 #   docker build -t incant:min --build-arg EXTRAS="" .         # no browser, QA or Kokoro (HTTP TTS only, ~1.1 GB)

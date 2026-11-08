@@ -93,6 +93,10 @@ gold suite, nothing written to the data directory by tests, then commit.
   voices (`voices_read`) or read the subscription (`user_read`) — both handled: six stock voices that synthesize on
   a free tier are built in (others answer 402 paid_plan_required or 404), and when the credits can't be read the
   run stops unless `allow_over_quota = true`. A 2-chapter test book (187 characters) rendered with QA clean.
+  With `voices_read` and `user_read` granted: 21 account voices (all synthesize on the free tier; 20 castable,
+  one gender-neutral), labels mapped to casting tags (ElevenLabs' "young" → neutral, tone also from the voice
+  name: "Deep", "Bright"); the credit check reads the balance; a test book cast Mr. Hale → Roger, Margaret →
+  Alice, narrator George, QA clean.
 - **Phase 5** — `eval/compare.py` (any parse × attribute on scratch copies; strict + loose scores) and
   `eval/g2p_ab.py`. **Misaki** (extra `nlp`, no PyTorch, +110 MB): on par with espeak by speech-to-text (mean WER
   0.036 vs 0.037, 3/70 failing each). Listening to the 10 heteronym/name sentences: misaki better on read/read and

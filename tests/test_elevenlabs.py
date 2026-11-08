@@ -43,7 +43,7 @@ def make(tmp_path, monkeypatch, sub=None, extra=""):
 def test_voices_and_request(tmp_path, monkeypatch):
     m, seen = make(tmp_path, monkeypatch)
     lib = m.voices().voices
-    assert lib["v1"].gender == "female" and lib["v1"].age == "teen" and lib["v2"].tone == "deep"
+    assert lib["v1"].gender == "female" and lib["v1"].age == "neutral" and lib["v2"].tone == "deep"
     assert m.narrator() == "v1"  # the narration voice
     wav = m.synthesize("Hello there.", lib["v2"], Emotion(text="angry", alpha=0.8), variant=2)
     req = seen[-1]

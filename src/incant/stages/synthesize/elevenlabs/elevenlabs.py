@@ -28,7 +28,9 @@ __all__ = ["ElevenLabs"]
 
 RATE = 24000
 PROTOCOL = 1  # bump when the request shape changes (invalidates the segment cache)
-AGE = {"young": "teen", "middle_aged": "adult", "middle aged": "adult", "old": "older"}
+# ElevenLabs' "young" is a young adult (Sarah, "young", is described as "Mature"): "neutral" ranks between teen and
+# adult in casting.
+AGE = {"young": "neutral", "middle_aged": "adult", "middle aged": "adult", "old": "older"}
 # Stock voices that synthesized with a free-tier key (2026-11); others answered 402 paid_plan_required or 404.
 # Keys without voices_read can still use these; account voices and voices/elevenlabs.json add to them.
 STOCK = {vid: Voice(id=vid, name=name, gender=g, age="adult", tone=tone, description=desc, source="elevenlabs (stock)")
@@ -96,10 +98,12 @@ class ElevenLabs(SpeechHTTP):
                         labels = {k: str(val).lower() for k, val in (v.get("labels") or {}).items()}
                         gender = labels.get("gender") if labels.get("gender") in ("male", "female") else None
                         desc = labels.get("description") or labels.get("descriptive") or ""
+                        cue = f"{v.get('name', '')} {desc}".lower()  # names carry it too: "Brian - Deep, Resonant"
                         self._account[v["voice_id"]] = Voice(
                             id=v["voice_id"], name=v.get("name"), gender=gender,
                             age=AGE.get(labels.get("age", ""), "adult" if gender else None),
-                            tone="deep" if "deep" in desc else ("high" if "high" in desc else "neutral"),
+                            tone="deep" if re.search(r"deep|husky|gravel", cue) else
+                                 ("high" if re.search(r"high|bright|squeak", cue) else "neutral"),
                             description=", ".join(x for x in (labels.get("accent"), desc, labels.get("use_case")) if x),
                             source=f"elevenlabs ({v.get('category', 'voice')})")
                 except (httpx.HTTPError, ValueError, KeyError):

@@ -14,6 +14,8 @@ First public release.
   (`characters`, `speakers`) and speech servers (`indextts`, `openai`, `elevenlabs`) are opt-in.
 - The IndexTTS narrator voice is set under `[synthesize.indextts]` instead of `[cast]`.
 - The web user agent identifies incant with the project URL.
+- EPUB files are read by incant's own reader (zipfile + lxml) instead of EbookLib, which is AGPL-3.0; the
+  text it produces is unchanged.
 
 ### Added
 - `--version`.
@@ -21,7 +23,10 @@ First public release.
 - The ten evaluation books ship in `eval/books/`, so `eval/suite.py` and `eval/compare.py` work from a fresh
   clone; `eval/suite.py --attribute METHOD` (default `speakers`).
 - `THIRD_PARTY_NOTICES.md`, the license texts in `LICENSES/`, and `tools/licenses.py`; the images carry them.
-- README sections on licensing and responsible use; `CONTRIBUTING.md`, `SECURITY.md`, CI.
+- README sections on licensing and responsible use; `CONTRIBUTING.md`, `SECURITY.md`.
+- CI: tests and lint on every push and pull request; release images for each `v*` tag, built from a clean
+  checkout and pushed to the GitHub Container Registry (and Docker Hub when configured).
+  `tools/build-images.sh` builds them locally from committed files only.
 
 ### Fixed
 - A test that needed the `anthropic` extra now skips without it.

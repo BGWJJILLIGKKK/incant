@@ -161,6 +161,8 @@ docker compose run --rm incant books/book.epub
   Kokoro), `CONVERTERS=pandoc` or `calibre` (for `ebook`).
 - `incant_local` (about 6.7 GB) adds CPU-only PyTorch and Docling, which OCRs scanned PDFs without a text
   layer: `docker compose --profile local build incant_local`. Outside Docker: `uv sync --extra torch`.
+- Release images are built by CI from a clean checkout of each `v*` tag (`.github/workflows/images.yml`);
+  `tools/build-images.sh [local]` does the same locally, from committed files only.
 
 ## Quality checks
 
@@ -184,8 +186,10 @@ security reports: [SECURITY.md](SECURITY.md).
 ## License
 
 incant's code is under the BSD 3-Clause license ([LICENSE](LICENSE)). Some of what it depends on and bundles is
-copyleft — notably EbookLib (AGPL-3.0, EPUB reading), espeak-ng and phonemizer (GPL-3.0, Kokoro) and ffmpeg
-(GPL) — so the Docker images are also distributed under those terms. Every component and model, its license and
+copyleft — notably espeak-ng and phonemizer (GPL-3.0, used by Kokoro), KindleUnpack (GPL-3.0, Kindle files)
+and ffmpeg (GPL) — so the Docker images are also distributed under those terms. A source install without the
+optional extras has no GPL or AGPL code: only permissive licenses, plus num2words (LGPL) and certifi and tld
+(MPL). Every component and model, its license and
 where its source is: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Responsible use

@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-import posixpath
 import re
 import warnings
 from collections import Counter
 from pathlib import Path
 
-import ebooklib
 from bs4 import BeautifulSoup, NavigableString, Tag, XMLParsedAsHTMLWarning
-from ebooklib import epub
 
 from ....normalize import SCENE_BREAK, clean_paragraph, clean_unicode, heading, is_scene_break
 from ..base import Ingested, IngestMethod
+from .container import EpubFile
 
 __all__ = ["EpubIngest"]
 
@@ -23,24 +21,6 @@ _DROP = {"script", "style", "sup", "svg", "figure", "nav", "aside", "table"}
 # Gutenberg/ebookmaker boilerplate and non-narrative furniture, matched on id or class.
 _DROP_ID = re.compile(r"^pg-(header|footer)$")
 _DROP_CLASS = re.compile(r"caption|figcenter|figleft|figright|pageno|pagenum|footnote|pg-boilerplate", re.I)
-
-
-def _toc_titles(book: epub.EpubBook) -> dict[str, str]:
-    """Map document href (no fragment) -> first TOC title pointing at it."""
-    out: dict[str, str] = {}
-
-    def walk(items):
-        for it in items:
-            if isinstance(it, tuple):  # (Section, children)
-                sec, children = it
-                if getattr(sec, "href", None):
-                    out.setdefault(sec.href.split("#")[0], sec.title)
-                walk(children)
-            elif isinstance(it, epub.Link):
-                out.setdefault(it.href.split("#")[0], it.title)
-
-    walk(book.toc)
-    return out
 
 
 def _text_of(el: Tag) -> str:
@@ -132,58 +112,30 @@ def _assemble(docs: list[tuple[list[Block], str | None]], book_title: str) -> li
     return out
 
 
-def _cover(book: epub.EpubBook) -> tuple[str, bytes] | None:
-    candidates = list(book.get_items_of_type(ebooklib.ITEM_COVER))
-    meta = book.get_metadata("OPF", "cover")
-    if meta:
-        cid = meta[0][1].get("content")
-        if cid and (it := book.get_item_with_id(cid)):
-            candidates.append(it)
-    candidates += [i for i in book.get_items_of_type(ebooklib.ITEM_IMAGE) if "cover" in i.get_name().lower()]
-    for it in candidates:
-        ext = posixpath.splitext(it.get_name())[1].lower().lstrip(".")
-        if ext in ("jpg", "jpeg", "png"):
-            return ("jpg" if ext == "jpeg" else ext, it.get_content())
-    return None
-
-
-def _meta(book: epub.EpubBook, name: str) -> str | None:
-    v = book.get_metadata("DC", name)
-    return v[0][0].strip() if v and v[0][0] else None
-
-
 def ingest_epub(path: Path) -> Ingested:
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        book = epub.read_epub(str(path), {"ignore_ncx": False})
-    toc = _toc_titles(book)
-    title = _meta(book, "title") or path.stem
+    book = EpubFile.open(path)
+    title = book.title or path.stem
     docs: list[tuple[list[Block], str | None]] = []
-    for idref, _linear in book.spine:
-        item = book.get_item_with_id(idref)
-        if item is None or item.get_type() != ebooklib.ITEM_DOCUMENT:
-            continue
-        if isinstance(item, epub.EpubNav) or "nav" in (getattr(item, "properties", None) or []):
-            continue
-        html = clean_unicode(item.get_content().decode("utf-8", errors="replace")).encode()
-        docs.append((_doc_blocks(html), toc.get(item.get_name())))
+    for item in book.documents():
+        html = clean_unicode(item.content.decode("utf-8", errors="replace")).encode()
+        docs.append((_doc_blocks(html), book.toc.get(item.href)))
     paragraphs = _assemble(docs, title)
 
-    lang = (_meta(book, "language") or "en").split("-")[0]
+    lang = (book.language or "en").split("-")[0]
     return Ingested(
         title=title,
-        author=_meta(book, "creator"),
+        author=book.creator,
         language=lang,
-        description=_meta(book, "description"),
+        description=book.description,
         paragraphs=paragraphs,
         source_format="epub",
-        cover=_cover(book),
+        cover=book.cover(),
     )
 
 
 class EpubIngest(IngestMethod):
     """EPUB 2/3: spine order, book-wide chapter heading level, TOC titles, cover, Gutenberg cleanup."""
-    LICENSE = 'project code; ebooklib (AGPL-3.0, a tool: output not encumbered)'
+    LICENSE = 'project code (BSD-3-Clause)'
     OUTPUT_TERMS = 'none'
 
     @classmethod

@@ -906,18 +906,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ebooklib"
-version = "0.21"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "lxml" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/fc/d8/a7ec6e06014057918bd58d1495af2e9c4e21cf14c93d10c625e905a8285d/ebooklib-0.21.tar.gz", hash = "sha256:fa815d544f722321c9fd31d8957473b2617027d3091431aa690d6dd93f785222", size = 148682, upload-time = "2026-11-01T14:08:59.06Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/72/5dde31a7b988f13ea158936e10bf82e7f6c1763201b325774ea93a0cf8ff/ebooklib-0.21-py3-none-any.whl", hash = "sha256:8cb417bed66567210661e6ef203f6310f394ad4a282f385a07320cbc09906c30", size = 52543, upload-time = "2026-11-01T14:08:57.524Z" },
-]
-
-[[package]]
 name = "en-core-web-sm"
 version = "3.8.0"
 source = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
@@ -1220,6 +1208,88 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f5/08/8eea9d4b8302028f3abb2c0813953f7aec26d33b7a8960ed760e65ff29fa/idna-3.20.tar.gz", hash = "sha256:a7db850025b95ded1eae8a46181a1a6c56c92c96f0e2b005d9ff8dc0210cab44", size = 216463, upload-time = "2026-09-17T14:11:04.752Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl", hash = "sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c", size = 69583, upload-time = "2026-09-17T14:11:03.168Z" },
+]
+
+[[package]]
+name = "incant"
+version = "0.2.0"
+source = { editable = "." }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "httpx" },
+    { name = "lxml" },
+    { name = "num2words" },
+    { name = "numpy" },
+    { name = "pdfminer-six" },
+    { name = "pydantic" },
+    { name = "trafilatura" },
+]
+
+[package.optional-dependencies]
+anthropic = [
+    { name = "anthropic" },
+]
+browser = [
+    { name = "playwright" },
+]
+kokoro = [
+    { name = "kokoro-onnx" },
+]
+mobi = [
+    { name = "mobi" },
+]
+nlp = [
+    { name = "en-core-web-sm" },
+    { name = "misaki" },
+    { name = "spacy" },
+]
+qa = [
+    { name = "faster-whisper" },
+]
+torch = [
+    { name = "docling" },
+    { name = "torch", version = "2.15.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
+    { name = "torch", version = "2.15.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
+    { name = "torchvision", version = "0.29.2", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
+    { name = "torchvision", version = "0.29.2+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pyphen" },
+    { name = "pytest" },
+    { name = "reportlab" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", marker = "extra == 'anthropic'", specifier = ">=2.6" },
+    { name = "beautifulsoup4", specifier = ">=4.12" },
+    { name = "docling", marker = "extra == 'torch'", specifier = ">=2" },
+    { name = "en-core-web-sm", marker = "extra == 'nlp'", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" },
+    { name = "faster-whisper", marker = "extra == 'qa'", specifier = ">=1.1" },
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "kokoro-onnx", marker = "extra == 'kokoro'", specifier = ">=0.4" },
+    { name = "lxml", specifier = ">=5.0" },
+    { name = "misaki", marker = "extra == 'nlp'", specifier = ">=0.9.4" },
+    { name = "mobi", marker = "extra == 'mobi'", specifier = ">=0.4" },
+    { name = "num2words", specifier = ">=0.5" },
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "pdfminer-six", specifier = ">=20231228" },
+    { name = "playwright", marker = "extra == 'browser'", specifier = ">=1.47" },
+    { name = "pydantic", specifier = ">=2.9" },
+    { name = "spacy", marker = "extra == 'nlp'", specifier = ">=3.8,<3.9" },
+    { name = "torch", marker = "extra == 'torch'", specifier = ">=2.4", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "torchvision", marker = "extra == 'torch'", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "trafilatura", specifier = ">=1.12" },
+]
+provides-extras = ["qa", "browser", "kokoro", "anthropic", "mobi", "nlp", "torch"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pyphen", specifier = ">=0.14" },
+    { name = "pytest", specifier = ">=8" },
+    { name = "reportlab", specifier = ">=4" },
 ]
 
 [[package]]
@@ -1581,90 +1651,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/00/cc/20a5331698cc23ffe0e45955e12d57f1cc93c2ceb3873573757514f726b5/mail_parser-4.10.0.tar.gz", hash = "sha256:2099f2620462342effe87aea7c6062cb87ddf8bdd05f1f718d5315d4476a4b75", size = 3011269, upload-time = "2026-10-30T22:21:37.666Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/45/c4/21ff43fe0a950c4886830bbffe5071e512dc6e42693ed2a80e8d27c77227/mail_parser-4.10.0-py3-none-any.whl", hash = "sha256:8c6939e83d9b7d3fc153720fc49d876534de4a5d40bfee06730ef173052496f2", size = 70965, upload-time = "2026-10-30T22:21:36.341Z" },
-]
-
-[[package]]
-name = "incant"
-version = "0.2.0"
-source = { editable = "." }
-dependencies = [
-    { name = "beautifulsoup4" },
-    { name = "ebooklib" },
-    { name = "httpx" },
-    { name = "lxml" },
-    { name = "num2words" },
-    { name = "numpy" },
-    { name = "pdfminer-six" },
-    { name = "pydantic" },
-    { name = "trafilatura" },
-]
-
-[package.optional-dependencies]
-anthropic = [
-    { name = "anthropic" },
-]
-browser = [
-    { name = "playwright" },
-]
-kokoro = [
-    { name = "kokoro-onnx" },
-]
-mobi = [
-    { name = "mobi" },
-]
-nlp = [
-    { name = "en-core-web-sm" },
-    { name = "misaki" },
-    { name = "spacy" },
-]
-qa = [
-    { name = "faster-whisper" },
-]
-torch = [
-    { name = "docling" },
-    { name = "torch", version = "2.15.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
-    { name = "torch", version = "2.15.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
-    { name = "torchvision", version = "0.29.2", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
-    { name = "torchvision", version = "0.29.2+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pyphen" },
-    { name = "pytest" },
-    { name = "reportlab" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anthropic", marker = "extra == 'anthropic'", specifier = ">=2.6" },
-    { name = "beautifulsoup4", specifier = ">=4.12" },
-    { name = "docling", marker = "extra == 'torch'", specifier = ">=2" },
-    { name = "ebooklib", specifier = ">=0.18" },
-    { name = "en-core-web-sm", marker = "extra == 'nlp'", url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" },
-    { name = "faster-whisper", marker = "extra == 'qa'", specifier = ">=1.1" },
-    { name = "httpx", specifier = ">=0.27" },
-    { name = "kokoro-onnx", marker = "extra == 'kokoro'", specifier = ">=0.4" },
-    { name = "lxml", specifier = ">=5.0" },
-    { name = "misaki", marker = "extra == 'nlp'", specifier = ">=0.9.4" },
-    { name = "mobi", marker = "extra == 'mobi'", specifier = ">=0.4" },
-    { name = "num2words", specifier = ">=0.5" },
-    { name = "numpy", specifier = ">=1.26" },
-    { name = "pdfminer-six", specifier = ">=20231228" },
-    { name = "playwright", marker = "extra == 'browser'", specifier = ">=1.47" },
-    { name = "pydantic", specifier = ">=2.9" },
-    { name = "spacy", marker = "extra == 'nlp'", specifier = ">=3.8,<3.9" },
-    { name = "torch", marker = "extra == 'torch'", specifier = ">=2.4", index = "https://download.pytorch.org/whl/cpu" },
-    { name = "torchvision", marker = "extra == 'torch'", index = "https://download.pytorch.org/whl/cpu" },
-    { name = "trafilatura", specifier = ">=1.12" },
-]
-provides-extras = ["qa", "browser", "kokoro", "anthropic", "mobi", "nlp", "torch"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pyphen", specifier = ">=0.14" },
-    { name = "pytest", specifier = ">=8" },
-    { name = "reportlab", specifier = ">=4" },
 ]
 
 [[package]]

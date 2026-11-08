@@ -8,7 +8,6 @@ a whole is distributed under their terms too, while incant's own files stay BSD-
 
 | Component | License | Where | Used for |
 |---|---|---|---|
-| EbookLib | AGPL-3.0-or-later | core dependency | reading EPUB files |
 | espeak-ng (via espeakng-loader) | GPL-3.0-or-later | `kokoro` extra, both images | phonemes for Kokoro |
 | phonemizer | GPL-3.0-or-later | `kokoro` extra, both images | phonemes for Kokoro |
 | mobi (KindleUnpack) | GPL-3.0-only | `mobi` extra, both images | Kindle files |
@@ -82,7 +81,6 @@ Generated with `tools/licenses.py`, as declared by each package.
 | dlinfo | 2.0.0 | MIT |
 | docopt | 0.6.2 | MIT License |
 | docstring_parser | 0.18.0 | MIT License |
-| EbookLib | 0.21 | GNU Affero General Public License v3 or later (AGPLv3+) |
 | en_core_web_sm | 3.8.0 | MIT |
 | espeakng-loader | 0.2.4 | GPL-3.0-or-later (bundles libespeak-ng; text: LICENSES/GPL-3.0.txt) |
 | faster-whisper | 1.2.1 | MIT License |

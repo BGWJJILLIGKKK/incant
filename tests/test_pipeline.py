@@ -5,7 +5,6 @@ import shutil
 import subprocess
 
 import pytest
-from ebooklib import epub
 
 from incant.cli import main
 from incant.config import Config
@@ -15,11 +14,7 @@ HAVE_FFMPEG = bool(shutil.which("ffmpeg") and shutil.which("ffprobe"))
 
 
 def make_epub(path):
-    book = epub.EpubBook()
-    book.set_identifier("test-1")
-    book.set_title("Test Book")
-    book.add_author("A. Writer")
-    book.set_language("en")
+    """A small EPUB 3 (with an NCX too) like Project Gutenberg's: title page, two chapters, a license page."""
     docs = [
         ("Title", "c0.xhtml", "<h1>Test Book</h1><p>by A. Writer</p>"),
         ("Chapter One", "c1.xhtml", "<h1>Test Book</h1><h2>Chapter One</h2><p>It began. “Hello,” said Ann, “there.”</p>"
@@ -28,17 +23,43 @@ def make_epub(path):
         ("Chapter Two", "c2.xhtml", "<h2>Chapter Two</h2><p>Second <i>chapter</i> text.</p><table><tr><td>skip me</td></tr></table>"),
         ("License", "c3.xhtml", '<section id="pg-footer"><h2>License</h2><p>Boilerplate.</p></section>'),
     ]
-    items = []
-    for title, name, body in docs:
-        it = epub.EpubHtml(title=title, file_name=name, lang="en")
-        it.content = f"<html><body>{body}</body></html>"
-        book.add_item(it)
-        items.append(it)
-    book.toc = items
-    book.add_item(epub.EpubNcx())
-    book.add_item(epub.EpubNav())
-    book.spine = ["nav", *items]
-    epub.write_epub(str(path), book)
+    write_epub(path, "Test Book", "A. Writer", [(name, title, body) for title, name, body in docs])
+
+
+def write_epub(path, title, author, docs, *, ncx=True, nav=True, opf_dir="EPUB", extra_manifest="", extra_meta=""):
+    """Write an EPUB with the standard library: docs = [(file name, TOC title, body html)]."""
+    import zipfile
+
+    x = 'xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"'
+    manifest = "".join(f'<item id="d{i}" href="{n}" media-type="application/xhtml+xml"/>' for i, (n, _, _) in enumerate(docs))
+    spine = "".join(f'<itemref idref="d{i}"/>' for i in range(len(docs)))
+    if nav:
+        manifest += '<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>'
+        spine = '<itemref idref="nav"/>' + spine
+    if ncx:
+        manifest += '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>'
+    base = f"{opf_dir}/" if opf_dir else ""
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+        z.writestr("META-INF/container.xml", '<?xml version="1.0"?><container version="1.0" '
+                   'xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles>'
+                   f'<rootfile full-path="{base}content.opf" media-type="application/oebps-package+xml"/>'
+                   "</rootfiles></container>")
+        z.writestr(f"{base}content.opf", '<?xml version="1.0"?><package xmlns="http://www.idpf.org/2007/opf" '
+                   'version="3.0" unique-identifier="id"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/">'
+                   f'<dc:identifier id="id">test-1</dc:identifier><dc:title>{title}</dc:title>'
+                   f"<dc:creator>{author}</dc:creator><dc:language>en</dc:language>{extra_meta}</metadata>"
+                   f'<manifest>{manifest}{extra_manifest}</manifest><spine{" toc=\"ncx\"" if ncx else ""}>{spine}</spine></package>')
+        for name, toc_title, body in docs:
+            z.writestr(f"{base}{name}", f"<html {x}><head><title>{toc_title}</title></head><body>{body}</body></html>")
+        if nav:
+            links = "".join(f'<li><a href="{n}">{t}</a></li>' for n, t, _ in docs)
+            z.writestr(f"{base}nav.xhtml", f'<html {x}><body><nav epub:type="toc"><ol>{links}</ol></nav></body></html>')
+        if ncx:
+            points = "".join(f'<navPoint id="p{i}"><navLabel><text>{t}</text></navLabel><content src="{n}"/></navPoint>'
+                             for i, (n, t, _) in enumerate(docs))
+            z.writestr(f"{base}toc.ncx", '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">'
+                       f"<navMap>{points}</navMap></ncx>")
 
 
 @pytest.fixture

@@ -92,8 +92,10 @@ gold suite, nothing written to the data directory by tests, then commit.
   reference and tested against a mock server; live test pending a key.
 - **Phase 5** — `eval/compare.py` (any parse × attribute on scratch copies; strict + loose scores) and
   `eval/g2p_ab.py`. **Misaki** (extra `nlp`, no PyTorch, +110 MB): on par with espeak by speech-to-text (mean WER
-  0.036 vs 0.037, 3/70 failing each; fixes "wound/wound", slightly worse on a few names) → shipped as
-  `[synthesize.kokoro] g2p = "misaki"`, default unchanged, not in the default image. **`parse=names`** (spaCy
+  0.036 vs 0.037, 3/70 failing each). Listening to the 10 heteronym/name sentences: misaki better on read/read and
+  wound/wound, worse on "bowed to" (it always says the violin "bow"); after a context rule for bow/bowed/bowing
+  (`kokoro/heteronyms.py`) misaki matched or beat espeak on all ten → `g2p = "auto"` (misaki when installed) is the
+  default, and `nlp` joins the default extras and image. Both still miss "lead pipe" and "tear" (paper). **`parse=names`** (spaCy
   person names) **missed its gate and was removed**: as a full roster 62.7% (non-speakers crowd pronoun
   resolution), as enrichment of the speaking roster 67.9% — equal to `basic` + `tags` (needed ≥ 73%). Names alone
   can't give what the LLM roster gives `tags` (79.5%): role descriptions ("Scrooge's nephew", "wife of

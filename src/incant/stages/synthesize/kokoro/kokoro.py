@@ -26,6 +26,7 @@ from ....schemas import Emotion, Voice
 from ....voices import VoiceLibrary
 from ....voicesets import KOKORO, KOKORO_LANG, KOKORO_NARRATOR
 from ..base import SynthesizeMethod, SynthSettings
+from . import heteronyms
 
 __all__ = ["KokoroTTS"]
 
@@ -45,7 +46,8 @@ class KokoroSettings(SynthSettings):
     max_segment_chars: int = 400
     # Pronunciation for the English voices: "espeak" (kokoro-onnx's built-in phonemizer) or "misaki" (Kokoro's
     # own dictionary-based G2P with spaCy part-of-speech for heteronyms, espeak for unknown words; extra: nlp).
-    g2p: Literal["espeak", "misaki"] = "espeak"
+    # "auto": misaki when the nlp extra is installed (it is by default), else espeak.
+    g2p: Literal["auto", "espeak", "misaki"] = "auto"
 
 
 class KokoroTTS(SynthesizeMethod):
@@ -63,10 +65,18 @@ class KokoroTTS(SynthesizeMethod):
 
     def identity(self) -> str:
         s = self.settings
-        g2p = f":g2p={s.g2p}" if s.g2p != "espeak" else ""  # (espeak keeps the original key: cache stays valid)
+        mode = self.g2p_mode()  # espeak keeps the original key, so espeak audio stays cached
+        g2p = f":g2p={mode}-h1" if mode != "espeak" else ""  # h1: heteronym rules (bump when they change)
         return f"kokoro-onnx:v1.0:{s.model}:speed={s.speed}{g2p}:p{PROTOCOL}"
 
     _g2ps: dict[bool, object] = {}
+
+    def g2p_mode(self) -> str:
+        if self.settings.g2p != "auto":
+            return self.settings.g2p
+        import importlib.util
+
+        return "misaki" if importlib.util.find_spec("misaki") and importlib.util.find_spec("spacy") else "espeak"
 
     def misaki(self, british: bool):
         """Misaki's English G2P (one per accent, shared), with espeak for words not in its dictionary."""
@@ -136,10 +146,12 @@ class KokoroTTS(SynthesizeMethod):
         lang = voice.lang or KOKORO_LANG.get(base[:1], "en-us")
         speed = self.settings.speed * (1.0, 0.96, 1.04)[variant % 3]  # deterministic model: retry = other tempo
         style = self._style(kokoro, voice)
-        if self.settings.g2p == "misaki" and lang in ("en-us", "en-gb"):
+        if self.g2p_mode() == "misaki" and lang in ("en-us", "en-gb"):
             g2p = self.misaki(british=lang == "en-gb")
             with self._lock:  # spaCy and espeak aren't thread-safe
-                phonemes = g2p(text)[0].replace("❓", "")
+                _, tokens = g2p(text)
+                heteronyms.fix(tokens)  # bow/bowed by context
+                phonemes = heteronyms.phonemes(tokens).replace("❓", "").strip()
                 audio, rate = kokoro.create(phonemes, voice=style, speed=speed, lang=lang, is_phonemes=True)
         else:
             with self._lock:  # the phonemizer (espeak) isn't thread-safe
@@ -160,6 +172,8 @@ class KokoroTTS(SynthesizeMethod):
             out.append((True, "kokoro-onnx installed"))
         except ImportError:
             out.append((False, "kokoro-onnx not installed: uv sync --extra kokoro"))
+        out.append((True, f"pronunciation: {self.g2p_mode()}" + (" (install the nlp extra for misaki)"
+                    if self.g2p_mode() == "espeak" and self.settings.g2p == "auto" else "")))
         for p in self.paths():
             out.append((p.exists() or self.settings.download,
                         f"{p}" + ("" if p.exists() else " (downloads on first use)" if self.settings.download else " missing")))

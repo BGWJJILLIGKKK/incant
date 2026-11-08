@@ -37,3 +37,24 @@ def test_misaki_synthesizes(tmp_path):
     wav = m.synthesize("The wind was too strong to wind the sail.", m.voices().get("bf_emma"), None)
     with wave.open(io.BytesIO(wav)) as w:
         assert w.getnframes() / w.getframerate() > 1.5
+
+
+def test_bow_heteronym_rules():
+    from incant.stages.synthesize.kokoro import heteronyms
+
+    g = kokoro(Path("/tmp"), "misaki").misaki(british=False)
+
+    def bows(text):
+        _, toks = g(text)
+        heteronyms.fix(toks)
+        return [t.phonemes for t in toks if heteronyms.BOW.match(t.text)]
+
+    assert bows("Mr. Darcy bowed to Elizabeth.") == ["bˈWd"]  # bent at the waist (rhymes with "now")
+    assert bows("He bowed low and made a deep bow.") == ["bˈWd", "bˈW"]
+    assert bows("She bowed the cello and tied a bow in her hair.") == ["bˈOd", "bˈO"]  # rhymes with "go"
+    assert bows("The bows of the ships rose.") == ["bˈWz"] and bows("He drew his bow and an arrow.") == ["bˈO"]
+
+
+def test_auto_picks_misaki_when_installed(tmp_path):
+    m = kokoro(tmp_path, "auto")
+    assert m.g2p_mode() == "misaki" and ":g2p=misaki-h1" in m.identity()

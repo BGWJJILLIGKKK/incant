@@ -96,7 +96,7 @@ qa_retries = 2
 [synthesize.kokoro]          # Kokoro-82M on the CPU (uv sync --extra kokoro); model files download on first use
 # narrator = "af_heart"      # default; voices: a*/b* = American/British English (voicesets.py); voices/kokoro.json
 model = "fp32"               # "int8": smaller download, not faster on most CPUs
-g2p = "espeak"               # "misaki": Kokoro's own English pronunciation (uv sync --extra nlp); on par in tests
+g2p = "auto"                 # misaki (Kokoro's own English pronunciation, nlp extra) if installed, else espeak
 speed = 1.0
 qa = true
 

@@ -21,7 +21,7 @@ qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
 browser = ["playwright>=1.47"]  # render JavaScript-built pages (then: playwright install chromium)
 kokoro = ["kokoro-onnx>=0.4"]  # local Kokoro-82M TTS on CPU (model files download on first use, ~340 MB)
 anthropic = ["anthropic>=2.6"]  # [llm] dialect = "anthropic": Claude through the official SDK
-nlp = [  # Misaki pronunciation for Kokoro ([synthesize.kokoro] g2p = "misaki"): spaCy + model, ~110 MB, no PyTorch
+nlp = [  # Misaki pronunciation for Kokoro (the default when installed): spaCy + model, ~110 MB, no PyTorch
     "spacy>=3.8,<3.9",
     "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
     "misaki>=0.9.4",  # without its [en] extra, which pulls in PyTorch

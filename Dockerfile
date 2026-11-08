@@ -16,7 +16,7 @@
 # /data holds books, work/, output/ and your incant.local.toml (settings, secrets, cookies paths).
 
 ARG PYTHON=3.12
-ARG EXTRAS="qa browser kokoro anthropic"
+ARG EXTRAS="qa browser kokoro anthropic nlp"
 
 # ---------------------------------------------------------------- build: the virtualenv
 FROM python:${PYTHON}-slim-bookworm AS build

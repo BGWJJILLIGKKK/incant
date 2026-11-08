@@ -360,7 +360,7 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 | Method | Runs | Voices | Emotion | Notes |
 |---|---|---|---|---|
 | `indextts` | HTTP (IndexTTS-2.5 server) | `voices/voices.json` | free text + strength | best quality; GPU |
-| `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`; `g2p = "misaki"` with the nlp extra) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
+| `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`); pronunciation `g2p = auto` (Misaki with context rules for heteronyms such as bow/bowed when the nlp extra is installed, else espeak) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
 | `openai` | HTTP, any OpenAI `/v1/audio/speech` (Kokoro-FastAPI, openedai-speech, LocalAI, OpenAI) | built-in `kokoro` or `openai` list (+ `voices/openai.json`) | `instructions` (gpt-4o-mini-tts) if `instructions = true` | `api_key_env` |
 | `elevenlabs` | HTTP, ElevenLabs API (`xi-api-key`) | account voices (`/v1/voices`, gender/age labels → tags) + `voices/elevenlabs.json` | lowers `stability` | paid; 24 kHz PCM; `seed` per QA take; stops before exceeding the subscription's remaining characters unless `allow_over_quota` |
 | `dummy` | local | any id | — | beeps; tests |

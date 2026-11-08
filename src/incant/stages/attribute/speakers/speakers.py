@@ -191,6 +191,9 @@ def windows(paras: list[list[Span]], max_quotes: int, max_words: int) -> list[tu
 
 
 class SpeakersAttribute(AttributeMethod):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'  # the code itself; the LLM's terms are reported separately
+    USES_LLM = True
     Settings = SpeakersSettings
     settings: SpeakersSettings
 

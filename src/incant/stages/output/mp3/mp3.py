@@ -18,6 +18,8 @@ class Mp3Settings(BaseModel):
 
 
 class Mp3(OutputMethod):
+    LICENSE = 'project code; FFmpeg (LGPL/GPL, a tool: output not encumbered)'
+    OUTPUT_TERMS = 'none'
     Settings = Mp3Settings
     settings: Mp3Settings
     EXTENSION = ".mp3"

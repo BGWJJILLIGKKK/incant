@@ -11,6 +11,8 @@ __all__ = ["BasicParse"]
 
 
 class BasicParse(ParseMethod):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
     Settings = MetatextSettings
     settings: MetatextSettings
 

@@ -183,6 +183,8 @@ def ingest_epub(path: Path) -> Ingested:
 
 class EpubIngest(IngestMethod):
     """EPUB 2/3: spine order, book-wide chapter heading level, TOC titles, cover, Gutenberg cleanup."""
+    LICENSE = 'project code; ebooklib (AGPL-3.0, a tool: output not encumbered)'
+    OUTPUT_TERMS = 'none'
 
     @classmethod
     def accepts(cls, source: str) -> bool:

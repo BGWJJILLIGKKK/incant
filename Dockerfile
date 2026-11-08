@@ -5,6 +5,7 @@
 #
 #   docker build -t incant .                                   # everything (~3.3 GB)
 #   docker build -t incant:lean --build-arg BAKE_MODELS=0 .    # models download on first use into /data
+#   docker build -t incant --build-arg CONVERTERS=pandoc .    # + docx/odt/rtf/fb2/html (calibre: + Kindle)
 #   docker build -t incant:min --build-arg EXTRAS="" .         # no browser, QA or Kokoro (HTTP TTS only, ~1.1 GB)
 #
 #   docker compose run --rm incant books/b.epub     # data directory from .env (INCANT_DATA=…)
@@ -13,7 +14,7 @@
 # /data holds books, work/, output/ and your incant.local.toml (settings, secrets, cookies paths).
 
 ARG PYTHON=3.12
-ARG EXTRAS="qa browser kokoro"
+ARG EXTRAS="qa browser kokoro anthropic"
 
 # ---------------------------------------------------------------- build: the virtualenv
 FROM python:${PYTHON}-slim-bookworm AS build
@@ -32,6 +33,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM python:${PYTHON}-slim-bookworm
 ARG EXTRAS
 ARG BAKE_MODELS=1
+ARG CONVERTERS=""
 ENV PYTHONUNBUFFERED=1 \
     PATH=/opt/venv/bin:$PATH \
     PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright \
@@ -44,6 +46,10 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends ffmpeg ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 COPY --from=build /opt/venv /opt/venv
+
+# E-book converters for ingest=ebook (docx/odt/rtf/fb2/html: pandoc; also Kindle formats: calibre, large).
+RUN if [ -n "$CONVERTERS" ]; then apt-get update \
+      && apt-get install -y --no-install-recommends $CONVERTERS && rm -rf /var/lib/apt/lists/*; fi
 
 # Chromium's headless shell and the system libraries it needs (the browser extra only).
 RUN case " $EXTRAS " in *" browser "*) playwright install --with-deps --only-shell chromium \

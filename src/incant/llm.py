@@ -8,15 +8,15 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import threading
+import time
 from pathlib import Path
 from typing import TypeVar
 
 import httpx
 from pydantic import BaseModel
 
-from .config import LLMConfig
+from .config import LLMConfig, secret
 from .workdir import atomic_write
 
 M = TypeVar("M", bound=BaseModel)
@@ -62,7 +62,8 @@ class LLM:
         self.cache_dir = cache_dir
         with _budgets_lock:  # one budget per server, shared by every client in the process
             self.budget = _budgets.setdefault(cfg.base_url, TokenBudget(cfg.context_tokens))
-        key = os.environ.get(cfg.api_key_env, "") if cfg.api_key_env else cfg.api_key
+        key = (secret(cfg.api_key_env) or "") if cfg.api_key_env else cfg.api_key
+        self._anthropic = None
         self.http = httpx.Client(
             base_url=cfg.base_url.rstrip("/"), timeout=cfg.timeout_s, headers={"Authorization": f"Bearer {key}"}
         )
@@ -94,31 +95,62 @@ class LLM:
         return body
 
     def models(self) -> list[str]:
+        if self.cfg.dialect == "anthropic":
+            from . import llm_anthropic
+
+            return [m.id for m in llm_anthropic.client(self.cfg).models.list()]
         r = self.http.get("/models")
         r.raise_for_status()
         return [m["id"] for m in r.json().get("data", [])]
 
     def chat_json(self, system: str, user: str, schema: type[M], *, think: bool = False, max_tokens: int = 4096) -> M:
-        body = self.body(system, user, schema, think, max_tokens)
+        anthropic_api = self.cfg.dialect == "anthropic"
+        if anthropic_api:
+            from . import llm_anthropic
+
+            body = llm_anthropic.request(self.cfg, system, user, schema, think, max_tokens)
+        else:
+            body = self.body(system, user, schema, think, max_tokens)
         key = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
         cached = self.cache_dir / key[:2] / f"{key}.json" if self.cache_dir else None
         if cached and cached.exists():
             return schema.model_validate_json(cached.read_text())
         data = None
         need = self.budget.acquire(estimate_tokens(system + user) + max_tokens)
+        if anthropic_api:
+            try:
+                if self._anthropic is None:
+                    self._anthropic = llm_anthropic.client(self.cfg)
+                result, used = llm_anthropic.call(self._anthropic, body, schema)
+            finally:
+                self.budget.release(need)
+            _count(used["input"], used["output"])
+            if cached:
+                atomic_write(cached, result.model_dump_json())
+            return result
         try:
-            for attempt in range(2):
+            for attempt in range(self.cfg.retries + 1):
                 try:
                     r = self.http.post("/chat/completions", json=body)
                     r.raise_for_status()
                     data = r.json()
                     break
                 except httpx.HTTPError as e:
-                    if attempt == 1:
+                    status = getattr(getattr(e, "response", None), "status_code", None)
+                    transient = status is None or status == 429 or status >= 500  # network, rate limit, overload
+                    if attempt == self.cfg.retries or not transient:
                         detail = getattr(getattr(e, "response", None), "text", "")[:200]
                         raise LLMError(f"{type(e).__name__}: {e} {detail}".strip()) from e
+                    wait = min(2 ** (attempt + 1), 32)
+                    try:
+                        wait = max(wait, float(e.response.headers.get("retry-after", 0)))  # type: ignore[union-attr]
+                    except (AttributeError, ValueError):
+                        pass
+                    time.sleep(wait)
         finally:
             self.budget.release(need)
+        u = data.get("usage") or {}
+        _count(u.get("prompt_tokens") or 0, u.get("completion_tokens") or 0)
         choice = data["choices"][0]
         content = _strip_fences(choice["message"].get("content") or "")
         if choice.get("finish_reason") == "length":
@@ -131,6 +163,17 @@ class LLM:
         if cached:
             atomic_write(cached, result.model_dump_json())
         return result
+
+
+USAGE = {"requests": 0, "input": 0, "output": 0}  # tokens sent to / received from the LLM in this process
+_usage_lock = threading.Lock()
+
+
+def _count(inp: int, out: int) -> None:
+    with _usage_lock:
+        USAGE["requests"] += 1
+        USAGE["input"] += inp
+        USAGE["output"] += out
 
 
 def _strip_fences(s: str) -> str:

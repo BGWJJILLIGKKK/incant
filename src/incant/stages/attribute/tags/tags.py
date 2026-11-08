@@ -314,6 +314,8 @@ def build_roster(book: dict[str, list[list[Span]]], log=None) -> CharacterList:
 
 
 class TagsAttribute(AttributeMethod):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
     Settings = TagsSettings
     settings: TagsSettings
     trace: list | None = None  # debugging: (first quote id, rule, speaker, per-quote tags) per paragraph

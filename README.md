@@ -56,8 +56,7 @@ is content-cached per segment, so it always runs but only renders what changed.
 | Fewer LLM calls | `characters` (LLM) | `tags` (80%) | `kokoro` |
 | No LLM at all | `basic` | `tags` (~68%) | `kokoro` (CPU, ~3–5× real time) |
 
-The LLM can be any OpenAI-compatible server (`[llm] dialect = "openai"` for Ollama, LM Studio, OpenRouter,
-OpenAI). Each TTS backend has its own voices and its own cast: switching backends keeps the other's `cast.json`
+The LLM can be a local server or a cloud model; see **LLM servers** below. Each TTS backend has its own voices and its own cast: switching backends keeps the other's `cast.json`
 as `cast.<backend>.json` and brings it back when you switch again.
 
 **Author's notes** on web stories — introductions, commentary, "Thanks for reading!", calls to comment or tip —
@@ -123,6 +122,74 @@ renders audio; re-render a chapter with `./incant <book> --from normalize --chap
   per-book numbers in docs/findings.md. Run it before committing any profiling/attribution change.
 - Every rendered segment is transcribed (faster-whisper, CPU) and compared with its text; mismatches are
   re-rendered and the best take kept. Leftovers are listed in `audio/qa_report.json`.
+
+## LLM servers
+
+`[llm]` in `incant.toml` (or your data directory's `incant.local.toml`). Keys are named by `api_key_env`
+and read from the environment or a `.env` file (the data directory's first); keep that file `chmod 600`
+(`--check` warns otherwise). Every run prints the tokens it used.
+
+```toml
+# llama.cpp / llama-swap (default; also vLLM, SGLang)
+[llm]
+base_url = "http://localhost:8080/v1"
+model = "qwen3.5-9b"
+
+# Ollama, LM Studio, OpenRouter, OpenAI and other OpenAI-compatible servers
+[llm]
+dialect = "openai"
+base_url = "http://localhost:11434/v1"   # OpenRouter: https://openrouter.ai/api/v1
+model = "qwen3:14b"
+# api_key_env = "OPENROUTER_API_KEY"
+# structured = "json_object"             # if the server can't constrain answers to a JSON schema
+
+# Claude, through the official Anthropic SDK (extra: anthropic)
+[llm]
+dialect = "anthropic"
+model = "claude-opus-5-5"
+api_key_env = "ANTHROPIC_API_KEY"
+context_tokens = 1000000
+concurrency = 4
+
+# Gemini, through Google's OpenAI-compatible endpoint
+[llm]
+dialect = "openai"
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+model = "gemini-3.8-flash"               # GET …/openai/models lists what your key can use
+api_key_env = "GEMINI_API_KEY"
+context_tokens = 1000000
+```
+
+Long-context models can profile a whole book's characters in one pass: `[parse.characters] window_words = 200000`.
+Cloud calls retry overloads and rate limits (`[llm] retries`, backoff up to 32 s).
+
+Measured on Pride and Prejudice chapter 1 alone (847 words, 32 gold quotes; `characters` + `speakers`):
+
+| Model | Speakers right | Time | Tokens (in / out) |
+|---|---|---|---|
+| qwen3.5-9b (local) | 9/32 (28%) | 27 s | 4.6k / 3.1k |
+| claude-opus-5-5 | 26/32 (81%) | 26 s | 9.1k / 3.1k (≈ $0.10) |
+
+A single short chapter is the hard case: Mrs. Bennet is "his lady" or "his wife" until the next chapter, so
+the local model gives her lines to Mrs. Long. On whole books the local model reaches 95% (`eval/`).
+
+## Credits and license terms
+
+Each finished audiobook gets a `credits.txt` beside it: the source, every method, model and voice used, the
+license and the terms each puts on the result, required attributions, the weakest known terms, and the gaps
+(whatever incant wasn't told). Nothing is required: unknown terms are listed, never assumed. Declare what you
+know in config:
+
+```toml
+[credits]
+llm = "provider terms: Qwen license"
+"synthesize.indextts" = "non-commercial: check your checkpoint's license"
+"voice.a_janelle_risa" = "attribution: voice-zero"
+source = "none: public domain"
+```
+
+`./incant --licenses` lists every method's known terms and whether a chain with known permissive terms exists
+for every stage (today: `parse=basic attribute=narrator|tags synthesize=kokoro`), naming the stages where none does.
 
 ## Where things live
 

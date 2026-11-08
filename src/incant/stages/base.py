@@ -60,6 +60,13 @@ class Method:
     # Expensive or hand-editable stages set True; cheap/cached ones leave False.
     SKIP_IF_UNCHANGED: ClassVar[bool] = False
 
+    # Credits (optional; see credits.py). LICENSE: the component's own license. OUTPUT_TERMS: what using it
+    # imposes on the finished audiobook — "none", "attribution: …", "provider terms: …", "non-commercial: …";
+    # None = unknown (reported as a gap, never assumed). USES_LLM: terms come from the configured [llm] model.
+    LICENSE: ClassVar[str | None] = None
+    OUTPUT_TERMS: ClassVar[str | None] = None
+    USES_LLM: ClassVar[bool] = False
+
     def __init__(self, settings: BaseModel, cfg: Config):
         self.settings = settings
         self.cfg = cfg

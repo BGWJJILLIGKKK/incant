@@ -37,6 +37,8 @@ def _keep_heading(m: re.Match) -> str:
 
 
 class GutenbergIngest(TxtIngest):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
     @classmethod
     def accepts(cls, source: str) -> bool:
         if not super().accepts(source):

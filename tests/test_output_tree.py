@@ -60,7 +60,7 @@ def test_book_lands_in_output_tree(tmp_path):
     out = tmp_path / "library" / "A. Writer" / "Test Book" / "Test Book.m4b"
     assert out.exists() and not (tmp_path / "work" / "test-book" / "out").exists()
     rec = json.loads((tmp_path / "work" / "test-book" / "output.json").read_text())
-    assert rec == {"files": [str(out.resolve())]}
+    assert rec == {"files": [str(out.resolve()), str((out.parent / "credits.txt").resolve())]}
 
     shutil.rmtree(tmp_path / "library")
     assert main(["test-book", "-c", str(conf), "-o", str(tmp_path / "elsewhere")]) == 0  # -o DIR moves the tree base

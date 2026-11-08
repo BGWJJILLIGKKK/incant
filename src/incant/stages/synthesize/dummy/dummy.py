@@ -22,6 +22,8 @@ RATE = 24000
 
 
 class DummyTTS(SynthesizeMethod):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
     NEEDS_VOICE_LIBRARY = False
     QA_SUPPORTED = False
 

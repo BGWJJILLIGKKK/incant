@@ -156,8 +156,8 @@ def test_bookmark_file_inside_batch_directory(tmp_path, fake_web, capsys):
     d.mkdir()
     (d / "a.txt").write_text("Title: Little Book\n\nChapter 1\n\nIt was short.\n\nChapter 2\n\nThe end came.\n")
     (d / "b.html").write_text(NETSCAPE)
-    (d / "c.html").write_text("<html><body>not bookmarks</body></html>")
+    (d / "c.xml").write_text("<html><body>not bookmarks</body></html>")
     assert main([str(d), "-c", str(conf), "--dry-run"]) == 0
     out = capsys.readouterr().out
     assert "batch: 4 books" in out and "a.txt:" in out and "b.html [3/3] Untitled" in out
-    assert "skip: c.html" in out
+    assert "skip: c.xml" in out

@@ -31,6 +31,7 @@ import httpx
 import trafilatura
 from pydantic import BaseModel, Field
 
+from ....config import secret
 from ....normalize import clean_unicode, paragraphs_from_plain
 from ..base import Ingested, IngestMethod
 from .embedded import embedded_text
@@ -83,7 +84,7 @@ class FetchError(RuntimeError):
 def _env(name: str | None, what: str, host: str) -> str | None:
     if not name:
         return None
-    v = os.environ.get(name)
+    v = secret(name)
     if v is None:
         raise FetchError(f"{what} for {host}: environment variable {name} is not set")
     return v
@@ -327,6 +328,8 @@ def part_title(title: str, series: str) -> str:
 
 class UrlIngest(IngestMethod):
     """A single web page, main text extracted with trafilatura; per-site credentials supported."""
+    LICENSE = 'project code; trafilatura, Playwright (Apache-2.0)'
+    OUTPUT_TERMS = 'none'
 
     Settings = UrlSettings
     settings: UrlSettings
@@ -349,7 +352,7 @@ class UrlIngest(IngestMethod):
         for host, site in self.settings.sites.items():
             for var in (site.password_env, site.bearer_env):
                 if var:
-                    out.append((var in os.environ, f"{host}: environment variable {var}"))
+                    out.append((secret(var) is not None, f"{host}: environment variable {var}"))
             if site.cookies:
                 p = cookies_path(site.cookies, self.cfg.paths.data_dir)
                 out.append((p.is_file(), f"{host}: cookies file {p}"))

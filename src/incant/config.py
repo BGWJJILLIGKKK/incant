@@ -20,6 +20,7 @@ else the config's own directory. A incant.local.toml in the data directory is re
 from __future__ import annotations
 
 import os
+import re
 import tomllib
 from pathlib import Path
 from typing import Any, Literal
@@ -38,10 +39,14 @@ class LLMConfig(BaseModel):
     # "llama.cpp": Qwen-style thinking switch (chat_template_kwargs) and top_k/min_p sampling (also vLLM, SGLang).
     # "openai": standard fields only; thinking is off and the thinking sampling extras are dropped
     #           (OpenAI, Ollama, LM Studio, OpenRouter, most hosted APIs).
-    dialect: Literal["llama.cpp", "openai"] = "llama.cpp"
+    # "anthropic": Claude through the official Anthropic SDK (extra: anthropic).
+    dialect: Literal["llama.cpp", "openai", "anthropic"] = "llama.cpp"
+    effort: str = "low"  # anthropic: thinking depth for ordinary calls
+    effort_thinking: str = "high"  # anthropic: for calls a stage marks as "think"
     # Structured output: "json_schema" (constrained decoding), or "json_object" for servers without schemas
     # (the schema is then described in the prompt and the answer validated).
     structured: Literal["json_schema", "json_object"] = "json_schema"
+    retries: int = 4  # transient failures (network, 429, 5xx) are retried with backoff (2-32 s, or Retry-After)
     timeout_s: float = 1200.0  # long thinking calls share the GPU 4 ways (~25 tok/s each)
     concurrency: int = 4  # llama.cpp slots
     # Total KV cache shared by ALL slots (llama.cpp unified KV). Concurrent requests' prompt + max output
@@ -118,6 +123,36 @@ class Config(BaseModel):
         return p if p.is_absolute() else (self.base_dir / p)
 
 
+_SECRET_FILES: list[Path] = []  # set by load_config: the data directory's .env, then the config's own
+
+
+def secret(name: str | None) -> str | None:
+    """A secret by variable name: the process environment, then the .env files of the last loaded config
+    (data directory first). Values never reach logs, fingerprints or pipeline.json."""
+    if not name:
+        return None
+    if name in os.environ:
+        return os.environ[name]
+    for f in _SECRET_FILES:
+        if (v := env_file(f).get(name)) is not None:
+            return v
+    return None
+
+
+def exposed_env_files() -> list[Path]:
+    """.env files holding secrets that other users on this machine can read."""
+    out = []
+    for f in _SECRET_FILES:
+        try:
+            mode = f.stat().st_mode
+        except OSError:
+            continue
+        names = env_file(f)
+        if mode & 0o077 and any(re.search(r"KEY|TOKEN|SECRET|PASSWORD", k, re.I) for k in names):
+            out.append(f)
+    return out
+
+
 def env_file(path: Path) -> dict[str, str]:
     """KEY=VALUE lines of a .env file (the one docker compose also reads); {} if there is none."""
     out: dict[str, str] = {}
@@ -162,4 +197,5 @@ def load_config(path: Path | None = None) -> Config:
     cfg.paths.work_dir = cfg.paths.data_dir / cfg.paths.work_dir  # (an absolute path stays as it is)
     cfg.paths.output_dir = cfg.paths.data_dir / cfg.paths.output_dir
     cfg.paths.voices_dir = cfg.resolve(cfg.paths.voices_dir)
+    _SECRET_FILES[:] = list(dict.fromkeys([cfg.paths.data_dir / ".env", base.resolve() / ".env"]))
     return cfg

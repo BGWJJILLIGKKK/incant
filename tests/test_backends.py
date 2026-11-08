@@ -232,7 +232,7 @@ def test_kokoro_book_to_mp3_and_chapter_files(tmp_path):
 
     assert main(["rain", "chapters", "--from", "output", "-c", str(conf)]) == 0
     files = sorted(p.name for p in (tmp_path / "out" / "A. Writer" / "Rain").iterdir())
-    assert files == ["01 - Chapter 1.opus", "02 - Chapter 2.opus", "Rain.m3u", "Rain.mp3"]
+    assert files == ["01 - Chapter 1.opus", "02 - Chapter 2.opus", "Rain.m3u", "Rain.mp3", "credits.txt"]
     with wave.open(str(tmp_path / "work" / "rain" / "audio" / "chapters" / "0001.wav")) as w:
         assert w.getnframes() / w.getframerate() > 3
 

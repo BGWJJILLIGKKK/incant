@@ -46,6 +46,8 @@ class KokoroSettings(SynthSettings):
 
 
 class KokoroTTS(SynthesizeMethod):
+    LICENSE = 'Kokoro-82M: Apache-2.0 (code, weights and voices); kokoro-onnx (MIT)'
+    OUTPUT_TERMS = 'none'
     Settings = KokoroSettings
     settings: KokoroSettings
     DEFAULT_NARRATOR = KOKORO_NARRATOR

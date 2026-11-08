@@ -142,6 +142,8 @@ def unique_pages(links: list[tuple[str, str]]) -> list[SourceItem]:
 
 class BookmarkIngest(IngestMethod):
     """A browser bookmark export: every bookmarked page becomes its own book (run as a batch)."""
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
 
     @classmethod
     def accepts(cls, source: str) -> bool:

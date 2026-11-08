@@ -146,6 +146,13 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - When text comes from embedded script data, `url` also renders the page (if allowed) and keeps the longer text:
   JavaScript sites can embed reader comments while the article loads separately.
 
+### Other formats (`ebook`, child of `epub`)
+- mobi / azw / azw3 / lit / pdb (Calibre), docx / odt / rtf / fb2 / local HTML (Calibre or Pandoc; HTML
+  bookmark exports excluded) are converted to EPUB in a temp dir, then read by `epub`. `converter =
+  auto | calibre | pandoc`, `timeout_s`. Missing tool → error naming the apt package; DRM'd Kindle books fail.
+- Docker: `--build-arg CONVERTERS=pandoc` (or `calibre`).
+- Pandoc doesn't carry an `.odt`'s title/author into the EPUB: such books are named after the file.
+
 ### Plain text and Project Gutenberg
 - `txt`: the file as is; `Title:`/`Author:` header lines name the book. `clean(raw)` is the hook for subclasses.
 - `gutenberg` (inherits `txt`): picked for `.txt` files with `*** START OF THE PROJECT GUTENBERG …` in the first
@@ -493,6 +500,14 @@ The m4b file:
 
 - Cover attached as `attached_pic`.
 
+**`credits.txt`** (written by `OutputMethod.record`, listed in `output.json`; `credits.py`): source, each stage's
+method with its `LICENSE` / `OUTPUT_TERMS`, the LLM (model, dialect) for `USES_LLM` methods, voices used (cast
+roles) with `license` / `source` / `consent`, the weakest known terms (none < attribution < provider terms <
+non-commercial), required attributions, and gaps (unknown terms). `[credits]` in config overrides or fills in
+terms: keys `llm`, `llm.<model>`, `<stage>.<method>`, `voice.<id>`, `source`. In the book's output folder it is
+`credits.txt`; beside an `-o FILE` elsewhere `<file>.credits.txt`. `--licenses` prints the per-method table and
+whether a chain of known-permissive methods exists for every stage.
+
 **Requirements for a new output method:**
 - Use only the manifest, meta and cover; never re-render audio.
 - Write into the output tree via `default_path(ctx)`; record every file with `self.record(wd, files)`; return the path(s).
@@ -584,7 +599,7 @@ class Method:
 ## External services
 | Service | Contract |
 |---|---|
-| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). Key: `api_key` or `api_key_env`. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
+| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
 | TTS (`openai`) | `POST /v1/audio/speech` `{model, input, voice, response_format, speed?, instructions?}` → audio. 4xx fatal; 5xx/network retried. |
 | TTS (`kokoro`) | none: kokoro-onnx in-process; model files from the kokoro-onnx GitHub release into `model_dir` (`~/.cache/incant/kokoro`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |

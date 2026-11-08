@@ -30,6 +30,8 @@ class ChaptersSettings(BaseModel):
 
 
 class Chapters(OutputMethod):
+    LICENSE = 'project code; FFmpeg (LGPL/GPL, a tool: output not encumbered)'
+    OUTPUT_TERMS = 'none'
     Settings = ChaptersSettings
     settings: ChaptersSettings
 

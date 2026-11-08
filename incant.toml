@@ -30,14 +30,18 @@ main_unique = 8              # the N characters with most lines never share a vo
 
 # LLM and TTS share one GPU through llama-swap: all LLM stages run over the whole book
 # first, then the first TTS request swaps IndexTTS in (~30 s).
+# [credits]                  # terms you know, for credits.txt beside each audiobook (README: "Credits")
+# llm = "provider terms: Qwen license"
+# "synthesize.indextts" = "non-commercial: check your checkpoint's license"
+
 [review]                     # ./incant <book> --review
 host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
 port = 8765
 
-[llm]                        # shared by LLM-backed parse/attribute methods; any OpenAI-compatible server
+[llm]                        # shared by LLM-backed parse/attribute methods (README: "LLM servers")
 base_url = "http://localhost:8080/v1"
-# Ollama/LM Studio/OpenRouter/OpenAI: dialect = "openai" (no llama.cpp extras); structured = "json_object" if the
-# server can't constrain to a JSON schema; api_key_env = "OPENAI_API_KEY"
+# dialect = "llama.cpp" (default) | "openai" (Ollama, LM Studio, OpenRouter, OpenAI, Gemini) | "anthropic" (Claude);
+# api_key_env names a key in the environment or a .env file (data directory first)
 model = "qwen3.5-9b"
 concurrency = 4              # llama.cpp slots
 context_tokens = 32768       # KV cache shared by ALL slots; requests are admitted to fit it

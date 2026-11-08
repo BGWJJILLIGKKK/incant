@@ -373,6 +373,8 @@ def ingest_pdf(path: Path) -> Ingested:
 class PdfIngest(IngestMethod):
     """PDF with a text layer: running headers/footers, page numbers and footnotes removed; columns,
     paragraphs, headings and end-of-line hyphenation reconstructed."""
+    LICENSE = 'project code; pdfminer.six (MIT)'
+    OUTPUT_TERMS = 'none'
 
     @classmethod
     def accepts(cls, source: str) -> bool:

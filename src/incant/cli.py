@@ -172,6 +172,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--chapters", help="restrict per-chapter stages, e.g. 1-3,7")
     ap.add_argument("--dry-run", action="store_true", help="show the resolved plan and exit")
     ap.add_argument("--list", action="store_true", help="list stages and methods")
+    ap.add_argument("--licenses", action="store_true", help="known license terms per method, and gaps")
     ap.add_argument("--check", action="store_true", help="check readiness of the resolved methods (endpoints, voices, tools)")
     ap.add_argument("--review", action="store_true", help="serve the review/edit page for an existing book")
     ap.add_argument("--host", help="review page bind address (default [review] host, 127.0.0.1)")
@@ -182,6 +183,11 @@ def main(argv: list[str] | None = None) -> int:
     stages = discover()
     if args.list:
         return cmd_list(stages, cfg)
+    if args.licenses:
+        from .credits import licenses_table
+
+        print(licenses_table(cfg, stages))
+        return 0
 
     # INPUT: new source, an existing book (slug or work dir) to resume, or a directory of sources (batch)
     source: str | None = args.input
@@ -244,7 +250,16 @@ def main(argv: list[str] | None = None) -> int:
     except ResolveError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
+    finally:
+        _print_llm_usage()
     return 0
+
+
+def _print_llm_usage() -> None:
+    from .llm import USAGE
+
+    if USAGE["requests"]:
+        print(f"LLM usage: {USAGE['requests']} requests, {USAGE['input']:,} tokens in, {USAGE['output']:,} out")
 
 
 def _folder_items(folder: Path, tokens: list[str], stages: list[StageInfo]) -> list[BatchItem]:
@@ -261,7 +276,11 @@ def run_checks(cfg, steps: list[Step]) -> int:
     """--check: tools on PATH plus each planned method's own readiness checks."""
     import shutil
 
+    from .config import exposed_env_files
+
     ok = True
+    for f in exposed_env_files():
+        print(f"WARN {f} holds secrets but other users can read it: chmod 600 {f}")
     for tool in ("ffmpeg", "ffprobe"):
         found = shutil.which(tool)
         ok &= bool(found)
@@ -331,6 +350,7 @@ def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: li
             failed.append((it.label, f"{type(e).__name__}: {e}"))
             print(f"FAILED {it.label}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
     print(f"\nbatch finished: {len(done)} ok, {len(failed)} failed")
+    _print_llm_usage()
     for name, result in done:
         print(f"  ok    {name} -> {result}")
     for name, err in failed:

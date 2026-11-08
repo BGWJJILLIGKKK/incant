@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import os
 import time
 
 import httpx
 
+from ...config import secret
 from ...schemas import Emotion, Voice
 from .base import SynthesizeMethod, SynthSettings
 
@@ -29,7 +29,7 @@ class SpeechHTTP(SynthesizeMethod):
     def __init__(self, settings, cfg):
         super().__init__(settings, cfg)
         s = self.settings
-        key = os.environ.get(s.api_key_env) if s.api_key_env else s.api_key
+        key = secret(s.api_key_env) if s.api_key_env else s.api_key
         headers = {"Authorization": f"Bearer {key}"} if key else {}
         self.http = httpx.Client(base_url=s.base_url.rstrip("/"), timeout=s.timeout_s, headers=headers)
 
@@ -60,7 +60,7 @@ class SpeechHTTP(SynthesizeMethod):
     def check(self) -> list[tuple[bool, str]]:
         s = self.settings
         out = []
-        if s.api_key_env and not os.environ.get(s.api_key_env):
+        if s.api_key_env and not secret(s.api_key_env):
             out.append((False, f"environment variable {s.api_key_env} is not set"))
         try:  # /models doesn't load anything, so this won't trigger a llama-swap swap
             r = self.http.get("/models", timeout=10)

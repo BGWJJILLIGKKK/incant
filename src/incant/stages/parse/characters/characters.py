@@ -418,6 +418,9 @@ def windows(text: str, max_words: int) -> list[str]:
 
 
 class CharactersParse(ParseMethod):
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'  # the code itself; the LLM's terms are reported separately
+    USES_LLM = True
     Settings = CharactersSettings
     settings: CharactersSettings
 

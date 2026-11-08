@@ -56,6 +56,11 @@ class OutputMethod(Method):
         return [rec, *files]
 
     def record(self, wd: WorkDir, files: list[Path]) -> None:
+        """Note where the book went, and write credits.txt (what it was made with, terms, gaps) beside it."""
+        from ...credits import write as write_credits
+
+        if files:
+            files = [*files, write_credits(self.cfg, wd, files[0])]
         atomic_write(self.record_path(wd), json.dumps({"files": [str(p.resolve()) for p in files]}, indent=2) + "\n")
 
     def default_path(self, ctx: Context) -> Path:

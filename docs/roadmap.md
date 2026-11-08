@@ -75,4 +75,12 @@ gold suite, nothing written to the data directory by tests, then commit.
 - Misaki pins Python < 3.13.
 
 ## Results
-Filled in as phases land.
+- **Phase 1** — secrets from `.env` (environment → data directory → project), `--check` warns about readable
+  `.env` files; Claude through the official Anthropic SDK (`dialect = "anthropic"`, structured output, refusal
+  fallback); retries with backoff for overloads. P&P chapter 1 alone (847 words, 32 gold quotes):
+  claude-opus-5-5 26/32 (81%) in 26 s, 9.1k/3.1k tokens (≈ $0.10); local qwen3.5-9b 9/32 (28%) — on one
+  isolated chapter the local model lacks the context other chapters give it (95% on whole books).
+  Gemini: every model returned 503 "high demand" during the tests; to retry.
+- **Phase 2** — `ingest=ebook`: docx and odt converted by Pandoc in a `CONVERTERS=pandoc` image, read by `epub`.
+- **Phase 3** — `credits.txt` beside every audiobook and `--licenses`; a chain with known permissive terms
+  exists (`parse=basic attribute=narrator|tags synthesize=kokoro`).

@@ -19,6 +19,8 @@ def _header_field(raw: str, name: str) -> str | None:
 
 class TxtIngest(IngestMethod):
     """Plain text or Markdown."""
+    LICENSE = 'project code'
+    OUTPUT_TERMS = 'none'
 
     @classmethod
     def accepts(cls, source: str) -> bool:

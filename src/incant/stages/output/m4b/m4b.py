@@ -19,6 +19,8 @@ class M4bSettings(BaseModel):
 
 
 class M4b(OutputMethod):
+    LICENSE = 'project code; FFmpeg (LGPL/GPL, a tool: output not encumbered)'
+    OUTPUT_TERMS = 'none'
     Settings = M4bSettings
     settings: M4bSettings
     EXTENSION = ".m4b"

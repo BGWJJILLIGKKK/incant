@@ -84,3 +84,6 @@ gold suite, nothing written to the data directory by tests, then commit.
 - **Phase 2** — `ingest=ebook`: docx and odt converted by Pandoc in a `CONVERTERS=pandoc` image, read by `epub`.
 - **Phase 3** — `credits.txt` beside every audiobook and `--licenses`; a chain with known permissive terms
   exists (`parse=basic attribute=narrator|tags synthesize=kokoro`).
+- **Phase 4** — `synthesize=elevenlabs` on the shared HTTP client (new `request` / `decode` / `auth_headers`
+  hooks; IndexTTS and `openai` requests unchanged) with a quota guard. Request shape checked against the API
+  reference and tested against a mock server; live test pending a key.

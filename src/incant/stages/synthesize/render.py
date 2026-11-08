@@ -152,6 +152,17 @@ class Renderer:
             segs[-1].pause_after_ms = a.pause_chapter_end_ms
         return segs
 
+    def pending_chars(self, only: set[str] | None = None) -> tuple[int, int]:
+        """(characters, segments) still to synthesize for these chapters (not in the segment cache)."""
+        chars = segs = 0
+        for ch in self.wd.read_chapters().chapters:
+            if only is not None and ch.id not in only:
+                continue
+            for s in self.plan(ch):
+                if not self._cache_path(s.cache_key).exists():
+                    chars, segs = chars + len(s.text), segs + 1
+        return chars, segs
+
     # ------------------------------------------------------------ synthesis
 
     def _cache_path(self, key: str) -> Path:

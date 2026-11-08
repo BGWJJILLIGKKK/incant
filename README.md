@@ -45,7 +45,7 @@ is content-cached per segment, so it always runs but only renders what changed.
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
 | 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `tags` (rules), `speakers` (LLM) |
 | 4 | `normalize` | `speech/<chapter>.json` (spans + TTS-ready `say`), `speech/changes.txt` | `rules`, `none` |
-| 5 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `kokoro` (local), `openai` (HTTP), `indextts`, `dummy` |
+| 5 | `synthesize` | `cast.json`, `audio/chapters/*.wav`, `audio/manifest.json`, `audio/qa_report.json` | `kokoro` (local), `openai` (HTTP), `indextts`, `elevenlabs` (cloud), `dummy` |
 | 6 | `output` | `output/<author>/<title>/…` (outside `work/`), `output.json` | `m4b`, `mp3`, `chapters` |
 
 **Choosing methods** (speaker accuracy on the 10-book gold suite; see `docs/interfaces.md`):

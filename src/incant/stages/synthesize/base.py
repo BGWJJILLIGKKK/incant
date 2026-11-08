@@ -128,10 +128,14 @@ class SynthesizeMethod(Method):
                 ctx.log("  QA skipped: faster-whisper not installed (uv sync --extra qa)")
         r = Renderer(self.cfg, wd, self, self.voices(), self.ensure_cast(wd, ctx.log),
                      strict_voices=self.NEEDS_VOICE_LIBRARY, qa=qa)
+        self.before_render(r, ctx)
         m = r.render(only=ctx.chapters, progress=ctx.log)
         total = sum(c.duration_ms for c in m.chapters) / 1000
         ctx.log(f"  {len(m.chapters)} chapters, {total / 3600:.2f} h")
         return m
+
+    def before_render(self, renderer, ctx: Context) -> None:
+        """Hook: called with the planned renderer before any segment is synthesized (e.g. a quota check)."""
 
     def check(self) -> list[tuple[bool, str]]:
         lib = self.voices()

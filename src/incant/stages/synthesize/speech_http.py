@@ -30,26 +30,37 @@ class SpeechHTTP(SynthesizeMethod):
         super().__init__(settings, cfg)
         s = self.settings
         key = secret(s.api_key_env) if s.api_key_env else s.api_key
-        headers = {"Authorization": f"Bearer {key}"} if key else {}
-        self.http = httpx.Client(base_url=s.base_url.rstrip("/"), timeout=s.timeout_s, headers=headers)
+        self.http = httpx.Client(base_url=s.base_url.rstrip("/"), timeout=s.timeout_s,
+                                 headers=self.auth_headers(key) if key else {})
+
+    def auth_headers(self, key: str) -> dict[str, str]:
+        return {"Authorization": f"Bearer {key}"}
 
     def payload(self, text: str, voice: Voice, emotion: Emotion | None, variant: int) -> dict:
         raise NotImplementedError
+
+    def request(self, text: str, voice: Voice, emotion: Emotion | None, variant: int) -> tuple[str, dict]:
+        """(path, JSON body) of the speech request. Default: OpenAI-style POST /audio/speech with payload()."""
+        return "/audio/speech", self.payload(text, voice, emotion, variant)
+
+    def decode(self, response: httpx.Response) -> bytes:
+        """The response as WAV (or any format ffmpeg reads)."""
+        return response.content
 
     def synthesize(self, text: str, voice: Voice | None, emotion: Emotion | None, variant: int = 0) -> bytes:
         if voice is None:
             raise ValueError(f"{self.name} needs a voice: set narrator under [synthesize.{self.name}] or [cast], "
                              "or edit the book's cast.json")
-        body = self.payload(text, voice, emotion, variant)
+        path, body = self.request(text, voice, emotion, variant)
         last = ""
         for attempt in range(self.settings.retries + 1):
             try:
-                r = self.http.post("/audio/speech", json=body)
+                r = self.http.post(path, json=body)
             except httpx.TransportError as e:
                 last = f"{type(e).__name__}: {e}"
             else:
                 if r.status_code == 200:
-                    return r.content
+                    return self.decode(r)
                 detail = r.text[:400]
                 if r.status_code < 500:  # bad request: retrying won't help
                     raise RuntimeError(f"TTS rejected segment ({r.status_code}): {detail}\n  text: {text[:120]!r}")

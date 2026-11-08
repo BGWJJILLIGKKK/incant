@@ -356,6 +356,7 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 | `indextts` | HTTP (IndexTTS-2.5 server) | `voices/voices.json` | free text + strength | best quality; GPU |
 | `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
 | `openai` | HTTP, any OpenAI `/v1/audio/speech` (Kokoro-FastAPI, openedai-speech, LocalAI, OpenAI) | built-in `kokoro` or `openai` list (+ `voices/openai.json`) | `instructions` (gpt-4o-mini-tts) if `instructions = true` | `api_key_env` |
+| `elevenlabs` | HTTP, ElevenLabs API (`xi-api-key`) | account voices (`/v1/voices`, gender/age labels → tags) + `voices/elevenlabs.json` | lowers `stability` | paid; 24 kHz PCM; `seed` per QA take; stops before exceeding the subscription's remaining characters unless `allow_over_quota` |
 | `dummy` | local | any id | — | beeps; tests |
 
 **Writes:**
@@ -458,7 +459,8 @@ A list of QA records (same shape as `.qa.json`) for segments still failing after
 - `voice_space() -> str|None`: names the id space (default: method name); None = ids are labels (no cast switching).
 - `DEFAULT_NARRATOR`: a voice id to narrate when config names none of this backend's voices.
 - `NEEDS_VOICE_LIBRARY = False`: any voice id accepted, no casting. `QA_SUPPORTED = False`: output can't be transcribed.
-- HTTP backends: subclass `speech_http.SpeechHTTP` (auth via `api_key_env`, retries, `--check` of `/models`) and implement `payload()`.
+- HTTP backends: subclass `speech_http.SpeechHTTP` (auth via `api_key_env`, retries, `--check` of `/models`) and implement `payload()`; override `request()` (path + body), `decode()` (response → WAV) and `auth_headers()` for non-OpenAI APIs.
+- `before_render(renderer, ctx)`: called once before synthesis; `renderer.pending_chars(chapters)` gives the uncached characters/segments (cost guards).
 - Cache keys include `Voice.mix`/`lang` only when set, so adding a field never invalidates existing audio.
 
 ---

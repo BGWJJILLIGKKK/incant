@@ -104,6 +104,10 @@ model = "kokoro"
 voices = "kokoro"            # built-in voice list: "kokoro", "openai" (alloy, nova…), or "none" (voices/openai.json only)
 # api_key_env = "OPENAI_API_KEY"; instructions = true  # gpt-4o-mini-tts: speak each line's emotion
 
+[synthesize.elevenlabs]      # paid cloud TTS; key in ELEVENLABS_API_KEY (environment or the data directory's .env)
+model_id = "eleven_multilingual_v2"
+allow_over_quota = false     # stop before rendering more characters than the subscription has left
+
 [synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
 concurrency = 4
 

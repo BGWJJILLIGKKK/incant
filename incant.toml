@@ -41,7 +41,8 @@ port = 8765
 [llm]                        # shared by LLM-backed parse/attribute methods (README: "LLM servers")
 base_url = "http://localhost:8080/v1"
 # dialect = "llama.cpp" (default) | "openai" (Ollama, LM Studio, OpenRouter, OpenAI, Gemini) | "anthropic" (Claude);
-# api_key_env names a key in the environment or a .env file (data directory first)
+# api_key_env names a key in the environment or a .env file (data directory first). Cloud presets (README):
+# schema_style = "simple" (Gemini), reasoning_effort / min_max_tokens (reasoning models), retries, effort (Claude)
 model = "qwen3.5-9b"
 concurrency = 4              # llama.cpp slots
 context_tokens = 32768       # KV cache shared by ALL slots; requests are admitted to fit it

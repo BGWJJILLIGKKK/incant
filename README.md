@@ -41,7 +41,7 @@ is content-cached per segment, so it always runs but only renders what changed.
 
 | # | Stage | Writes (in `work/<slug>/`) | Methods |
 |---|---|---|---|
-| 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub`, `pdf`, `txt` (└ `gutenberg`), `url`, `bookmark` |
+| 1 | `ingest` | `meta.json`, `text.md`, `cover.*` | `epub` (└ `ebook`: Kindle/Word/ODT/RTF/FB2/HTML via Calibre or Pandoc), `pdf` (└ `docling`: OCR, incant_local), `txt` (└ `gutenberg`), `url`, `bookmark` |
 | 2 | `parse` | `chapters.json`, `chapters/*.txt`, `characters.json` | `basic`, `characters` (LLM) |
 | 3 | `attribute` | `spans/<chapter>.jsonl` | `narrator`, `tags` (rules), `speakers` (LLM) |
 | 4 | `normalize` | `speech/<chapter>.json` (spans + TTS-ready `say`), `speech/changes.txt` | `rules`, `none` |
@@ -52,7 +52,7 @@ is content-cached per segment, so it always runs but only renders what changed.
 
 | Need | parse | attribute | synthesize |
 |---|---|---|---|
-| Best | `characters` (LLM) | `speakers` (LLM, 95%) | `indextts` (GPU server, emotion) |
+| Best | `characters` (LLM) | `speakers` (LLM, 95%) | `indextts` (GPU server, emotion) or `elevenlabs` (paid cloud) |
 | Fewer LLM calls | `characters` (LLM) | `tags` (80%) | `kokoro` |
 | No LLM at all | `basic` | `tags` (~68%) | `kokoro` (CPU, ~3–5× real time) |
 
@@ -157,6 +157,10 @@ dialect = "openai"
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
 model = "gemini-3.8-flash"               # GET …/openai/models lists what your key can use
 api_key_env = "GEMINI_API_KEY"
+schema_style = "simple"                  # Gemini rejects length limits and $refs in JSON schemas
+reasoning_effort = "low"                 # 3.x models reason; their hidden tokens count against max_tokens
+min_max_tokens = 16000
+concurrency = 1                          # free-tier keys are rate-limited (429)
 context_tokens = 1000000
 ```
 
@@ -169,6 +173,10 @@ Measured on Pride and Prejudice chapter 1 alone (847 words, 32 gold quotes; `cha
 |---|---|---|---|
 | qwen3.5-9b (local) | 9/32 (28%) | 27 s | 4.6k / 3.1k |
 | claude-opus-5-5 | 26/32 (81%) | 26 s | 9.1k / 3.1k (≈ $0.10) |
+| gemini-3.8-flash | 26/32 (81%) | 19 s | 4.5k / 3.4k (< $0.01) |
+| gemini-3.5-flash-lite | 11/32 (34%) | 7 s | 4.5k / 2.9k |
+
+Gemini's free tier returned 503 "high demand" and 429 rate limits during testing; a funded key ran cleanly.
 
 A single short chapter is the hard case: Mrs. Bennet is "his lady" or "his wife" until the next chapter, so
 the local model gives her lines to Mrs. Long. On whole books the local model reaches 95% (`eval/`).
@@ -235,6 +243,17 @@ docker compose run --rm incant book-slug --review  # host networking: http://127
 - Lighter images: `--build-arg BAKE_MODELS=0` (models download on first use) or `--build-arg EXTRAS=""`
   (no browser, QA or Kokoro: ~1.1 GB instead of ~3.3 GB).
 - The code changes? `docker compose build` again; your data is untouched.
+
+**`incant_local`** is the same Dockerfile with the heavy local option: CPU-only PyTorch and Docling
+(`ingest=docling`: layout analysis and OCR for scanned PDFs without a text layer), models baked in. It is larger
+than the regular image (~6.7 GB against ~3.3 GB), so it is separate and built only on request:
+
+```sh
+docker compose --profile local build incant_local
+docker compose run --rm incant_local books/scan.pdf          # image-only PDF: picked up by docling
+```
+
+Outside Docker: `uv sync --extra torch` (PyTorch comes from its CPU-only index).
 
 ## Setup
 

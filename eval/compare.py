@@ -73,6 +73,8 @@ def main() -> int:
     ap.add_argument("--parse", default="keep", help="keep (copy characters.json) | basic | names | characters | …")
     ap.add_argument("--attribute", default="tags")
     ap.add_argument("--books", help="comma-separated subset of eval/gold")
+    ap.add_argument("--set", action="append", default=[], metavar="TOML",
+                    help='extra config, e.g. --set \'[parse.booknlp]\nmodel = "small"\'')
     ap.add_argument("--keep-dir", type=Path, help="keep the scratch copy here (default: a temp dir, removed)")
     args = ap.parse_args()
     cfg = load_config()
@@ -86,7 +88,8 @@ def main() -> int:
     pipeline = {"parse": args.parse if args.parse != "keep" else "basic", "attribute": args.attribute}
     (tmp / "incant.toml").write_text('[paths]\ndata_dir = "."\nwork_dir = "work"\n[pipeline]\n'
                                         + "".join(f'{k} = "{v}"\n' for k, v in pipeline.items())
-                                        + "normalize = \"rules\"\nsynthesize = \"dummy\"\n")
+                                        + "normalize = \"rules\"\nsynthesize = \"dummy\"\n"
+                                        + "".join(f"{s}\n" for s in args.set))
     rows, tot = [], [0, 0, 0]
     for g in golds:
         gold = json.loads(g.read_text())

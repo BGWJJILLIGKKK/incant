@@ -72,13 +72,12 @@ class LLM:
         """The request. For the llama.cpp dialect it is exactly what earlier versions sent, so cached answers
         (keyed by the request) stay valid."""
         c = self.cfg
+        js = schema.model_json_schema() if c.schema_style == "full" else simple_schema(schema.model_json_schema())
         if c.structured == "json_object":
-            system += ("\n\nAnswer with one JSON object matching this JSON schema, and nothing else:\n"
-                       + json.dumps(schema.model_json_schema()))
+            system += ("\n\nAnswer with one JSON object matching this JSON schema, and nothing else:\n" + json.dumps(js))
             fmt: dict = {"type": "json_object"}
         else:
-            fmt = {"type": "json_schema",
-                   "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema(), "strict": True}}
+            fmt = {"type": "json_schema", "json_schema": {"name": schema.__name__, "schema": js, "strict": True}}
         body = {
             "model": c.model,
             "temperature": c.temperature,
@@ -92,6 +91,10 @@ class LLM:
                 body |= c.thinking_sampling
         elif think:  # standard sampling fields only
             body |= {k: v for k, v in c.thinking_sampling.items() if k in ("temperature", "top_p", "seed")}
+        if c.dialect == "openai" and c.reasoning_effort:
+            body["reasoning_effort"] = c.reasoning_effort
+        if c.min_max_tokens > body["max_tokens"]:
+            body["max_tokens"] = c.min_max_tokens
         return body
 
     def models(self) -> list[str]:
@@ -163,6 +166,25 @@ class LLM:
         if cached:
             atomic_write(cached, result.model_dump_json())
         return result
+
+
+_LIMITS = {"maxLength", "minLength", "maxItems", "minItems", "pattern", "format"}
+
+
+def simple_schema(schema: dict) -> dict:
+    """$defs inlined and length/format limits dropped (servers that support only a JSON Schema subset)."""
+    defs = schema.get("$defs", {})
+
+    def walk(node):
+        if isinstance(node, dict):
+            if "$ref" in node:
+                return walk(defs[node["$ref"].split("/")[-1]])
+            return {k: walk(v) for k, v in node.items() if k not in _LIMITS and k != "$defs"}
+        if isinstance(node, list):
+            return [walk(x) for x in node]
+        return node
+
+    return walk(schema)
 
 
 USAGE = {"requests": 0, "input": 0, "output": 0}  # tokens sent to / received from the LLM in this process

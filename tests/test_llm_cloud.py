@@ -93,3 +93,24 @@ def test_anthropic_dialect(tmp_path, monkeypatch):
         llm._anthropic, _ = fake_client(stop=stop)
         with pytest.raises(llm_mod.LLMError, match=msg):
             llm.chat_json("sys", f"user {stop}", Out)
+
+
+def test_simple_schema_and_reasoning_options():
+    from pydantic import Field
+
+    class Inner(BaseModel):
+        name: str = Field(max_length=60)
+
+    class Outer(BaseModel):
+        people: list[Inner] = Field(max_length=4)
+
+    s = llm_mod.simple_schema(Outer.model_json_schema())
+    text = str(s)
+    assert "$defs" not in text and "$ref" not in text and "maxLength" not in text and "maxItems" not in text
+    assert s["properties"]["people"]["items"]["properties"]["name"]["type"] == "string"
+    body = llm_mod.LLM(LLMConfig(dialect="openai", schema_style="simple", reasoning_effort="low",
+                                 min_max_tokens=16000)).body("s", "u", Outer, False, 4096)
+    assert body["reasoning_effort"] == "low" and body["max_tokens"] == 16000
+    assert "maxItems" not in str(body["response_format"])
+    plain = llm_mod.LLM(LLMConfig()).body("s", "u", Outer, False, 4096)
+    assert "reasoning_effort" not in plain and plain["max_tokens"] == 4096  # llama.cpp unchanged

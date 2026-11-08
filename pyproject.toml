@@ -26,6 +26,11 @@ nlp = [  # Misaki pronunciation for Kokoro ([synthesize.kokoro] g2p = "misaki"):
     "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
     "misaki>=0.9.4",  # without its [en] extra, which pulls in PyTorch
 ]
+torch = [  # the incant_local image: ingest=docling (OCR for scanned PDFs) on CPU-only PyTorch
+    "docling>=2",
+    "torch>=2.4",
+    "torchvision",  # listed so it also comes from the CPU index, matching torch
+]
 
 [project.scripts]
 incant = "incant.cli:main"
@@ -42,3 +47,13 @@ testpaths = ["tests"]
 
 [tool.hatch.metadata]
 allow-direct-references = true  # the spaCy model (nlp extra) is a wheel URL, not on PyPI
+
+# PyTorch for the torch extra comes from its CPU-only index (the default Linux wheels carry 2-3 GB of CUDA).
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]

@@ -14,7 +14,7 @@ separate image, **`incant_local`**, built from the same Dockerfile; the default 
 | `synthesize=elevenlabs` | core | mock tests (live once a key exists) |
 | Misaki pronunciation for Kokoro | `nlp` extra, lean image | A/B: whisper WER not worse + listening |
 | `parse=names` — spaCy name roster, no LLM | `nlp` extra, lean image | no-LLM suite beats 68% by ≥ 5 points |
-| `parse=booknlp` | `torch` extra → `incant_local` | no-LLM suite ≥ 73% (the bar `names` missed) |
+| `parse=booknlp` | — (tried; dropped at its gate) | no-LLM suite ≥ 73% (the bar `names` missed) |
 | `ingest=docling` — child of `pdf` | `torch` extra → `incant_local` | scanned-PDF text clearly better than `pdf` |
 
 **Not added:** FastCoref (BookNLP covers coreference), CTC alignment QA (whisper QA exists), NeMo normalization
@@ -80,7 +80,10 @@ gold suite, nothing written to the data directory by tests, then commit.
   fallback); retries with backoff for overloads. P&P chapter 1 alone (847 words, 32 gold quotes):
   claude-opus-5-5 26/32 (81%) in 26 s, 9.1k/3.1k tokens (≈ $0.10); local qwen3.5-9b 9/32 (28%) — on one
   isolated chapter the local model lacks the context other chapters give it (95% on whole books).
-  Gemini: every model returned 503 "high demand" during the tests; to retry.
+  Gemini (Google's OpenAI-compatible endpoint) needed `schema_style = "simple"` (it rejects length limits in
+  JSON schemas), `reasoning_effort` / `min_max_tokens` (3.x models reason within max_tokens) and low concurrency
+  on a free key; gemini-3.8-flash then scored 26/32 (81%, same as Claude) in 19 s for under a cent;
+  gemini-3.5-flash-lite 11/32 (34%).
 - **Phase 2** — `ingest=ebook`: docx and odt converted by Pandoc in a `CONVERTERS=pandoc` image, read by `epub`.
 - **Phase 3** — `credits.txt` beside every audiobook and `--licenses`; a chain with known permissive terms
   exists (`parse=basic attribute=narrator|tags synthesize=kokoro`).
@@ -95,3 +98,11 @@ gold suite, nothing written to the data directory by tests, then commit.
   resolution), as enrichment of the speaking roster 67.9% — equal to `basic` + `tags` (needed ≥ 73%). Names alone
   can't give what the LLM roster gives `tags` (79.5%): role descriptions ("Scrooge's nephew", "wife of
   Mr. Bennet"). The tags roster code is now shared (`roster_from_names`, `tag_name_counts`).
+- **Phase 6** — `torch` extra (PyTorch and torchvision from the CPU-only index) and the `incant_local` image (6.7 GB);
+  the model bake step now fails the build on any error. **Docling passed its gate**: an image-only scan gives
+  `pdf` nothing (it points to ocrmypdf) and Docling clean text (~7 s/page); running headers are dropped.
+  **BookNLP missed its gate and was removed**: it installs on Python 3.12 only with workarounds (saved models
+  carry `position_ids` that current transformers reject; TensorFlow declared but unused, 1.9 GB; `pkg_resources`),
+  and its small models scored 62.0% as the character list for `tags`, 62.5% with its own quote speakers as hints
+  — below `basic` + `tags` (67.9%): its coreference splits people ("his wife" / "Mrs. Bennet": P&P 23%).
+  The large models (+2.7 GB in the image) weren't tried: the failure is the clustering, not model size.

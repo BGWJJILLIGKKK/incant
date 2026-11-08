@@ -46,6 +46,12 @@ class LLMConfig(BaseModel):
     # Structured output: "json_schema" (constrained decoding), or "json_object" for servers without schemas
     # (the schema is then described in the prompt and the answer validated).
     structured: Literal["json_schema", "json_object"] = "json_schema"
+    # "simple": references inlined, length limits dropped — for servers that reject parts of JSON Schema (Gemini).
+    # The answer is still validated against the full schema.
+    schema_style: Literal["full", "simple"] = "full"
+    # Reasoning models (Gemini 3.x, OpenAI o-series): hidden reasoning counts against max_tokens.
+    reasoning_effort: str | None = None  # openai dialect: sent as reasoning_effort ("none", "low", "medium", "high")
+    min_max_tokens: int = 0  # floor for every request's max_tokens (room for the reasoning)
     retries: int = 4  # transient failures (network, 429, 5xx) are retried with backoff (2-32 s, or Retry-After)
     timeout_s: float = 1200.0  # long thinking calls share the GPU 4 ways (~25 tok/s each)
     concurrency: int = 4  # llama.cpp slots

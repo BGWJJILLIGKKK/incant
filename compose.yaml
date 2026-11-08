@@ -18,3 +18,18 @@ services:
     # Without host networking (Docker Desktop): drop network_mode, add
     #   ports: ["8765:8765"]   and   extra_hosts: ["llm-host:host-gateway"]
     # and set [review] host = "0.0.0.0" in incant.local.toml.
+
+  # The heavy local variant: + PyTorch (CPU) and Docling with its models (OCR for scanned PDFs).
+  #   docker compose --profile local build incant_local
+  #   docker compose run --rm incant_local books/scan.pdf docling …
+  incant_local:
+    profiles: ["local"]
+    build:
+      context: .
+      args:
+        EXTRAS: "qa browser kokoro anthropic nlp torch"
+    image: incant_local
+    user: "${UID:-1000}:${GID:-1000}"
+    network_mode: host
+    volumes:
+      - ${INCANT_DATA:-.}:/data

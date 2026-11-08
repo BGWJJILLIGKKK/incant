@@ -6,6 +6,8 @@
 #   docker build -t incant .                                   # everything (~3.3 GB)
 #   docker build -t incant:lean --build-arg BAKE_MODELS=0 .    # models download on first use into /data
 #   docker build -t incant --build-arg CONVERTERS=pandoc .    # + docx/odt/rtf/fb2/html (calibre: + Kindle)
+#   docker build -t incant_local --build-arg EXTRAS="qa browser kokoro anthropic nlp torch" .
+#                                       # + PyTorch (CPU) and Docling: OCR for scanned PDFs (compose: incant_local)
 #   docker build -t incant:min --build-arg EXTRAS="" .         # no browser, QA or Kokoro (HTTP TTS only, ~1.1 GB)
 #
 #   docker compose run --rm incant books/b.epub     # data directory from .env (INCANT_DATA=…)
@@ -39,6 +41,7 @@ ENV PYTHONUNBUFFERED=1 \
     PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright \
     HF_HOME=/opt/models/hf \
     INCANT_KOKORO_DIR=/opt/models/kokoro \
+    INCANT_DOCLING_DIR=/opt/models/docling \
     INCANT_HOME=/app \
     INCANT_DATA=/data
 
@@ -56,16 +59,19 @@ RUN case " $EXTRAS " in *" browser "*) playwright install --with-deps --only-she
       && rm -rf /var/lib/apt/lists/* ;; esac
 
 # Models: baked in (works offline, nothing to download per container), or fetched on first use.
-RUN mkdir -p /opt/models/hf /opt/models/kokoro \
- && if [ "$BAKE_MODELS" = "1" ]; then \
+# set -e and plain `;` sequencing: any failed download fails the build (an `a && b` list wouldn't).
+RUN set -e; mkdir -p /opt/models/hf /opt/models/kokoro; \
+    if [ "$BAKE_MODELS" = "1" ]; then \
       case " $EXTRAS " in *" qa "*) \
         python -c "from faster_whisper import WhisperModel; WhisperModel('base.en', device='cpu', compute_type='int8')" ;; esac; \
+      case " $EXTRAS " in *" torch "*) \
+        docling-tools models download -o /opt/models/docling layout rapidocr ;; esac; \
       case " $EXTRAS " in *" kokoro "*) for f in kokoro-v1.0.onnx voices-v1.0.bin; do \
         python -c "import sys, urllib.request; urllib.request.urlretrieve(sys.argv[1], sys.argv[2])" \
           "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/$f" "/opt/models/kokoro/$f"; \
         done ;; esac; \
-    fi \
- && chmod -R a+rwX /opt/models   # readable by any --user, and writable for first-use downloads
+    fi; \
+    chmod -R a+rwX /opt/models   # readable by any --user, and writable for first-use downloads
 
 WORKDIR /app
 COPY incant.toml lexicon.toml ./

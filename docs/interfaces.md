@@ -153,6 +153,12 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - Docker: `--build-arg CONVERTERS=pandoc` (or `calibre`).
 - Pandoc doesn't carry an `.odt`'s title/author into the EPUB: such books are named after the file.
 
+### Scanned PDFs (`docling`, child of `pdf`; incant_local)
+- Docling layout analysis + OCR (RapidOCR); table structure off. Auto-detected only for PDFs with < 200
+  characters of text layer and only where Docling is installed (else `pdf` explains `ocrmypdf`); explicit
+  `ingest=docling` works on any PDF. Headings that repeat (`max_repeats`, default 2) are running headers and
+  dropped; image placeholders dropped. ~7 s per page on CPU. Models: `$INCANT_DOCLING_DIR` (baked in the image).
+
 ### Plain text and Project Gutenberg
 - `txt`: the file as is; `Title:`/`Author:` header lines name the book. `clean(raw)` is the hook for subclasses.
 - `gutenberg` (inherits `txt`): picked for `.txt` files with `*** START OF THE PROJECT GUTENBERG …` in the first
@@ -601,7 +607,7 @@ class Method:
 ## External services
 | Service | Contract |
 |---|---|
-| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
+| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `schema_style = "simple"`: `$defs` inlined and length/format limits dropped, for servers that reject them (Gemini); answers are still validated against the full schema. `reasoning_effort` (openai dialect) and `min_max_tokens` (a floor on every request's `max_tokens`) for reasoning models whose hidden tokens count against `max_tokens`; all three are added only when set, so other requests and their cache keys don't change. `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). The llama.cpp request body is unchanged from earlier versions, so `llm_cache` stays valid. |
 | TTS (`openai`) | `POST /v1/audio/speech` `{model, input, voice, response_format, speed?, instructions?}` → audio. 4xx fatal; 5xx/network retried. |
 | TTS (`kokoro`) | none: kokoro-onnx in-process; model files from the kokoro-onnx GitHub release into `model_dir` (`~/.cache/incant/kokoro`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |

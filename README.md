@@ -1,4 +1,4 @@
-# incant
+# incant — Ingest Novels, Cast Actors, Narrate Tales
 
 Books in (EPUB, PDF, text, Word/Kindle, web pages), multi-voice audiobooks out (m4b, mp3, or a file per
 chapter). An LLM — local or cloud — works out who speaks each line; a TTS engine — local Kokoro, an IndexTTS

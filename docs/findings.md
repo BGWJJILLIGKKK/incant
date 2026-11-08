@@ -8,7 +8,7 @@ against the hardware below; where something is a judgement rather than a measure
 | Item | Finding |
 |---|---|
 | GPU | One 16 GB GPU on a separate host; llama-swap switches between the LLM and the TTS. |
-| Dev VM | No GPU; 16 cores, 47 GB RAM. All CPU work (ffmpeg, whisper QA) runs here. |
+| CPU host | No GPU; 16 cores. All CPU work (ffmpeg, whisper QA) runs here. |
 | Co-residency | Qwen3.5-9B + IndexTTS-2.5 *fit* together but leave no room to work. Decision: run all LLM stages for the whole book, then let llama-swap swap to IndexTTS for synthesis. |
 | Swap cost | First request after a swap: ~33 s (TTS), similar for the LLM. |
 

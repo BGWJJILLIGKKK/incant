@@ -78,7 +78,7 @@ def parent_methods(stage: StageInfo, cls: type) -> list[str]:
 
 def instantiate(cfg: Config, stage: StageInfo, name: str) -> Method:
     """Settings come from [<stage>.<name>], on top of the tables of the methods it inherits from
-    ([ingest.epub] settings apply to [ingest.ebook] too)."""
+    ([ingest.ebook] settings apply to [ingest.mobi] too)."""
     cls = load_method_class(stage, name)
     merged: dict = {}
     for parent in reversed(parent_methods(stage, cls)):

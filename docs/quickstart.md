@@ -25,7 +25,7 @@ program. Files the container writes there belong to you (`UID`/`GID`).
 Optional, in the data directory:
 - `.env` with API keys (`CLAUDE_API_KEY`, `GEMINI_API_KEY`, `ELEVENLABS_API_KEY`), `chmod 600`.
 - `incant.local.toml` to point at your own servers, e.g. `[llm] base_url = "http://my-gpu-box:8080/v1"`.
-  The defaults expect llama-swap at `localhost:8080` (README: "Configuration" for Ollama, Claude, Gemini).
+  The defaults expect an OpenAI-style LLM and TTS server (such as llama-swap) at `localhost:8080` (README: "Configuration" for Ollama, Claude, Gemini).
 
 ## 2. Build and check
 

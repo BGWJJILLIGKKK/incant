@@ -4,7 +4,7 @@
 
 ```json
 {
-  "a_janelle_risa": { "voice": "a_janelle_risa", "source": "voice-zero", "default_emotion": "calm" }
+  "a_janelle_risa": { "voice": "a_janelle_risa", "source": "voice-zero", "license": "public domain (Voice-Zero)", "default_emotion": "calm" }
 }
 ```
 

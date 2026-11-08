@@ -18,9 +18,10 @@ _SOFT_BREAK = re.compile(r"(?<=[;:,—–])\s+")
 
 
 def speakable(text: str) -> str:
-    t = text.replace("*", "")
+    # Backslashes are never spoken: Markdown escapes (\#, \*) and stray escapes copied from web pages
+    # (doesn\'t, \"word\") that TTS engines read as noise.
+    t = text.replace("\\", "").replace("*", "")
     t = re.sub(r"[“”\"]", "", t)
-    t = t.replace("\\#", "#")
     t = re.sub(r"\s+", " ", t).strip()
     return t if re.search(r"[A-Za-z0-9]", t) else ""
 

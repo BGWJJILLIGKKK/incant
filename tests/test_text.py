@@ -84,6 +84,8 @@ def test_span_invariant_and_ids():
 def test_speakable_strips_markup_and_quotes():
     assert speakable("“We are *not* here,”") == "We are not here,"
     assert speakable(" , ") == ""
+    assert speakable("It doesn\\'t matter,\\") == "It doesn't matter,"
+    assert speakable("a \\\"microfiction\\\" piece, \\#3") == "a microfiction piece, #3"
 
 
 def test_chunk_respects_abbreviations_and_budget():

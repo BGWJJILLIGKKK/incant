@@ -5,6 +5,10 @@ and versions follow [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Fixed
+- Backslashes are no longer sent to the TTS. Some web pages contain stray escapes (`doesn\'t`, `\"word\"`)
+  that engines read as noise, which failed the speech-to-text check and caused extra re-renders.
+
 ## 0.3.0 — 2026-11-08
 
 First public release.

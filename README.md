@@ -181,6 +181,15 @@ Gemini's free tier returned 503 "high demand" and 429 rate limits during testing
 A single short chapter is the hard case: Mrs. Bennet is "his lady" or "his wife" until the next chapter, so
 the local model gives her lines to Mrs. Long. On whole books the local model reaches 95% (`eval/`).
 
+## Cloud voices (ElevenLabs)
+
+`./incant book.epub elevenlabs` with `ELEVENLABS_API_KEY` in the data directory's `.env`. Give the key the
+`voices_read` and `user_read` permissions: then your account's voices are cast automatically from their
+labels, and the remaining characters are checked before rendering (the run stops rather than overspend). With
+a narrower key, six stock voices (George narrates) are used and the run stops unless `allow_over_quota = true`.
+A free tier (10,000 characters a month, ~15–20 minutes of audio) covers a few chapters: render slices with
+`--chapters`. Free-tier audio must credit ElevenLabs; `credits.txt` says so.
+
 ## Credits and license terms
 
 Each finished audiobook gets a `credits.txt` beside it: the source, every method, model and voice used, the

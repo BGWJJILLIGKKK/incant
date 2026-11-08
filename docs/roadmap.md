@@ -1,21 +1,22 @@
 # Roadmap: stage alternatives
 
-Which alternatives from the stage-alternatives survey get added, how, and in what order. The filter: realistic
+**Status: complete** (6 phases; results at the end). Which alternatives from the stage-alternatives survey get
+added, how, and in what order. The filter: realistic
 without a tremendous amount of work, fills a gap, and doesn't bloat the project. PyTorch-based options go into a
 separate image, **`incant_local`**, built from the same Dockerfile; the default `incant` image stays lean.
 
 ## Decisions
 
-| Item | Lands in | Gate before merging |
-|---|---|---|
-| Secrets from `.env` + cloud LLM presets (Gemini, Claude, OpenRouter, Ollama) | core | live smoke test + one gold book |
-| `ingest=ebook` — Calibre / Pandoc, child of `epub` | core (tools via Docker `CONVERTERS`) | real docx/odt/mobi conversions |
-| Credits / license report + `--licenses` gap report | core | — |
-| `synthesize=elevenlabs` | core | mock tests (live once a key exists) |
-| Misaki pronunciation for Kokoro | `nlp` extra, lean image | A/B: whisper WER not worse + listening |
-| `parse=names` — spaCy name roster, no LLM | `nlp` extra, lean image | no-LLM suite beats 68% by ≥ 5 points |
-| `parse=booknlp` | — (tried; dropped at its gate) | no-LLM suite ≥ 73% (the bar `names` missed) |
-| `ingest=docling` — child of `pdf` | `torch` extra → `incant_local` | scanned-PDF text clearly better than `pdf` |
+| Item | Lands in | Gate before merging | Outcome |
+|---|---|---|---|
+| Secrets from `.env` + cloud LLM presets (Gemini, Claude, OpenRouter, Ollama) | core | live smoke test + one gold book | **shipped** — Claude and Gemini 81% on the test chapter |
+| `ingest=ebook` — Calibre / Pandoc, child of `epub` | core (tools via Docker `CONVERTERS`) | real docx/odt/mobi conversions | **shipped** — docx, odt verified |
+| Credits / license report + `--licenses` gap report | core | — | **shipped** |
+| `synthesize=elevenlabs` | core | mock tests (live once a key exists) | **shipped** — verified live |
+| Misaki pronunciation for Kokoro | `nlp` extra, lean image | A/B: whisper WER not worse + listening | **shipped as the default** (with a bow/bowed rule) |
+| `parse=names` — spaCy name roster, no LLM | `nlp` extra, lean image | no-LLM suite beats 68% by ≥ 5 points | dropped — 67.9% |
+| `parse=booknlp` | `torch` extra → `incant_local` | no-LLM suite ≥ 73% (the bar `names` missed) | dropped — 62.5% |
+| `ingest=docling` — child of `pdf` | `torch` extra → `incant_local` | scanned-PDF text clearly better than `pdf` | **shipped** — `incant_local`, 6.7 GB |
 
 **Not added:** FastCoref (BookNLP covers coreference), CTC alignment QA (whisper QA exists), NeMo normalization
 (small gain over `rules`; pynini + transformers), StyleTTS 2 / F5-TTS (GPU; usable through the `openai` method
@@ -23,6 +24,8 @@ when served), Piper (overlaps Kokoro; now GPL-3), Crawl4AI (Playwright + trafila
 the dialogue alternator (both in `attribute=tags`), ChatTTS / XTTS-v2 (non-commercial, heavy).
 
 ## Phases
+
+*The plan as written before implementation; outcomes are under Results.*
 
 Each phase: tests for the new code, the full suite green, defaults unchanged, quality measured on the 10-book
 gold suite, nothing written to the data directory by tests, then commit.

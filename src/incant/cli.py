@@ -11,8 +11,9 @@ The pipeline is spelled out by method names, one per stage, in stage order:
 INPUT is a file, a URL, an existing book slug under work/, or a book work directory. A relative path that
 doesn't exist where you are is looked up in the data directory ($INCANT_DATA / .env), so
 `./incant books/x.epub` finds <data>/books/x.epub. A directory of
-source files (no meta.json in it) is a batch: every supported file in it, by name, one after another,
-each through the whole pipeline; a failing book is reported and the batch continues.
+source files (no meta.json in it) is a batch: every supported file in it, by name, each through the whole
+pipeline; a failing book is reported and the batch continues. Books overlap where they use different servers,
+one book at a time per server ([run] lanes).
 
     ./incant books/                            # every supported file in books/
     ./incant books/ dummy --until synthesize   # same methods/options for each
@@ -40,6 +41,7 @@ from pathlib import Path
 
 from . import __version__
 from .config import load_config
+from .lanes import Job, describe, plan_phases, run_lanes
 from .pipeline import ResolveError, StageInfo, Step, discover, instantiate, load_method_class, resolve, run_pipeline
 from .stages.base import Context
 from .workdir import WorkDir
@@ -307,7 +309,8 @@ def run_checks(cfg, steps: list[Step]) -> int:
 
 
 def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: list[str] | None = None) -> int:
-    """Run the pipeline for each item, sequentially; a failing item is reported and the batch continues."""
+    """Run the pipeline for each item, in lanes (lanes.py): books overlap, one at a time per server. A failing
+    item is reported and the batch continues."""
     if args.slug:
         print("error: --slug names one book; a batch names each book from its title", file=sys.stderr)
         return 2
@@ -334,7 +337,28 @@ def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: li
     if out_dir is not None and out_dir.suffix and not out_dir.is_dir():
         print(f"error: a batch writes one file per book — give an output directory, not '{out_dir}'", file=sys.stderr)
         return 2
+    force = {x.strip() for x in args.force.split(",") if x.strip()}
+    mode = cfg.run.lanes
+    methods: dict[tuple[str, str], object] = {}
+
+    def resource_of(step: Step) -> str | None:
+        k = (step.stage.name, step.method)
+        if k not in methods:
+            methods[k] = instantiate(cfg, step.stage, step.method)
+        return methods[k].resource()  # type: ignore[attr-defined]
+
+    try:
+        phases = [plan_phases(steps, resource_of, mode, args.start, args.stop) for _, steps, _ in plans]
+    except Exception as e:  # noqa: BLE001 — a method that can't be set up fails the same way when it runs
+        print(f"error: {type(e).__name__}: {e}", file=sys.stderr)
+        return 2
     print(f"batch: {len(plans)} books from {origin}")
+    lanes_used = {p.lane for ph in phases for p in ph}
+    if len(lanes_used) > 1:
+        shown = dict.fromkeys(describe(ph) for ph in phases)
+        print("lanes (one book at a time in each, books in parallel across them):")
+        for d in shown:
+            print(f"  {d}")
     if args.check:  # every distinct plan's methods, once
         return run_checks(cfg, [st for _, steps, _ in plans for st in steps])
     if args.dry_run:
@@ -344,26 +368,47 @@ def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: li
     if out_dir:
         out_dir.mkdir(parents=True, exist_ok=True)
 
-    force = {x.strip() for x in args.force.split(",") if x.strip()}
-    done: list[tuple[str, object]] = []
-    failed: list[tuple[str, str]] = []
-    for n, (it, steps, _) in enumerate(plans, 1):
-        print(f"\n=== [{n}/{len(plans)}] {it.label}", flush=True)
-        print(f"plan: {_plan_str(steps)}", flush=True)
-        ctx = Context(cfg=cfg, source=it.source, title=it.title, out_dir=out_dir, chapters=_parse_chapters(args.chapters))
-        try:
-            run_pipeline(steps, ctx, start=args.start, stop=args.stop, force=force)
-            done.append((it.label, ctx.results.get("output") or (ctx.wd.root if ctx.wd else "")))
-        except KeyboardInterrupt:
-            raise
-        except Exception as e:  # noqa: BLE001 — one bad book shouldn't stop the batch
-            failed.append((it.label, f"{type(e).__name__}: {e}"))
-            print(f"FAILED {it.label}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+    import threading
+
+    out_lock = threading.Lock()
+
+    def say(msg: str, err: bool = False) -> None:
+        with out_lock:
+            print(msg, file=sys.stderr if err else sys.stdout, flush=True)
+
+    tag = len(lanes_used) > 1  # several books at once: mark each line with its book
+    done: list[tuple[int, str, object]] = []
+    failed: list[tuple[int, str, str]] = []
+    jobs: list[Job] = []
+    for n, ((it, steps, _), ph) in enumerate(zip(plans, phases), 1):
+        ctx = Context(cfg=cfg, source=it.source, title=it.title, out_dir=out_dir, chapters=_parse_chapters(args.chapters),
+                      log=(lambda msg, n=n: say(f"[{n}] {msg}")) if tag else (lambda msg: say(msg)))
+
+        def run(phase, i, n=n, it=it, steps=steps, ctx=ctx, ph=ph):
+            if i == 0 or tag:
+                where = f" — {', '.join(phase.stages)} ({phase.lane})" if tag else ""
+                say(f"\n=== [{n}/{len(plans)}] {it.label}{where}")
+            if i == 0:
+                ctx.log(f"plan: {_plan_str(steps)}")
+            run_pipeline(steps, ctx, start=phase.first, stop=phase.last, force=force, log_skips=i == 0)
+
+        jobs.append(Job(key=(n, it, ctx), phases=ph, run=run))
+
+    def finish(job: Job) -> None:
+        n, it, ctx = job.key
+        if job.error is None:
+            done.append((n, it.label, ctx.results.get("output") or (ctx.wd.root if ctx.wd else "")))
+        else:
+            e = job.error
+            failed.append((n, it.label, f"{type(e).__name__}: {e}"))
+            say(f"FAILED {it.label}: {type(e).__name__}: {e}", err=True)
+
+    run_lanes(jobs, finish)
     print(f"\nbatch finished: {len(done)} ok, {len(failed)} failed")
     _print_llm_usage()
-    for name, result in done:
+    for _, name, result in sorted(done, key=lambda d: d[0]):  # in batch order, not finishing order
         print(f"  ok    {name} -> {result}")
-    for name, err in failed:
+    for _, name, err in sorted(failed, key=lambda f: f[0]):
         print(f"  FAIL  {name}: {err[:200]}")
     return 0 if not failed else 1
 

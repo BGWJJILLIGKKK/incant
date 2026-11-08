@@ -36,6 +36,8 @@ auto-detection, then the stage's default.
 ./incant --list                                       # stages and methods (children nested)
 ```
 
+In a batch, books overlap where they use different servers: book 2 is fetched and attributed while book 1 is
+voiced, but each server only ever works on one book at a time (`[run] lanes`; `--dry-run` shows them).
 Also `--until STAGE`, `--force STAGE|all`, `--slug NAME`, `--dry-run`, `-c CONFIG`, `--licenses`.
 Re-runs are cheap: parse and attribute are skipped when nothing upstream changed (hand edits survive), and
 audio is cached per segment, so only changed lines are re-rendered.

@@ -53,6 +53,9 @@ class IngestMethod(Method):
     def outputs(cls, wd: WorkDir) -> list[Path]:
         return [wd.meta_path, wd.text_path]
 
+    def resource(self) -> str | None:
+        return "ingest"  # one lane: sites see one book at a time, and slugs are claimed one at a time
+
     def run(self, ctx: Context) -> WorkDir:
         if not ctx.source:
             raise RuntimeError("ingest needs an input source")
@@ -64,8 +67,7 @@ class IngestMethod(Method):
         if ctx.title and (not ing.title.strip() or ing.title == ctx.source):
             ing.title = ctx.title  # the page has no title of its own: use the container's
         ing.author = normalize_author(ing.author)
-        src = ing.source or (ctx.source if ctx.source.startswith(("http://", "https://"))
-                             else str(Path(ctx.source).resolve()))
+        src = ing.source or canonical_source(ctx.source)
         slug = ctx.slug or unique_slug(ctx.cfg.paths.work_dir, slugify(ing.title), src)
         wd = WorkDir.for_slug(ctx.cfg.paths.work_dir, slug)
         ctx.created = not wd.meta_path.exists()
@@ -99,16 +101,28 @@ def normalize_author(author: str | None) -> str | None:
     return a or None
 
 
-def unique_slug(work_dir: Path, slug: str, source: str) -> str:
-    """`slug`, or `slug-2`, `slug-3`… when a different source already owns it. Re-ingesting the same source
-    reuses its work directory (whatever its slug); two different sources with the same title ("Chapter 1", "Untitled") get
-    separate ones instead of overwriting each other."""
-    for meta in sorted(work_dir.glob("*/meta.json")):  # this source's book, even if its title has changed
+def canonical_source(source: str) -> str:
+    """How meta.json records a source: URLs as given, files as absolute paths."""
+    return source if source.startswith(("http://", "https://")) else str(Path(source).resolve())
+
+
+def book_for_source(work_dir: Path, source: str) -> str | None:
+    """Slug of the book ingested from `source` (canonical form), even if its title has changed since."""
+    for meta in sorted(work_dir.glob("*/meta.json")):
         try:
             if BookMeta.model_validate_json(meta.read_text()).source == source:
                 return meta.parent.name
         except ValueError:
             continue
+    return None
+
+
+def unique_slug(work_dir: Path, slug: str, source: str) -> str:
+    """`slug`, or `slug-2`, `slug-3`… when a different source already owns it. Re-ingesting the same source
+    reuses its work directory (whatever its slug); two different sources with the same title ("Chapter 1", "Untitled") get
+    separate ones instead of overwriting each other."""
+    if found := book_for_source(work_dir, source):
+        return found
     n = 1
     while True:
         cand = slug if n == 1 else f"{slug}-{n}"

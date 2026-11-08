@@ -224,10 +224,10 @@ def _read_records(wd: WorkDir) -> dict:
 
 
 def run_pipeline(steps: list[Step], ctx: Context, *, start: str | None = None, stop: str | None = None,
-                 force: set[str] | None = None) -> Context:
+                 force: set[str] | None = None, log_skips: bool = True) -> Context:
     """Run the steps; on failure, clean up a book this run created (see [run] cleanup_failed), then re-raise."""
     try:
-        return _run_steps(steps, ctx, start=start, stop=stop, force=force)
+        return _run_steps(steps, ctx, start=start, stop=stop, force=force, log_skips=log_skips)
     except Exception as e:
         cleanup_failed(ctx, e)
         raise
@@ -254,8 +254,21 @@ def cleanup_failed(ctx: Context, error: BaseException) -> bool:
     return True
 
 
+def _existing_book(ctx: Context) -> None:
+    """--from past ingest with a source as input (a batch item, or a file named again): the book ingested from it."""
+    from .stages.ingest.base import book_for_source, canonical_source
+
+    work = ctx.cfg.paths.work_dir
+    slug = ctx.slug if ctx.slug and (work / ctx.slug / "meta.json").exists() else \
+        book_for_source(work, canonical_source(ctx.source or ""))
+    if slug is None:
+        raise RuntimeError(f"'{ctx.source}' hasn't been ingested yet: run it without --from first (a page that is "
+                           "part of a series is stored under the series' address)")
+    ctx.wd = WorkDir.for_slug(work, slug)
+
+
 def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, stop: str | None = None,
-               force: set[str] | None = None) -> Context:
+               force: set[str] | None = None, log_skips: bool = True) -> Context:
     force = force or set()
     names = [s.stage.name for s in steps]
     for n in (start, stop):
@@ -268,9 +281,12 @@ def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, sto
         if start and name == start:
             active = True
         if step.method == "-" or not active:
+            if ctx.wd is None and ctx.source and step.method != "-":
+                _existing_book(ctx)
             if ctx.wd:
                 upstream_hash = hash_paths(step.stage.module.Base.outputs(ctx.wd))
-            ctx.log(f"[{name}] skipped ({'existing book' if step.method == '-' else 'before --from'})")
+            if log_skips:
+                ctx.log(f"[{name}] skipped ({'existing book' if step.method == '-' else 'before --from'})")
         else:
             method = instantiate(ctx.cfg, step.stage, step.method)
             key = f"{method.fingerprint()}:{upstream_hash}"

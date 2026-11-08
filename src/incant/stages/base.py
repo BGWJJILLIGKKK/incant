@@ -88,6 +88,15 @@ class Method:
         blob = json.dumps([self.stage, self.name, self.settings.model_dump(mode="json")], sort_keys=True)
         return hashlib.sha256(blob.encode()).hexdigest()[:16]
 
+    def resource(self) -> str | None:
+        """What this method waits on, for batch lanes (lanes.py): a server's 'host:port', a name for an
+        in-process engine, or None for quick local work. A batch sends one book at a time to each resource."""
+        if self.USES_LLM:
+            from ..lanes import llm_endpoint
+
+            return llm_endpoint(self.cfg.llm)
+        return None
+
 
 def hash_paths(paths: list[Path]) -> str:
     h = hashlib.sha256()

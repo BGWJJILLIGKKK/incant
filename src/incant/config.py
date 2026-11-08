@@ -108,6 +108,10 @@ class RunConfig(BaseModel):
     # ingested as text, a stage that crashed) don't linger or get resumed. Books that existed before the run,
     # and books with synthesized audio (hours of TTS), are never deleted. "never" keeps everything.
     cleanup_failed: Literal["new", "never"] = "new"
+    # Batches run books in parallel lanes, one book at a time per server (lanes.py): "host" puts every server on
+    # one machine in one lane (they may share a GPU); "endpoint" gives each server address its own lane;
+    # "off" runs one book at a time.
+    lanes: Literal["host", "endpoint", "off"] = "host"
 
 
 class Config(BaseModel):

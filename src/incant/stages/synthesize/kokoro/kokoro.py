@@ -63,6 +63,9 @@ class KokoroTTS(SynthesizeMethod):
     def voices(self) -> VoiceLibrary:
         return VoiceLibrary(self.cfg.paths.voices_dir, index="kokoro.json", builtin=KOKORO)
 
+    def resource(self) -> str | None:
+        return "kokoro"  # in this process, on the CPU
+
     def identity(self) -> str:
         s = self.settings
         mode = self.g2p_mode()  # espeak keeps the original key, so espeak audio stays cached

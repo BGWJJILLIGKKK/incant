@@ -33,6 +33,11 @@ class SpeechHTTP(SynthesizeMethod):
         self.http = httpx.Client(base_url=s.base_url.rstrip("/"), timeout=s.timeout_s,
                                  headers=self.auth_headers(key) if key else {})
 
+    def resource(self) -> str | None:
+        from ...lanes import endpoint
+
+        return endpoint(self.settings.base_url)
+
     def auth_headers(self, key: str) -> dict[str, str]:
         return {"Authorization": f"Bearer {key}"}
 

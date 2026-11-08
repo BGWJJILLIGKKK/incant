@@ -30,6 +30,13 @@ class ParseMethod(Method):
 
         return LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
 
+    def resource(self) -> str | None:
+        if getattr(self.settings, "metatext", None) == "llm":
+            from ...lanes import llm_endpoint
+
+            return llm_endpoint(self.cfg.llm)
+        return super().resource()
+
     @classmethod
     def outputs(cls, wd: WorkDir) -> list[Path]:
         return [wd.chapters_path, wd.root / "chapters"] + ([wd.characters_path] if wd.characters_path.exists() else [])

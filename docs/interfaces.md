@@ -578,7 +578,12 @@ class Method:
     def outputs(cls, wd) -> list[Path]          # per stage; hashed for staleness
     def check(self) -> list[tuple[bool, str]]   # --check readiness
     def fingerprint(self) -> str                # add anything else that changes output (e.g. model)
+    def resource(self) -> str | None            # what it waits on, for batch lanes (below)
 ```
+`resource()` defaults to the `[llm]` server (`host:port`) for `USES_LLM` methods (and parse with
+`metatext = "llm"`), else None (quick local work). Ingest methods return `"ingest"`, HTTP speech backends their
+`base_url`'s `host:port`, Kokoro `"kokoro"`. A method that calls a server of its own should return that server's
+address (`lanes.endpoint(url)`).
 
 ## Adding things
 
@@ -636,6 +641,16 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
     (parse `basic`, attribute `narrator`, normalize `rules`, synthesize `kokoro`, output `m4b`).
 - **Input:** a directory without `meta.json` is a batch. Its files are processed in sorted order, failures are reported and the run continues.
   A container file (bookmark export) is a batch of its items; inside a directory it is expanded in place.
+  With `--from` past ingest, each item's book is found by its source (`meta.json` `source`); an item never
+  ingested fails.
+- **Batch lanes** (`lanes.py`, `[run] lanes`): each book's stages are cut into phases where `resource()`
+  changes (quick stages join a neighbouring phase), and each resource gets one worker that runs one book's phase
+  at a time, in batch order. Books overlap across lanes (book 2 is attributed while book 1 is synthesized), but
+  no server ever sees more than one book at once, so per-book limits (`[llm] concurrency` and its token budget,
+  ElevenLabs' quota check, site pacing) still hold. Stages on the same server share a lane (a llama-swap
+  serving the LLM and IndexTTS isn't made to swap between books). `"host"` (default): every server on one
+  machine shares a lane, since they may share a GPU; `"endpoint"`: one lane per `host:port`; `"off"`: one book
+  at a time. `--dry-run` prints the lanes; when books overlap, log lines start with `[n]`, the book's number.
 - **Exit code:** non-zero on any failure.
 
 ## Review server (`--review`)

@@ -5,9 +5,16 @@ and versions follow [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Added
+- Batches run in lanes, one per server: while one book is synthesized, the next is fetched and attributed.
+  Each server still works on one book at a time; stages on the same server (or, by default, the same machine)
+  share a lane. `[run] lanes = "host" | "endpoint" | "off"`; `--dry-run` shows the lanes.
+
 ### Fixed
 - Backslashes are no longer sent to the TTS. Some web pages contain stray escapes (`doesn\'t`, `\"word\"`)
   that engines read as noise, which failed the speech-to-text check and caused extra re-renders.
+- `--from` past ingest on a batch, or on a source file named again, finds each source's existing book
+  (it failed with "no book work directory").
 
 ## 0.3.0 — 2026-11-08
 

@@ -1,6 +1,6 @@
 [project]
 name = "incant"
-version = "0.1.0"
+version = "0.2.0"
 description = "Turn books (txt, epub, URLs) into fully-voiced, multi-speaker m4b audiobooks using local LLMs and TTS."
 readme = "README.md"
 requires-python = ">=3.12"

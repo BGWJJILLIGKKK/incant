@@ -1,12 +1,11 @@
 # Quickstart
 
-From nothing to a finished audiobook with Docker, in two variants. Everything here was run from a fresh clone
-in an empty directory; the times are from that run (16-core CPU, LLM and IndexTTS on a separate GPU server).
+From nothing to a finished audiobook with Docker, in two variants.
 
-| Image | Size | Build | Adds |
-|---|---|---|---|
-| `incant` | 3.7 GB | 2½ min | everything except the GPU servers: ffmpeg, Chromium, Kokoro voices, speech-to-text QA, Kindle/EPUB/PDF/web ingest |
-| `incant_local` | 6.7 GB | 4½ min | + CPU-only PyTorch and Docling: OCR for scanned PDFs |
+| Image | Size | Adds |
+|---|---|---|
+| `incant` | 3.7 GB | everything except the GPU servers: ffmpeg, Chromium, Kokoro voices, speech-to-text QA, Kindle/EPUB/PDF/web ingest |
+| `incant_local` | 6.7 GB | + CPU-only PyTorch and Docling: OCR for scanned PDFs |
 
 You need Docker with Compose and git. An LLM (local server or cloud key) is optional: without one, use the
 rule-based methods (`basic tags`). IndexTTS is optional too: Kokoro runs on the CPU.
@@ -57,22 +56,18 @@ the LLM, `speakers` attributes every quotation, `rules` spells out numbers and a
 on the CPU, `mp3` writes one chaptered file. `--chapters 1-3` renders only the first three chapters (the
 character profile always covers the whole book).
 
-RESULT_LEAN
-
 ## 4. A scanned PDF, rules and IndexTTS (`incant_local`)
 
 A PDF made of page images has no text to extract; `docling` (only in `incant_local`) reads it with layout
-analysis and OCR, and is picked automatically for such files.
+analysis and OCR, and is picked automatically for such files. With a scanned book in `books/scan.pdf`:
 
 ```sh
-docker compose run --rm incant_local books/carol-scan.pdf basic tags none indextts chapters
+docker compose run --rm incant_local books/scan.pdf basic tags none indextts chapters
 ```
 
 `basic` splits chapters without an LLM, `tags` attributes speakers by rules (dialogue tags, pronouns,
 turn-taking), `none` leaves the text as is, `indextts` voices it on the GPU server with emotion, `chapters`
 writes a file per chapter plus a playlist.
-
-RESULT_LOCAL
 
 ## 5. Results, review, re-runs
 
@@ -80,16 +75,14 @@ Finished books land in `<data>/output/<author>/<title>/` with a `credits.txt` (w
 terms, and what isn't known). Per-book state is in `<data>/work/<book>/`.
 
 ```sh
-docker compose run --rm incant alice-s-adventures-in-wonderland --review   # http://127.0.0.1:8765
-docker compose run --rm incant alice-s-adventures-in-wonderland --chapters 4-6            # three more chapters
+docker compose run --rm incant alice-s-adventures-in-wonderland --review                 # http://127.0.0.1:8765
+docker compose run --rm incant alice-s-adventures-in-wonderland kokoro mp3 --chapters 4-6  # three more chapters
 ```
+
+A book already in `work/` is named by its slug; methods you don't repeat come from `[pipeline]` in the config.
 
 Re-runs reuse everything that hasn't changed: the LLM's answers are cached, audio is cached per line, so
 fixing one speaker in the review page re-renders only that line.
-
-## Notes from the test run
-
-NOTES
 
 ## Without Docker
 

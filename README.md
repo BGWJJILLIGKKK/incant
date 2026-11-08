@@ -16,6 +16,7 @@ Needs [uv](https://docs.astral.sh/uv/) and ffmpeg. `./incant` installs its own d
 ```
 
 The result lands in `output/<author>/<title>/` of your data directory (see **Where things live**).
+Step by step with Docker, from a fresh clone: [docs/quickstart.md](docs/quickstart.md).
 
 ## Usage
 

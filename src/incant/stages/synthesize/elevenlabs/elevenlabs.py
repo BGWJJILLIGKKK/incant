@@ -15,6 +15,7 @@ Free-tier audio must credit ElevenLabs (see credits.txt).
 from __future__ import annotations
 
 import io
+import re
 import wave
 
 import httpx
@@ -28,6 +29,27 @@ __all__ = ["ElevenLabs"]
 RATE = 24000
 PROTOCOL = 1  # bump when the request shape changes (invalidates the segment cache)
 AGE = {"young": "teen", "middle_aged": "adult", "middle aged": "adult", "old": "older"}
+# Stock voices that synthesized with a free-tier key (2026-11); others answered 402 paid_plan_required or 404.
+# Keys without voices_read can still use these; account voices and voices/elevenlabs.json add to them.
+STOCK = {vid: Voice(id=vid, name=name, gender=g, age="adult", tone=tone, description=desc, source="elevenlabs (stock)")
+         for vid, name, g, tone, desc in [
+             ("JBFqnCBsd6RMkjVDRZzb", "George", "male", "neutral", "British, warm storyteller, narration"),
+             ("onwK4e9ZLuTAKqWW03F9", "Daniel", "male", "deep", "British, authoritative"),
+             ("nPczCjzI2devNBz1zQrb", "Brian", "male", "deep", "American, deep, narration"),
+             ("EXAVITQu4vr4xnSDxMaL", "Sarah", "female", "neutral", "American, soft"),
+             ("pFZP5JQG7iQjIQuC4Bku", "Lily", "female", "neutral", "British, warm"),
+             ("Xb7hH8MSUJpSbSDYk0k2", "Alice", "female", "neutral", "British, confident"),
+         ]}
+
+
+def missing_permission(r: httpx.Response) -> str | None:
+    """'voices_read' etc. when a scoped API key lacks a permission."""
+    try:
+        detail = r.json().get("detail", {})
+    except ValueError:
+        return None
+    m = re.search(r"missing the permission (\w+)", str(detail.get("message", "")))
+    return m.group(1) if r.status_code == 401 and m else None
 
 
 class ElevenLabsSettings(SpeechHTTPSettings):
@@ -62,9 +84,13 @@ class ElevenLabs(SpeechHTTP):
     def account_voices(self) -> dict[str, Voice]:
         if not hasattr(self, "_account"):
             self._account: dict[str, Voice] = {}
+            self.voices_note = ""
             if "xi-api-key" in self.http.headers:
                 try:
                     r = self.http.get("/v1/voices", timeout=30)
+                    if perm := missing_permission(r):
+                        self.voices_note = f"the API key lacks {perm}: stock voices and voices/elevenlabs.json only"
+                        return self._account
                     r.raise_for_status()
                     for v in r.json().get("voices", []):
                         labels = {k: str(val).lower() for k, val in (v.get("labels") or {}).items()}
@@ -81,14 +107,15 @@ class ElevenLabs(SpeechHTTP):
         return self._account
 
     def voices(self) -> VoiceLibrary:
-        return VoiceLibrary(self.cfg.paths.voices_dir, index="elevenlabs.json", builtin=self.account_voices())
+        return VoiceLibrary(self.cfg.paths.voices_dir, index="elevenlabs.json",
+                            builtin=STOCK | self.account_voices())
 
     @property
     def DEFAULT_NARRATOR(self) -> str | None:  # type: ignore[override]
         voices = list(self.account_voices().values())
         narr = [v for v in voices if "narrat" in (v.description or "") or "audiobook" in (v.description or "")]
         pool = narr or voices
-        return pool[0].id if pool else None
+        return pool[0].id if pool else "JBFqnCBsd6RMkjVDRZzb"  # George
 
     # ------------------------------------------------------------ synthesis
 
@@ -111,8 +138,11 @@ class ElevenLabs(SpeechHTTP):
 
     # ------------------------------------------------------------ cost guard
 
-    def subscription(self) -> dict:
+    def subscription(self) -> dict | None:
+        """The subscription, or None when the key may not read it (no user_read permission)."""
         r = self.http.get("/v1/user/subscription", timeout=30)
+        if missing_permission(r):
+            return None
         r.raise_for_status()
         return r.json()
 
@@ -121,6 +151,13 @@ class ElevenLabs(SpeechHTTP):
         if not chars:
             return
         sub = self.subscription()
+        if sub is None:
+            msg = (f"ElevenLabs: {chars:,} characters to synthesize ({segs} segments), but this API key may not read "
+                   "the subscription (user_read), so the remaining credits can't be checked")
+            if not self.settings.allow_over_quota:
+                raise RuntimeError(msg + "; grant the key user_read, or set allow_over_quota = true to go ahead")
+            ctx.log(f"  {msg}; going ahead (allow_over_quota = true)")
+            return
         left = int(sub.get("character_limit", 0)) - int(sub.get("character_count", 0))
         ctx.log(f"  ElevenLabs: {chars:,} characters to synthesize ({segs} segments); "
                 f"{left:,} left this period ({sub.get('tier', '?')} tier)")
@@ -134,12 +171,17 @@ class ElevenLabs(SpeechHTTP):
             return [(False, f"no API key: set {self.settings.api_key_env} in the environment or the data directory's .env")]
         try:
             sub = self.subscription()
-            left = int(sub.get("character_limit", 0)) - int(sub.get("character_count", 0))
-            out.append((True, f"{sub.get('tier', '?')} tier, {left:,} characters left this period"))
+            if sub is None:
+                out.append((True, "the key may not read the subscription (user_read): credits can't be checked before "
+                                  "rendering; grant user_read or set allow_over_quota = true"))
+            else:
+                left = int(sub.get("character_limit", 0)) - int(sub.get("character_count", 0))
+                out.append((True, f"{sub.get('tier', '?')} tier, {left:,} characters left this period"))
         except httpx.HTTPError as e:
             out.append((False, f"subscription: {e}"))
         lib = self.voices()
-        out.append((bool(lib.voices), f"{len(lib.voices)} voices ({lib.describe()})"))
+        out.append((bool(lib.voices), f"{len(lib.voices)} voices ({lib.describe()})"
+                    + (f"; {self.voices_note}" if getattr(self, "voices_note", "") else "")))
         narr = self.narrator()
         out.append((narr is not None, f"narrator voice: {narr!r}"))
         return out

@@ -89,7 +89,10 @@ gold suite, nothing written to the data directory by tests, then commit.
   exists (`parse=basic attribute=narrator|tags synthesize=kokoro`).
 - **Phase 4** — `synthesize=elevenlabs` on the shared HTTP client (new `request` / `decode` / `auth_headers`
   hooks; IndexTTS and `openai` requests unchanged) with a quota guard. Request shape checked against the API
-  reference and tested against a mock server; live test pending a key.
+  reference and tested against a mock server. Live (free tier, scoped key): synthesis works; the key may not list
+  voices (`voices_read`) or read the subscription (`user_read`) — both handled: six stock voices that synthesize on
+  a free tier are built in (others answer 402 paid_plan_required or 404), and when the credits can't be read the
+  run stops unless `allow_over_quota = true`. A 2-chapter test book (187 characters) rendered with QA clean.
 - **Phase 5** — `eval/compare.py` (any parse × attribute on scratch copies; strict + loose scores) and
   `eval/g2p_ab.py`. **Misaki** (extra `nlp`, no PyTorch, +110 MB): on par with espeak by speech-to-text (mean WER
   0.036 vs 0.037, 3/70 failing each). Listening to the 10 heteronym/name sentences: misaki better on read/read and

@@ -74,4 +74,33 @@ def test_no_key(tmp_path, monkeypatch):
     conf = tmp_path / "incant.toml"
     conf.write_text("")
     m = instantiate(load_config(conf), {s.name: s for s in discover()}["synthesize"], "elevenlabs")
-    assert m.voices().voices == {} and m.check()[0][0] is False
+    from incant.stages.synthesize.elevenlabs.elevenlabs import STOCK
+
+    assert set(m.voices().voices) == set(STOCK) and m.check()[0][0] is False and m.narrator() == "JBFqnCBsd6RMkjVDRZzb"
+
+
+def test_scoped_key_without_read_permissions(tmp_path, monkeypatch):
+    """A key allowed to synthesize but not to list voices or read the subscription (as ElevenLabs issues them)."""
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "xi-scoped")
+    conf = tmp_path / "incant.toml"
+    conf.write_text("[synthesize.elevenlabs]\n")
+    m = instantiate(load_config(conf), {s.name: s for s in discover()}["synthesize"], "elevenlabs")
+
+    def handler(req):
+        perm = {"/v1/voices": "voices_read", "/v1/user/subscription": "user_read"}.get(req.url.path)
+        if perm:
+            return httpx.Response(401, json={"detail": {"status": "missing_permissions",
+                                                        "message": f"The API key you used is missing the permission {perm} to execute this operation."}})
+        return httpx.Response(200, content=b"\x00\x00" * 240)
+
+    m.http = httpx.Client(base_url="https://api.elevenlabs.io", transport=httpx.MockTransport(handler),
+                          headers=dict(m.http.headers))
+    lib = m.voices().voices
+    assert "JBFqnCBsd6RMkjVDRZzb" in lib and m.narrator() == "JBFqnCBsd6RMkjVDRZzb"
+    msgs = " ".join(msg for _, msg in m.check())
+    assert "lacks voices_read" in msgs and "user_read" in msgs
+    renderer = SimpleNamespace(pending_chars=lambda only: (500, 4))
+    with pytest.raises(RuntimeError, match="can't be checked; grant the key user_read, or set allow_over_quota"):
+        m.before_render(renderer, SimpleNamespace(chapters=None, log=print))
+    m.settings.allow_over_quota = True
+    m.before_render(renderer, SimpleNamespace(chapters=None, log=print))

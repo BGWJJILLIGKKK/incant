@@ -108,7 +108,8 @@ voices = "kokoro"            # built-in voice list: "kokoro", "openai" (alloy, n
 
 [synthesize.elevenlabs]      # paid cloud TTS; key in ELEVENLABS_API_KEY (environment or the data directory's .env)
 model_id = "eleven_multilingual_v2"
-allow_over_quota = false     # stop before rendering more characters than the subscription has left
+allow_over_quota = false     # stop before rendering more characters than the subscription has left (or when a
+                             # key without user_read can't tell); narrator default: George (stock)
 
 [synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
 concurrency = 4

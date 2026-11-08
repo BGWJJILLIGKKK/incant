@@ -24,7 +24,7 @@ ARG EXTRAS
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PROJECT_ENVIRONMENT=/opt/venv UV_PYTHON_DOWNLOADS=never
 COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /usr/local/bin/uv
 WORKDIR /app
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml uv.lock README.md LICENSE THIRD_PARTY_NOTICES.md ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project $(for e in $EXTRAS; do printf -- '--extra %s ' "$e"; done)
 COPY src ./src
@@ -74,8 +74,13 @@ RUN set -e; mkdir -p /opt/models/hf /opt/models/kokoro; \
     chmod -R a+rwX /opt/models   # readable by any --user, and writable for first-use downloads
 
 WORKDIR /app
-COPY incant.toml lexicon.toml ./
+COPY incant.toml lexicon.toml LICENSE THIRD_PARTY_NOTICES.md ./
+COPY LICENSES ./LICENSES
 COPY voices ./voices
+LABEL org.opencontainers.image.title="incant" \
+      org.opencontainers.image.description="Ingest Novels, Cast Actors, Narrate Tales: multi-voice audiobooks" \
+      org.opencontainers.image.source="https://github.com/BGWJJILLIGKKK/incant" \
+      org.opencontainers.image.documentation="https://github.com/BGWJJILLIGKKK/incant/blob/main/THIRD_PARTY_NOTICES.md"
 
 # Run as your own uid (--user, or compose's user:) so files written to /data stay yours.
 RUN useradd --uid 1000 --create-home app && mkdir -p /data && chown app /data

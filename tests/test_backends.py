@@ -248,6 +248,14 @@ def test_check_on_a_batch_only_checks(tmp_path, capsys):
     assert not (tmp_path / "work").exists()  # nothing ingested
 
 
+def test_check_named_methods_without_a_book(tmp_path, capsys):
+    conf = tmp_path / "incant.toml"
+    conf.write_text('[paths]\nwork_dir = "work"\n')
+    main(["dummy", "chapters", "-c", str(conf), "--check"])
+    out = capsys.readouterr().out
+    assert "synthesize=dummy" in out and "output=chapters" in out
+
+
 def test_data_dir_holds_books_and_user_settings(tmp_path, monkeypatch):
     app, data = tmp_path / "app", tmp_path / "data"
     app.mkdir(), data.mkdir()

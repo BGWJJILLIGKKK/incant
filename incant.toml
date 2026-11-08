@@ -4,14 +4,15 @@
 # Default method per stage, used when the command line doesn't name one.
 # "auto" = detect from the input (ingest).
 [pipeline]
+# The defaults need no server or GPU: rule-based speakers and Kokoro voices on the CPU, all built in.
+# With an LLM server or key (see [llm]), parse = "characters" and attribute = "speakers" reach 95%.
 ingest = "auto"
-parse = "characters"         # LLM character profiles (~10 min/book); "basic" = chapters only
-attribute = "speakers"       # LLM speaker + emotion per quote (~8 min/book, 95%); "tags" = rules, seconds (80%,
-                             # 68% with parse=basic); "narrator" = one voice
+parse = "basic"              # chapters only; "characters" = LLM character profiles (~10 min/book)
+attribute = "tags"           # rules: dialogue tags, pronouns, turn-taking, seconds (68%; 80% after parse=characters);
+                             # "speakers" = LLM speaker + emotion per quote (~8 min/book, 95%); "narrator" = one voice
 normalize = "rules"          # spell out numerals/numbers/abbreviations/caps for the TTS; "none" = markup only
-synthesize = "indextts"      # "kokoro" = local CPU, no server; "openai" = any /v1/audio/speech server; "dummy"
+synthesize = "kokoro"        # local CPU, no server; "indextts" / "openai" = speech servers; "elevenlabs"; "dummy"
 output = "m4b"               # "mp3" = one chaptered mp3; "chapters" = a file per chapter + playlist
-
 [run]
 cleanup_failed = "new"       # a failed run deletes a book it created ("never" keeps it); never books with audio
 
@@ -23,13 +24,13 @@ voices_dir = "voices"         # (relative to this file: the program's voice list
 output_dir = "output"         # finished books: output/<author>/<title>/<title>.m4b
 
 [cast]
-narrator = "a_janelle_risa"  # voice id from voices/voices.json; also the fallback for uncast speakers
+# narrator = "…"             # one voice id for every backend; normally set per backend ([synthesize.<name>] narrator)
 main_unique = 8              # the N characters with most lines never share a voice
 # Speaking characters are cast automatically into the book's cast.json from voice gender/age/tone tags;
 # existing entries there are never changed, so edit cast.json to recast.
 
-# LLM and TTS share one GPU through llama-swap: all LLM stages run over the whole book
-# first, then the first TTS request swaps IndexTTS in (~30 s).
+# All LLM stages run over the whole book before synthesis starts, so one GPU can serve the LLM and then the
+# TTS (llama-swap swaps models on demand).
 # [credits]                  # terms you know, for credits.txt beside each audiobook (README: "Credits")
 # llm = "provider terms: Qwen license"
 # "synthesize.indextts" = "non-commercial: check your checkpoint's license"
@@ -38,7 +39,7 @@ main_unique = 8              # the N characters with most lines never share a vo
 host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
 port = 8765
 
-[llm]                        # shared by LLM-backed parse/attribute methods (README: "LLM servers")
+[llm]                        # for parse = "characters" / attribute = "speakers" (README: "Configuration")
 base_url = "http://localhost:8080/v1"
 # dialect = "llama.cpp" (default) | "openai" (Ollama, LM Studio, OpenRouter, OpenAI, Gemini) | "anthropic" (Claude);
 # api_key_env names a key in the environment or a .env file (data directory first). Cloud presets (README):
@@ -81,7 +82,8 @@ min_intensity = 0.3          # weaker emotions are rendered neutral
 [normalize.rules]
 lexicon = "lexicon.toml"     # [words] Name = "respelling"; plus <work>/<book>/lexicon.toml
 
-[synthesize.indextts]
+[synthesize.indextts]          # an IndexTTS-2 server with an OpenAI-style API (voices: voices/voices.json)
+narrator = "a_janelle_risa"
 base_url = "http://localhost:8080/v1"
 model = "indextts-2.5"
 lang = "en"

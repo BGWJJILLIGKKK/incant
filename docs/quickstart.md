@@ -14,7 +14,7 @@ rule-based methods (`basic tags`). IndexTTS is optional too: Kokoro runs on the 
 
 ```sh
 mkdir -p ~/audiobooks/books
-git clone <repository-url>
+git clone https://github.com/BGWJJILLIGKKK/incant.git
 cd incant
 printf 'INCANT_DATA=%s\nUID=%s\nGID=%s\n' ~/audiobooks "$(id -u)" "$(id -g)" > .env
 ```
@@ -30,18 +30,19 @@ Optional, in the data directory:
 ## 2. Build and check
 
 ```sh
-docker compose build                                   # incant
-docker compose --profile local build incant_local   # only if you need OCR for scanned PDFs
+docker compose build                                  # incant
+docker compose --profile local build incant_local     # only if you need OCR for scanned PDFs
 docker compose run --rm incant --check
 ```
 
-`--check` lists what the configured pipeline needs and whether it's there:
+`--check` lists what the configured pipeline needs and whether it's there. The defaults (rule-based speakers,
+Kokoro voices) need nothing else; methods you name that need a server are checked when you name them, e.g.
+`--check characters speakers indextts`:
 
 ```
 ok  ffmpeg
 ok  [parse.characters] llm model 'qwen3.5-9b' at http://localhost:8080/v1
 ok  [synthesize.indextts] model 'indextts-2.5' at http://localhost:8080/v1
-ok  [synthesize.indextts] 152 voices (/app/voices/voices.json)
 ```
 
 ## 3. A Kindle book, LLM speakers, Kokoro voices (`incant`)

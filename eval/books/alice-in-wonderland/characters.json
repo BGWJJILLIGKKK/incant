@@ -1,0 +1,1248 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "alice",
+      "canonical_name": "Alice",
+      "aliases": [
+        "the tiny hands",
+        "the prisoner"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Alice",
+      "age": "child",
+      "description": "The protagonist who is tired of sitting by her sister, falls down a rabbit-hole, shrinks and grows, and tries to reach the garden.; The protagonist who shrinks and grows, talks to her feet, cries in the hall, and swims in the pool.; The protagonist who is talking to the animals and participating in the race.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012"
+      ],
+      "mentions": 12,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-white-rabbit",
+      "canonical_name": "the White Rabbit",
+      "aliases": [
+        "the Rabbit",
+        "W. RABBIT",
+        "the master"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "A rabbit with pink eyes who wears a waistcoat, carries a watch, and is late.; A rabbit dressed in clothes who rushes about, drops gloves and a fan, and is later found swimming in the pool.; A rabbit who mistakes Alice for Mary Ann, tries to enter the house through the window, and later orders Bill.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0004",
+        "0008",
+        "0011",
+        "0012"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dinah",
+      "canonical_name": "Dinah",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the cat, she, her",
+      "age": "adult",
+      "description": "Alice's cat, mentioned by name multiple times.; Alice's cat, described as quiet and good at catching mice.; Alice's cat, mentioned by name but does not speak in the passage.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0004"
+      ],
+      "mentions": 4,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-march-hare",
+      "canonical_name": "the March Hare",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.75,
+      "gender_evidence": "the March Hare",
+      "age": "adult",
+      "description": "A character mentioned by the Cat as living in a specific direction.; One of the characters at the tea party.; Follows the Hatter into court, argues about dates.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007",
+        "0011",
+        "0012"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-mock-turtle",
+      "canonical_name": "the Mock Turtle",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.67,
+      "gender_evidence": "his, him, he",
+      "age": "adult",
+      "description": "A creature sitting on a rock who sighs and tells Alice and the Gryphon his history as a real Turtle who went to school.; A creature who sings and explains the Lobster Quadrille.; A character mentioned in the sister's dream.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0010",
+        "0012"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bill-the-lizard",
+      "canonical_name": "Bill, the Lizard",
+      "aliases": [
+        "Bill",
+        "the poor little juror"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Bill",
+      "age": "adult",
+      "description": "A character who carries a ladder, is ordered to go down the chimney, and is kicked by Alice.; One of the twelve jurors, a lizard who loses his pencil.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0011"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "cheshire-puss",
+      "canonical_name": "Cheshire Puss",
+      "aliases": [
+        "the Cheshire cat",
+        "the Cat",
+        "the cat"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "he",
+      "age": "unknown",
+      "description": "A large cat that grins, appears and disappears, and gives Alice directions.; A cat that appears in the air and talks to Alice.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0008"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-soldiers",
+      "canonical_name": "the soldiers",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns used for soldiers",
+      "age": "unknown",
+      "description": "Soldiers carrying clubs and later executing the gardeners.; Soldiers who take people into custody when the Queen sentences them.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ada",
+      "canonical_name": "Ada",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "child",
+      "description": "A child Alice knows, described as having hair in long ringlets.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "elsie",
+      "canonical_name": "Elsie",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "sisters",
+      "age": "child",
+      "description": "One of the three little sisters in the Dormouse's story.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "father-william",
+      "canonical_name": "Father William",
+      "aliases": [
+        "the sage"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Father William replied to his son... his father... I took to",
+      "age": "adult",
+      "description": "A character in the poem Alice recites, referred to as 'Father William', 'the sage', and 'his father'.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "five",
+      "canonical_name": "Five",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns used for Five",
+      "age": "unknown",
+      "description": "One of the three gardeners painting roses red.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lacie",
+      "canonical_name": "Lacie",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "sisters",
+      "age": "child",
+      "description": "One of the three little sisters in the Dormouse's story.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mabel",
+      "canonical_name": "Mabel",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "child",
+      "description": "A child Alice knows, described as knowing very little.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-ann",
+      "canonical_name": "Mary Ann",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mary Ann",
+      "age": "adult",
+      "description": "The housemaid the Rabbit mistakes Alice for; she is never seen or heard from directly in the passage.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "o-mouse",
+      "canonical_name": "O Mouse",
+      "aliases": [
+        "the Mouse"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "unknown",
+      "description": "A small animal that falls into the pool of tears, hates cats and dogs, and agrees to tell Alice his history.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pat",
+      "canonical_name": "Pat",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Pat",
+      "age": "adult",
+      "description": "A character who claims to be digging for apples and helps the Rabbit remove Alice's arm from the window.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "seven",
+      "canonical_name": "Seven",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns used for Seven",
+      "age": "unknown",
+      "description": "One of the three gardeners painting roses red.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tillie",
+      "canonical_name": "Tillie",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "sisters",
+      "age": "child",
+      "description": "One of the three little sisters in the Dormouse's story.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "two",
+      "canonical_name": "Two",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns used for Two",
+      "age": "unknown",
+      "description": "One of the three gardeners painting roses red.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-caterpillar",
+      "canonical_name": "the Caterpillar",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A creature smoking a hookah on a mushroom who questions Alice's identity.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-dodo",
+      "canonical_name": "the Dodo",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A bird who proposes the Caucus-race and distributes the prizes.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-dormouse",
+      "canonical_name": "the Dormouse",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A sleeping creature at the tea party.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-dormouse-2",
+      "canonical_name": "the Dormouse",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his",
+      "age": "adult",
+      "description": "Follows the Hare, falls asleep during the trial, is accused of saying things.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duchess",
+      "canonical_name": "the Duchess",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "adult",
+      "description": "A woman sitting on a stool nursing a baby, who sings and argues with Alice.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duchess-2",
+      "canonical_name": "the Duchess",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Duchess', pronouns 'she/her'",
+      "age": "unknown",
+      "description": "A Duchess who is very ugly, has a sharp chin, and is linked arm-in-arm with Alice. She is hot-tempered and constantly finds morals in things.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duck",
+      "canonical_name": "the Duck",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her",
+      "age": "unknown",
+      "description": "A bird that interrupts the Mouse's story to ask about the meaning of 'it'.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-eaglet",
+      "canonical_name": "the Eaglet",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "its",
+      "age": "young_adult",
+      "description": "A bird that tells the Dodo to speak English and hides a smile.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-fish-footman",
+      "canonical_name": "the Fish-Footman",
+      "aliases": [
+        "the footman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "A footman in livery with a fish-like face who delivers an invitation.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-frog-footman",
+      "canonical_name": "the Frog-Footman",
+      "aliases": [
+        "the Footman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "A footman with a round face and large eyes like a frog who receives the invitation.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gryphon",
+      "canonical_name": "the Gryphon",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A creature that lies in the sun, wakes up to take Alice to see the Mock Turtle, and engages in conversation with Alice and the Mock Turtle.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gryphon-2",
+      "canonical_name": "the Gryphon",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "his, him, he",
+      "age": "unknown",
+      "description": "A creature who interrupts, dances, and explains facts about whiting.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gryphon-3",
+      "canonical_name": "the Gryphon",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Whispers to Alice about the jurors.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gryphon-4",
+      "canonical_name": "the Gryphon",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "A character mentioned in the sister's dream.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hatter",
+      "canonical_name": "the Hatter",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A character mentioned by the Cat as living in a specific direction.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hatter-2",
+      "canonical_name": "the Hatter",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the Hatter",
+      "age": "unknown",
+      "description": "One of the characters at the tea party.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hatter-3",
+      "canonical_name": "the Hatter",
+      "aliases": [
+        "the first witness",
+        "the miserable Hatter"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his",
+      "age": "adult",
+      "description": "First witness, brings tea and bread-and-butter, claims to be a hatter.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king",
+      "canonical_name": "the King",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "King, your Majesty",
+      "age": "unknown",
+      "description": "The ruler who tries to protect Alice from beheading.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-2",
+      "canonical_name": "the King",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'King', pronouns 'he/him'",
+      "age": "adult",
+      "description": "The King who pardons the guests and is present at the croquet game.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-3",
+      "canonical_name": "the King",
+      "aliases": [
+        "the judge"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "crown, King, your Majesty",
+      "age": "adult",
+      "description": "Seated on a throne, wears a crown over a wig, wears spectacles, acts as the judge.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-4",
+      "canonical_name": "the King",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "The judge presiding over the trial.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-knave",
+      "canonical_name": "the Knave",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his",
+      "age": "child",
+      "description": "Standing before the King in chains, accused of stealing tarts.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-knave-2",
+      "canonical_name": "the Knave",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "young_adult",
+      "description": "The accused who denies writing the verses.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-knave-of-hearts",
+      "canonical_name": "the Knave of Hearts",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Knave, male pronouns",
+      "age": "unknown",
+      "description": "Carries the King's crown and bows to the Queen.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lizard",
+      "canonical_name": "the Lizard",
+      "aliases": [
+        "the unfortunate little Bill",
+        "the poor little thing"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "young_adult",
+      "description": "A jurymen who was upset and later used as a target.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lory",
+      "canonical_name": "the Lory",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A bird that argues with Alice about its age and later comments on the Mouse leaving.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-mouse",
+      "canonical_name": "the Mouse",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "his",
+      "age": "unknown",
+      "description": "A character who claims authority, tells a story about William the Conqueror, and later tells a story about Fury and a mouse.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-pigeon",
+      "canonical_name": "the Pigeon",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "hatching the eggs... taken the highest tree... I've tried...",
+      "age": "adult",
+      "description": "A large pigeon in a nest who mistakes Alice for a serpent.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen",
+      "canonical_name": "the Queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Queen",
+      "age": "unknown",
+      "description": "The monarch who sent the invitation to play croquet.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-2",
+      "canonical_name": "the Queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Queen, your Majesty",
+      "age": "unknown",
+      "description": "The ruler of the garden who sentences people to beheading.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-3",
+      "canonical_name": "the Queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Queen', pronouns 'she/her'",
+      "age": "adult",
+      "description": "A terrifying figure who appears suddenly, orders executions, and demands the Duchess's head. She is frowning and shouts commands.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-4",
+      "canonical_name": "the Queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Queen, your Majesty",
+      "age": "adult",
+      "description": "Seated on a throne, wears spectacles, reads a list of singers.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-5",
+      "canonical_name": "the Queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "adult",
+      "description": "The Queen who orders executions.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-of-hearts",
+      "canonical_name": "the Queen of Hearts",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the Queen of Hearts",
+      "age": "unknown",
+      "description": "Mentioned in a story told by the Hatter.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-cook",
+      "canonical_name": "the cook",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "adult",
+      "description": "A woman stirring a cauldron of soup and throwing kitchen utensils.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-executioner",
+      "canonical_name": "the executioner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns used for executioner",
+      "age": "unknown",
+      "description": "The executioner who argues about beheading heads without bodies.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-jury-box",
+      "canonical_name": "the jury-box",
+      "aliases": [
+        "the jury"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he",
+      "age": "adult",
+      "description": "The group of people serving as judges.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-little-thing",
+      "canonical_name": "the little thing",
+      "aliases": [
+        "the baby",
+        "the poor little thing"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "boy",
+      "age": "teen",
+      "description": "A baby being nursed by the Duchess who sneezes, howls, and eventually turns into a pig.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-young-crab",
+      "canonical_name": "the young Crab",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her",
+      "age": "child",
+      "description": "The daughter of the old crab who tells her mother to hold her tongue.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-young-man",
+      "canonical_name": "the young man",
+      "aliases": [
+        "the youth"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the young man said... said the youth... And your hair has...",
+      "age": "young_adult",
+      "description": "A character in the poem Alice recites, referred to as 'the young man' and 'the youth'.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "the Dormouse": [
+      "the-dormouse",
+      "the-dormouse-2"
+    ],
+    "the Duchess": [
+      "the-duchess",
+      "the-duchess-2"
+    ],
+    "the Gryphon": [
+      "the-gryphon",
+      "the-gryphon-2",
+      "the-gryphon-3",
+      "the-gryphon-4"
+    ],
+    "the Hatter": [
+      "the-hatter",
+      "the-hatter-2",
+      "the-hatter-3"
+    ],
+    "the King": [
+      "the-king",
+      "the-king-2",
+      "the-king-3",
+      "the-king-4"
+    ],
+    "the Knave": [
+      "the-knave",
+      "the-knave-2"
+    ],
+    "the Mouse": [
+      "o-mouse",
+      "the-mouse"
+    ],
+    "the Queen": [
+      "the-queen",
+      "the-queen-2",
+      "the-queen-3",
+      "the-queen-4",
+      "the-queen-5"
+    ],
+    "the poor little thing": [
+      "the-lizard",
+      "the-little-thing"
+    ]
+  }
+}

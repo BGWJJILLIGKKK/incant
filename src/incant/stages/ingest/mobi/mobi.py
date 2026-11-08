@@ -18,7 +18,7 @@ from pathlib import Path
 
 from ....normalize import SCENE_BREAK, clean_paragraph, clean_unicode, heading, paragraphs_from_plain
 from ..base import Ingested
-from ..ebook.ebook import CALIBRE_ONLY, EbookIngest
+from ..ebook.ebook import EbookIngest
 from ..gutenberg.gutenberg import strip_gutenberg
 
 __all__ = ["MobiIngest"]

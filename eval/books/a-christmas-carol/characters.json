@@ -1,0 +1,819 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "ebenezer-scrooge",
+      "canonical_name": "Ebenezer Scrooge",
+      "aliases": [
+        "Scrooge",
+        "Mr. Scrooge",
+        "Jacob",
+        "the old gentleman",
+        "the Ghost of Jacob Marley",
+        "the husband",
+        "the uncle",
+        "Mr. Ebenezer Scrooge",
+        "Scrooge the Baleful",
+        "Uncle Scrooge",
+        "the first speaker",
+        "the wandering Spirits",
+        "Master Scrooge",
+        "the dogged Scrooge"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and description as a man/partner",
+      "age": "adult",
+      "description": "Living partner of Marley, owner of Scrooge and Marley firm, known for being tight-fisted and cold-hearted.; The main character, a man who is visited by the Ghost of Christmas Past.; The protagonist of the story, a wealthy but miserly man who is visited by the Ghost of Christmas Past.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bob-cratchit",
+      "canonical_name": "Bob Cratchit",
+      "aliases": [
+        "the clerk",
+        "Cratchit",
+        "the portly gentleman",
+        "the clerk in the Tank",
+        "the old gentleman",
+        "the Tank",
+        "Mr. Scrooge"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, 'father', 'Mr. Scrooge'",
+      "age": "adult",
+      "description": "Scrooge's clerk and Tiny Tim's father.; Scrooge's employee who is late for work on Christmas Day.; Scrooge's clerk who copies letters in a dismal little cell.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0004",
+        "0005",
+        "0006"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jacob-marley",
+      "canonical_name": "Jacob Marley",
+      "aliases": [
+        "Marley",
+        "the Ghost of Jacob Marley",
+        "Old Marley"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, 'Marley's intervention'",
+      "age": "adult",
+      "description": "Mentioned as the one who sent the spirits.; Scrooge's deceased business partner who appears as a solemn phantom.; Scrooge's deceased business partner who appears as a ghost.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0004",
+        "0006"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tiny-tim",
+      "canonical_name": "Tiny Tim",
+      "aliases": [
+        "the child"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, 'his', 'he'",
+      "age": "child",
+      "description": "Bob and Mrs. Cratchit's disabled son.; Bob Cratchit's young son who is shown dead in the vision.; Bob Cratchit's young son who is mentioned as not dying.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005",
+        "0006"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "master-peter-cratchit",
+      "canonical_name": "Master Peter Cratchit",
+      "aliases": [
+        "Peter"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, 'his', 'he'",
+      "age": "young_adult",
+      "description": "Bob Cratchit's son.; One of Bob Cratchit's sons.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-cratchit",
+      "canonical_name": "Mrs. Cratchit",
+      "aliases": [
+        "the mother"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, 'wife', 'her'",
+      "age": "adult",
+      "description": "Bob Cratchit's wife and the mother of the Cratchit children.; Bob Cratchit's wife and Tiny Tim's mother.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "topper",
+      "canonical_name": "Topper",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns",
+      "age": "adult",
+      "description": "A bachelor and friend of Scrooge's nephew who plays games at the Christmas party.; A guest at Fred's Christmas dinner.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-ghost-of-christmas-present",
+      "canonical_name": "the Ghost of Christmas Present",
+      "aliases": [
+        "the Spirit",
+        "the Ghost of Christmas Past",
+        "the good Spirit",
+        "the Phantom",
+        "the second messenger"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A giant spirit in green robes showing Scrooge Christmas scenes.; A supernatural being who guides Scrooge through various visions of Christmas past, present, and future.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-ghost-of-christmas-yet-to-come",
+      "canonical_name": "the Ghost of Christmas Yet To Come",
+      "aliases": [
+        "the Spirit",
+        "The Spirit",
+        "the Phantom",
+        "the Unseen Eyes",
+        "the finger pointed",
+        "the Spectral hand",
+        "the finger",
+        "the hand",
+        "the Spectre",
+        "the finger still",
+        "the kind hand"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "The supernatural being showing Scrooge visions, pointing to the grave, and eventually transforming into a bedpost.; A ghostly figure shrouded in black, guiding Scrooge through future events.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-plump-sister",
+      "canonical_name": "the plump sister",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns",
+      "age": "young_adult",
+      "description": "One of Scrooge's niece's sisters, described as plump with a lace tucker.; A guest at Fred's Christmas dinner.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "belle",
+      "canonical_name": "Belle",
+      "aliases": [
+        "the mother"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'mother' and 'his'",
+      "age": "adult",
+      "description": "Scrooge's former partner and wife in the vision. Referred to as 'Belle', 'the mother', and 'his daughter' (referring to her daughter).",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "c-d",
+      "canonical_name": "C. D",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "The author of the preface, signing as 'C. D.' and describing himself as 'Their faithful Friend and Servant'.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dick-wilkins",
+      "canonical_name": "Dick Wilkins",
+      "aliases": [
+        "Dick"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy', 'fellow-'prent",
+      "age": "young_adult",
+      "description": "Scrooge's former apprentice who works with him under Fezziwig.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fan",
+      "canonical_name": "Fan",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'child', 'girl', '",
+      "age": "young_adult",
+      "description": "Scrooge's younger sister who comes to bring him home from school.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fred",
+      "canonical_name": "Fred",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "his",
+      "age": "young_adult",
+      "description": "Scrooge's nephew who invites him to Christmas dinner.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ignorance",
+      "canonical_name": "Ignorance",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns",
+      "age": "child",
+      "description": "A ghostly boy representing ignorance, shown to Scrooge by the Spirit.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "martha",
+      "canonical_name": "Martha",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, 'her', 'girls'",
+      "age": "young_adult",
+      "description": "One of the older Cratchit daughters.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-dilber",
+      "canonical_name": "Mrs. Dilber",
+      "aliases": [
+        "the laundress"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (Mrs. Dilber)",
+      "age": "adult",
+      "description": "A laundress who steals items from the dead man's belongings.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-fezziwig",
+      "canonical_name": "Mrs. Fezziwig",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs.'",
+      "age": "adult",
+      "description": "Fezziwig's wife who joins the Christmas party.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "want",
+      "canonical_name": "Want",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns",
+      "age": "child",
+      "description": "A ghostly girl representing want, shown to Scrooge by the Spirit.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-genius-of-the-weather",
+      "canonical_name": "the Genius of the Weather",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Personification of the weather sitting on the threshold.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-ghost",
+      "canonical_name": "the Ghost",
+      "aliases": [
+        "the spectre",
+        "the phantom"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A ghostly figure wearing a chain, speaking to Scrooge about his fate.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-ghost-2",
+      "canonical_name": "the Ghost",
+      "aliases": [
+        "Spirit",
+        "the relentless Ghost"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A supernatural being showing Scrooge visions of his past. Referred to as 'Spirit', 'the Ghost', and 'the relentless Ghost'.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lord-mayor",
+      "canonical_name": "the Lord Mayor",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and title as Lord Mayor",
+      "age": "adult",
+      "description": "Lord Mayor who gives orders to his household to keep Christmas.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-spirit",
+      "canonical_name": "the Spirit",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Spirit that appears to Scrooge.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-boy",
+      "canonical_name": "the boy",
+      "aliases": [
+        "the lad"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "his",
+      "age": "young_adult",
+      "description": "A young boy Scrooge meets on the street to buy a turkey.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-elder",
+      "canonical_name": "the elder",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns",
+      "age": "adult",
+      "description": "One of two lighthouse keepers who sing a Christmas song.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-first-woman",
+      "canonical_name": "the first woman",
+      "aliases": [
+        "the woman",
+        "the charwoman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (charwoman)",
+      "age": "adult",
+      "description": "A charwoman who steals items from the dead man's belongings.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gentleman",
+      "canonical_name": "the gentleman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and description as a gentleman",
+      "age": "adult",
+      "description": "Portly gentleman who visits Scrooge to raise a fund for the poor.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-girl",
+      "canonical_name": "the girl",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her",
+      "age": "young_adult",
+      "description": "Fred's wife who lives with Scrooge's nephew.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-man-in-faded-black",
+      "canonical_name": "the man in faded black",
+      "aliases": [
+        "the man",
+        "the third"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (undertaker's man)",
+      "age": "adult",
+      "description": "An undertaker's assistant who steals items from the dead man's belongings.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-master-of-the-house",
+      "canonical_name": "the master of the house",
+      "aliases": [
+        "the father"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'father' and 'the",
+      "age": "adult",
+      "description": "The husband of Belle in the vision. Referred to as 'the father', 'the master of the house', and 'Scrooge' (in the context of the vision, though this is likely a",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-merchants",
+      "canonical_name": "the merchants",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (they/them), title (merchants)",
+      "age": "adult",
+      "description": "A group of businessmen discussing the death of Jacob.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-old-man",
+      "canonical_name": "the old man",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns",
+      "age": "adult",
+      "description": "An elderly man who sings a Christmas song with his family in a miner's hut.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-postboy",
+      "canonical_name": "the postboy",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "young_adult",
+      "description": "A delivery person who refuses the schoolmaster's offer of a drink.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-schoolmaster",
+      "canonical_name": "the schoolmaster",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'man', 'schoolmaster'",
+      "age": "adult",
+      "description": "The strict teacher at Scrooge's school who greets him and his sister.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-singer",
+      "canonical_name": "the singer",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Person who sings a Christmas carol at Scrooge's keyhole.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Mr. Scrooge": [
+      "ebenezer-scrooge",
+      "bob-cratchit"
+    ],
+    "the Ghost": [
+      "the-ghost",
+      "the-ghost-2"
+    ],
+    "the Ghost of Jacob Marley": [
+      "ebenezer-scrooge",
+      "jacob-marley"
+    ],
+    "the Phantom": [
+      "the-ghost-of-christmas-present",
+      "the-ghost-of-christmas-yet-to-come"
+    ],
+    "the Spirit": [
+      "the-ghost-of-christmas-present",
+      "the-ghost-of-christmas-yet-to-come",
+      "the-spirit"
+    ],
+    "the mother": [
+      "mrs-cratchit",
+      "belle"
+    ],
+    "the old gentleman": [
+      "ebenezer-scrooge",
+      "bob-cratchit"
+    ]
+  }
+}

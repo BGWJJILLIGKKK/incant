@@ -1,0 +1,4397 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "laurie",
+      "canonical_name": "Laurie",
+      "aliases": [
+        "Teddy",
+        "the boy",
+        "Sam Weller",
+        "Mr. Theodore Laurence",
+        "Lazy Laurence",
+        "Apollo",
+        "The Friend",
+        "the young gentleman",
+        "the new member",
+        "the injured youth",
+        "the friend",
+        "the culprit",
+        "the lad",
+        "the mischief-loving lad",
+        "the prisoner",
+        "the Laurence boy",
+        "the little mamma",
+        "the rejected lovers",
+        "the learned gentleman",
+        "the handsome eyes",
+        "the moody-looking man",
+        "the ambitious pair",
+        "the beloved little face",
+        "the poor fellow",
+        "the exasperating martyr",
+        "Theodore",
+        "Laurie Laurence",
+        "the dear boy",
+        "the lonely old woman",
+        "Mr. Weller",
+        "the solitary boy",
+        "the young man",
+        "Dora",
+        "the Alpine maid",
+        "Uncle Teddy",
+        "the fellow",
+        "the doctor",
+        "the musician",
+        "the Unquenchables",
+        "the once busy hands",
+        "the once smiling lips",
+        "the novel heroes",
+        "the traveler",
+        "the once rosy face",
+        "the young neighbor",
+        "Theodore Laurence"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.98,
+      "gender_evidence": "male",
+      "age": "young_adult",
+      "description": "Laurie Laurence, a young man who lives next door to the March family. He is friendly and interested in Jo.; Mr. Laurence's grandson, who is sick and lonely but becomes friendly with Jo.; rich, playful, truant, loves music",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0040",
+        "0042",
+        "0043",
+        "0044",
+        "0045",
+        "0047",
+        "0048"
+      ],
+      "mentions": 57,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-march",
+      "canonical_name": "Mrs. March",
+      "aliases": [
+        "Mother",
+        "Marmee",
+        "Mrs. Moffat",
+        "Mamma",
+        "the poor woman",
+        "Sallie Moffat",
+        "the mother",
+        "the invalid",
+        "Madam Mother",
+        "the learned gentleman",
+        "Mum",
+        "the beloved little face",
+        "the elder lady",
+        "the motherly heart",
+        "the mistress of a house",
+        "the poor things",
+        "the young man",
+        "Mis March",
+        "the motherly face",
+        "the good lady next door",
+        "the once busy hands",
+        "the once smiling lips",
+        "the woman",
+        "the poor lady",
+        "the motherly missionary",
+        "the once rosy face",
+        "the parents",
+        "Ma Chere Mamma"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "tall, motherly, not elegantly dressed, gray cloak, unfashionable bonnet; The mother of Jo, Meg, Beth, and Amy.; mother of the March girls, kind, welcoming",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0011",
+        "0012",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0041",
+        "0043",
+        "0044",
+        "0045",
+        "0047",
+        "0048"
+      ],
+      "mentions": 52,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jo",
+      "canonical_name": "Jo",
+      "aliases": [
+        "Mrs. Laurence",
+        "the daughter",
+        "the young lady",
+        "Miss Jo",
+        "Josephine",
+        "the girl",
+        "Miss March",
+        "Doctor Jo",
+        "the oldest",
+        "the strong-minded lady",
+        "the little dear",
+        "the once rosy face",
+        "the proud papa",
+        "the ambitious girl",
+        "Miss Marsch",
+        "the curly crop",
+        "the injured youth",
+        "the learned gentleman",
+        "Mr. Snodgrass",
+        "the big hat",
+        "the beloved little face",
+        "the fiery spirit",
+        "the aspirant for fame",
+        "the rough head",
+        "the little friend",
+        "the culprit",
+        "TOPSY-TURVY JO",
+        "Miss Randal",
+        "the little mother",
+        "the mannie",
+        "the afflicted heroine",
+        "the handsome friend",
+        "the young authoress",
+        "the actors",
+        "Jo March",
+        "the lovers",
+        "the gifted brow",
+        "the first pilgrim",
+        "the child",
+        "the strong sister",
+        "the gull",
+        "the young person",
+        "Snodgrass",
+        "Miss Josephine March",
+        "Mrs. Bhaer",
+        "the aforesaid enemy",
+        "the tall girl",
+        "the heavy weight",
+        "Augustus Snodgrass",
+        "the mischief-loving lad",
+        "the strongminded sister",
+        "the invalids",
+        "the complacent wraith",
+        "the Unquenchables",
+        "the little Mary",
+        "the aforesaid blighted affections",
+        "the elder ones",
+        "the once busy hands",
+        "the once smiling lips",
+        "the perplexed authoress",
+        "the fairy prince",
+        "the editor",
+        "the prisoner",
+        "Josyphine",
+        "the author",
+        "the blue army sock",
+        "Mother Bhaer",
+        "the first",
+        "the blonde mademoiselle"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "tall, thin, brown, long hair, round shoulders, big hands and feet; The first to wake, restless, plays male parts, considered a 'Sancho'.; One of the March sisters, younger than Meg but older than Beth and Amy. She is energetic, practical, and often careless with her clothes.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0039",
+        "0040",
+        "0041",
+        "0042",
+        "0043",
+        "0044",
+        "0045",
+        "0046",
+        "0047",
+        "0048"
+      ],
+      "mentions": 51,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "amy",
+      "canonical_name": "Amy",
+      "aliases": [
+        "Diana",
+        "Miss March",
+        "the child",
+        "the baby",
+        "the little dear",
+        "Amy Curtis March",
+        "N.W",
+        "the injured youth",
+        "the lark",
+        "Mis. Laurence",
+        "the mature age of twelve",
+        "the little dead roses",
+        "the beloved little face",
+        "the aspirant for fame",
+        "the culprit",
+        "the weaker vessel",
+        "Miss Malaprop",
+        "the youngest",
+        "the girl",
+        "the actors",
+        "Mademoiselle",
+        "the young enthusiast",
+        "Amy March",
+        "Winkle",
+        "Nathaniel Winkle",
+        "the happy-hearted girl",
+        "Miss Amy",
+        "the young speaker",
+        "the invalids",
+        "the mischief-loving lad",
+        "the little demon",
+        "Mr. Winkle",
+        "the once busy hands",
+        "the once smiling lips",
+        "the dignified",
+        "the prisoner",
+        "the blonde mademoiselle"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "blue eyes, yellow hair curling on shoulders, pale and slender; Lazy Amy, plays Hagar/Zara, throws open the door.; One of the March sisters, younger than Jo. She is practical and concerned with her appearance.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0037",
+        "0038",
+        "0040",
+        "0041",
+        "0042",
+        "0043",
+        "0044",
+        "0045",
+        "0047",
+        "0048"
+      ],
+      "mentions": 44,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "meg",
+      "canonical_name": "Meg",
+      "aliases": [
+        "Margaret",
+        "Mrs. Brooke",
+        "Miss March",
+        "the eldest",
+        "Daisey",
+        "the girl",
+        "the little dear",
+        "Mrs. John Brooke",
+        "the happy bride",
+        "the injured damsel",
+        "the injured youth",
+        "the learned gentleman",
+        "the unconscious innocents",
+        "the bride",
+        "Miss Margaret",
+        "Miss Meg",
+        "the little red squirmers",
+        "the womanly skill",
+        "the little woman",
+        "the young housewife",
+        "the beloved little face",
+        "Peggy",
+        "the best actress",
+        "the culprit",
+        "the prodigies",
+        "Meggy",
+        "the approaching lady",
+        "the turtledove",
+        "Mrs. Meg",
+        "the infants",
+        "the President",
+        "the actors",
+        "the serpent",
+        "Pickwick",
+        "Mr. Pickwick",
+        "the shortsighted parent",
+        "the babies",
+        "Samuel Pickwick",
+        "Miss Meg March",
+        "the presiding genius",
+        "the elder ones",
+        "the once busy hands",
+        "Cherie",
+        "Madam Purrer",
+        "the once smiling lips",
+        "the prisoner",
+        "the scarlet young lady",
+        "the captive mamma",
+        "the Chair",
+        "Miss"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "plump, fair, large eyes, soft brown hair, sweet mouth, white hands; Sweet and pious nature, plays Hagar, acts as escort.; One of the March sisters, older than Jo but younger than Marmee. She is concerned with her appearance and social propriety.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0032",
+        "0033",
+        "0034",
+        "0036",
+        "0037",
+        "0039",
+        "0040",
+        "0041",
+        "0043",
+        "0044",
+        "0046",
+        "0047",
+        "0048"
+      ],
+      "mentions": 43,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "beth",
+      "canonical_name": "Beth",
+      "aliases": [
+        "Bethy",
+        "the gentle giver",
+        "the invalid",
+        "the invalids",
+        "Aunty Beth",
+        "the little dear",
+        "the injured youth",
+        "LITTLE BETH",
+        "the patient creature",
+        "the learned gentleman",
+        "the saintliest hymns",
+        "the little empty bed",
+        "the little grand daughter",
+        "the little dead roses",
+        "the beloved little face",
+        "the beloved",
+        "the culprit",
+        "Tupman",
+        "the turtledove",
+        "the actors",
+        "the sister",
+        "Little Miss Tranquility",
+        "Miss Elizabeth March",
+        "the tall girl",
+        "Tracy Tupman",
+        "the mischief-loving lad",
+        "the beloved presence",
+        "the once busy hands",
+        "the little girl",
+        "the once smiling lips",
+        "the immortal",
+        "Elizabeth",
+        "the four young faces",
+        "the musical girl",
+        "the prisoner",
+        "the peacemaker",
+        "the once rosy face",
+        "the curly crop",
+        "the blonde mademoiselle"
+      ],
+      "gender": "female",
+      "gender_confidence": 0.98,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "rosy, smooth-haired, bright-eyed, shy manner, timid voice, peaceful expression; Quiet expression, plays the spirit/Hagar, plays Beth's march.; One of the March sisters, younger than Jo. She is gentle and observant.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0040",
+        "0041",
+        "0042",
+        "0043",
+        "0044",
+        "0048"
+      ],
+      "mentions": 41,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hannah",
+      "canonical_name": "Hannah",
+      "aliases": [
+        "Minna",
+        "the beloved little face",
+        "the once busy hands",
+        "the once smiling lips",
+        "the once rosy face",
+        "Old Hannah",
+        "the shortsighted parent",
+        "the servant",
+        "the excellent nurse",
+        "the learned gentleman",
+        "Hannah Mullet"
+      ],
+      "gender": "female",
+      "gender_confidence": 0.97,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Hannah'",
+      "age": "adult",
+      "description": "old; Lived with the family since Meg was born, carried wood.; A servant who helps the March sisters.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0006",
+        "0007",
+        "0010",
+        "0011",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0022",
+        "0023",
+        "0025",
+        "0027",
+        "0029",
+        "0034",
+        "0036",
+        "0038",
+        "0039",
+        "0041",
+        "0043",
+        "0044",
+        "0046",
+        "0047"
+      ],
+      "mentions": 32,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "james-laurence",
+      "canonical_name": "James Laurence",
+      "aliases": [
+        "Mr. Laurence",
+        "Grandfather",
+        "the old gentleman",
+        "the old man",
+        "the kind old gentleman",
+        "the old folks",
+        "the gentleman",
+        "the beloved little face",
+        "the sly old gentleman",
+        "the kind old man",
+        "Sir",
+        "Old Mr. Laurence",
+        "the dearest old man",
+        "the stately old gentleman",
+        "Father Laurence",
+        "the good man",
+        "the once busy hands",
+        "the motherly friend",
+        "the once smiling lips",
+        "the once rosy face"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Laurie's grandfather and the owner of the house where the party is held.; An elderly gentleman who lives in a large house next to the Marches. He is Laurie's grandfather.; wealthy, kind, lost a little girl, loves music",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0005",
+        "0006",
+        "0012",
+        "0013",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0031",
+        "0036",
+        "0042",
+        "0044",
+        "0048"
+      ],
+      "mentions": 24,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "father",
+      "canonical_name": "Father",
+      "aliases": [
+        "Mr. March",
+        "the father",
+        "the learned gentleman",
+        "the gray-headed scholar",
+        "the dear man",
+        "the beloved little face",
+        "the new invalid",
+        "the quiet scholar",
+        "Father Laurence",
+        "the household conscience",
+        "Papa",
+        "the paternal minister",
+        "the writer",
+        "the once busy hands",
+        "the once smiling lips",
+        "the fatherly voice",
+        "the once rosy face",
+        "the parents",
+        "the pure-hearted old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, 'Father', 'Papa', 'chaplain', 'soldier', 're'",
+      "age": "adult",
+      "description": "far away, fighting in the army, chaplain, too old to be drafted, not strong enough for a soldier; The deceased father of the sisters, referred to as 'Father', 'your father', and 'earthly one'.; Meg and Jo's father, mentioned by Mrs. March as a source of friendship and support.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0008",
+        "0009",
+        "0016",
+        "0017",
+        "0018",
+        "0022",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0032",
+        "0034",
+        "0035",
+        "0037",
+        "0039",
+        "0041",
+        "0043",
+        "0044",
+        "0045",
+        "0048"
+      ],
+      "mentions": 22,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-march",
+      "canonical_name": "Aunt March",
+      "aliases": [
+        "the old lady",
+        "the stately old gentleman",
+        "Aunty",
+        "the fidgety old lady",
+        "the best of us",
+        "the lonely old woman",
+        "the girl",
+        "Madame"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns, 'Aunt March', 'Aunt', 'March', 'Aunt', 'A',",
+      "age": "adult",
+      "description": "Aunt; Jo's great-aunt, described as fidgety and cross.; Aunt of the March sisters, owner of Plumfield.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0005",
+        "0011",
+        "0015",
+        "0017",
+        "0019",
+        "0020",
+        "0023",
+        "0025",
+        "0026",
+        "0029",
+        "0030",
+        "0048"
+      ],
+      "mentions": 14,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-brooke",
+      "canonical_name": "John Brooke",
+      "aliases": [
+        "John",
+        "Parpar",
+        "the young man",
+        "the pale young gentleman",
+        "the master",
+        "Papa",
+        "the anxious John",
+        "the culprit",
+        "the injured youth",
+        "the father",
+        "the prisoner",
+        "the mischief-loving lad",
+        "the handsome eyes",
+        "the bridegroom"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (his, he), explicit statements (\"as I'm a girl\", \"",
+      "age": "young_adult",
+      "description": "Meg's love interest; referred to as 'John' throughout. He is the one who writes the; John Brooke, Meg's suitor.; Meg's husband, referred to as 'her John' and 'Mr. Brooke'.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021",
+        "0023",
+        "0025",
+        "0026",
+        "0029",
+        "0036",
+        "0037",
+        "0039",
+        "0041",
+        "0044"
+      ],
+      "mentions": 11,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-brooke",
+      "canonical_name": "Mr. Brooke",
+      "aliases": [
+        "the postman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "tutor",
+      "age": "adult",
+      "description": "Laurie's tutor who does not stay at the Laurence house.; Laurie's tutor, makes unsatisfactory reports; Mr. Brooke is a friend of the March sisters, described as 'grave' and 'silent'. He is likely in his late 20s or early 30s, as he is",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0006",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0020",
+        "0021",
+        "0022",
+        "0025"
+      ],
+      "mentions": 11,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "professor-bhaer",
+      "canonical_name": "Professor Bhaer",
+      "aliases": [
+        "Mr. Bhaer",
+        "Fritz",
+        "The Professor",
+        "Bhaer",
+        "the Professor",
+        "Professor",
+        "Professorin",
+        "the bear-man",
+        "Father Bhaer",
+        "the kind eyes",
+        "the friend",
+        "the solitary man",
+        "the kindred spirit",
+        "the worthy Professor",
+        "the handsome friend",
+        "Old Fritz",
+        "Lager Beer",
+        "the shortsighted parent",
+        "the gray head",
+        "the singer",
+        "the attraction",
+        "Monsieur de Trop",
+        "the stranger",
+        "the fairy prince",
+        "Friedrich Bhaer"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mr., he, his, him, gentleman, Professor",
+      "age": "adult",
+      "description": "A German language teacher and Professor who becomes interested in Jo's writing and character.; A professor who visits Jo.; Jo's father, Laurie's friend, and a professor. He speaks in the passage.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034",
+        "0035",
+        "0043",
+        "0044",
+        "0045",
+        "0046",
+        "0047",
+        "0048"
+      ],
+      "mentions": 11,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "demi",
+      "canonical_name": "Demi",
+      "aliases": [
+        "John Laurence",
+        "Rob",
+        "the babies",
+        "the young inventor",
+        "the prodigies",
+        "the young philosopher",
+        "the unconscious innocents",
+        "the infants",
+        "the precocious pupil",
+        "the oldest grandchild",
+        "the captive mamma",
+        "the little red squirmers"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "son",
+      "age": "child",
+      "description": "Demi is Meg and John's son. He is described as obstreperous and difficult, often refusing to go to bed or follow rules; Meg's son, for whom Jo is making a kite.; One of the March twins.",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029",
+        "0039",
+        "0043",
+        "0044",
+        "0046",
+        "0048"
+      ],
+      "mentions": 7,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "daisy",
+      "canonical_name": "Daisy",
+      "aliases": [
+        "the young inventor",
+        "the little ghost",
+        "the babies",
+        "the Dovecote",
+        "the little quadroon",
+        "the young rebel"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "daughter",
+      "age": "child",
+      "description": "Daisy is Meg and John's daughter. She is described as having good nature and is often the first to go to bed; Meg's daughter, who tied herself to the kite as a bob.; One of the March twins.",
+      "first_chapter": "0039",
+      "chapters": [
+        "0039",
+        "0043",
+        "0044",
+        "0046",
+        "0048"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-carrol",
+      "canonical_name": "Mrs. Carrol",
+      "aliases": [
+        "Aunt Carrol",
+        "the good lady",
+        "the blonde mademoiselle"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), title (Mrs.)",
+      "age": "adult",
+      "description": "Mother of Florence; ordered by Aunt March to buy linen.; A person Laurie pays respects to before leaving.; Amy's aunt who lives in Vevay and is aware of Amy's feelings for Laurie.",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025",
+        "0030",
+        "0031",
+        "0038",
+        "0042",
+        "0044"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ned-moffat",
+      "canonical_name": "Ned Moffat",
+      "aliases": [
+        "Mr. Ned"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "Annie's brother.; Ned Moffat is a friend of the March sisters, described as 'college' and 'good-natured'. He is likely in his late teens or early twenties, as he is; A friend of Laurie's who plays billiards.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0012",
+        "0014",
+        "0025",
+        "0029"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "annie-moffat",
+      "canonical_name": "Annie Moffat",
+      "aliases": [
+        "Annie"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns, 'Annie Moffat'",
+      "age": "young_adult",
+      "description": "A friend of Sallie who invites Meg to spend a week with her.; Meg's friend whose house she is visiting.; The hostess of the party where Meg was dressed up and where she heard gossip about Laurie.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0009",
+        "0033"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "belle-moffat",
+      "canonical_name": "Belle Moffat",
+      "aliases": [
+        "Belle",
+        "Miss Belle"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "young_adult",
+      "description": "Annie's engaged sister.; A person mentioned by Meg who said that poor girls don't stand a chance unless they put themselves forward.; A woman who recently got married and is going to Paris.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0014"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "don-pedro",
+      "canonical_name": "Don Pedro",
+      "aliases": [
+        "Roderigo",
+        "the stern sire",
+        "the cruel sire"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, 'Don Pedro', 'Don', 'Pedro', 'Don', 'D',",
+      "age": "adult",
+      "description": "Don Pedro; The cruel sire, wishes Zara to go into a convent.; Roderigo",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "flo",
+      "canonical_name": "Flo",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 0.75,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "Aunt Carrol's companion who will travel with Amy.; Amy's younger sister, traveling with her.; A person whose name is mentioned in relation to saving up for a party.",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031",
+        "0032",
+        "0038",
+        "0042"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fred-vaughn",
+      "canonical_name": "Fred Vaughn",
+      "aliases": [
+        "Fred",
+        "the poor fellow"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boys' and 'lad",
+      "age": "young_adult",
+      "description": "Fred Vaughn is a friend of the March sisters, described as 'riotous' and 'prankish'. He is likely in his late teens or early twenties, as he is; A man Amy is considering marrying. He is rich, a gentleman, and has delightful manners. He is not present in the scene. ; A suitor for Amy's hand who has returned from Egypt.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012",
+        "0040",
+        "0042",
+        "0043"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-kirke",
+      "canonical_name": "Mrs. Kirke",
+      "aliases": [
+        "Mrs. K"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs.'",
+      "age": "adult",
+      "description": "Mrs. Kirke is a friend of the March family who is looking for a teacher for her children. She accepts Jo's offer to teach.; The hostess of the house where the narrator is staying as a governess.; The person Jo lives with until June.",
+      "first_chapter": "0033",
+      "chapters": [
+        "0033",
+        "0034",
+        "0035",
+        "0043"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "polly",
+      "canonical_name": "Polly",
+      "aliases": [
+        "the parrot",
+        "the old fellow"
+      ],
+      "gender": "female",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (he/him), referred to as 'old fellow'",
+      "age": "adult",
+      "description": "Aunt March's pet parrot.; Aunt March's parrot who is mischievous and speaks.; Aunt March's daughter.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017",
+        "0019",
+        "0020",
+        "0030"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sallie-gardiner",
+      "canonical_name": "Sallie Gardiner",
+      "aliases": [
+        "Mrs. Gardiner",
+        "Miss Sallie"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Sallie Gardiner'",
+      "age": "young_adult",
+      "description": "A guest invited to the March house.; Sallie Gardiner is a friend of the March sisters, described as 'absorbed' and 'chattering'. She is likely in her late teens or early twenties, as she is; Meg's friend; married to Ned Moffat.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0011",
+        "0012",
+        "0025"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tina",
+      "canonical_name": "Tina",
+      "aliases": [
+        "the mite",
+        "the little thing",
+        "the child"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name 'Tina', 'her', 'she'",
+      "age": "child",
+      "description": "A small child who is a scholar of Professor Bhaer and later revealed to be the daughter of the French laundrywoman.; A young girl who puts a cocked hat on Mr. Bhaer's head.; A little child sitting on Jo's knee.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034",
+        "0035",
+        "0047"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hortense",
+      "canonical_name": "Hortense",
+      "aliases": [
+        "the maid",
+        "the girl",
+        "the maids"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "A servant who works in the Laurence house.; A maid who brings flowers and a note.; Belle's maid.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0009"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sallie",
+      "canonical_name": "Sallie",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns, 'Sallie'",
+      "age": "young_adult",
+      "description": "One of Mrs. Gardiner's daughters.; Annie's sister.; A friend of Meg's who tells her about Belle Moffat's wedding.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0009",
+        "0014"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt",
+      "canonical_name": "Aunt",
+      "aliases": [
+        "Aunt Mary"
+      ],
+      "gender": "female",
+      "gender_confidence": 0.5,
+      "gender_evidence": "female pronouns (she/her), \"Aunt Mary\"",
+      "age": "adult",
+      "description": "Amy's aunt, traveling with the family.; Amy's aunt, mentioned as being charmed by Laurie.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032",
+        "0038"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "brooke",
+      "canonical_name": "Brooke",
+      "aliases": [
+        "the once smiling lips",
+        "the beloved little face",
+        "the once busy hands",
+        "the once rosy face"
+      ],
+      "gender": "female",
+      "gender_confidence": 0.5,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mrs. March's sister who agrees to come to help.; Mr. Laurence's business partner, Brooke is mentioned as managing the business in London while Mr. Laurence travels. He is referred to as 'Brooke' in the passage",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0036"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "christian",
+      "canonical_name": "Christian",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, 'Christian', 'Christian', 'C',",
+      "age": "adult",
+      "description": "Christian; A biblical figure mentioned in a simile about Jo's journey.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0043"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "count-antonio",
+      "canonical_name": "Count Antonio",
+      "aliases": [
+        "Count Adelon",
+        "Count de Adelon"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Count), pronouns (him, he)",
+      "age": "adult",
+      "description": "The father of Viola and host of the masked ball.; The man Viola is supposed to marry but hates.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dr-bangs",
+      "canonical_name": "Dr. Bangs",
+      "aliases": [
+        "the beloved little face",
+        "the once busy hands",
+        "the once smiling lips",
+        "the once rosy face",
+        "the doctor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Dr.)",
+      "age": "adult",
+      "description": "Doctor called to examine Beth.; The doctor who treats Beth and advises sending for Mrs. March.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017",
+        "0018"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "emil",
+      "canonical_name": "Emil",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being one of Mr. Bhaer",
+      "age": "child",
+      "description": "One of Mr. Bhaer's sons.; child",
+      "first_chapter": "0047",
+      "chapters": [
+        "0047",
+        "0048"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "esther",
+      "canonical_name": "Esther",
+      "aliases": [
+        "Estelle Valnor"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Frenchwoman'",
+      "age": "adult",
+      "description": "Aunt March's maid, originally named Estelle. She is French and pious.; A person who teaches Amy French.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0030"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ferdinando",
+      "canonical_name": "Ferdinando",
+      "aliases": [
+        "the timid little servant",
+        "the timid servant",
+        "the servant"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the timid little servant",
+      "age": "adult",
+      "description": "The 'minion', carries the cups.; Brings the cups of wine, frightened.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "franz",
+      "canonical_name": "Franz",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being one of Mr. Bhaer",
+      "age": "child",
+      "description": "One of Mr. Bhaer's sons.; child",
+      "first_chapter": "0047",
+      "chapters": [
+        "0047",
+        "0048"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hugo",
+      "canonical_name": "Hugo",
+      "aliases": [
+        "the villain",
+        "the villain of the piece",
+        "the stern sire",
+        "the cruel sire"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, 'Hugo', 'villain', 'Hugo', 'the', 'H',",
+      "age": "adult",
+      "description": "villain; The villain, stalks in with a clanking sword, plays male parts.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jack-scott",
+      "canonical_name": "Jack Scott",
+      "aliases": [
+        "Scott",
+        "Mr. Scott"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'friend', 'guest'",
+      "age": "adult",
+      "description": "John's friend, bachelor; Scott is John's neighbor who married and went to housekeeping. John often visits him for comfort and to discuss politics",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029",
+        "0039"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "kitty-bryant",
+      "canonical_name": "Kitty Bryant",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'playmate'",
+      "age": "child",
+      "description": "Amy's friend, mentioned in the will regarding the blue silk apron and gold-bead ring.; Amy's friend; Amy is going to her house to get flowers.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0025"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lotty",
+      "canonical_name": "Lotty",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she)",
+      "age": "young_adult",
+      "description": "Meg's servant; mentioned as running errands.; Meg's sister or close relative",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025",
+        "0029"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-clara",
+      "canonical_name": "Miss Clara",
+      "aliases": [
+        "Clara"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "young_adult",
+      "description": "Annie's elder sister.; Annie's elder sister, referred to with her title.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-crocker",
+      "canonical_name": "Miss Crocker",
+      "aliases": [
+        "Croaker"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Miss Crocker' or",
+      "age": "adult",
+      "description": "A thin, yellow spinster who is a guest at the dinner party.; A woman Jo escorts to a lecture.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0028"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-norton",
+      "canonical_name": "Miss Norton",
+      "aliases": [
+        "the solitary woman",
+        "the maiden lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name 'Miss Norton', 'her', 'she'",
+      "age": "adult",
+      "description": "A rich, cultivated, and kind lady who lives in the house.; A woman who introduces Jo and Mr. Bhaer to a symposium of celebrities.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034",
+        "0035"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-tudor",
+      "canonical_name": "Mr. Tudor",
+      "aliases": [
+        "Tudor",
+        "the learned gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Mr.', ",
+      "age": "young_adult",
+      "description": "A young man visiting the March family.; One of Laurie's college friends, who is often absent or distracted.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027",
+        "0030"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-chester",
+      "canonical_name": "Mrs. Chester",
+      "aliases": [
+        "Mama"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs.', ",
+      "age": "adult",
+      "description": "A hostess at one of the social calls.; May's mother, who organizes the fair and initially gives the art table to May instead of Amy.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-hummel",
+      "canonical_name": "Mrs. Hummel",
+      "aliases": [
+        "the once smiling lips",
+        "the beloved little face",
+        "the once busy hands",
+        "the once rosy face"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (she/her), title (Mrs.)",
+      "age": "adult",
+      "description": "Neighbor whose baby dies of scarlet fever.; A neighbor who comes to apologize and get a shroud.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017",
+        "0018"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ned",
+      "canonical_name": "Ned",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he)",
+      "age": "adult",
+      "description": "Mrs. Moffat's husband.; Ned is Sallie Moffatt's husband who lives in a world of his own. He is described as having no place for her",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026",
+        "0039"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "scrabble",
+      "canonical_name": "Scrabble",
+      "aliases": [
+        "the pet rat"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (his), referred to as a 'young fellow' and 'he",
+      "age": "young_adult",
+      "description": "A pet rat that lives near Jo's room.; A pet rat who is the father of another rat.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0014"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "viola",
+      "canonical_name": "Viola",
+      "aliases": [
+        "the beloved hand",
+        "the young bridegroom",
+        "the Lady Viola",
+        "the fair maid"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (her, she), context (bride)",
+      "age": "young_adult",
+      "description": "The daughter of Count Adelon and the artist lover.; A character in the story Jo reads aloud.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0014"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-audience",
+      "canonical_name": "the audience",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "the audience; The people watching the play.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lady",
+      "canonical_name": "the lady",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (lady), pronouns (her, she)",
+      "age": "adult",
+      "description": "The fairy queen's companion at the masked ball.; A lady who has never ridden a horse.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0030"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "angelo",
+      "canonical_name": "Angelo",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'Angelo'",
+      "age": "unknown",
+      "description": "A character in the story Jo reads aloud.",
+      "first_chapter": "0014",
+      "chapters": [
+        "0014"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "apollyon",
+      "canonical_name": "Apollyon",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, 'Apollyon', 'Apollyon', 'A',",
+      "age": "unknown",
+      "description": "Apollyon",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-amy",
+      "canonical_name": "Aunt Amy",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her own",
+      "age": "adult",
+      "description": "Daisy and Demi's aunt, who is only a name to them.",
+      "first_chapter": "0046",
+      "chapters": [
+        "0046"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-beth",
+      "canonical_name": "Aunt Beth",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her own",
+      "age": "adult",
+      "description": "Daisy and Demi's aunt, who is a vague memory to them.",
+      "first_chapter": "0046",
+      "chapters": [
+        "0046"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-cockle-top",
+      "canonical_name": "Aunt Cockle-top",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Aunt)",
+      "age": "adult",
+      "description": "Aunt of the girls, fed by Jo's sunflowers.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-dodo",
+      "canonical_name": "Aunt Dodo",
+      "aliases": [
+        "the little Mary",
+        "the bear-man"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "her own",
+      "age": "adult",
+      "description": "Daisy and Demi's aunt, who is their favorite playmate.",
+      "first_chapter": "0046",
+      "chapters": [
+        "0046"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "baptiste",
+      "canonical_name": "Baptiste",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'monsieur' by Amy, ",
+      "age": "young_adult",
+      "description": "A young man who drives Amy and Laurie's carriage. He falls asleep while driving. ",
+      "first_chapter": "0040",
+      "chapters": [
+        "0040"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "cardiglia",
+      "canonical_name": "Cardiglia",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A person who owns a shop where Laurie bought a holder.",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "caroline-percy",
+      "canonical_name": "Caroline Percy",
+      "aliases": [
+        "the mischief-loving lad",
+        "the prisoner",
+        "the culprit",
+        "the injured youth"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (her, she), explicit statements (\"as I'm a girl\", \"",
+      "age": "unknown",
+      "description": "A pattern of prudence; referred to as 'Caroline Percy' throughout. She is the one who writes the",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "cock-robin",
+      "canonical_name": "Cock Robin",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'fellow'",
+      "age": "unknown",
+      "description": "Cock Robin is a character from a song or story that Laurie quotes when talking about girls.",
+      "first_chapter": "0033",
+      "chapters": [
+        "0033"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "colonel-teddy",
+      "canonical_name": "Colonel Teddy",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, he), title (Colonel)",
+      "age": "adult",
+      "description": "A military officer who sends news about the father.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "david",
+      "canonical_name": "David",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'David'",
+      "age": "unknown",
+      "description": "A character mentioned by Laurie in a comparison.",
+      "first_chapter": "0044",
+      "chapters": [
+        "0044"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dickens",
+      "canonical_name": "Dickens",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dodo",
+      "canonical_name": "Dodo",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Dodo'",
+      "age": "child",
+      "description": "One of the March twins.",
+      "first_chapter": "0044",
+      "chapters": [
+        "0044"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fechter",
+      "canonical_name": "Fechter",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, \"Fechter\"",
+      "age": "adult",
+      "description": "An actor mentioned as being seen at the theater.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fisher",
+      "canonical_name": "Fisher",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "Ned's friend.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "florence",
+      "canonical_name": "Florence",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she)",
+      "age": "young_adult",
+      "description": "Daughter of Mrs. Carrol.",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "frank-vaughn",
+      "canonical_name": "Frank Vaughn",
+      "aliases": [
+        "Frank"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), \"Frank\", \"the younger twin\"",
+      "age": "young_adult",
+      "description": "Fred's twin brother, who limps slightly.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "friedrich",
+      "canonical_name": "Friedrich",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he/him) and context (lover)",
+      "age": "young_adult",
+      "description": "Friedrich is Jo's lover whom she kisses and who is led into the house. He is referred to as 'her lover'.",
+      "first_chapter": "0047",
+      "chapters": [
+        "0047"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "grace",
+      "canonical_name": "Grace",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), \"Grace\", \"the sister\"",
+      "age": "young_adult",
+      "description": "Amy's sister, mentioned in the second letter.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "grandma",
+      "canonical_name": "Grandma",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Grandma",
+      "age": "elderly",
+      "description": "Beth's grandmother; stays home with the babies.",
+      "first_chapter": "0037",
+      "chapters": [
+        "0037"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "grandpa",
+      "canonical_name": "Grandpa",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Grandpa'",
+      "age": "elderly",
+      "description": "Beth's grandfather, mentioned in the conversation about Beth's gifts.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hagar",
+      "canonical_name": "Hagar",
+      "aliases": [
+        "the witch"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns, 'Hagar', 'witch', 'Hagar', 'the', 'H',",
+      "age": "unknown",
+      "description": "witch",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hannah-brown",
+      "canonical_name": "Hannah Brown",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name",
+      "age": "adult",
+      "description": "A woman who presides over a cooking class.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hannah-more",
+      "canonical_name": "Hannah More",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Hannah, she, her",
+      "age": "adult",
+      "description": "An author whose works Jo reads to improve her writing style.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hattie-king",
+      "canonical_name": "Hattie King",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), name (Hattie King)",
+      "age": "unknown",
+      "description": "A friend of Amy who speaks French.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hayes",
+      "canonical_name": "Hayes",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "A friend of Laurie's who sends flowers to Amy.",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "heinrich",
+      "canonical_name": "Heinrich",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name",
+      "age": "unknown",
+      "description": "Mrs. Hummel's child with a sore throat.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "henshaw",
+      "canonical_name": "Henshaw",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he)",
+      "age": "adult",
+      "description": "A friend of Laurie's who needed financial help.",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hercules",
+      "canonical_name": "Hercules",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he)",
+      "age": "young_adult",
+      "description": "A cousin referred to as 'the young giant' and 'Hercules'.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jack",
+      "canonical_name": "Jack",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Jack, he, his",
+      "age": "adult",
+      "description": "A reference to Jack from Jack and the Beanstalk, used as a comparison for Jo.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jenny-snow",
+      "canonical_name": "Jenny Snow",
+      "aliases": [
+        "the revengeful Snow",
+        "Miss Snow"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, referred to as 'girls', 'young lady', 'demoisel",
+      "age": "child",
+      "description": "A schoolmate who initially mocks Amy but later betrays her to Mr. Davis.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jimmy",
+      "canonical_name": "Jimmy",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he, him), dialogue tags ('said so kindly'),",
+      "age": "adult",
+      "description": "The barber's son who is in the army, mentioned by the barber's wife.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "joanna",
+      "canonical_name": "Joanna",
+      "aliases": [
+        "the invalid doll"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name (Joanna)",
+      "age": "unknown",
+      "description": "doll that Beth takes for exercise",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "kate-vaughn",
+      "canonical_name": "Kate Vaughn",
+      "aliases": [
+        "Miss Kate",
+        "Kate"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'girls' and 'sist",
+      "age": "young_adult",
+      "description": "Kate Vaughn is a friend of the March sisters, described as 'older' and 'standoff'. She is likely in her late teens or early twenties, as she is",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "katy-brown",
+      "canonical_name": "Katy Brown",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, referred to as 'girls'",
+      "age": "child",
+      "description": "A schoolmate who invites Amy to a party.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "keats",
+      "canonical_name": "Keats",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "A poet mentioned by Jo as an example of a genius.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lady-de-jones",
+      "canonical_name": "Lady de Jones",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Lady, matron, she, her",
+      "age": "adult",
+      "description": "A British matron who brings her family of eight to the ball.",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "little-nap",
+      "canonical_name": "Little Nap",
+      "aliases": [
+        "Napoleon"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, \"Little Nap\", \"Napoleon\"",
+      "age": "child",
+      "description": "The emperor's son, mentioned in the second letter.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lottchen",
+      "canonical_name": "Lottchen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (she/her), name",
+      "age": "young_adult",
+      "description": "Mrs. Hummel's daughter who cares for the baby.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "madam",
+      "canonical_name": "Madam",
+      "aliases": [
+        "the good mistress",
+        "the departed girl"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'mistress'",
+      "age": "unknown",
+      "description": "Esther's previous mistress, who is now deceased. She is referred to as 'the good mistress' and 'the departed girl'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "major-lincoln",
+      "canonical_name": "Major Lincoln",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "A guest at the party.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary",
+      "canonical_name": "Mary",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to by name, ",
+      "age": "unknown",
+      "description": "A person mentioned by Aunt March regarding financial support.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-kingsley",
+      "canonical_name": "Mary Kingsley",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, referred to as 'girls'",
+      "age": "child",
+      "description": "A schoolmate who lends Amy her watch.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "may-chester",
+      "canonical_name": "May Chester",
+      "aliases": [
+        "May"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "Mrs. Chester's daughter, who is jealous of Amy and initially takes the art table, but later reconciles with Amy.",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "minnie-kirke",
+      "canonical_name": "Minnie Kirke",
+      "aliases": [
+        "Minnie"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name 'Minnie Kirke', 'her', 'she'",
+      "age": "young_adult",
+      "description": "One of Mrs. Kirke's daughters, described as a 'little old woman'.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-edgeworth",
+      "canonical_name": "Miss Edgeworth",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Miss, she, her",
+      "age": "adult",
+      "description": "An author whose works Jo reads to improve her writing style.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-eliott",
+      "canonical_name": "Miss Eliott",
+      "aliases": [
+        "the learned gentleman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'young lady', 'sw",
+      "age": "young_adult",
+      "description": "One of the girls in Amy's drawing class, who is often absent or distracted.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-lamb",
+      "canonical_name": "Miss Lamb",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Miss', ",
+      "age": "young_adult",
+      "description": "Daughter of Mrs. Lamb who compliments Jo's writing.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-oranthy-bluggage",
+      "canonical_name": "Miss Oranthy Bluggage",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Miss)",
+      "age": "adult",
+      "description": "A lecturer advertised in the paper.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "misses-chester",
+      "canonical_name": "Misses Chester",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Misses', ",
+      "age": "young_adult",
+      "description": "Daughters of Mrs. Chester who participate in the conversation.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-allen",
+      "canonical_name": "Mr. Allen",
+      "aliases": [
+        "the publisher"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mr.'",
+      "age": "adult",
+      "description": "The publisher who advises Jo to make her book brief and dramatic.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-dashwood",
+      "canonical_name": "Mr. Dashwood",
+      "aliases": [
+        "the editor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mr., he, his, him, gentleman",
+      "age": "adult",
+      "description": "The editor of the Weekly Volcano who publishes Jo's sensational stories.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-davis",
+      "canonical_name": "Mr. Davis",
+      "aliases": [
+        "the inexorable Davis",
+        "the teacher",
+        "the irascible gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him), referred to as 'gentleman', 'man'",
+      "age": "adult",
+      "description": "The strict schoolteacher who punishes Amy for having limes in her desk.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-lamb",
+      "canonical_name": "Mr. Lamb",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Mr.', ",
+      "age": "young_adult",
+      "description": "Son of Mrs. Lamb who speaks to Amy.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-mantalini",
+      "canonical_name": "Mr. Mantalini",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mr'",
+      "age": "unknown",
+      "description": "character referenced in a quote about 'dem'd total'",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-moffat",
+      "canonical_name": "Mr. Moffat",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "Annie's father.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-cornelius",
+      "canonical_name": "Mrs. Cornelius",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mrs'",
+      "age": "unknown",
+      "description": "neighbor/friend who advises Meg",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-grundy",
+      "canonical_name": "Mrs. Grundy",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), title (Mrs. Grundy), context (",
+      "age": "unknown",
+      "description": "A fictional character representing a prudish woman who disapproves of young men's behavior.",
+      "first_chapter": "0042",
+      "chapters": [
+        "0042"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-gummidge",
+      "canonical_name": "Mrs. Gummidge",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), title (Mrs.)",
+      "age": "adult",
+      "description": "Mentioned by Laurie as an example of someone who treats suitors coldly.",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-king",
+      "canonical_name": "Mrs. King",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Mrs.)",
+      "age": "unknown",
+      "description": "Person Jo is sent to tell that Mrs. March cannot come.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-lamb",
+      "canonical_name": "Mrs. Lamb",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs.', ",
+      "age": "adult",
+      "description": "A hostess at another social call.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-m",
+      "canonical_name": "Mrs. M",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "adult",
+      "description": "A character mentioned in gossip.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-malaprop",
+      "canonical_name": "Mrs. Malaprop",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "role 'Mrs. Malaprop'",
+      "age": "adult",
+      "description": "A character the narrator dresses up as for a masquerade.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-s-l-a-n-g-northbury",
+      "canonical_name": "Mrs. S.L.A.N.G. Northbury",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mrs.'",
+      "age": "unknown",
+      "description": "The author of the sensational story in the newspaper.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-scott",
+      "canonical_name": "Mrs. Scott",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "lively, pretty girl",
+      "age": "young_adult",
+      "description": "Mrs. Scott is Scott's wife. She is lively and pretty, with nothing to do but be agreeable. John often visits her for social interaction",
+      "first_chapter": "0039",
+      "chapters": [
+        "0039"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-sherwood",
+      "canonical_name": "Mrs. Sherwood",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mrs., she, her",
+      "age": "adult",
+      "description": "An author whose works Jo reads to improve her writing style.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-snowball-pat-paw",
+      "canonical_name": "Mrs. Snowball Pat Paw",
+      "aliases": [
+        "S. B. Pat Paw",
+        "Snowball"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Mrs.), pronouns (her, she)",
+      "age": "unknown",
+      "description": "A cat who is the subject of a fictional obituary.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "nan",
+      "canonical_name": "Nan",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'her', 'daughter',",
+      "age": "young_adult",
+      "description": "Annie's sister.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "nick-bottom",
+      "canonical_name": "Nick Bottom",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "role 'Nick Bottom'",
+      "age": "adult",
+      "description": "A character the Professor dresses up as for a masquerade.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "peggotty",
+      "canonical_name": "Peggotty",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Peggotty'",
+      "age": "adult",
+      "description": "A character mentioned by Laurie in a comparison.",
+      "first_chapter": "0044",
+      "chapters": [
+        "0044"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pip",
+      "canonical_name": "Pip",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him), referred to as 'Pip'",
+      "age": "unknown",
+      "description": "A canary belonging to Beth.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "poll",
+      "canonical_name": "Poll",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A fat poodle belonging to Aunt March.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "professor-sands",
+      "canonical_name": "Professor Sands",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Professor', male name",
+      "age": "adult",
+      "description": "The lecturer giving the lecture on the Pyramids.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "rasselas",
+      "canonical_name": "Rasselas",
+      "aliases": [
+        "the mischief-loving lad",
+        "the prisoner",
+        "the culprit",
+        "the injured youth"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A book title; referred to as 'Rasselas' throughout. She is the one who writes the",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ristori",
+      "canonical_name": "Ristori",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "robert-lennox",
+      "canonical_name": "Robert Lennox",
+      "aliases": [
+        "Mr. Lennox",
+        "Lennox"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), \"Mr. Lennox\", \"Robert\"",
+      "age": "adult",
+      "description": "An acquaintance on the ship who sings about Kate Kearney.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sallie-moffatt",
+      "canonical_name": "Sallie Moffatt",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Sallie Moffatt is a friend who visits the Brooke household. She is described as liking the quiet and pleasant atmosphere",
+      "first_chapter": "0039",
+      "chapters": [
+        "0039"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sam",
+      "canonical_name": "Sam",
+      "aliases": [
+        "the mischief-loving lad",
+        "the prisoner",
+        "the culprit",
+        "the injured youth"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (his, he), explicit statements (\"as I'm a girl\", \"",
+      "age": "unknown",
+      "description": "A book title; referred to as 'Sam' throughout. She is the one who writes the",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "satan",
+      "canonical_name": "Satan",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him, his), title (Satan), context (",
+      "age": "unknown",
+      "description": "Satan mentioned in the passage.",
+      "first_chapter": "0042",
+      "chapters": [
+        "0042"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "schiller",
+      "canonical_name": "Schiller",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Schiller, he, his",
+      "age": "adult",
+      "description": "The author of the play Mr. Bhaer reads to Jo.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "teddie",
+      "canonical_name": "Teddie",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy', ",
+      "age": "child",
+      "description": "A boy managed by Amy.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "telemachus",
+      "canonical_name": "Telemachus",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Yours gratefully, Telemachus",
+      "age": "unknown",
+      "description": "The writer of the letter.",
+      "first_chapter": "0040",
+      "chapters": [
+        "0040"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-devil",
+      "canonical_name": "The Devil",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "The devil mentioned in the passage.",
+      "first_chapter": "0042",
+      "chapters": [
+        "0042"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duke-of-devonshire",
+      "canonical_name": "The Duke of Devonshire",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title, \"the Duke of Devonshire\"",
+      "age": "adult",
+      "description": "A nobleman mentioned as living near Hyde Park.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duke-of-wellington",
+      "canonical_name": "The Duke of Wellington",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title, \"the Duke of Wellington\"",
+      "age": "adult",
+      "description": "A nobleman mentioned as having a house near Hyde Park.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-emperor",
+      "canonical_name": "The Emperor",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title, \"the emperor\", \"the imperial family\"",
+      "age": "adult",
+      "description": "The French emperor, mentioned in the second letter.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-girl",
+      "canonical_name": "The Girl",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), title (The Girl), context (",
+      "age": "young_adult",
+      "description": "A girl mentioned in the passage.",
+      "first_chapter": "0042",
+      "chapters": [
+        "0042"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-women",
+      "canonical_name": "The Women",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (they/them), \"women\"",
+      "age": "adult",
+      "description": "Women riding horses on Rotten Row.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "thomas",
+      "canonical_name": "Thomas",
+      "aliases": [
+        "the man",
+        "the barber"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he, him), dialogue tags ('said Thomas'), context",
+      "age": "adult",
+      "description": "The barber who buys Jo's hair.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "titania",
+      "canonical_name": "Titania",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "role 'Titania'",
+      "age": "child",
+      "description": "A character Tina dresses up as for a masquerade.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tommy-bangs",
+      "canonical_name": "Tommy Bangs",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'Tommy Bangs' and ",
+      "age": "child",
+      "description": "child",
+      "first_chapter": "0048",
+      "chapters": [
+        "0048"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tommy-chamberlain",
+      "canonical_name": "Tommy Chamberlain",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to by name, ",
+      "age": "young_adult",
+      "description": "A young man whose father keeps a grocery store.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "uncle",
+      "canonical_name": "Uncle",
+      "aliases": [
+        "Papa"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), \"Papa\"",
+      "age": "adult",
+      "description": "Amy's uncle, traveling with the family.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "uncle-march",
+      "canonical_name": "Uncle March",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Uncle March'",
+      "age": "unknown",
+      "description": "Amy's uncle, mentioned in the will regarding his watch.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "valrosa",
+      "canonical_name": "Valrosa",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A honeymoon home mentioned by Amy.",
+      "first_chapter": "0044",
+      "chapters": [
+        "0044"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "victor-emmanuel",
+      "canonical_name": "Victor Emmanuel",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "vladimir",
+      "canonical_name": "Vladimir",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Vladimir, he, him",
+      "age": "young_adult",
+      "description": "A person who dances with Amy and then leaves her.",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "wallenstein",
+      "canonical_name": "Wallenstein",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Wallenstein, he, his",
+      "age": "adult",
+      "description": "A character in the play Mr. Bhaer reads to Jo.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ward",
+      "canonical_name": "Ward",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), \"his friend Ward\"",
+      "age": "adult",
+      "description": "Mr. Lennox's friend who ordered a bouquet for Amy.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "zara",
+      "canonical_name": "Zara",
+      "aliases": [
+        "the stern sire",
+        "the cruel sire"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "she",
+      "age": "adult",
+      "description": "Loves Hugo, falls from the tower, defies her sire.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the serene Teuton"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Count, Pole, boy, man, he, him",
+      "age": "young_adult",
+      "description": "A Polish count who dances with Amy at the ball.",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-demon-of-the-jura",
+      "canonical_name": "the Demon of the Jura",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Demon, he, his",
+      "age": "unknown",
+      "description": "A metaphorical reference to the fire consuming Jo's stories.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-divine-mother",
+      "canonical_name": "the Divine Mother",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Divine Mother'",
+      "age": "unknown",
+      "description": "A religious figure depicted in a picture in Amy's closet.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-earl-of-devereux",
+      "canonical_name": "the Earl of Devereux",
+      "aliases": [
+        "Ferdinand Devereux",
+        "the noble face",
+        "the artist lover",
+        "the young English artist",
+        "De Vere",
+        "the Earl",
+        "the young bridegroom"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (him, he), title (Earl)",
+      "age": "young_adult",
+      "description": "The artist who loves Viola and marries her in disguise.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-frenchwoman",
+      "canonical_name": "the Frenchwoman",
+      "aliases": [
+        "the French laundrywoman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "role 'Frenchwoman', 'her', 'she'",
+      "age": "adult",
+      "description": "The laundrywoman who is Tina's mother.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-madame-de-staels",
+      "canonical_name": "the Madame de Staels",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Madame, she, her",
+      "age": "adult",
+      "description": "A celebrity at the symposium who looks daggers at the novelist.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-queen-of-the-sandwich-islands",
+      "canonical_name": "the Queen of the Sandwich Islands",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Queen",
+      "age": "unknown",
+      "first_chapter": "0038",
+      "chapters": [
+        "0038"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-clerk",
+      "canonical_name": "the clerk",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title 'clerk'.",
+      "age": "adult",
+      "description": "A married man working in the dry-goods store.",
+      "first_chapter": "0047",
+      "chapters": [
+        "0047"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-elegant-beings",
+      "canonical_name": "the elegant beings",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "adult",
+      "description": "People who smoke and make remarks about the narrator.",
+      "first_chapter": "0034",
+      "chapters": [
+        "0034"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-fairy-queen",
+      "canonical_name": "the fairy queen",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (queen), pronouns (her, she)",
+      "age": "unknown",
+      "description": "A character at the masked ball who dances with the troubadour.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-shopman",
+      "canonical_name": "the shopman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'shopman'",
+      "age": "unknown",
+      "description": "salesperson at the dress shop",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-spirit",
+      "canonical_name": "the spirit",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Appears in cloudy white, brings the love philter.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Father Laurence": [
+      "james-laurence",
+      "father"
+    ],
+    "Miss March": [
+      "jo",
+      "amy",
+      "meg"
+    ],
+    "Papa": [
+      "father",
+      "john-brooke",
+      "uncle"
+    ],
+    "the Unquenchables": [
+      "laurie",
+      "jo"
+    ],
+    "the actors": [
+      "jo",
+      "amy",
+      "meg",
+      "beth"
+    ],
+    "the aspirant for fame": [
+      "jo",
+      "amy"
+    ],
+    "the babies": [
+      "meg",
+      "demi",
+      "daisy"
+    ],
+    "the bear-man": [
+      "professor-bhaer",
+      "aunt-dodo"
+    ],
+    "the beloved little face": [
+      "laurie",
+      "mrs-march",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "hannah",
+      "james-laurence",
+      "father",
+      "brooke",
+      "dr-bangs",
+      "mrs-hummel"
+    ],
+    "the blonde mademoiselle": [
+      "jo",
+      "amy",
+      "beth",
+      "mrs-carrol"
+    ],
+    "the captive mamma": [
+      "meg",
+      "demi"
+    ],
+    "the child": [
+      "jo",
+      "amy",
+      "tina"
+    ],
+    "the cruel sire": [
+      "don-pedro",
+      "hugo",
+      "zara"
+    ],
+    "the culprit": [
+      "laurie",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "john-brooke",
+      "caroline-percy",
+      "rasselas",
+      "sam"
+    ],
+    "the curly crop": [
+      "jo",
+      "beth"
+    ],
+    "the doctor": [
+      "laurie",
+      "dr-bangs"
+    ],
+    "the editor": [
+      "jo",
+      "mr-dashwood"
+    ],
+    "the elder ones": [
+      "jo",
+      "meg"
+    ],
+    "the fairy prince": [
+      "jo",
+      "professor-bhaer"
+    ],
+    "the father": [
+      "father",
+      "john-brooke"
+    ],
+    "the friend": [
+      "laurie",
+      "professor-bhaer"
+    ],
+    "the girl": [
+      "jo",
+      "amy",
+      "meg",
+      "aunt-march",
+      "hortense"
+    ],
+    "the handsome eyes": [
+      "laurie",
+      "john-brooke"
+    ],
+    "the handsome friend": [
+      "jo",
+      "professor-bhaer"
+    ],
+    "the infants": [
+      "meg",
+      "demi"
+    ],
+    "the injured youth": [
+      "laurie",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "john-brooke",
+      "caroline-percy",
+      "rasselas",
+      "sam"
+    ],
+    "the invalid": [
+      "mrs-march",
+      "beth"
+    ],
+    "the invalids": [
+      "jo",
+      "amy",
+      "beth"
+    ],
+    "the learned gentleman": [
+      "laurie",
+      "mrs-march",
+      "jo",
+      "meg",
+      "beth",
+      "hannah",
+      "father",
+      "mr-tudor",
+      "miss-eliott"
+    ],
+    "the little Mary": [
+      "jo",
+      "aunt-dodo"
+    ],
+    "the little dead roses": [
+      "amy",
+      "beth"
+    ],
+    "the little dear": [
+      "jo",
+      "amy",
+      "meg",
+      "beth"
+    ],
+    "the little red squirmers": [
+      "meg",
+      "demi"
+    ],
+    "the lonely old woman": [
+      "laurie",
+      "aunt-march"
+    ],
+    "the mischief-loving lad": [
+      "laurie",
+      "jo",
+      "amy",
+      "beth",
+      "john-brooke",
+      "caroline-percy",
+      "rasselas",
+      "sam"
+    ],
+    "the once busy hands": [
+      "laurie",
+      "mrs-march",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "hannah",
+      "james-laurence",
+      "father",
+      "brooke",
+      "dr-bangs",
+      "mrs-hummel"
+    ],
+    "the once rosy face": [
+      "laurie",
+      "mrs-march",
+      "jo",
+      "beth",
+      "hannah",
+      "james-laurence",
+      "father",
+      "brooke",
+      "dr-bangs",
+      "mrs-hummel"
+    ],
+    "the once smiling lips": [
+      "laurie",
+      "mrs-march",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "hannah",
+      "james-laurence",
+      "father",
+      "brooke",
+      "dr-bangs",
+      "mrs-hummel"
+    ],
+    "the parents": [
+      "mrs-march",
+      "father"
+    ],
+    "the poor fellow": [
+      "laurie",
+      "fred-vaughn"
+    ],
+    "the prisoner": [
+      "laurie",
+      "jo",
+      "amy",
+      "meg",
+      "beth",
+      "john-brooke",
+      "caroline-percy",
+      "rasselas",
+      "sam"
+    ],
+    "the prodigies": [
+      "meg",
+      "demi"
+    ],
+    "the servant": [
+      "hannah",
+      "ferdinando"
+    ],
+    "the shortsighted parent": [
+      "meg",
+      "hannah",
+      "professor-bhaer"
+    ],
+    "the stately old gentleman": [
+      "james-laurence",
+      "aunt-march"
+    ],
+    "the stern sire": [
+      "don-pedro",
+      "hugo",
+      "zara"
+    ],
+    "the tall girl": [
+      "jo",
+      "beth"
+    ],
+    "the turtledove": [
+      "meg",
+      "beth"
+    ],
+    "the unconscious innocents": [
+      "meg",
+      "demi"
+    ],
+    "the young bridegroom": [
+      "viola",
+      "the-earl-of-devereux"
+    ],
+    "the young inventor": [
+      "demi",
+      "daisy"
+    ],
+    "the young man": [
+      "laurie",
+      "mrs-march",
+      "john-brooke"
+    ]
+  }
+}

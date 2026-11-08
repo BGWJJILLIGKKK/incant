@@ -61,7 +61,7 @@ class Site(BaseModel):
 
 
 class UrlSettings(BaseModel):
-    user_agent: str = "Mozilla/5.0 (X11; Linux x86_64) incant (personal audiobook use)"
+    user_agent: str = "Mozilla/5.0 (X11; Linux x86_64) incant (+https://github.com/BGWJJILLIGKKK/incant)"
     timeout_s: float = 30.0
     netrc: bool = True  # use ~/.netrc ($NETRC) for hosts without a [sites] entry
     sites: dict[str, Site] = Field(default_factory=dict)

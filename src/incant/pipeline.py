@@ -153,7 +153,7 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
             all_methods = sorted(owners)
             hint = difflib.get_close_matches(tok, all_methods, n=3)
             raise ResolveError(f"'{tok}' is not a method of any stage" + (f" — did you mean {', '.join(hint)}?" if hint else "")
-                               + f"\n  available: " + "; ".join(f"{s.name}: {', '.join(s.methods)}" for s in stages))
+                               + "\n  available: " + "; ".join(f"{s.name}: {', '.join(s.methods)}" for s in stages))
         free = [s for s in cand if s.name not in chosen]
         if not free:
             raise ResolveError(f"'{tok}': stage {'/'.join(s.name for s in cand)} already set to '{chosen[cand[0].name]}'")

@@ -1,0 +1,1253 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "flint",
+      "canonical_name": "Flint",
+      "aliases": [
+        "the captain",
+        "Billy Bones",
+        "Captain Flint",
+        "Mr. Smollett",
+        "Bill",
+        "the black-hearted hound",
+        "the dead captain",
+        "the dead buccaneer",
+        "Billy",
+        "the brown old seaman",
+        "the old fellow",
+        "Smollett",
+        "the mate",
+        "the dead man",
+        "the sailor",
+        "Captain",
+        "Mr. W. Bones",
+        "the ruffian"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.91,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A tall, strong, heavy, nut-brown man with a sabre cut across one cheek, a dirty livid white complexion, and a tarry pigtail. He is a pirate who stays at the inn; The captain is an older man, likely in his late 40s or 50s, who is suffering from a stroke and is dying. He is referred to as 'the captain', 'Billy Bones', 'the; Jim's father, a former pirate who is currently ill and recovering in the inn.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0028",
+        "0029",
+        "0030",
+        "0032",
+        "0033",
+        "0034",
+        "0035"
+      ],
+      "mentions": 35,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-silver",
+      "canonical_name": "John Silver",
+      "aliases": [
+        "Silver",
+        "Long John",
+        "the cook",
+        "Long John Silver",
+        "the sea-cook",
+        "John",
+        "the old buccaneer",
+        "the maroon",
+        "Master Silver",
+        "the murderer",
+        "the first voice",
+        "the ringleaders",
+        "the landlord",
+        "the monster",
+        "the ringleader",
+        "Mr. Silver",
+        "the buccaneer",
+        "the old cripple",
+        "the half-idiot maroon",
+        "the man with the bandage",
+        "the speakers",
+        "the swab"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.92,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Long John Silver, the cook of the ship. He is described as a clever man who is friendly with the crew.; A pirate who lost a leg and is now quartermaster.; The man who is actually in charge of the mutiny and arranges the party going ashore.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0025",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035"
+      ],
+      "mentions": 26,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "doctor-livesey",
+      "canonical_name": "Doctor Livesey",
+      "aliases": [
+        "the doctor",
+        "Dr. Livesey",
+        "David Livesey",
+        "Livesey",
+        "Doctor",
+        "Dr",
+        "the doctor himself",
+        "the ruffian"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.96,
+      "gender_evidence": "male pronouns (him, his) and title 'Dr.'",
+      "age": "adult",
+      "description": "A doctor who visits the narrator's father who is ill. He is described as neat, bright, with powder as white as snow and bright black eyes; Dr. Livesey is an adult man who visits the inn to see the father and treats the captain. He is referred to as 'Dr. Livesey', 'the doctor', 'the; A gentleman and magistrate mentioned as a destination.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0013",
+        "0014",
+        "0015",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0029",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035"
+      ],
+      "mentions": 24,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-trelawney",
+      "canonical_name": "John Trelawney",
+      "aliases": [
+        "the squire",
+        "Mr. Trelawney",
+        "Trelawney",
+        "Squire Trelawney",
+        "Squire",
+        "J. T",
+        "the good soul",
+        "the gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.96,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A tall, rough-looking man who is a friend of Dr. Livesey.; The owner of the Admiral Benbow inn and the narrator's guardian, who is hard at work in Bristol.; The squire is a gentleman who owns the tavern and is involved in the search for Black Dog. He is referred to as 'a",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0022",
+        "0023",
+        "0031",
+        "0034",
+        "0035"
+      ],
+      "mentions": 24,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jim-hawkins",
+      "canonical_name": "Jim Hawkins",
+      "aliases": [
+        "Jim",
+        "Hawkins",
+        "Mr. Hawkins",
+        "the right sort",
+        "the lad"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and explicit reference to 'my father'",
+      "age": "young_adult",
+      "description": "The narrator, a young man working as a clerk for his father at the Admiral Benbow inn.; The narrator, a young man who is the son of the innkeeper's widow. He is referred to as 'Jim' by his mother and as 'the boy' or 'fatherless boy' in the context.; One of the men on watch, addressed as 'Jim' by Silver and the captain.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005",
+        "0007",
+        "0013",
+        "0017",
+        "0019",
+        "0021",
+        "0022",
+        "0027",
+        "0029",
+        "0030",
+        "0032",
+        "0034"
+      ],
+      "mentions": 14,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "israel-hands",
+      "canonical_name": "Israel Hands",
+      "aliases": [
+        "Hands",
+        "the coxswain",
+        "Israel",
+        "Mr. Hands",
+        "the Spirit"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A crew member who was one of the squire's men.; The coxswain of the Hispaniola, referred to as 'Hands', 'Israel', 'Mr. Hands', and 'the coxswain'. He is described as an 'elderly seaman' with a 'wounded thigh'; A crew member who was shot and drowned, later thrown overboard by the narrator.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0012",
+        "0013",
+        "0017",
+        "0018",
+        "0024",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030"
+      ],
+      "mentions": 13,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-hunter",
+      "canonical_name": "John Hunter",
+      "aliases": [
+        "Hunter"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.82,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man the squire plans to take on the expedition.; A member of the group going on the cruise, mentioned as one of the people who will occupy the six berths.; A crew member who joins Jim on the deck.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0010",
+        "0013",
+        "0014",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0022",
+        "0023"
+      ],
+      "mentions": 11,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "abraham-gray",
+      "canonical_name": "Abraham Gray",
+      "aliases": [
+        "Gray",
+        "the new man",
+        "Abe Gray",
+        "the man Gray"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man sitting in the fore-sheets of the boat. He speaks about the current and later identifies Israel as Flint's gunner.; Gray is the carpenter's mate, referred to as 'Gray' and 'Abraham Gray' in the log entry. He is an adult male.; A new member of the group with a bandaged face.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0034",
+        "0035"
+      ],
+      "mentions": 10,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ben-gunn",
+      "canonical_name": "Ben Gunn",
+      "aliases": [
+        "the maroon",
+        "Benjamin Gunn",
+        "the half-idiot maroon",
+        "the marooned man",
+        "the poor fellow"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A white man marooned on the island for three years. He is ragged, wears goatskins, and claims to be rich due to buried treasure. He is referred to as 'the s' in; A man who has been on a desert island for three years; referred to as 'a good boy' by the narrator.; Referred to in the narrator's thoughts regarding his last words.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016",
+        "0020",
+        "0021",
+        "0023",
+        "0024",
+        "0028",
+        "0031",
+        "0033",
+        "0034",
+        "0035"
+      ],
+      "mentions": 10,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "richard-joyce",
+      "canonical_name": "Richard Joyce",
+      "aliases": [
+        "Joyce"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.89,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man the squire plans to take on the expedition.; A member of the group going on the cruise, mentioned as one of the people who will occupy the six berths.; One of the sure men taken into the cabin party's confidence.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0010",
+        "0014",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0022"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tom-redruth",
+      "canonical_name": "Tom Redruth",
+      "aliases": [
+        "Redruth",
+        "Tom",
+        "Thomas Redruth",
+        "the speakers",
+        "the intruders",
+        "the poor old gamekeeper",
+        "the sailor",
+        "the honest hands"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.89,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man the squire plans to take on the expedition.; A member of the group going on the cruise, mentioned as one of the people who will occupy the six berths.; One of the sure men taken into the cabin party's confidence.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0010",
+        "0014",
+        "0015",
+        "0017",
+        "0018",
+        "0019",
+        "0020"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alexander-smollett",
+      "canonical_name": "Alexander Smollett",
+      "aliases": [
+        "Captain Smollett",
+        "Smollett"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Captain Smollett, the captain of the ship. He is described as a sharp-looking man who is angry with everything on board and the crew.; The captain of the Hispaniola, leading the effort to stop the mutiny.; The leader of the group at the stockade; referred to as 'Captain Smollett' and 'the captain'.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0013",
+        "0019",
+        "0020",
+        "0025",
+        "0028",
+        "0031"
+      ],
+      "mentions": 7,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dick-johnson",
+      "canonical_name": "Dick Johnson",
+      "aliases": [
+        "Dick",
+        "the youngest hand",
+        "the lad",
+        "the young seaman",
+        "Johnson",
+        "the lad Dick",
+        "the youngest hand on board"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and name.",
+      "age": "adult",
+      "description": "A sailor referred to as 'the lad' and 'Dick'.; One of Silver's men who is ordered to bring a torch.; One of the pirates, referred to as 'Dick' or 'Dick Johnson', who is present in the block house.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0033"
+      ],
+      "mentions": 7,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "black-dog",
+      "canonical_name": "Black Dog",
+      "aliases": [
+        "the blind man",
+        "the fugitive",
+        "the stranger",
+        "the blind beggar",
+        "the wretched being",
+        "the tallow-faced man",
+        "the swab",
+        "the man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and references to 'his' cutlass, 'his",
+      "age": "adult",
+      "description": "Black Dog is an adult man, likely in his late 40s or 50s, who is a former shipmate of the captain. He is referred to as 'Black Dog', 'the stranger', 'the; A notorious character known as 'Black Dog' and also referred to as 'the blind beggar' or 'the blind man'. He is described as 'detestable' and 'terrible'; A pirate mentioned by Pew.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0009",
+        "0029"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "job-anderson",
+      "canonical_name": "Job Anderson",
+      "aliases": [
+        "Anderson",
+        "Job",
+        "the boatswain",
+        "the big boatswain"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A crew member ordered to the deck by the captain.; Job Anderson is the boatswain leading the mutineers, referred to as 'Job Anderson' and 'the boatswain'. He is an adult male.; The boatswain who appears at the loophole and roars commands.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0019",
+        "0022",
+        "0023",
+        "0030"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "tom-morgan",
+      "canonical_name": "Tom Morgan",
+      "aliases": [
+        "Morgan",
+        "the old man Morgan",
+        "the old mahogany-faced seaman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and explicit references to him as a",
+      "age": "adult",
+      "description": "Morgan is an old, grey-haired sailor who was drinking with Black Dog. He is referred to as 'a; A pirate who challenges Silver's authority and is later referred to as 'Tom Morgan'.; One of the buccaneers, described as an old man.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0029",
+        "0030",
+        "0031",
+        "0033",
+        "0034"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "george-merry",
+      "canonical_name": "George Merry",
+      "aliases": [
+        "Merry",
+        "George",
+        "the accused",
+        "the man with the bandage"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns used for George",
+      "age": "adult",
+      "description": "One of the buccaneers who opposes Silver and is later made sentinel.; A pirate with a bandaged head.; A pirate who tries to calm the others and walks first with the compass.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-arrow",
+      "canonical_name": "Mr. Arrow",
+      "aliases": [
+        "Arrow",
+        "the mate"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The mate of the ship, described as a brown old sailor with earrings and a squint. He is friendly with the squire but not with Mr. Trelawney or the captain.; Mr. Arrow is the first mate of the Hispaniola. He is described as useless as an officer, a bad influence, and a drunkard who disappears overboard.; A man mentioned in the narrator's thoughts.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0010",
+        "0011",
+        "0012"
+      ],
+      "mentions": 4,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-blandly",
+      "canonical_name": "Mr. Blandly",
+      "aliases": [
+        "Blandly"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mr.",
+      "age": "adult",
+      "description": "A friend of the squire who comes to wish him a good voyage.; A man who was fitting out a consort ship when the Hispaniola reached Bristol, referred to as 'Mr. Blandly'. He is an adult male.; An old friend of John Trelawney who helped find and purchase the Hispaniola.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0011",
+        "0035"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pew",
+      "canonical_name": "Pew",
+      "aliases": [
+        "Old Pew",
+        "the blind beggar",
+        "the blind miscreant",
+        "Master Pew"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'he', 'him', 'his', and 'Master Pew'",
+      "age": "adult",
+      "description": "A blind pirate/beggar who leads the attack on the inn.; Pew is a blind man who used to come to the tavern with Black Dog. He is referred to as 'a; A deceased pirate who lost his sight.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0009",
+        "0012"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-cowardice-of-the-neighbours",
+      "canonical_name": "the cowardice of the neighbours",
+      "aliases": [
+        "the neighbours"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "The neighbors who join in the captain's singing and are frightened by his stories; People who visit the inn after Jim's father dies.; The villagers of the hamlet who refuse to help Jim and his mother. They are referred to collectively as 'the neighbours', 'men', 'woman, and child'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0004",
+        "0005"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-parrot",
+      "canonical_name": "the parrot",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 0.33,
+      "gender_evidence": "referred to as 'her' in the text ('preening her plumage')",
+      "age": "unknown",
+      "description": "A parrot on the ship, mentioned as having blabbed the secret of the treasure.; The parrot is a pet of Long John Silver, named Cap'n Flint after the famous buccaneer. It is described as being two hundred years old and is able to speak.; A parrot sitting on Long John's shoulder; a speaking creature mentioned in the passage.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0011",
+        "0029"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "barbecue",
+      "canonical_name": "Barbecue",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Barbecue is referred to as 'the cook' and is",
+      "age": "adult",
+      "description": "Barbecue is the ship's cook, known by the men as Barbecue. He has a crutch and is respected and obeyed by the crew. He is a confidant of Long John Silver.; A doctor who is a friend of Silver and a former ally of Jim.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0032"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "supervisor-dance",
+      "canonical_name": "Supervisor Dance",
+      "aliases": [
+        "Mr. Dance",
+        "the supervisor",
+        "Dance"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and title 'Mr.'",
+      "age": "adult",
+      "description": "A man who rode with Jim and is being rewarded for his actions.; A revenue officer who arrives on the scene.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alan",
+      "canonical_name": "Alan",
+      "aliases": [
+        "the honest hands"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronoun 'his' used in 'rest his soul' and 'kill me too'",
+      "age": "unknown",
+      "description": "A sailor killed by Silver before the narrator witnesses the murder of Tom.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "allardyce",
+      "canonical_name": "Allardyce",
+      "aliases": [
+        "the fellow with the bandage"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and description of his injuries",
+      "age": "adult",
+      "description": "A pirate who owed money to Morgan and was killed by Flint.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ben",
+      "canonical_name": "Ben",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and explicit references to him as a",
+      "age": "adult",
+      "description": "Ben is a sailor who is described as a good runner. He is referred to as 'a",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dirk",
+      "canonical_name": "Dirk",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'Dirk'",
+      "age": "unknown",
+      "description": "A pirate mentioned by Pew.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dogger",
+      "canonical_name": "Dogger",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man who provided a stirrup for Jim to descend.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "england",
+      "canonical_name": "England",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A former captain mentioned in the story.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "harry",
+      "canonical_name": "Harry",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and explicit references to him as a",
+      "age": "adult",
+      "description": "Harry is a sailor who is asked to catch Black Dog. He is referred to as 'a",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "james-hawkins",
+      "canonical_name": "James Hawkins",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'James Hawkins' and 'cabin-boy' in the",
+      "age": "young_adult",
+      "description": "James Hawkins is the cabin-boy, referred to as 'James Hawkins' and 'cabin-boy' in the log. He is a young adult male.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "johnny",
+      "canonical_name": "Johnny",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'Johnny'",
+      "age": "unknown",
+      "description": "A pirate mentioned by Pew.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "king-george",
+      "canonical_name": "King George",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "unknown",
+      "description": "The monarch mentioned by Silver in the context of English language; not a character in the scene.",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-crossley",
+      "canonical_name": "Mrs. Crossley",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (her, she), context (Mrs. Crossley)",
+      "age": "unknown",
+      "description": "A villager who is asked by Jim's mother to bring back the money. She is referred to as 'Mrs. Crossley'",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "s-l-o",
+      "canonical_name": "S.L.O",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "gentleman",
+      "age": "adult",
+      "description": "The dedicatee of the book, referred to as an American gentleman.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duke-of-cumberland",
+      "canonical_name": "the Duke of Cumberland",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "I have served his Royal Highness the Duke of Cumberland",
+      "age": "adult",
+      "description": "A historical figure mentioned by the narrator.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-union-jack",
+      "canonical_name": "the Union Jack",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A flag mentioned in the story. It is described as fluttering in the air above a wood.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-companion",
+      "canonical_name": "the companion",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to him as 'my friend of the red cap' and 'dr",
+      "age": "adult",
+      "description": "The companion is a drunk man who is quarreling with Israel Hands on the Hispaniola.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-crew",
+      "canonical_name": "the crew",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the crew is referred to as 'the men' and 'mates', and is",
+      "age": "adult",
+      "description": "The crew of the Hispaniola, including the boatswain and other sailors. They sing the chorus and are generally capable seamen.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-fellows",
+      "canonical_name": "the fellows",
+      "aliases": [
+        "the hands"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The crew of the ship, mentioned as being friendly with the cook and the captain.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-figure",
+      "canonical_name": "the figure",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and dialogue tags ('said he', ",
+      "age": "unknown",
+      "description": "A mysterious figure that the narrator encounters on the island. It is later revealed to be Ben Gunn.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lookout",
+      "canonical_name": "the lookout",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A sailor shouting 'Land ho!'",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-maid",
+      "canonical_name": "the maid",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she, her) and role 'maid'",
+      "age": "adult",
+      "description": "A servant who opened the door for Jim and Mr. Dance.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-singer",
+      "canonical_name": "the singer",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to him as 'a dull, old, droning sailor's', '",
+      "age": "adult",
+      "description": "The singer is a sailor who is singing a song about the crew of the Hispaniola.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Smollett": [
+      "flint",
+      "alexander-smollett"
+    ],
+    "the blind beggar": [
+      "black-dog",
+      "pew"
+    ],
+    "the half-idiot maroon": [
+      "john-silver",
+      "ben-gunn"
+    ],
+    "the honest hands": [
+      "tom-redruth",
+      "alan"
+    ],
+    "the lad": [
+      "jim-hawkins",
+      "dick-johnson"
+    ],
+    "the man with the bandage": [
+      "john-silver",
+      "george-merry"
+    ],
+    "the maroon": [
+      "john-silver",
+      "ben-gunn"
+    ],
+    "the mate": [
+      "flint",
+      "mr-arrow"
+    ],
+    "the ruffian": [
+      "flint",
+      "doctor-livesey"
+    ],
+    "the sailor": [
+      "flint",
+      "tom-redruth"
+    ],
+    "the speakers": [
+      "john-silver",
+      "tom-redruth"
+    ],
+    "the swab": [
+      "john-silver",
+      "black-dog"
+    ]
+  },
+  "narrator": "jim-hawkins"
+}

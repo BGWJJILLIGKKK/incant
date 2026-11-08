@@ -1,0 +1,1616 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "tom-sawyer",
+      "canonical_name": "Tom Sawyer",
+      "aliases": [
+        "Tom",
+        "the boy",
+        "the Black Avenger of the Spanish Main",
+        "Thomas Sawyer",
+        "the child",
+        "Tom Sawyer the Pirate",
+        "the departed",
+        "the enemy",
+        "Mars Tom",
+        "the lad",
+        "the pupil",
+        "Mr. Thomas Sawyer",
+        "Thomas",
+        "Robin Hood",
+        "the suffering neighbors",
+        "the envy of the young",
+        "the lads",
+        "the prisoner",
+        "the strangers",
+        "the missing lads",
+        "the pet of the old",
+        "the messenger",
+        "the sacred presence",
+        "the traitor",
+        "the Adored Unknown"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Tom",
+      "age": "child",
+      "description": "young boy, plays hookey, fights other boys; A boy who is tasked with whitewashing a fence and later tricks other boys into doing the work for him.; A young boy who whitewashes a fence, fights in a boys' war game, falls in love with a new girl, and later mourns her loss.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0035",
+        "0036"
+      ],
+      "mentions": 34,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "huck-finn",
+      "canonical_name": "Huck Finn",
+      "aliases": [
+        "Huck",
+        "Huckleberry Finn",
+        "Huckleberry",
+        "the stranger",
+        "the comrade",
+        "Hucky",
+        "the halfbreed",
+        "the Red-Handed",
+        "the patient",
+        "the departed",
+        "the vagabond boy",
+        "the watcher",
+        "the small watcher",
+        "the poor fellow",
+        "the half-breed",
+        "the refugee",
+        "the speaker",
+        "the pirates"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context",
+      "age": "child",
+      "description": "A boy who sleeps with Joe, goes fishing, and later considers returning home.; Huck Finn, who is in the pirate camp with Tom.; One of the boys on the sandbar; melancholy; smokes pipe with Tom and Joe; gets lost in woods during;",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0010",
+        "0011",
+        "0012",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0033",
+        "0035",
+        "0036"
+      ],
+      "mentions": 23,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "aunt-polly",
+      "canonical_name": "Aunt Polly",
+      "aliases": [
+        "the old lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Aunt",
+      "age": "adult",
+      "description": "Tom's aunt, scolds him, tries to catch him swimming; Tom's aunt who supervises the fence whitewashing and chases Tom away.; Tom's aunt who supervises his work, scolds him, and later comforts him emotionally.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0010",
+        "0012",
+        "0013",
+        "0016",
+        "0018",
+        "0019",
+        "0021",
+        "0031",
+        "0033",
+        "0035"
+      ],
+      "mentions": 16,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "joe-harper",
+      "canonical_name": "Joe Harper",
+      "aliases": [
+        "Joe",
+        "Robin Hood",
+        "Guy of Guisborne",
+        "the waverer",
+        "the Terror of the Seas"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "child",
+      "description": "Tom's friend who leads the opposing army in a boys' war game.; A boy who knows how to cure warts by burying beans at crossroads.; Tom's best friend and fellow student.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0007",
+        "0008",
+        "0009",
+        "0011",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0023",
+        "0026",
+        "0030",
+        "0031"
+      ],
+      "mentions": 16,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sid",
+      "canonical_name": "Sid",
+      "aliases": [
+        "Siddy",
+        "Mr. Siddy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy', 'brother'",
+      "age": "child",
+      "description": "Tom's quiet half-brother; A boy who wanted to whitewash the fence but was prevented by Aunt Polly.; Tom's younger brother who gets into trouble with clods and sugar, and later wakes up after Tom's prank.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0010",
+        "0011",
+        "0012",
+        "0016",
+        "0018",
+        "0019",
+        "0030",
+        "0035"
+      ],
+      "mentions": 14,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "becky-thatcher",
+      "canonical_name": "Becky Thatcher",
+      "aliases": [
+        "Becky",
+        "the girl",
+        "Rebecca Thatcher",
+        "the giddy lad"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she) and explicit reference to 'a' (,",
+      "age": "child",
+      "description": "young girl; Tom's friend who is excited about the picnic and considers going to Widow Douglas' instead of Joe Harper's.; The daughter of Mrs. Thatcher.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0013",
+        "0018",
+        "0019",
+        "0021",
+        "0023",
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0036"
+      ],
+      "mentions": 12,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "injun-joe",
+      "canonical_name": "Injun Joe",
+      "aliases": [
+        "the halfbreed",
+        "the stony-hearted liar",
+        "the watcher",
+        "the Injun blood",
+        "the most balefully interesting object",
+        "the stolid murderer",
+        "the stolid face",
+        "the half-breed",
+        "the speaker"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context",
+      "age": "adult",
+      "description": "A man who murders Doctor Robinson and frames Muff Potter.; A character mentioned by name and as a threat; he is the one who beat Muff Potter and is feared by the boys. He does not appear or speak in this passage.; seen in the graveyard, suspected of murder, gives false statements at the inquest, helps raise the body",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0011",
+        "0012",
+        "0024",
+        "0025",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0031",
+        "0032",
+        "0033"
+      ],
+      "mentions": 12,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-austin",
+      "canonical_name": "Mary Austin",
+      "aliases": [
+        "Mary",
+        "the girl",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, referred to as 'cousin' and 'girl'",
+      "age": "child",
+      "description": "Tom's cousin who returns from a visit to the country and brings sunshine into his life.; Tom's sister who helps him recite and dress.; Tom's sister who sits with Aunt Polly.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0012",
+        "0016",
+        "0018",
+        "0019",
+        "0030",
+        "0035"
+      ],
+      "mentions": 10,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ben-rogers",
+      "canonical_name": "Ben Rogers",
+      "aliases": [
+        "the late steamer Big Missouri",
+        "Ben"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and dialogue tag 'Ben Rogers hove in'",
+      "age": "child",
+      "description": "A boy who personates a steamboat and is tricked by Tom into whitewashing the fence.; A boy who sold a blue ticket to Huckleberry Finn.; A boy mentioned by Tom regarding circus pay.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0007",
+        "0008",
+        "0023",
+        "0026",
+        "0029"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sereny-harper",
+      "canonical_name": "Sereny Harper",
+      "aliases": [
+        "Mrs. Harper",
+        "Sereny"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs. Harper",
+      "age": "adult",
+      "description": "Joe Harper's mother who is grieving over her son's presumed death.; Joe Harper's mother who is mentioned in Tom's dream and later visited by Aunt Polly.; A woman who is a friend of Mrs. Thatcher.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016",
+        "0019",
+        "0020",
+        "0031",
+        "0032"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "widow-douglas",
+      "canonical_name": "Widow Douglas",
+      "aliases": [
+        "the widow Douglas",
+        "the widder"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Widow'",
+      "age": "adult",
+      "description": "A fair, smart, forty-year-old woman who is well-to-do and hospitable.; A woman who is a friend of the old Welshman and later takes care of Huck.; Stays by to see that Tom obeys.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0030",
+        "0031",
+        "0033",
+        "0036"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "amy-lawrence",
+      "canonical_name": "Amy Lawrence",
+      "aliases": [
+        "the girl",
+        "Amy",
+        "the Adored Unknown"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'girl' and 'new'",
+      "age": "child",
+      "description": "A new girl in the garden whom Tom falls in love with and then loses.; A girl Tom is infatuated with.; A girl Tom mistakenly claims to have been engaged to.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0005",
+        "0008",
+        "0019",
+        "0021"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "muff-potter",
+      "canonical_name": "Muff Potter",
+      "aliases": [
+        "Potter",
+        "Muff",
+        "the ruffian",
+        "the prisoner",
+        "the poor fellow",
+        "the half-breed",
+        "the murdered man",
+        "the poor creature"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his)",
+      "age": "adult",
+      "description": "A man who is digging the grave and is later framed for murder.; A man found unconscious in the ruined building; referred to as drunk and beaten by Injun Joe. He does not speak.; found with a gory knife, accused of murder, arrested, weeping in jail",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0011",
+        "0012",
+        "0024",
+        "0025"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jeff-thatcher",
+      "canonical_name": "Jeff Thatcher",
+      "aliases": [
+        "Jeff"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'man'",
+      "age": "child",
+      "description": "A man who lives in a house where Tom sees Amy Lawrence.; A boy who heard about Bob Tanner's wart cure from Johnny Baker.; Becky Thatcher's brother who visits the schoolyard.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0007",
+        "0013",
+        "0017"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "judge-thatcher",
+      "canonical_name": "Judge Thatcher",
+      "aliases": [
+        "the Judge",
+        "Judge"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "elderly people",
+      "age": "adult",
+      "description": "A judge whose family has returned to town.; A judge and father of Becky.; Very ill, has the cave door sheathed with boiler iron.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031",
+        "0033",
+        "0036"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-dobbins",
+      "canonical_name": "Mr. Dobbins",
+      "aliases": [
+        "the master",
+        "the schoolmaster",
+        "the dominie"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mr.' and male pronouns (his, him, he)",
+      "age": "adult",
+      "description": "middle-aged man; Schoolmaster, middle-aged, bald under wig, severe, fuddled on Examination Evening.; The school teacher who punishes Tom for talking to Huckleberry Finn.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0021",
+        "0022"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-thatcher",
+      "canonical_name": "Mrs. Thatcher",
+      "aliases": [
+        "the petitioner"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "mother",
+      "age": "adult",
+      "description": "Becky's mother who gives her instructions before the picnic.; The wife of Judge Thatcher and mother of Becky.; Becky's mother, mentioned as someone who would miss Becky.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031",
+        "0032",
+        "0033"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-rev-mr-sprague",
+      "canonical_name": "the Rev. Mr. Sprague",
+      "aliases": [
+        "the minister",
+        "the clergyman",
+        "the preacher",
+        "the old minister"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mr.",
+      "age": "adult",
+      "description": "The priest who leads the service, reads the hymn, gives the sermon, and prays.; speaks at the graveyard; The officiant at the funeral service.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0012",
+        "0018",
+        "0036"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "johnny-miller",
+      "canonical_name": "Johnny Miller",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name and implied gender from context of trading with a",
+      "age": "child",
+      "description": "A boy who trades a dead rat and a string to Tom for the chance to whitewash the fence.; A man whose house is mentioned in relation to a stray dog. He does not speak.; Mentioned by Tom as someone who was at the slaughter-house when Tom said he wished he could smoke.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0011",
+        "0017"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alfred-temple",
+      "canonical_name": "Alfred Temple",
+      "aliases": [
+        "Alfred"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'Alfred' and 'that",
+      "age": "child",
+      "description": "A boy who is reading a picture-book with Becky and gets his book ruined by Tom.; boy",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0021"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "billy-fisher",
+      "canonical_name": "Billy Fisher",
+      "aliases": [
+        "Billy",
+        "the first boy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, context",
+      "age": "child",
+      "description": "A classmate Tom trades tickets with.; A boy who trades a kite to Tom for the chance to whitewash the fence.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bob-tanner",
+      "canonical_name": "Bob Tanner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "child",
+      "description": "A boy who tried to cure warts with spunk-water.; Mentioned by Tom as someone who was at the slaughter-house when Tom said he wished he could smoke.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0017"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "gracie-miller",
+      "canonical_name": "Gracie Miller",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name",
+      "age": "adult",
+      "description": "Johnny Miller's wife, mentioned as having burned herself. She does not speak.; student",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0021"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jim",
+      "canonical_name": "Jim",
+      "aliases": [
+        "the small colored boy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "child",
+      "description": "small colored boy who helps with wood; A boy who brings water from the pump and is tricked by Tom into whitewashing the fence.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jim-hollis",
+      "canonical_name": "Jim Hollis",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "child",
+      "description": "A boy who heard about Bob Tanner's wart cure from Ben Rogers.; A boy Tom encounters during the revival who calls attention to the blessing of his late measles as a warning.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "peter",
+      "canonical_name": "Peter",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'cat' and 'beast'",
+      "age": "unknown",
+      "description": "Aunt Polly's cat who drinks the Pain-killer and exhibits erratic behavior.; A character mentioned in Tom's dream about a Pain-killer.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0019"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "susy-harper",
+      "canonical_name": "Susy Harper",
+      "aliases": [
+        "Susy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, implied by context of being invited to a picnic",
+      "age": "child",
+      "description": "A girl who asks to be invited to the picnic along with Joe.; A girl that Becky plans to stay with if she doesn't go home.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0030"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-mayor-of-the-village",
+      "canonical_name": "the mayor of the village",
+      "aliases": [
+        "the mayor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "mayor",
+      "age": "adult",
+      "description": "The mayor of the town who attends the sermon.; Mayor who awarded the first prize to the author of 'A Vision'.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0022"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-old-welshman",
+      "canonical_name": "the old Welshman",
+      "aliases": [
+        "the old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'old man' and 'prop'",
+      "age": "adult",
+      "description": "An older man who owns a tavern and lives in a house on a hill.; An old Welshman who lives near the quarry and helps Huck.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-sheriff",
+      "canonical_name": "the sheriff",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male title",
+      "age": "adult",
+      "description": "The sheriff who opens the court session.; A law enforcement officer who is contacted by the Welshman.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024",
+        "0031"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-widow",
+      "canonical_name": "the widow",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'widow' implies female",
+      "age": "adult",
+      "description": "The owner of the land where the old tree is located; Tom suggests she might try to take the treasure.; An adult woman who hosts parties and is mentioned as having a secret about Huck. She is referred to as 'the widow' and 'the widow's'. She speaks at the party",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026",
+        "0035"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "auntie",
+      "canonical_name": "Auntie",
+      "aliases": [
+        "Aunt"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she) and title 'Aunt'",
+      "age": "adult",
+      "description": "Tom's aunt who confronts him about his behavior, eventually forgives him after reading his note.",
+      "first_chapter": "0020",
+      "chapters": [
+        "0020"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "benjamin-rogers",
+      "canonical_name": "Benjamin Rogers",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "student",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bill-turner",
+      "canonical_name": "Bill Turner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "him/his pronouns",
+      "age": "unknown",
+      "description": "A person who drowned last summer, mentioned in conversation.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bull-harbison",
+      "canonical_name": "Bull Harbison",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'dog' but distinguished from 'str'",
+      "age": "adult",
+      "description": "A man whose dog howls outside. Tom identifies the voice as Bull Harbison's. He does not speak.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "doctor-robinson",
+      "canonical_name": "Doctor Robinson",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "adult",
+      "description": "A doctor mentioned by Huck as potentially dying. He does not speak.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "doodle-bug",
+      "canonical_name": "Doodle-bug",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A small black bug summoned by Tom to answer his questions.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "finn-the-red-handed",
+      "canonical_name": "Finn the Red-Handed",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "his/him pronouns",
+      "age": "unknown",
+      "description": "A person dreaming of home while the boys are on the island.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "grace-miller",
+      "canonical_name": "Grace Miller",
+      "aliases": [
+        "Grace"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, implied by context of being invited to a picnic",
+      "age": "child",
+      "description": "A girl who asks to be invited to the picnic.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jimmy-hodges",
+      "canonical_name": "Jimmy Hodges",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name and implied by context of being 'released' from a ",
+      "age": "child",
+      "description": "A classmate of Tom who was recently released from Sunday school.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "johnny-baker",
+      "canonical_name": "Johnny Baker",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "child",
+      "description": "A boy who heard about Bob Tanner's wart cure from Jim Hollis.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "joseph-harper",
+      "canonical_name": "Joseph Harper",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "student",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "judge-frazer",
+      "canonical_name": "Judge Frazer",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Judge, justice of the peace) and male pronouns (",
+      "age": "adult",
+      "description": "An old official who appears to be on his deathbed, then convalescent, and finally dies, causing Tom to resign from the Cadets.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mister-williams",
+      "canonical_name": "Mister Williams",
+      "aliases": [
+        "Hoss Williams",
+        "the young man",
+        "Williams",
+        "the corpse",
+        "the murdered man",
+        "the dead"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context",
+      "age": "young_adult",
+      "description": "A young doctor who is being buried and is later murdered.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mother-hopkins",
+      "canonical_name": "Mother Hopkins",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'witch'",
+      "age": "adult",
+      "description": "A woman who is rumored to be a witch and taught Huckleberry how to cure warts with dead cats.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-jones",
+      "canonical_name": "Mr. Jones",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and context (Mr. Jones, old Mr.,",
+      "age": "adult",
+      "description": "An adult man who is hosting a party and has a secret about Huck. He is referred to as 'Mr. Jones' and 'old Mr. Jones'. He makes a speech at the party and is",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-walters",
+      "canonical_name": "Mr. Walters",
+      "aliases": [
+        "the teacher",
+        "the great man",
+        "the county judge",
+        "the Judge",
+        "the great Judge Thatcher",
+        "the superintendent"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns, context",
+      "age": "adult",
+      "description": "The Sunday school superintendent who gives speeches and awards prizes.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-ward",
+      "canonical_name": "Mrs. Ward",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mrs.",
+      "age": "adult",
+      "description": "The Major's wife who attends the sermon.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pap",
+      "canonical_name": "Pap",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name implies male, context of being Huck's father",
+      "age": "adult",
+      "description": "Huck's father, who is expected to return and take Huck's money.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sally-rogers",
+      "canonical_name": "Sally Rogers",
+      "aliases": [
+        "Sally"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name, implied by context of being invited to a picnic",
+      "age": "child",
+      "description": "A girl who asks to be invited to the picnic.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sawbones",
+      "canonical_name": "Sawbones",
+      "aliases": [
+        "the third voice",
+        "the doctor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context",
+      "age": "adult",
+      "description": "Young Doctor Robinson, referred to as 'the third voice' before his identity is revealed.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "susan-harper",
+      "canonical_name": "Susan Harper",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name",
+      "age": "unknown",
+      "description": "student",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "uncle-jake",
+      "canonical_name": "Uncle Jake",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name and title ('Uncle')",
+      "age": "adult",
+      "description": "Ben Rogers' 'nigger man' (servant); Huck works for him by toting water and eats with him; Huck refers to him as 'Uncle Jake'",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "united-states-senator",
+      "canonical_name": "United States Senator",
+      "aliases": [
+        "Mr. Benton"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Mr., Senator) and male pronouns (he, him, his)",
+      "age": "adult",
+      "description": "A United States Senator whom Tom expected to be a giant but found to be only a normal-sized man, causing disappointment.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "willie-mufferson",
+      "canonical_name": "Willie Mufferson",
+      "aliases": [
+        "the Model Boy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Willie",
+      "age": "child",
+      "description": "A very good boy who brings his mother to church and is hated by other boys.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-sheriff-2",
+      "canonical_name": "the Sheriff",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his)",
+      "age": "adult",
+      "description": "leads Potter by the arm, shows Potter the knife",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-spaniard",
+      "canonical_name": "the Spaniard",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title ('Spaniard') and pronouns (his/him)",
+      "age": "adult",
+      "description": "A person Tom and Huck are watching for; nobody resembling him enters or leaves the tavern",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-spirit-of-the-night",
+      "canonical_name": "the Spirit of the Night",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A supernatural presence felt by the boys during the storm.",
+      "first_chapter": "0017",
+      "chapters": [
+        "0017"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-welshman",
+      "canonical_name": "the Welshman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him) and context (the Welshman and his",
+      "age": "unknown",
+      "description": "A man mentioned as being part of the widow's party. He is referred to as 'the Welshman' and 'his sons'. He does not speak in the passage.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-widow-2",
+      "canonical_name": "the Widow",
+      "aliases": [
+        "the widder"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title 'widow'",
+      "age": "adult",
+      "description": "A woman whose house is near the cave.",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-clerk",
+      "canonical_name": "the clerk",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "adult",
+      "description": "The court clerk who calls witnesses.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-judge",
+      "canonical_name": "the judge",
+      "aliases": [
+        "the bench"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "adult",
+      "description": "The presiding judge of the court.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-splendid-marvel",
+      "canonical_name": "the splendid marvel",
+      "aliases": [
+        "the new boy",
+        "the enemy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'boy'",
+      "age": "child",
+      "description": "well-dressed new boy who challenges Tom",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-villagers",
+      "canonical_name": "the villagers",
+      "aliases": [
+        "the public",
+        "the town"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "spread the news, go to the graveyard, talk about the murder, attend the inquest",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Robin Hood": [
+      "tom-sawyer",
+      "joe-harper"
+    ],
+    "the Adored Unknown": [
+      "tom-sawyer",
+      "amy-lawrence"
+    ],
+    "the Judge": [
+      "judge-thatcher",
+      "mr-walters"
+    ],
+    "the departed": [
+      "tom-sawyer",
+      "huck-finn"
+    ],
+    "the enemy": [
+      "tom-sawyer",
+      "the-splendid-marvel"
+    ],
+    "the girl": [
+      "becky-thatcher",
+      "mary-austin",
+      "amy-lawrence"
+    ],
+    "the half-breed": [
+      "huck-finn",
+      "injun-joe",
+      "muff-potter"
+    ],
+    "the halfbreed": [
+      "huck-finn",
+      "injun-joe"
+    ],
+    "the murdered man": [
+      "muff-potter",
+      "mister-williams"
+    ],
+    "the poor fellow": [
+      "huck-finn",
+      "muff-potter"
+    ],
+    "the prisoner": [
+      "tom-sawyer",
+      "muff-potter"
+    ],
+    "the speaker": [
+      "huck-finn",
+      "injun-joe"
+    ],
+    "the watcher": [
+      "huck-finn",
+      "injun-joe"
+    ],
+    "the widder": [
+      "widow-douglas",
+      "the-widow-2"
+    ]
+  }
+}

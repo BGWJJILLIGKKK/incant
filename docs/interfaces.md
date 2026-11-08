@@ -382,7 +382,7 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 | Field | Type | Meaning |
 |---|---|---|
 | schema_version | int | |
-| roles | {char id: voice id} | must include `narrator` (from `[cast] narrator`) |
+| roles | {char id: voice id} | must include `narrator` (the backend's narrator voice, below) |
 | default_voice | str | voice for unknown or uncast speakers; defaults to the narrator voice |
 | engine | str\|None | voice space the ids belong to (`indextts`, `kokoro`, `openai-kokoro`…). None = older file, adopted by the first backend that has all its voices. |
 | auto | {char id: voice id} | the last automatic pick. A role equal to its `auto` entry is recast every run; a role that differs (hand-set) is kept. |

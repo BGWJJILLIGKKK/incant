@@ -1,6 +1,5 @@
 """Methods that inherit from other methods: settings, auto-detection, --list, url series, gutenberg."""
 
-import json
 
 import pytest
 

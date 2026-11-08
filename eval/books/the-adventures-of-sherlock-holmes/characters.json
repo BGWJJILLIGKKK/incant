@@ -1,0 +1,2835 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "sherlock-holmes",
+      "canonical_name": "Sherlock Holmes",
+      "aliases": [
+        "Holmes",
+        "Mr. Sherlock Holmes",
+        "Mr. Holmes",
+        "the gentleman",
+        "the plumber",
+        "the cripple",
+        "the manager",
+        "the culprit",
+        "the meddler",
+        "the sinister cripple",
+        "the young man",
+        "the unknown gentleman",
+        "the colonel",
+        "the country surgeon",
+        "Holmes, the Scotland Yard Jack-in-office",
+        "the sombre thinker",
+        "the leader of the gang",
+        "the busybody",
+        "Master Holmes",
+        "the detective",
+        "Sir",
+        "the doctor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Tall, spare figure, cold, precise mind, lives in Baker Street, wears tweed suit later in disguise.; The main character of the story, who is referred to as Holmes, Mr. Sherlock Holmes, my companion, my friend, the celebrated Mr. Sherlock Holmes, and the King's; Detective living in lodgings at Baker Street, uses a clay pipe, has a snuffbox with an amethyst, wears a ring from the King of Bohemia.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012"
+      ],
+      "mentions": 23,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "watson",
+      "canonical_name": "Watson",
+      "aliases": [
+        "Dr. Watson",
+        "Doctor",
+        "Boswell",
+        "the country surgeon"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Doctor' and 'my dear",
+      "age": "adult",
+      "description": "Watson is an adult male, referred to as 'Doctor' and 'my dear doctor' by Holmes. He is Watson's companion in the story, and he is described as having a 'gentle'; Narrator, Watson's wife's husband, a doctor who has served in Afghanistan.; Holmes's companion and the narrator of the story.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0010",
+        "0011",
+        "0012"
+      ],
+      "mentions": 16,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "inspector-bradstreet",
+      "canonical_name": "Inspector Bradstreet",
+      "aliases": [
+        "Inspector",
+        "the inspector",
+        "Bradstreet"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'Inspector', 'he', 'him', 'his'",
+      "age": "adult",
+      "description": "A police inspector.; Inspector Bradstreet is a police officer from the B division who arrested John Horner. He is an adult male.; A Scotland Yard inspector who assists Holmes in the investigation.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0006",
+        "0007",
+        "0009"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jackson",
+      "canonical_name": "Jackson",
+      "aliases": [
+        "Hood",
+        "Lee",
+        "Hudson",
+        "the man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being a general.",
+      "age": "adult",
+      "description": "A Confederate general mentioned in Colonel Openshaw's diary.; A person mentioned in Colonel Openshaw's diary.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 4,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "james-ryder",
+      "canonical_name": "James Ryder",
+      "aliases": [
+        "James",
+        "John Robinson",
+        "the stranger",
+        "the little man",
+        "the inquirer",
+        "the little fellow"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and context of 'he' referring to",
+      "age": "adult",
+      "description": "James Ryder is the upper-attendant at the Hotel Cosmopolitan who discovered the robbery. He is an adult male.; A man who is referred to as 'James Ryder', 'the little fellow', 'the little man', 'the stranger', 'the fellow', 'the thief', 'the criminal', 'the prisoner', and; Someone the narrator considers sending to bed.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lestrade",
+      "canonical_name": "Lestrade",
+      "aliases": [
+        "Mr. Lestrade",
+        "Scotland Yard",
+        "the lodge-keeper",
+        "the detective",
+        "the fellow",
+        "the official detective"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'Mr. Lestrade",
+      "age": "adult",
+      "description": "Detective from Scotland Yard, working on the case before Holmes.; A Scotland Yard detective assisting Holmes.; male",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0010"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-hosmer-angel",
+      "canonical_name": "Mr. Hosmer Angel",
+      "aliases": [
+        "Mr. Windibank",
+        "Mr. James Windibank",
+        "the missing man",
+        "the gentleman",
+        "the disappearing bridegroom",
+        "Mr. Angel",
+        "the stepfather",
+        "the scoundrel",
+        "Hosmer Angel"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context",
+      "age": "adult",
+      "description": "Engaged to Miss Sutherland, cashier in Leadenhall Street, described as shy, whispering, wearing tinted glasses, vanished on wedding day.; The alias used by Mr. Windibank to court Miss Sutherland.; The stepfather who disguised himself as Hosmer Angel to prevent his stepdaughter's marriage.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-openshaw",
+      "canonical_name": "John Openshaw",
+      "aliases": [
+        "Colonel Openshaw",
+        "the deceased",
+        "the young man",
+        "the colonel",
+        "the dead man",
+        "Openshaw",
+        "the victim"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title of Colonel.",
+      "age": "adult",
+      "description": "John Openshaw's uncle, a former Confederate soldier who committed suicide.; American who moved to England, received threatening letters, carried papers, fell into the river and died.; The client who comes to Holmes for help with his family's troubles.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lord-robert-st-simon",
+      "canonical_name": "Lord Robert St. Simon",
+      "aliases": [
+        "Lord Backwater",
+        "Lord St. Simon",
+        "the bridegroom",
+        "Lord Robert Walsingham de Vere St. Simon",
+        "Lord Robert",
+        "the unfortunate bridegroom",
+        "the nobleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title (Lord)",
+      "age": "adult",
+      "description": "The groom, a nobleman.; male; A friend of the bridegroom.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary",
+      "canonical_name": "Mary",
+      "aliases": [
+        "Miss Holder",
+        "the maid"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and context of being a servant.",
+      "age": "young_adult",
+      "description": "The servant who takes care of the Openshaw household.; Alexander Holder's niece whom he adopted.; Mr. Holder's niece. Described as above middle height, slim, with dark hair and eyes, and deadly pale. Later revealed to have fled with Sir George Burnwell.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0011"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-mary-sutherland",
+      "canonical_name": "Miss Mary Sutherland",
+      "aliases": [
+        "Miss Sutherland",
+        "the young lady",
+        "the girl",
+        "the maiden",
+        "the daughter"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title (Miss), referred to as 'Miss Mary",
+      "age": "young_adult",
+      "description": "client of Miss Mary Sutherland; Client of Holmes, typist, lives at home with stepfather, engaged to Mr. Hosmer Angel, wears a hat with a red feather and a purple plush jacket.; The stepdaughter who was deceived into believing she was marrying Hosmer Angel.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-windigate",
+      "canonical_name": "Mr. Windigate",
+      "aliases": [
+        "the landlord",
+        "Windigate"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and context of 'he' referring to",
+      "age": "adult",
+      "description": "A man who is referred to as 'Mr. Windigate', 'the gentleman', 'the man', and 'the customer'.; Windigate is the landlord of the Alpha Inn who organized the goose club. He is an adult male.; accountant living on the ground floor, never heard of the Red-headed League, knew William Morris",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0007"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sir-george-burnwell",
+      "canonical_name": "Sir George Burnwell",
+      "aliases": [
+        "Francis Prosper",
+        "the man",
+        "Sir George",
+        "the thief",
+        "Boots",
+        "Wooden-leg",
+        "the greengrocer"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "An aristocratic club member and Arthur's friend.; Ruined gambler and villain. Mary's lover. Wore boots and had a cut head/eye. Fled with Mary.; Greengrocer who brings vegetables. Has a wooden leg. Later revealed to be Sir George Burnwell in disguise.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alexander-holder",
+      "canonical_name": "Alexander Holder",
+      "aliases": [
+        "Mr. Holder",
+        "the banker",
+        "the financier",
+        "the senior partner"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The senior partner of the banking firm Holder & Stevenson.; Banker, father of Arthur and uncle of Mary. Appears distressed, pinched, and fallen in.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "arthur",
+      "canonical_name": "Arthur",
+      "aliases": [
+        "the lad",
+        "the wretched boy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "young_adult",
+      "description": "Alexander Holder's only son.; Mr. Holder's son. Described as having carried himself well, chivalrous, and having cut Sir George Burnwell.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "breckinridge",
+      "canonical_name": "Breckinridge",
+      "aliases": [
+        "the salesman",
+        "the proprietor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Breckinridge is a salesman at Covent Garden Market who sold geese to the Alpha Inn. He is an adult male.; A man who runs a shop selling geese and poultry. He is described as 'surly' and is referred to as 'the salesman' and 'Breckinridge'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "catherine-cusack",
+      "canonical_name": "Catherine Cusack",
+      "aliases": [
+        "Cusack"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "Catherine Cusack is the maid to the Countess of Morcar who heard Ryder's cry of dismay. She is a young adult female.; A woman who is referred to as 'Catherine Cusack', 'Cusack', 'the maid', 'the waiting-maid', 'the lady's maid', 'the servant', and 'the woman'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "colonel-lysander-stark",
+      "canonical_name": "Colonel Lysander Stark",
+      "aliases": [
+        "the colonel",
+        "the morose Englishman",
+        "the sinister German",
+        "the ruffian",
+        "Colonel Stark",
+        "the silent Englishman",
+        "the villain"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (Colonel)",
+      "age": "adult",
+      "description": "A German man, described as over middle size but exceedingly thin, with a bright eye and brisk step. He hires Mr. Hatherley to inspect a hydraulic press.; A German criminal who runs a coin-making operation using a hydraulic press. He traps the narrator in a room, cuts off his thumb, and attempts to kill him. He is",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dr-grimesby-roylott",
+      "canonical_name": "Dr. Grimesby Roylott",
+      "aliases": [
+        "Dr. Roylott",
+        "the Doctor",
+        "the schemer",
+        "the terror of the village",
+        "the old man",
+        "the violent"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Dr.'",
+      "age": "adult",
+      "description": "Helen Stoner's stepfather, a doctor.; Stepfather of Miss Stoner, owner of Stoke Moran Manor House, keeps exotic pets (cheetah, baboon, snake), and is the victim of the snake attack.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "elise",
+      "canonical_name": "Elise",
+      "aliases": [
+        "the woman",
+        "the beautiful woman",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (lady)",
+      "age": "young_adult",
+      "description": "A pretty woman with dark dress who appears in the house at night. She speaks broken English and warns Mr. Hatherley to leave.; A German woman who helps the narrator escape from Colonel Stark. She is in love with him and tries to stop him from killing the narrator.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "helen-stoner",
+      "canonical_name": "Helen Stoner",
+      "aliases": [
+        "Miss Stoner",
+        "the lady",
+        "the poor girl",
+        "the terrified girl",
+        "Miss Roylott"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'madam', 'lady', '",
+      "age": "adult",
+      "description": "Stepdaughter of Dr. Roylott, seeking Holmes's help.; Client of Holmes and Watson, lives at Stoke Moran Manor House, fears her stepfather Dr. Roylott, and is the victim of the snake attack.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hugh-boone",
+      "canonical_name": "Hugh Boone",
+      "aliases": [
+        "Boone",
+        "the cripple",
+        "the sinister cripple",
+        "the prisoner",
+        "the manager"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'he', 'him', 'his'",
+      "age": "adult",
+      "description": "A beggar falsely accused of Neville's murder.; A professional beggar and lodger at the opium den, suspected of killing Neville St. Clair.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "irene-adler",
+      "canonical_name": "Irene Adler",
+      "aliases": [
+        "Madame",
+        "Irene Norton",
+        "Miss Irene Adler",
+        "the lady",
+        "the bride",
+        "Mademoiselle",
+        "the late Irene Adler"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), 'her', 'her sex', 'her biography'",
+      "age": "adult",
+      "description": "Born in New Jersey 1858, contralto, prima donna of Warsaw Opera, retired, lives in London at Briony Lodge, sings at concerts, drives out daily, has a male lover; A woman who was married to Godfrey Norton, later referred to as Irene Norton. She is described as a beautiful creature, a superb figure, and a clever woman who,",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-horner",
+      "canonical_name": "John Horner",
+      "aliases": [
+        "Horner",
+        "the plumber",
+        "the prisoner"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and context of 'he' referring to",
+      "age": "adult",
+      "description": "A man who is referred to as 'Horner', 'the plumber', 'the man', 'the fellow', 'the thief', 'the criminal', 'the prisoner', and 'the accused'.; John Horner is a plumber accused of stealing the blue carbuncle from the Countess of Morcar. He is an adult male.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lady-st-simon",
+      "canonical_name": "Lady St. Simon",
+      "aliases": [
+        "the lady",
+        "the bride",
+        "Miss Hatty Doran",
+        "the missing lady",
+        "Miss Doran"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and title (Lady/Miss)",
+      "age": "young_adult",
+      "description": "The bride, daughter of Aloysius Doran.; female",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-turner",
+      "canonical_name": "Miss Turner",
+      "aliases": [
+        "the daughter"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Miss Turner",
+      "age": "young_adult",
+      "description": "Daughter of Mr. John Turner, believes James McCarthy is innocent.; The daughter of Mr. Turner, whom the idiot wanted to marry.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-duncan-ross",
+      "canonical_name": "Mr. Duncan Ross",
+      "aliases": [
+        "William Morris",
+        "Duncan Ross",
+        "the red-headed man",
+        "the little man",
+        "the manager"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Mr. Duncan",
+      "age": "adult",
+      "description": "small man with head even redder than Wilson's, solicitor, temporary convenience, moved out yesterday, new offices at 17 King Edward Street; solicitor, red-headed, temporary convenience, moved out yesterday, new offices at 17 King Edward Street",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-ferguson",
+      "canonical_name": "Mr. Ferguson",
+      "aliases": [
+        "Ferguson",
+        "the fat manager"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (he/him), title (Mr.)",
+      "age": "adult",
+      "description": "A character who remains outside the hydraulic press room while the narrator and Colonel Stark are inside.; A short, thick man with a chinchilla beard who is introduced as Colonel Stark's secretary and manager. He appears morose and silent.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-godfrey-norton",
+      "canonical_name": "Mr. Godfrey Norton",
+      "aliases": [
+        "Godfrey Norton",
+        "the bridegroom"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), 'his', 'Mr.'",
+      "age": "adult",
+      "description": "Lawyer of the Inner Temple, Irene Adler's frequent male visitor, dark, handsome, dashing, drives her to church.; A bachelor who married Irene Adler. He is referred to as the gentleman, the bridegroom, and an English lawyer.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-henry-baker",
+      "canonical_name": "Mr. Henry Baker",
+      "aliases": [
+        "Henry Baker",
+        "the unknown gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Henry Baker is the man who lost his hat and goose on Christmas morning. He is an adult male.; A man who is referred to as 'Mr. Henry Baker', 'Mr. Baker', 'the member', and 'the gentleman'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-jabez-wilson",
+      "canonical_name": "Mr. Jabez Wilson",
+      "aliases": [
+        "Jabez Wilson",
+        "Mr. Wilson",
+        "the red-headed man",
+        "the pawnbroker",
+        "Wilson",
+        "the portly client"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'our red-headed'",
+      "age": "adult",
+      "description": "Jabez Wilson is an adult male, referred to as 'our red-headed client' and 'Mr. Wilson' by Watson. He is described as having a 'gentle'; pawnbroker, widower, obese, pompous, slow, blazing red head, expression of chagrin and discontent, manual labourer past, ship's carpenter, Freemason, has been",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-james-mccarthy",
+      "canonical_name": "Mr. James McCarthy",
+      "aliases": [
+        "the idiot",
+        "the son",
+        "the culprit",
+        "the young man",
+        "the unfortunate young man",
+        "the lad",
+        "the accused",
+        "James McCarthy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'James McCarthy",
+      "age": "young_adult",
+      "description": "Son of the murdered man, accused of patricide.; A man who married a barmaid while in love with another woman, later accused of murdering his father.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-john-hare",
+      "canonical_name": "Mr. John Hare",
+      "aliases": [
+        "the clergyman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "clergyman",
+      "age": "adult",
+      "description": "A clergyman who performed the marriage ceremony between Irene Adler and Godfrey Norton. He is also referred to as Mr. John Hare and an amiable and simple-minded; male",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0010"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-john-turner",
+      "canonical_name": "Mr. John Turner",
+      "aliases": [
+        "Mr. Turner",
+        "the father",
+        "Turner",
+        "Black Jack of Ballarat",
+        "the old man",
+        "the neighbouring landowner",
+        "Mr. Turner, of the Hall"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'Mr. Turner",
+      "age": "adult",
+      "description": "Wealthy landowner in Boscombe Valley, Miss Turner's father, bedridden.; The wealthy landowner and father of Miss Turner; former highway robber who was murdered.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-hudson",
+      "canonical_name": "Mrs. Hudson",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mrs. Hudson is the landlady of 221B Baker Street. She is an adult female.; Landlady of Baker Street rooms.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-st-clair",
+      "canonical_name": "Mrs. St. Clair",
+      "aliases": [
+        "the wife",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Mrs. St. Clair' '",
+      "age": "adult",
+      "description": "Neville St. Clair's wife, who witnessed his disappearance.; A married woman whose husband has been missing.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "neville-st-clair",
+      "canonical_name": "Neville St. Clair",
+      "aliases": [
+        "the missing man",
+        "Mr. Neville St. Clair",
+        "Mr. St. Clair",
+        "Neville",
+        "the missing gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Mr. St. Clair'",
+      "age": "adult",
+      "description": "A wealthy man who disappeared, believed to be dead.; The missing husband who was actually a beggar.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-countess-of-morcar",
+      "canonical_name": "the Countess of Morcar",
+      "aliases": [
+        "Mrs. Henry Baker",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mrs. Henry Baker is the wife of the man who lost the hat and goose. She is also the Countess of Morcar, the owner of the stolen gem. She is an adult female.; A woman who is referred to as 'the Countess of Morcar', 'her ladyship', 'the lady', 'the noblewoman', 'the woman', and 'the lady'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-of-bohemia-2",
+      "canonical_name": "the King of Bohemia",
+      "aliases": [
+        "the King",
+        "Wilhelm Gottsreich Sigismond von Ormstein",
+        "Count Von Kramm",
+        "Grand Duke of Cassel-Felstein"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), 'his', 'King', 'Majesty'",
+      "age": "adult",
+      "description": "Hereditary King of Bohemia, married to Clotilde Lothman von Saxe-Meningen, wears a vizard mask initially, incognito from Prague, stays at Langham Hotel.; The King of Bohemia, who is referred to as the King, his Majesty, the King of Bohemia, your Majesty, and the King of Bohemia.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-lascar",
+      "canonical_name": "the Lascar",
+      "aliases": [
+        "the rascally Lascar",
+        "the Lascar manager",
+        "the proprietor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (implied by 'Lascar' and 'he'), referred to as",
+      "age": "adult",
+      "description": "The manager of the opium den, accused of being an accessory to the crime.; A man who kept a room for Neville and received his letter.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alice",
+      "canonical_name": "Alice",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female role (maid)",
+      "age": "unknown",
+      "description": "The bride's American maid.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "archie",
+      "canonical_name": "Archie",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Archie' and 'my pal",
+      "age": "young_adult",
+      "description": "Archie is a young adult male, referred to as 'Archie' and 'my pal' by John Clay. He is described as having a 'gentle'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "baxter",
+      "canonical_name": "Baxter",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A person quoted by Holmes regarding fate.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bill",
+      "canonical_name": "Bill",
+      "aliases": [
+        "the small boy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "child",
+      "description": "Bill is a young boy who works for Breckinridge and brings the books. He is a child male.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "captain-james-calhoun",
+      "canonical_name": "Captain James Calhoun",
+      "aliases": [
+        "the leader of the gang",
+        "Captain Calhoun"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), 'his', 'Captain'",
+      "age": "adult",
+      "description": "Leader of the KKK gang, captain of the barque Lone Star, targeted by Holmes.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "carlo",
+      "canonical_name": "Carlo",
+      "aliases": [
+        "the dog",
+        "the huge famished brute",
+        "the mastiff"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), role (mastiff/dog)",
+      "age": "adult",
+      "description": "A large, fierce mastiff owned by Mr. Rucastle. He is kept hungry to make him more dangerous and is let loose at night to prevent Mr. Fowler from",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "clotilde-lothman-von-saxe-meningen",
+      "canonical_name": "Clotilde Lothman von Saxe-Meningen",
+      "aliases": [
+        "Clotilde"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns implied by 'daughter', 'she', 'her family'",
+      "age": "young_adult",
+      "description": "Second daughter of the King of Scandinavia, about to marry the King of Bohemia, soul of delicacy.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "cuvier",
+      "canonical_name": "Cuvier",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being a scientist.",
+      "age": "adult",
+      "description": "A scientist mentioned by Holmes in his analogy.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dr-becher",
+      "canonical_name": "Dr. Becher",
+      "aliases": [
+        "the doctor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Dr. Becher', 'the'",
+      "age": "adult",
+      "description": "An English doctor whose house is set on fire by the criminals.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dr-willows",
+      "canonical_name": "Dr. Willows",
+      "aliases": [
+        "the doctor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'Dr. Willows",
+      "age": "adult",
+      "description": "Doctor attending to Mr. Turner.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "edward",
+      "canonical_name": "Edward",
+      "aliases": [
+        "the child"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), role (child)",
+      "age": "child",
+      "description": "The young child in the nursery, cared for by Miss Hunter while the Rucastles are away. He is the son of Mr. and Mrs. Rucastle.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "elias-whitney",
+      "canonical_name": "Elias Whitney",
+      "aliases": [
+        "the late Elias Whitney",
+        "D.D"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (implied by 'late' and title D.D.), referred '",
+      "age": "adult",
+      "description": "Deceased, Principal of a Theological College.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ezekiah-hopkins",
+      "canonical_name": "Ezekiah Hopkins",
+      "aliases": [
+        "the late Ezekiah Hopkins"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'the late Ezekiah",
+      "age": "adult",
+      "description": "late American millionaire, red-headed, founded the League of the Red-headed Men, left enormous fortune in hands of trustees",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fritz",
+      "canonical_name": "Fritz",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "Colonel Stark's first name, called by Elise.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "inspector-barton",
+      "canonical_name": "Inspector Barton",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (implied by 'Inspector' and 'he'), referred to",
+      "age": "adult",
+      "description": "The police inspector in charge of the case.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john",
+      "canonical_name": "John",
+      "aliases": [
+        "the coachman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the coachman",
+      "age": "adult",
+      "description": "The coachman who was sent by Irene Adler to watch Sherlock Holmes. He is also referred to as the coachman.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-clay",
+      "canonical_name": "John Clay",
+      "aliases": [
+        "the intruder",
+        "Clay"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Clay' and 'the other",
+      "age": "young_adult",
+      "description": "John Clay is a young adult male, referred to as 'Clay' and 'the other' by Watson. He is described as having a 'gentle'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-cobb",
+      "canonical_name": "John Cobb",
+      "aliases": [
+        "the groom"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'John Cobb",
+      "age": "adult",
+      "description": "Groom who drove Mr. McCarthy to Ross.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-swain",
+      "canonical_name": "John Swain",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being a visitor.",
+      "age": "unknown",
+      "description": "A person mentioned in Colonel Openshaw's diary.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "kate-whitney",
+      "canonical_name": "Kate Whitney",
+      "aliases": [
+        "Kate"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Kate' and 'wife'",
+      "age": "young_adult",
+      "description": "Isa Whitney's wife, a young and timid woman seeking help.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lady-alicia-whittington",
+      "canonical_name": "Lady Alicia Whittington",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title (Lady)",
+      "age": "unknown",
+      "description": "An intimate friend invited to the wedding.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lady-clara-st-simon",
+      "canonical_name": "Lady Clara St. Simon",
+      "aliases": [
+        "Lady Clara"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title (Lady)",
+      "age": "young_adult",
+      "description": "The younger sister of the bridegroom.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lord-eustace",
+      "canonical_name": "Lord Eustace",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Lord)",
+      "age": "unknown",
+      "description": "A younger brother of the bridegroom.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lucy-parr",
+      "canonical_name": "Lucy Parr",
+      "aliases": [
+        "the maid",
+        "the second waiting-maid",
+        "Lucy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "A maid in Alexander Holder's service.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "major-freebody",
+      "canonical_name": "Major Freebody",
+      "aliases": [
+        "the major"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title of Major.",
+      "age": "adult",
+      "description": "A friend of Joseph Openshaw who is in command of a fort.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "major-prendergast",
+      "canonical_name": "Major Prendergast",
+      "aliases": [
+        "the major"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title of Major.",
+      "age": "adult",
+      "description": "A friend of John Openshaw who advises him to see Holmes.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "major-general-stoner",
+      "canonical_name": "Major-General Stoner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title 'Major-General'",
+      "age": "adult",
+      "description": "Julia and Helen's biological father, deceased.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-jane",
+      "canonical_name": "Mary Jane",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns implied by 'servant girl', 'Mary Jane'",
+      "age": "adult",
+      "description": "Watson's servant girl, incorrigible, given notice by Watson's wife.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "maudsley",
+      "canonical_name": "Maudsley",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and context of 'he' referring to",
+      "age": "adult",
+      "description": "A man who is referred to as 'Maudsley', 'the friend', 'the pal', 'the man', 'the fellow', 'the thief', 'the criminal', 'the prisoner', and 'the accused'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mccauley",
+      "canonical_name": "McCauley",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being a visitor.",
+      "age": "unknown",
+      "description": "A person mentioned in Colonel Openshaw's diary.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-alice-rucastle",
+      "canonical_name": "Miss Alice Rucastle",
+      "aliases": [
+        "Miss Rucastle",
+        "Miss Alice",
+        "the prisoner",
+        "the real person",
+        "the daughter"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (Miss)",
+      "age": "young_adult",
+      "description": "Mr. and Mrs. Rucastle's daughter, who was said to have gone to America. She is actually imprisoned in the house by her parents. She had her hair cut off due to",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-flora-millar",
+      "canonical_name": "Miss Flora Millar",
+      "aliases": [
+        "Flora Millar",
+        "Flora",
+        "the young lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and title (Miss)",
+      "age": "young_adult",
+      "description": "A former danseuse who knew the bridegroom and was arrested.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-honoria-westphail",
+      "canonical_name": "Miss Honoria Westphail",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Miss'",
+      "age": "adult",
+      "description": "Julia and Helen's aunt.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-violet-hunter",
+      "canonical_name": "Miss Violet Hunter",
+      "aliases": [
+        "Miss Hunter",
+        "the girl"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), explicit name (Miss Violet Hunter",
+      "age": "young_adult",
+      "description": "A young woman who has recently arrived at the Copper Beeches, had her hair cut, and is being used to impersonate someone else. She is observant and brave.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-aloysius-doran",
+      "canonical_name": "Mr. Aloysius Doran",
+      "aliases": [
+        "Aloysius Doran",
+        "the father of the bride",
+        "Mr. Doran"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title (Mr.)",
+      "age": "adult",
+      "description": "The bride's father, a millionaire from San Francisco.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-armitage",
+      "canonical_name": "Mr. Armitage",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title 'Mr.'",
+      "age": "adult",
+      "description": "Percy Armitage's father.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-charles-mccarthy",
+      "canonical_name": "Mr. Charles McCarthy",
+      "aliases": [
+        "the murdered man",
+        "the deceased",
+        "the father",
+        "Mr. McCarthy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'Mr. McCarthy",
+      "age": "adult",
+      "description": "Tenant farmer, murdered man, father of James McCarthy.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-fordham",
+      "canonical_name": "Mr. Fordham",
+      "aliases": [
+        "the lawyer"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title of Mr.",
+      "age": "adult",
+      "description": "The Horsham lawyer who witnesses Colonel Openshaw's will.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-fowler",
+      "canonical_name": "Mr. Fowler",
+      "aliases": [
+        "the man in the road"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (Mr.)",
+      "age": "adult",
+      "description": "Miss Alice Rucastle's suitor/fiancé. He is a persevering man who blockaded the house to rescue his beloved. He eventually marries Miss Alice and leaves for",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-hardy",
+      "canonical_name": "Mr. Hardy",
+      "aliases": [
+        "the foreman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title 'Mr.'",
+      "age": "adult",
+      "description": "Former foreman of the plumbing business, now works with Mrs. Windibank.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-isa-whitney",
+      "canonical_name": "Mr. Isa Whitney",
+      "aliases": [
+        "Isa Whitney",
+        "Whitney"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'brother' and 'husand",
+      "age": "adult",
+      "description": "Addicted to opium, pale, haggard, unkempt, in a pitiable state of reaction.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-merryweather",
+      "canonical_name": "Mr. Merryweather",
+      "aliases": [
+        "Merryweather",
+        "the stranger",
+        "the bank director"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Mr. Merryweather'",
+      "age": "adult",
+      "description": "Merryweather is an adult male, referred to as 'Mr. Merryweather' and 'the bank director' by Watson. He is described as having a 'gentle'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-rucastle",
+      "canonical_name": "Mr. Rucastle",
+      "aliases": [
+        "the fat man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (Mr.)",
+      "age": "adult",
+      "description": "The owner of the Copper Beeches and husband of Mrs. Rucastle. He is described as round and jovial but also cruel and cunning. He imprisons his daughter and uses",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-etherege",
+      "canonical_name": "Mrs. Etherege",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title 'Mrs.'",
+      "age": "adult",
+      "description": "Holmes's former client whose husband was found by Holmes.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-farintosh",
+      "canonical_name": "Mrs. Farintosh",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Mrs.'",
+      "age": "adult",
+      "description": "Holmes's former client, Helen Stoner's friend.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-francis-hay-moulton",
+      "canonical_name": "Mrs. Francis Hay Moulton",
+      "aliases": [
+        "Mrs. Moulton",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Mrs.'",
+      "age": "young_adult",
+      "description": "female",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-oakshott",
+      "canonical_name": "Mrs. Oakshott",
+      "aliases": [
+        "Maggie",
+        "the dealer"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she) and context of 'she' referring to",
+      "age": "adult",
+      "description": "A woman who is referred to as 'Mrs. Oakshott', 'Maggie', 'the sister', 'my sister', 'the dealer', 'the woman', 'the lady', 'the wife', and 'the mother'.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-rucastle",
+      "canonical_name": "Mrs. Rucastle",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (Mrs.)",
+      "age": "adult",
+      "description": "The wife of Mr. Rucastle. She is described as having no sense of humor, with a sad and anxious look. She is devoted to her husband and helps him imprison his",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-stoner",
+      "canonical_name": "Mrs. Stoner",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Mrs.'",
+      "age": "adult",
+      "description": "Julia and Helen's biological mother, deceased.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-toller",
+      "canonical_name": "Mrs. Toller",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title (Mrs.)",
+      "age": "adult",
+      "description": "Toller's wife. She is kept in the cellar by Miss Hunter at Holmes' request. She knows the truth about the imprisonment of Miss Alice and helps the",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pa",
+      "canonical_name": "Pa",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Pa', 'father'",
+      "age": "adult",
+      "description": "male",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "palmer",
+      "canonical_name": "Palmer",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Former head of the medical profession, mentioned by Holmes as an example of a doctor who went wrong.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "paramore",
+      "canonical_name": "Paramore",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and context of being a visitor.",
+      "age": "unknown",
+      "description": "A person mentioned in Colonel Openshaw's diary.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "patience-moran",
+      "canonical_name": "Patience Moran",
+      "aliases": [
+        "the little girl"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Patience Moran",
+      "age": "child",
+      "description": "Daughter of the lodge-keeper, age 14, witnessed the quarrel.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "percy-armitage",
+      "canonical_name": "Percy Armitage",
+      "aliases": [
+        "Armitage"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title 'major'",
+      "age": "young_adult",
+      "description": "Helen Stoner's fiancé.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "peter-jones",
+      "canonical_name": "Peter Jones",
+      "aliases": [
+        "Jones",
+        "Mr. Jones",
+        "the bulky Jones",
+        "the police agent"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Jones' and 'Mr. ",
+      "age": "adult",
+      "description": "Peter Jones is an adult male, referred to as 'Jones' and 'Mr. Jones' by Watson. He is described as having a 'gentle'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "peterson",
+      "canonical_name": "Peterson",
+      "aliases": [
+        "the commissionaire"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Peterson is a commissionaire who finds the hat and goose on Christmas morning. He is an adult male.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "police-constable-cook",
+      "canonical_name": "Police-Constable Cook",
+      "aliases": [
+        "Cook"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), 'his', 'Constable'",
+      "age": "adult",
+      "description": "Police officer on duty near Waterloo Bridge who heard the cry for help.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "policeman",
+      "canonical_name": "Policeman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title of Policeman.",
+      "age": "adult",
+      "description": "The policeman assigned to stay with John Openshaw.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pritchard",
+      "canonical_name": "Pritchard",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Former head of the medical profession, mentioned by Holmes as an example of a doctor who went wrong.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "robert",
+      "canonical_name": "Robert",
+      "aliases": [
+        "Frank"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Robert'",
+      "age": "adult",
+      "description": "male",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sarasate",
+      "canonical_name": "Sarasate",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "plays at the St. James's Hall this afternoon",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-of-bohemia",
+      "canonical_name": "The King of Bohemia",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title 'King'",
+      "age": "adult",
+      "description": "Client of Holmes, gave him a souvenir.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-sign-of-four",
+      "canonical_name": "The Sign of Four",
+      "aliases": [
+        "the case",
+        "the adventure",
+        "the mystery"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A case mentioned by Holmes in his analogy.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "toller",
+      "canonical_name": "Toller",
+      "aliases": [
+        "the sobered Toller",
+        "the fat man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), role (groom)",
+      "age": "adult",
+      "description": "Mr. Rucastle's groom and the only person who can control the mastiff, Carlo. He is described as recently drinking hard and being very drunk. He is the father of",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "venner-matheson",
+      "canonical_name": "Venner & Matheson",
+      "aliases": [
+        "the well-known firm"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A well-known firm in Greenwich where Mr. Hatherley was apprenticed.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "victor-hatherley",
+      "canonical_name": "Victor Hatherley",
+      "aliases": [
+        "Mr. Hatherley"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), male title (Mr.), description of 'a'",
+      "age": "young_adult",
+      "description": "A hydraulic engineer, orphan, and bachelor residing in lodgings in London. He is described as young (not more than twenty-five), strong, masculine, but pale and",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "vincent-spaulding",
+      "canonical_name": "Vincent Spaulding",
+      "aliases": [
+        "the little man",
+        "Spaulding"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'his assistant', 'the",
+      "age": "adult",
+      "description": "small, stout-built, very quick in his ways, no hair on his face, not short of thirty, white splash of acid upon his forehead, ears pierced for earrings, gipsy",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "wallenstein",
+      "canonical_name": "Wallenstein",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "Historical figure whose death occurred in Egria, mentioned in the Gazetteer.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "william-crowder",
+      "canonical_name": "William Crowder",
+      "aliases": [
+        "the game-keeper"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'William Crowder",
+      "age": "adult",
+      "description": "Game-keeper employed by Mr. Turner, witnessed McCarthy walking alone.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-american",
+      "canonical_name": "the American",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'the American'",
+      "age": "adult",
+      "description": "male",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duchess-of-balmoral",
+      "canonical_name": "the Duchess of Balmoral",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title (Duchess)",
+      "age": "adult",
+      "description": "The mother of the bridegroom.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-duke-of-balmoral",
+      "canonical_name": "the Duke of Balmoral",
+      "aliases": [
+        "the Duke"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Duke)",
+      "age": "adult",
+      "description": "The father of the bridegroom.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-king-of-scandinavia",
+      "canonical_name": "the King of Scandinavia",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (King)",
+      "age": "adult",
+      "description": "Holmes's previous client.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-assistant",
+      "canonical_name": "the assistant",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'the assistant' and '",
+      "age": "young_adult",
+      "description": "The assistant is a young adult male, referred to as 'the assistant' and 'the pawnbroker's assistant' by Watson. He is described as having a 'gentle'",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-coroner",
+      "canonical_name": "the coroner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'the coroner",
+      "age": "adult",
+      "description": "Official who conducted the inquest.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-driver",
+      "canonical_name": "the driver",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'driver'",
+      "age": "adult",
+      "description": "Driver of the trap hired at the station inn, drives Holmes and Watson to Stoke Moran Manor House.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-guard",
+      "canonical_name": "the guard",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (guard)",
+      "age": "adult",
+      "description": "A railway guard who brings Mr. Hatherley to the narrator's consulting room.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hotel-waiter",
+      "canonical_name": "the hotel waiter",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him, his)",
+      "age": "adult",
+      "description": "The waiter who announced Mr. Turner's arrival.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-plain-clothes-man",
+      "canonical_name": "the plain-clothes man",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'plain-clothes man'",
+      "age": "adult",
+      "description": "A plain-clothes police officer who accompanies Holmes and the inspector.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-police-inspector",
+      "canonical_name": "the police inspector",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The police officer who investigates the theft.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-station-master",
+      "canonical_name": "the station-master",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'station-master'",
+      "age": "adult",
+      "description": "A railway station employee who provides information about the fire and the missing people.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "the bride": [
+      "irene-adler",
+      "lady-st-simon"
+    ],
+    "the bridegroom": [
+      "lord-robert-st-simon",
+      "mr-godfrey-norton"
+    ],
+    "the colonel": [
+      "sherlock-holmes",
+      "john-openshaw",
+      "colonel-lysander-stark"
+    ],
+    "the country surgeon": [
+      "sherlock-holmes",
+      "watson"
+    ],
+    "the cripple": [
+      "sherlock-holmes",
+      "hugh-boone"
+    ],
+    "the culprit": [
+      "sherlock-holmes",
+      "mr-james-mccarthy"
+    ],
+    "the daughter": [
+      "miss-mary-sutherland",
+      "miss-turner",
+      "miss-alice-rucastle"
+    ],
+    "the deceased": [
+      "john-openshaw",
+      "mr-charles-mccarthy"
+    ],
+    "the detective": [
+      "sherlock-holmes",
+      "lestrade"
+    ],
+    "the doctor": [
+      "sherlock-holmes",
+      "dr-becher",
+      "dr-willows"
+    ],
+    "the fat man": [
+      "mr-rucastle",
+      "toller"
+    ],
+    "the father": [
+      "mr-john-turner",
+      "mr-charles-mccarthy"
+    ],
+    "the gentleman": [
+      "sherlock-holmes",
+      "mr-hosmer-angel"
+    ],
+    "the girl": [
+      "miss-mary-sutherland",
+      "miss-violet-hunter"
+    ],
+    "the lad": [
+      "arthur",
+      "mr-james-mccarthy"
+    ],
+    "the lady": [
+      "elise",
+      "helen-stoner",
+      "irene-adler",
+      "lady-st-simon",
+      "mrs-st-clair",
+      "the-countess-of-morcar",
+      "mrs-francis-hay-moulton"
+    ],
+    "the leader of the gang": [
+      "sherlock-holmes",
+      "captain-james-calhoun"
+    ],
+    "the little man": [
+      "james-ryder",
+      "mr-duncan-ross",
+      "vincent-spaulding"
+    ],
+    "the maid": [
+      "mary",
+      "lucy-parr"
+    ],
+    "the major": [
+      "major-freebody",
+      "major-prendergast"
+    ],
+    "the man": [
+      "jackson",
+      "sir-george-burnwell"
+    ],
+    "the manager": [
+      "sherlock-holmes",
+      "hugh-boone",
+      "mr-duncan-ross"
+    ],
+    "the missing man": [
+      "mr-hosmer-angel",
+      "neville-st-clair"
+    ],
+    "the old man": [
+      "dr-grimesby-roylott",
+      "mr-john-turner"
+    ],
+    "the plumber": [
+      "sherlock-holmes",
+      "john-horner"
+    ],
+    "the prisoner": [
+      "hugh-boone",
+      "john-horner",
+      "miss-alice-rucastle"
+    ],
+    "the proprietor": [
+      "breckinridge",
+      "the-lascar"
+    ],
+    "the red-headed man": [
+      "mr-duncan-ross",
+      "mr-jabez-wilson"
+    ],
+    "the sinister cripple": [
+      "sherlock-holmes",
+      "hugh-boone"
+    ],
+    "the stranger": [
+      "james-ryder",
+      "mr-merryweather"
+    ],
+    "the unknown gentleman": [
+      "sherlock-holmes",
+      "mr-henry-baker"
+    ],
+    "the young lady": [
+      "miss-mary-sutherland",
+      "miss-flora-millar"
+    ],
+    "the young man": [
+      "sherlock-holmes",
+      "john-openshaw",
+      "mr-james-mccarthy"
+    ]
+  },
+  "narrator": "watson"
+}

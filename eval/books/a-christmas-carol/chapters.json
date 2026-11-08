@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "method": "headings",
+  "chapters": [
+    {
+      "id": "0001",
+      "index": 1,
+      "title": "CHARLES DICKENS",
+      "file": "chapters/0001.txt",
+      "word_count": 63,
+      "speak_title": true
+    },
+    {
+      "id": "0002",
+      "index": 2,
+      "title": "STAVE ONE.",
+      "file": "chapters/0002.txt",
+      "word_count": 6407,
+      "speak_title": true
+    },
+    {
+      "id": "0003",
+      "index": 3,
+      "title": "STAVE TWO.",
+      "file": "chapters/0003.txt",
+      "word_count": 6158,
+      "speak_title": true
+    },
+    {
+      "id": "0004",
+      "index": 4,
+      "title": "STAVE THREE.",
+      "file": "chapters/0004.txt",
+      "word_count": 8206,
+      "speak_title": true
+    },
+    {
+      "id": "0005",
+      "index": 5,
+      "title": "STAVE FOUR.",
+      "file": "chapters/0005.txt",
+      "word_count": 5358,
+      "speak_title": true
+    },
+    {
+      "id": "0006",
+      "index": 6,
+      "title": "STAVE FIVE.",
+      "file": "chapters/0006.txt",
+      "word_count": 2296,
+      "speak_title": true
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "method": "headings",
+  "chapters": [
+    {
+      "id": "0001",
+      "index": 1,
+      "title": "Introduction",
+      "file": "chapters/0001.txt",
+      "word_count": 183,
+      "speak_title": true
+    },
+    {
+      "id": "0002",
+      "index": 2,
+      "title": "Chapter I The Cyclone",
+      "file": "chapters/0002.txt",
+      "word_count": 1141,
+      "speak_title": true
+    },
+    {
+      "id": "0003",
+      "index": 3,
+      "title": "Chapter II The Council with the Munchkins",
+      "file": "chapters/0003.txt",
+      "word_count": 1997,
+      "speak_title": true
+    },
+    {
+      "id": "0004",
+      "index": 4,
+      "title": "Chapter III How Dorothy Saved the Scarecrow",
+      "file": "chapters/0004.txt",
+      "word_count": 1955,
+      "speak_title": true
+    },
+    {
+      "id": "0005",
+      "index": 5,
+      "title": "Chapter IV The Road Through the Forest",
+      "file": "chapters/0005.txt",
+      "word_count": 1434,
+      "speak_title": true
+    },
+    {
+      "id": "0006",
+      "index": 6,
+      "title": "Chapter V The Rescue of the Tin Woodman",
+      "file": "chapters/0006.txt",
+      "word_count": 2053,
+      "speak_title": true
+    },
+    {
+      "id": "0007",
+      "index": 7,
+      "title": "Chapter VI The Cowardly Lion",
+      "file": "chapters/0007.txt",
+      "word_count": 1495,
+      "speak_title": true
+    },
+    {
+      "id": "0008",
+      "index": 8,
+      "title": "Chapter VII The Journey to the Great Oz",
+      "file": "chapters/0008.txt",
+      "word_count": 1798,
+      "speak_title": true
+    },
+    {
+      "id": "0009",
+      "index": 9,
+      "title": "Chapter VIII The Deadly Poppy Field",
+      "file": "chapters/0009.txt",
+      "word_count": 1924,
+      "speak_title": true
+    },
+    {
+      "id": "0010",
+      "index": 10,
+      "title": "Chapter IX The Queen of the Field Mice",
+      "file": "chapters/0010.txt",
+      "word_count": 1382,
+      "speak_title": true
+    },
+    {
+      "id": "0011",
+      "index": 11,
+      "title": "Chapter X The Guardian of the Gate",
+      "file": "chapters/0011.txt",
+      "word_count": 1950,
+      "speak_title": true
+    },
+    {
+      "id": "0012",
+      "index": 12,
+      "title": "Chapter XI The Wonderful City of Oz",
+      "file": "chapters/0012.txt",
+      "word_count": 3602,
+      "speak_title": true
+    },
+    {
+      "id": "0013",
+      "index": 13,
+      "title": "Chapter XII The Search for the Wicked Witch",
+      "file": "chapters/0013.txt",
+      "word_count": 3666,
+      "speak_title": true
+    },
+    {
+      "id": "0014",
+      "index": 14,
+      "title": "Chapter XIII The Rescue",
+      "file": "chapters/0014.txt",
+      "word_count": 1188,
+      "speak_title": true
+    },
+    {
+      "id": "0015",
+      "index": 15,
+      "title": "Chapter XIV The Winged Monkeys",
+      "file": "chapters/0015.txt",
+      "word_count": 1882,
+      "speak_title": true
+    },
+    {
+      "id": "0016",
+      "index": 16,
+      "title": "Chapter XV The Discovery of Oz, the Terrible",
+      "file": "chapters/0016.txt",
+      "word_count": 2753,
+      "speak_title": true
+    },
+    {
+      "id": "0017",
+      "index": 17,
+      "title": "Chapter XVI The Magic Art of the Great Humbug",
+      "file": "chapters/0017.txt",
+      "word_count": 921,
+      "speak_title": true
+    },
+    {
+      "id": "0018",
+      "index": 18,
+      "title": "Chapter XVII How the Balloon Was Launched",
+      "file": "chapters/0018.txt",
+      "word_count": 1151,
+      "speak_title": true
+    },
+    {
+      "id": "0019",
+      "index": 19,
+      "title": "Chapter XVIII Away to the South",
+      "file": "chapters/0019.txt",
+      "word_count": 1162,
+      "speak_title": true
+    },
+    {
+      "id": "0020",
+      "index": 20,
+      "title": "Chapter XIX Attacked by the Fighting Trees",
+      "file": "chapters/0020.txt",
+      "word_count": 1011,
+      "speak_title": true
+    },
+    {
+      "id": "0021",
+      "index": 21,
+      "title": "Chapter XX The Dainty China Country",
+      "file": "chapters/0021.txt",
+      "word_count": 1500,
+      "speak_title": true
+    },
+    {
+      "id": "0022",
+      "index": 22,
+      "title": "Chapter XXI The Lion Becomes the King of Beasts",
+      "file": "chapters/0022.txt",
+      "word_count": 891,
+      "speak_title": true
+    },
+    {
+      "id": "0023",
+      "index": 23,
+      "title": "Chapter XXII The Country of the Quadlings",
+      "file": "chapters/0023.txt",
+      "word_count": 931,
+      "speak_title": true
+    },
+    {
+      "id": "0024",
+      "index": 24,
+      "title": "Chapter XXIII Glinda The Good Witch Grants Dorothy’s Wish",
+      "file": "chapters/0024.txt",
+      "word_count": 1248,
+      "speak_title": true
+    },
+    {
+      "id": "0025",
+      "index": 25,
+      "title": "Chapter XXIV Home Again",
+      "file": "chapters/0025.txt",
+      "word_count": 74,
+      "speak_title": true
+    }
+  ]
+}

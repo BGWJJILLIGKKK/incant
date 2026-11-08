@@ -4,16 +4,21 @@
     uv run python eval/suite.py --no-run           # score what's on disk
     uv run python eval/suite.py --books dracula,tom-sawyer
     uv run python eval/suite.py --save-baseline    # make this run the baseline
+    uv run python eval/suite.py --attribute tags   # another attribute method (default: speakers, needs an LLM)
 
-Re-attribution touches only the gold chapters (--chapters), with the configured attribute method and the
-book's current characters.json. A book dropping by REGRESSION_QUOTES or more vs the baseline is flagged;
-gold sets are ~30-60 quotes, so a single quote either way is noise.
+The ten books ship in eval/books/ (public-domain Project Gutenberg texts, already split into chapters, with the
+character lists parse=characters made for the baseline). A book missing from your work directory is copied
+there on first use; one already there is used as it is. Re-attribution touches only the gold chapters
+(--chapters). A book dropping by REGRESSION_QUOTES or more vs the baseline is flagged; gold sets are ~30-60
+quotes, so a single quote either way is noise. eval/baseline.json was made with attribute=speakers and
+qwen3.5-9b (llama.cpp); with another LLM or method, save your own baseline first (--save-baseline).
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
 import time
@@ -25,14 +30,21 @@ from incant.config import load_config  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 GOLD = ROOT / "eval" / "gold"
+BOOKS = ROOT / "eval" / "books"
 BASELINE = ROOT / "eval" / "baseline.json"
 RESULTS = ROOT / "eval" / "results"
 REGRESSION_QUOTES = 2
 
 
-def attribute(book: str, chapters: list[str], log: Path) -> bool:
+def seed(book: str, work: Path) -> None:
+    """Copy a shipped eval book into the work directory unless the book is already there."""
+    if not (work / book).exists() and (BOOKS / book).is_dir():
+        shutil.copytree(BOOKS / book, work / book)
+
+
+def attribute(book: str, method: str, chapters: list[str], log: Path) -> bool:
     spec = ",".join(str(int(c)) for c in chapters)
-    cmd = [sys.executable, "-m", "incant", book, "--from", "attribute", "--until", "attribute",
+    cmd = [sys.executable, "-m", "incant", book, method, "--from", "attribute", "--until", "attribute",
            "--force", "attribute", "--chapters", spec]
     with open(log, "w") as f:
         return subprocess.run(cmd, cwd=ROOT, stdout=f, stderr=subprocess.STDOUT).returncode == 0
@@ -43,6 +55,7 @@ def main() -> int:
     ap.add_argument("--no-run", action="store_true", help="score existing spans without re-attributing")
     ap.add_argument("--books", help="comma-separated subset")
     ap.add_argument("--save-baseline", action="store_true")
+    ap.add_argument("--attribute", default="speakers", metavar="METHOD", help="attribute method (default: speakers)")
     args = ap.parse_args()
 
     golds = sorted(GOLD.glob("*.json"))
@@ -57,11 +70,13 @@ def main() -> int:
     for g in golds:
         gold = json.loads(g.read_text())
         book = gold["book"]
-        if not (load_config().paths.work_dir / book / "characters.json").exists():
+        work = load_config().paths.work_dir
+        seed(book, work)
+        if not (work / book / "characters.json").exists():
             rows.append((book, None, "no characters.json (run parse=characters)"))
             continue
         t = time.time()
-        if not args.no_run and not attribute(book, gold_chapters(gold), logs / f"{book}.log"):
+        if not args.no_run and not attribute(book, args.attribute, gold_chapters(gold), logs / f"{book}.log"):
             rows.append((book, None, f"attribution failed — see logs/suite/{book}.log"))
             continue
         s = score(g)

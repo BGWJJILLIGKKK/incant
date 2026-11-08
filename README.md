@@ -9,13 +9,16 @@ or OpenAI-style server, or ElevenLabs — gives each character a voice.
 Needs [uv](https://docs.astral.sh/uv/) and ffmpeg. `./incant` installs its own dependencies on first run.
 
 ```sh
-./incant --check                                 # what's installed and reachable
-.venv/bin/playwright install chromium               # once: for web pages that load their text with JavaScript
-./incant books/book.epub basic tags kokoro       # no LLM, no GPU: rule-based speakers, CPU voices
-./incant books/book.epub                         # the configured pipeline (incant.toml [pipeline])
+git clone https://github.com/BGWJJILLIGKKK/incant.git && cd incant
+./incant --check                                       # what's installed and reachable
+./incant books/book.epub                               # rule-based speakers, Kokoro voices: no server, no GPU
+./incant books/book.epub characters speakers           # better speakers (95%), once an LLM is configured
+.venv/bin/playwright install chromium                  # once: for web pages that load their text with JavaScript
 ```
 
-The result lands in `output/<author>/<title>/` of your data directory (see **Where things live**).
+Out of the box everything runs on the CPU with what's bundled; an LLM (local server or cloud key) and speech
+servers are opt-in (**Configuration**). The result lands in `output/<author>/<title>/` of your data directory
+(see **Where things live**).
 Step by step with Docker, from a fresh clone: [docs/quickstart.md](docs/quickstart.md).
 
 ## Usage
@@ -54,7 +57,7 @@ Speaker accuracy on the 10-book gold suite (`eval/`):
 |---|---|---|---|
 | Best | `characters` | `speakers` — 95% | `indextts` (GPU server, emotion) or `elevenlabs` |
 | Fewer LLM calls | `characters` | `tags` — 80% | `kokoro` |
-| No LLM at all | `basic` | `tags` — 68% | `kokoro` (~3–5× real time on a desktop CPU) |
+| No LLM at all (the default) | `basic` | `tags` — 68% | `kokoro` (~3–5× real time on a desktop CPU) |
 
 Also done for you: author's notes on web stories ("Thanks for reading!", calls to comment) are removed from
 chapter edges, listed in `work/<book>/removed.txt`; TTS respellings are listed in `speech/changes.txt`; your
@@ -161,8 +164,10 @@ docker compose run --rm incant books/book.epub
 
 ## Quality checks
 
-- `eval/suite.py`: speaker attribution on ten books' hand-labelled scenes (~500 quotes) against
-  `eval/baseline.json`; flags any book that drops by 2+ quotes. Run it before committing attribution changes.
+- `eval/suite.py`: speaker attribution on ten public-domain books' hand-labelled scenes (~500 quotes) against
+  `eval/baseline.json`; flags any book that drops by 2+ quotes. The books ship in `eval/books/`, ready to
+  attribute. `--attribute tags` needs no LLM; the baseline was made with `speakers` and qwen3.5-9b, so with
+  another model save your own baseline first (`--save-baseline`).
   `eval/compare.py` scores any parse × attribute combination without touching your data.
 - Every rendered segment is transcribed (faster-whisper) and compared with its text; failing takes are
   re-rendered and the best kept. What still fails is listed in `audio/qa_report.json`.
@@ -173,4 +178,29 @@ docker compose run --rm incant books/book.epub
 writes book text; casting is separate from attribution; audio stays lossless until the output stage.
 A method is a directory under `src/incant/stages/<stage>/<name>/`, found by name, and may inherit from
 another method of its stage (its settings too). Contracts, file formats and how to add methods or stages:
-`docs/interfaces.md`. Plans and results: `docs/roadmap.md`, `docs/findings.md`.
+`docs/interfaces.md`. Contributing: [CONTRIBUTING.md](CONTRIBUTING.md); changes: [CHANGELOG.md](CHANGELOG.md);
+security reports: [SECURITY.md](SECURITY.md).
+
+## License
+
+incant's code is under the BSD 3-Clause license ([LICENSE](LICENSE)). Some of what it depends on and bundles is
+copyleft — notably EbookLib (AGPL-3.0, EPUB reading), espeak-ng and phonemizer (GPL-3.0, Kokoro) and ffmpeg
+(GPL) — so the Docker images are also distributed under those terms. Every component and model, its license and
+where its source is: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Responsible use
+
+incant makes audio from text you give it; what you may do with that audio depends on the text, not on incant.
+
+- **Copyright.** Most books and web stories are under copyright. Making an audiobook of one, even for yourself,
+  may not be allowed where you live, and sharing it almost never is without the rightsholder's permission.
+  Public-domain texts (Project Gutenberg, for example) are the safe case; check your own country's terms.
+- **Sites.** Fetching pages with your login or cookies uses your account: follow each site's terms, don't
+  bypass paywalls, age gates or access controls, and keep request volumes reasonable. incant identifies itself
+  in its user agent and refuses gate pages rather than working around them.
+- **Voices.** Use voices you have the right to use. Cloning or imitating a real person's voice needs their
+  consent; record it in the voice's `consent` field so `credits.txt` shows it.
+- **Services.** LLM and speech providers have their own terms for what you send and what comes back (some
+  require attribution or forbid commercial use). `credits.txt` beside each audiobook lists what was used and
+  which terms are known, but it is bookkeeping, not legal advice.
+- **Disclosure.** If you share what you make, say that it was AI-narrated.

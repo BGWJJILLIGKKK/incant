@@ -230,3 +230,11 @@ def test_batch_directory(setup, capsys):
         "A. Writer/Test Book/Test Book.m4b", "Unknown Author/Little Book/Little Book.m4b"]
     assert main([str(books), "-c", str(conf), "--slug", "x"]) == 2
     assert main([str(books), "-c", str(conf), "-o", str(tmp / "one.m4b")]) == 2
+
+
+def test_version_flag(capsys):
+    from incant import __version__
+
+    with pytest.raises(SystemExit) as e:
+        main(["--version"])
+    assert e.value.code == 0 and capsys.readouterr().out.strip() == f"incant {__version__}"

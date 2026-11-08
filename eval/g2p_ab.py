@@ -17,7 +17,7 @@ from pathlib import Path
 
 from incant.config import load_config
 from incant.pipeline import discover, instantiate
-from incant.qa import Transcriber, compare
+from incant.qa import Transcriber
 
 EXTRA = [
     "I read the letter yesterday, and now I read it again.",

@@ -6,7 +6,6 @@ chapter heading Gutenberg sometimes wraps inside one). Picked automatically for 
 from __future__ import annotations
 
 import re
-from pathlib import Path
 
 from ..txt.txt import TxtIngest
 

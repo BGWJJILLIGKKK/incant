@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "method": "headings",
+  "chapters": [
+    {
+      "id": "0001",
+      "index": 1,
+      "title": "by Robert Louis Stevenson",
+      "file": "chapters/0001.txt",
+      "word_count": 142,
+      "speak_title": true
+    },
+    {
+      "id": "0002",
+      "index": 2,
+      "title": "PART ONE—The Old Buccaneer: I The Old Sea-dog at the “Admiral Benbow”",
+      "file": "chapters/0002.txt",
+      "word_count": 2203,
+      "speak_title": true
+    },
+    {
+      "id": "0003",
+      "index": 3,
+      "title": "II Black Dog Appears and Disappears",
+      "file": "chapters/0003.txt",
+      "word_count": 2243,
+      "speak_title": true
+    },
+    {
+      "id": "0004",
+      "index": 4,
+      "title": "III The Black Spot",
+      "file": "chapters/0004.txt",
+      "word_count": 2151,
+      "speak_title": true
+    },
+    {
+      "id": "0005",
+      "index": 5,
+      "title": "IV The Sea-chest",
+      "file": "chapters/0005.txt",
+      "word_count": 2134,
+      "speak_title": true
+    },
+    {
+      "id": "0006",
+      "index": 6,
+      "title": "V The Last of the Blind Man",
+      "file": "chapters/0006.txt",
+      "word_count": 1849,
+      "speak_title": true
+    },
+    {
+      "id": "0007",
+      "index": 7,
+      "title": "VI The Captain’s Papers",
+      "file": "chapters/0007.txt",
+      "word_count": 1949,
+      "speak_title": true
+    },
+    {
+      "id": "0008",
+      "index": 8,
+      "title": "PART TWO—The Sea-cook: VII I Go to Bristol",
+      "file": "chapters/0008.txt",
+      "word_count": 1816,
+      "speak_title": true
+    },
+    {
+      "id": "0009",
+      "index": 9,
+      "title": "VIII At the Sign of the Spy-glass",
+      "file": "chapters/0009.txt",
+      "word_count": 1764,
+      "speak_title": true
+    },
+    {
+      "id": "0010",
+      "index": 10,
+      "title": "IX Powder and Arms",
+      "file": "chapters/0010.txt",
+      "word_count": 1711,
+      "speak_title": true
+    },
+    {
+      "id": "0011",
+      "index": 11,
+      "title": "X The Voyage",
+      "file": "chapters/0011.txt",
+      "word_count": 1932,
+      "speak_title": true
+    },
+    {
+      "id": "0012",
+      "index": 12,
+      "title": "XI What I Heard in the Apple-Barrel",
+      "file": "chapters/0012.txt",
+      "word_count": 2062,
+      "speak_title": true
+    },
+    {
+      "id": "0013",
+      "index": 13,
+      "title": "XII Council of War",
+      "file": "chapters/0013.txt",
+      "word_count": 1835,
+      "speak_title": true
+    },
+    {
+      "id": "0014",
+      "index": 14,
+      "title": "PART THREE—My Shore Adventure: XIII How I Began My Shore Adventure",
+      "file": "chapters/0014.txt",
+      "word_count": 1788,
+      "speak_title": true
+    },
+    {
+      "id": "0015",
+      "index": 15,
+      "title": "XIV The First Blow",
+      "file": "chapters/0015.txt",
+      "word_count": 1912,
+      "speak_title": true
+    },
+    {
+      "id": "0016",
+      "index": 16,
+      "title": "XV The Man of the Island",
+      "file": "chapters/0016.txt",
+      "word_count": 2219,
+      "speak_title": true
+    },
+    {
+      "id": "0017",
+      "index": 17,
+      "title": "PART FOUR—The Stockade: XVI Narrative Continued by the Doctor: How the Ship Was Abandoned",
+      "file": "chapters/0017.txt",
+      "word_count": 1634,
+      "speak_title": true
+    },
+    {
+      "id": "0018",
+      "index": 18,
+      "title": "XVII Narrative Continued by the Doctor: The Jolly-boat’s Last Trip",
+      "file": "chapters/0018.txt",
+      "word_count": 1470,
+      "speak_title": true
+    },
+    {
+      "id": "0019",
+      "index": 19,
+      "title": "XVIII Narrative Continued by the Doctor: End of the First Day’s Fighting",
+      "file": "chapters/0019.txt",
+      "word_count": 1469,
+      "speak_title": true
+    },
+    {
+      "id": "0020",
+      "index": 20,
+      "title": "XIX Narrative Resumed by Jim Hawkins: The Garrison in the Stockade",
+      "file": "chapters/0020.txt",
+      "word_count": 1998,
+      "speak_title": true
+    },
+    {
+      "id": "0021",
+      "index": 21,
+      "title": "XX Silver’s Embassy",
+      "file": "chapters/0021.txt",
+      "word_count": 1884,
+      "speak_title": true
+    },
+    {
+      "id": "0022",
+      "index": 22,
+      "title": "XXI The Attack",
+      "file": "chapters/0022.txt",
+      "word_count": 2005,
+      "speak_title": true
+    },
+    {
+      "id": "0023",
+      "index": 23,
+      "title": "PART FIVE—My Sea Adventure: XXII How I Began My Sea Adventure",
+      "file": "chapters/0023.txt",
+      "word_count": 2073,
+      "speak_title": true
+    },
+    {
+      "id": "0024",
+      "index": 24,
+      "title": "XXIII The Ebb-tide Runs",
+      "file": "chapters/0024.txt",
+      "word_count": 1578,
+      "speak_title": true
+    },
+    {
+      "id": "0025",
+      "index": 25,
+      "title": "XXIV The Cruise of the Coracle",
+      "file": "chapters/0025.txt",
+      "word_count": 1974,
+      "speak_title": true
+    },
+    {
+      "id": "0026",
+      "index": 26,
+      "title": "XXV I Strike the Jolly Roger",
+      "file": "chapters/0026.txt",
+      "word_count": 1703,
+      "speak_title": true
+    },
+    {
+      "id": "0027",
+      "index": 27,
+      "title": "XXVI Israel Hands",
+      "file": "chapters/0027.txt",
+      "word_count": 2933,
+      "speak_title": true
+    },
+    {
+      "id": "0028",
+      "index": 28,
+      "title": "XXVII “Pieces of Eight”",
+      "file": "chapters/0028.txt",
+      "word_count": 2156,
+      "speak_title": true
+    },
+    {
+      "id": "0029",
+      "index": 29,
+      "title": "PART SIX—Captain Silver: XXVIII In the Enemy’s Camp",
+      "file": "chapters/0029.txt",
+      "word_count": 2726,
+      "speak_title": true
+    },
+    {
+      "id": "0030",
+      "index": 30,
+      "title": "XXIX The Black Spot Again",
+      "file": "chapters/0030.txt",
+      "word_count": 2107,
+      "speak_title": true
+    },
+    {
+      "id": "0031",
+      "index": 31,
+      "title": "XXX On Parole",
+      "file": "chapters/0031.txt",
+      "word_count": 2306,
+      "speak_title": true
+    },
+    {
+      "id": "0032",
+      "index": 32,
+      "title": "XXXI The Treasure-hunt—Flint’s Pointer",
+      "file": "chapters/0032.txt",
+      "word_count": 2253,
+      "speak_title": true
+    },
+    {
+      "id": "0033",
+      "index": 33,
+      "title": "XXXII The Treasure-hunt—The Voice Among the Trees",
+      "file": "chapters/0033.txt",
+      "word_count": 1943,
+      "speak_title": true
+    },
+    {
+      "id": "0034",
+      "index": 34,
+      "title": "XXXIII The Fall of a Chieftain",
+      "file": "chapters/0034.txt",
+      "word_count": 1985,
+      "speak_title": true
+    },
+    {
+      "id": "0035",
+      "index": 35,
+      "title": "XXXIV And Last",
+      "file": "chapters/0035.txt",
+      "word_count": 1890,
+      "speak_title": true
+    }
+  ]
+}

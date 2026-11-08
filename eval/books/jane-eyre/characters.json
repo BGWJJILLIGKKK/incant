@@ -1,0 +1,3302 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "mr-rochester",
+      "canonical_name": "Mr. Rochester",
+      "aliases": [
+        "Edward Fairfax Rochester",
+        "Edward Rochester",
+        "the master",
+        "Edward",
+        "the husband",
+        "the owner",
+        "Rochester",
+        "the master of Thornfield",
+        "Fairfax Rochester",
+        "the tardy speaker",
+        "Rivers",
+        "the stranger",
+        "the husband of Bertha Mason",
+        "Monsieur Edouard Fairfax *de* Rochester",
+        "the blind tenant",
+        "King Ahasuerus",
+        "the parson",
+        "the latter",
+        "the active energy",
+        "the master of Thornfield Hall",
+        "the traveller",
+        "the caged eagle",
+        "Monsieur",
+        "the master of the house",
+        "the instrument",
+        "the future bridegroom",
+        "the proprietor",
+        "the visionary bride"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The owner of Thornfield Hall and Adela's guardian. He is mentioned frequently but does not appear in this passage. He is described as having brought Adela to ; The landlord and employer of the narrator.; The owner of Thornfield Hall who arrives after an accident.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0030",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0039",
+        "0040"
+      ],
+      "mentions": 35,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jane-eyre",
+      "canonical_name": "Jane Eyre",
+      "aliases": [
+        "Jane",
+        "Miss Eyre",
+        "Jane Rochester",
+        "the narrator",
+        "Janet",
+        "Miss Jane",
+        "the governess",
+        "the child",
+        "Miss",
+        "Mrs. Rochester",
+        "the little girl",
+        "the mad lady",
+        "the daughter",
+        "the intruders",
+        "the mistress",
+        "the pilgrim",
+        "Reader",
+        "the speaker",
+        "the new pupil",
+        "the heiress",
+        "the Indian",
+        "the lady",
+        "the person",
+        "Miss Jane Eyre",
+        "the instrument",
+        "the creeping creature",
+        "the frail shoulder"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'Miss Jane', 'little thing', 'little one', 'l",
+      "age": "young_adult",
+      "description": "The narrator, a young girl at Gateshead who is being sent to school.; The narrator, a new pupil at Lowood.; A student at Lowood who becomes close friends with Helen Burns and later discovers her death.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0006",
+        "0007",
+        "0009",
+        "0010",
+        "0011",
+        "0013",
+        "0016",
+        "0017",
+        "0018",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0032",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0039",
+        "0040"
+      ],
+      "mentions": 32,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-fairfax",
+      "canonical_name": "Mrs. Fairfax",
+      "aliases": [
+        "Alice Fairfax",
+        "the good lady",
+        "the widow",
+        "the housekeeper",
+        "the old lady",
+        "the manager",
+        "the worthy lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mrs.",
+      "age": "adult",
+      "description": "The owner of Thornfield Hall who offers the narrator a position as governess.; The housekeeper at Thornfield Hall, described as a neat, elderly lady in a widow's cap and black silk gown. She is kind, mild, and appears to be distantly (or '; The housekeeper at Thornfield Hall.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029",
+        "0035",
+        "0036",
+        "0038"
+      ],
+      "mentions": 24,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "adele",
+      "canonical_name": "Adèle",
+      "aliases": [
+        "Adela Varens",
+        "the poor thing",
+        "Miss Varens",
+        "the bairn",
+        "the beldame",
+        "Mademoiselle",
+        "the little girl",
+        "the creature",
+        "Adela",
+        "Mdlle. Jeannette",
+        "the little French girl",
+        "Mdlle. Varens",
+        "the child"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pupil",
+      "age": "child",
+      "description": "The narrator's pupil who speaks French.; A lively, spoiled child pupil at Thornfield Hall.; young child, pupil of the narrator, described as not bright but improving.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0023",
+        "0025",
+        "0026",
+        "0027",
+        "0029",
+        "0034",
+        "0040"
+      ],
+      "mentions": 20,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-reed",
+      "canonical_name": "John Reed",
+      "aliases": [
+        "John",
+        "Master John",
+        "the baby",
+        "the creature",
+        "Jack",
+        "the cook",
+        "the little beggar",
+        "Master"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "John, Jack, Master John, his mama",
+      "age": "adult",
+      "description": "Mrs. Reed's son, a schoolboy of fourteen years old who bullies and punishes the narrator.; One of Mrs. Reed's sons, Jane's cousin.; John is Mrs. Reed's son, described as 'her son John'. He is referred to as 'John' and 'the son'.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0008",
+        "0012",
+        "0013",
+        "0014",
+        "0017",
+        "0018",
+        "0019",
+        "0023",
+        "0027",
+        "0039",
+        "0040"
+      ],
+      "mentions": 17,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "st-john-rivers",
+      "canonical_name": "St. John Rivers",
+      "aliases": [
+        "St. John",
+        "Mr. Rivers",
+        "Mr. St. John",
+        "the successor",
+        "the young clergyman",
+        "Mr. St John",
+        "the young pastor",
+        "the representative of that house",
+        "the new-comer",
+        "the apostle",
+        "Rivers",
+        "the high master-spirit",
+        "the brother",
+        "the Spirit",
+        "the preacher",
+        "the clergyman",
+        "the nephew",
+        "the incumbent",
+        "the missionary",
+        "the angel",
+        "Mr. St. John Rivers",
+        "the Christian",
+        "the gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he/him), titles (Mr., gentleman, brother), context",
+      "age": "adult",
+      "description": "The narrator's brother and the St. John family's son. He arrives late, finds the narrator at the door, and takes charge of her care.; The deceased brother of the two girls and father of Mr. St. John. He is mentioned as having asked if the girls should be sent for.; Mr. St. John is the brother of Diana and Mary. He is a parson who is staying at Marsh End. He is described as tall, slender, with a Greek-like face, and having",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031",
+        "0032",
+        "0033",
+        "0034",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0039",
+        "0040"
+      ],
+      "mentions": 17,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-ingram",
+      "canonical_name": "Mary Ingram",
+      "aliases": [
+        "Mary",
+        "Miss Mary",
+        "Mary Rivers"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she)",
+      "age": "young_adult",
+      "description": "Mary Ingram is the older daughter of the Dowager Lady Ingram and Blanche's sister. She is described as tall, slim, and having a milder; The second of the two young women studying German, sitting on a stool.; Mary is the younger of the Rivers sisters. She is described as having a more reserved expression and distant manners, though gentle. She is",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0019",
+        "0020",
+        "0030",
+        "0031",
+        "0032",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0039",
+        "0040"
+      ],
+      "mentions": 14,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-reed",
+      "canonical_name": "Mrs. Reed",
+      "aliases": [
+        "Missis",
+        "Aunt Reed",
+        "Madam Mope",
+        "the mistress",
+        "the lady",
+        "Sarah Reed",
+        "the mother",
+        "the dying woman",
+        "the stony stranger",
+        "the patient"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mrs. Reed, mama, Madam Mope",
+      "age": "adult",
+      "description": "The mother of Eliza, John, and Georgiana Reed; she dines early when there is no company and lies reclined on a sofa.; The narrator's guardian and the mother of the Reed children, who arrives to retrieve the narrator from the red-room.; Jane Eyre's aunt and the mistress of Gateshead Hall.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0008",
+        "0010",
+        "0012",
+        "0023",
+        "0024",
+        "0026",
+        "0035"
+      ],
+      "mentions": 14,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "grace-poole",
+      "canonical_name": "Grace Poole",
+      "aliases": [
+        "Mrs. Poole",
+        "Grace",
+        "the charwoman",
+        "the shape",
+        "the wild beast",
+        "the creature",
+        "the fiend",
+        "the poor creature",
+        "the figure"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Poole is a surname, but context implies female servant; 'her",
+      "age": "adult",
+      "description": "A hard-featured, staid servant at Thornfield Hall who makes strange noises.; A servant at Thornfield, suspected of being involved in the fire.; The housekeeper at Thornfield Hall.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0017",
+        "0018",
+        "0019",
+        "0021",
+        "0022",
+        "0027",
+        "0028",
+        "0029",
+        "0038"
+      ],
+      "mentions": 13,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "blanche-ingram",
+      "canonical_name": "Blanche Ingram",
+      "aliases": [
+        "Miss Ingram",
+        "Blanche",
+        "Donna Bianca",
+        "the Honourable Blanche",
+        "the real head",
+        "the lady",
+        "the queen",
+        "the belle",
+        "the beautiful Miss Ingram"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "Miss Ingram is Mr. Rochester's intended wife and a prominent figure at Thornfield Hall. She is described as beautiful, showy, and somewhat arrogant; Returns from the library, refuses to believe the fortune-teller, and later goes to see her.; Mr. Rochester's fiancée, described as beautiful, noble, witty, and accomplished. She is eligible for the Rochester estate.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026"
+      ],
+      "mentions": 12,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "colonel-dent",
+      "canonical_name": "Colonel Dent",
+      "aliases": [
+        "Sir George Lynn",
+        "Frederick Lynn",
+        "Sir George",
+        "the magistrate",
+        "the Colonel",
+        "Mr. Frederick Lynn",
+        "the leader"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A gentleman attending the party at the Leas.; Colonel Dent is a 'fine soldierly man' present at the gathering. He is shown to be 'arguing on politics' with Mr. Eshton and later responding to Mr. Rochester's; Colonel Dent is a gentleman at Thornfield Hall who is often referred to as the leader of the group. He is described as a tall, dark-haired man with a swarthy (",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0019",
+        "0020",
+        "0022",
+        "0023"
+      ],
+      "mentions": 12,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sophie",
+      "canonical_name": "Sophie",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Adela's nurse, a foreigner who accompanied Adela from the Continent. She speaks French and is described as having come with Adela in a ship. She is referred to ; A French nurse at Thornfield Hall.; Sophie is Adèle's guardian. She is referred to as 'Sophie' and is described as Adèle's guardian. She is also referred to as 'the guardian', 'the",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0024",
+        "0027",
+        "0028"
+      ],
+      "mentions": 10,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bessie-lee",
+      "canonical_name": "Bessie Lee",
+      "aliases": [
+        "Bessie",
+        "Mrs. Leaven",
+        "the Abigail",
+        "the nursemaid"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Bessie, the nurse",
+      "age": "adult",
+      "description": "The nurse who chides the narrator and later narrates fairy tales and ballads to the children.; A servant girl who helps restrain the narrator and later questions her sanity.; A servant at Gateshead Hall who cares for Jane Eyre.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0007",
+        "0012",
+        "0014",
+        "0023"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "diana",
+      "canonical_name": "Diana",
+      "aliases": [
+        "the mistress"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to her as 'Diana' and 'she'.",
+      "age": "young_adult",
+      "description": "One of the two young women studying German in the kitchen, sitting in a rocking-chair.; Diana is one of the Rivers sisters, the elder one. She is described as having a voice like a dove, eyes that the narrator delights to encounter, and a willful,; One of the Rivers sisters, described as physically vigorous, handsome, and the leader of the trio.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0031",
+        "0032",
+        "0035",
+        "0036",
+        "0037",
+        "0038",
+        "0040"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "leah",
+      "canonical_name": "Leah",
+      "aliases": [
+        "the house-maid",
+        "the servant"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'maid', 'girl', ",
+      "age": "adult",
+      "description": "A maid-servant at Thornfield Hall who opens the door for Jane and brings refreshments. She is described as a 'nice girl' by Mrs. Fairfax. She does not speak in ; A housemaid who works with Grace.; A housemaid at Thornfield Hall.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0014",
+        "0017",
+        "0018",
+        "0019",
+        "0024",
+        "0027",
+        "0038"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-rev-robert-brocklehurst",
+      "canonical_name": "the Rev. Robert Brocklehurst",
+      "aliases": [
+        "Mr. Brocklehurst",
+        "the treasurer",
+        "the black marble clergyman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mr.' and male pronouns (he/him)",
+      "age": "adult",
+      "description": "The headmaster of Lowood School.; The treasurer and manager of Lowood Institution, a clergyman who lives at Brocklehurst Hall.; The patron and inspector of Lowood.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0015",
+        "0023",
+        "0031"
+      ],
+      "mentions": 9,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "maria-temple",
+      "canonical_name": "Maria Temple",
+      "aliases": [
+        "Miss Temple",
+        "the superintendent",
+        "the medical attendant",
+        "the lady",
+        "Madam"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Miss' and female pronouns (she/her)",
+      "age": "adult",
+      "description": "A teacher at Lowood School.; The superintendent of Lowood Institution, a tall, fair woman who shows kindness to Jane.; Miss Temple is a teacher at Lowood School, described as 'full of goodness' and 'mild'. She is referred to as 'Miss Temple' and 'the teacher'.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0015"
+      ],
+      "mentions": 8,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "pilot",
+      "canonical_name": "Pilot",
+      "aliases": [
+        "the wild beast",
+        "the devilish face of Judas",
+        "the arch-traitor",
+        "the fiend"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.75,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A large black and white Newfoundland dog belonging to Mr. Rochester.; A dog belonging to Adèle or Rochester, seen playing and later found in the hall.; A servant or animal at Thornfield Hall.",
+      "first_chapter": "0014",
+      "chapters": [
+        "0014",
+        "0017",
+        "0018",
+        "0022",
+        "0026",
+        "0027",
+        "0039"
+      ],
+      "mentions": 8,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "richard-mason",
+      "canonical_name": "Richard Mason",
+      "aliases": [
+        "Mason",
+        "Mr. Mason",
+        "the stranger",
+        "the second stranger",
+        "the intruder",
+        "the new-comer",
+        "the wounded man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Mr. Mason is a stranger who arrives at Thornfield Hall. He is described as a tall, fashionable-looking man with a sallow complexion and a vacant (; A stranger from the West Indies (Spanish Town, Jamaica) who arrives at the house while Mr. Rochester is away.; Bertha's brother and Mr. Rochester's brother-in-law.",
+      "first_chapter": "0020",
+      "chapters": [
+        "0020",
+        "0021",
+        "0022",
+        "0028",
+        "0029"
+      ],
+      "mentions": 7,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "georgiana",
+      "canonical_name": "Georgiana",
+      "aliases": [
+        "Georgy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Georgiana, Georgy",
+      "age": "young_adult",
+      "description": "One of Mrs. Reed's daughters; she is clustered with her sisters and runs to fetch Mrs. Reed during the fight.; One of Mrs. Reed's daughters, described as having a spoiled temper.; Mrs. Reed's daughter, mentioned in relation to her doll.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0023",
+        "0024"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "helen-burns",
+      "canonical_name": "Helen Burns",
+      "aliases": [
+        "the monitor",
+        "Helen",
+        "Burns"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Helen Burns as 'she', 'her', and 'girl'.",
+      "age": "young_adult",
+      "description": "Helen Burns is a student at Lowood School, referred to as 'Burns' by the other students. She is described as a 'great girl' and is older than the narrator.; A fellow pupil who comforts Jane.; Jane's friend and fellow student at Lowood, known for her calm and pious nature.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0023"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "eliza",
+      "canonical_name": "Eliza",
+      "aliases": [
+        "Joan",
+        "Georgy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Eliza, Georgy, Joan, his sisters",
+      "age": "young_adult",
+      "description": "One of Mrs. Reed's daughters; she is clustered with her sisters and later enters the breakfast room to inform John where the narrator is hiding.; One of Mrs. Reed's daughters, described as headstrong and selfish.; One of Mrs. Reed's daughters, Jane's cousin.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0006",
+        "0023",
+        "0024"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-driver",
+      "canonical_name": "the driver",
+      "aliases": [
+        "the man",
+        "the footman",
+        "the vehicle"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The driver is a man who drives the post-chaise that arrives at Thornfield Hall. He is described as a tall, dark-haired man with a swarthy (; The coach driver who stops for the narrator.; Driver of the carriage bringing Diana and Mary.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0020",
+        "0029",
+        "0036"
+      ],
+      "mentions": 5,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "abbot",
+      "canonical_name": "Abbot",
+      "aliases": [
+        "Miss Abbot",
+        "the bitter Miss Abbot",
+        "the Abigail",
+        "the lady"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.25,
+      "gender_evidence": "male pronouns (he/him) and title Colonel",
+      "age": "adult",
+      "description": "Mrs. Reed's maid who comes upon the scene of the fight.; A servant at Gateshead Hall who speaks ill of Jane Eyre.; A person who had a conference with Bessie (mentioned in the opening sentence).",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0006"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "baroness-ingram",
+      "canonical_name": "Baroness Ingram",
+      "aliases": [
+        "Lady Ingram",
+        "Dowager Lady Ingram",
+        "the Dowager"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to her as 'Lady Ingram', 'Baroness Ingram",
+      "age": "adult",
+      "description": "Lady Ingram is the wife of Lord Ingram and the mother of Mary and Louisa Ingram. She is described as a 'proud dowager' and is shown to be 'confabulating with; Lady Ingram is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy (; Wrings her hands in silence.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0020"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bertha-antoinetta-mason",
+      "canonical_name": "Bertha Antoinetta Mason",
+      "aliases": [
+        "Bertha Mason",
+        "Bertha",
+        "Miss Mason",
+        "Mrs. Rochester",
+        "the mad",
+        "the mad lady",
+        "the mad-woman",
+        "the maniac",
+        "the lunatic"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mr. Rochester's first wife, confined in the attic.; Mr. Rochester's first wife, who is now dead.; Mr. Rochester's first wife, who is mad and confined in the attic of Thornfield Hall.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028",
+        "0029",
+        "0038"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "celine-varens",
+      "canonical_name": "Céline Varens",
+      "aliases": [
+        "Céline",
+        "the Gallic sylph",
+        "the Varens",
+        "the mother"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), explicit reference to 'Céline Var",
+      "age": "adult",
+      "description": "Céline Varens is a historical figure mentioned in the passage. She is referred to as 'Céline Varens' and is described as a historical figure. She is also; Rochester's former lover, a French opera dancer who abandoned him.; A former mistress of Mr. Rochester mentioned in conversation.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016",
+        "0017",
+        "0026",
+        "0029"
+      ],
+      "mentions": 4,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hannah",
+      "canonical_name": "Hannah",
+      "aliases": [
+        "the old housekeeper",
+        "the servant"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'servant', 'mist",
+      "age": "adult",
+      "description": "Hannah is the servant who looks after the narrator and the Rivers family. She is described as having prejudices against the narrator at first, but later becomes; A companion who accompanies Mr. St. John to the parsonage.; A servant mentioned by Mr. St. John who could not travel through the snow.",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031",
+        "0032",
+        "0035",
+        "0036"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-eyre",
+      "canonical_name": "John Eyre",
+      "aliases": [
+        "Old John",
+        "Mr. Eyre of Madeira"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "uncle, his",
+      "age": "adult",
+      "description": "Jane Eyre's uncle, who lives in Madeira and intends to adopt her.; Jane's uncle who wrote a letter about adopting her.; The narrator's uncle who was a merchant in Madeira and the brother of the narrator's mother.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023",
+        "0026",
+        "0035",
+        "0038"
+      ],
+      "mentions": 4,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-miller",
+      "canonical_name": "Miss Miller",
+      "aliases": [
+        "the servant"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Miss Miller'",
+      "age": "adult",
+      "description": "An under-teacher at Lowood who initially receives Jane.; Miss Miller is a teacher at Lowood School, described as 'neat', 'punctual', and 'particular'. She is referred to as 'Miss Miller' and 'the teacher'.; A teacher at Lowood who praised Jane's progress.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0010",
+        "0011"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-scatcherd",
+      "canonical_name": "Miss Scatcherd",
+      "aliases": [
+        "the teacher"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Miss Scatcherd'",
+      "age": "adult",
+      "description": "A teacher at Lowood who teaches history and grammar.; Miss Scatcherd is a teacher at Lowood School, described as 'severe' and 'cruel' to Helen Burns. She is referred to as 'Miss Scatcherd' and 'the teacher'.; A teacher who chides Helen Burns.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0009",
+        "0010"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-carter",
+      "canonical_name": "Mr. Carter",
+      "aliases": [
+        "Carter",
+        "the surgeon"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'he', 'him', 'man'",
+      "age": "adult",
+      "description": "The surgeon who treats Mason.; The surgeon who dressed Mason's wounds. He is mentioned as one of the few people admitted to Mr. Rochester's confidence.; A surgeon who comes to treat Mr. Rochester's sprained ankle.",
+      "first_chapter": "0014",
+      "chapters": [
+        "0014",
+        "0022",
+        "0029",
+        "0038"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-oliver",
+      "canonical_name": "Mr. Oliver",
+      "aliases": [
+        "the proprietor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Referred to as 'Mr. Oliver, the proprietor'",
+      "age": "adult",
+      "description": "The sole rich man in Mr. St. John's parish, who owns a needle-factory and iron-foundry.; The father of Miss Rosamond and Miss Diana. He lives at Vale Hall and is ill.; Rosamond Oliver's father, a wealthy man.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032",
+        "0033",
+        "0034",
+        "0035"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "rosamond-oliver",
+      "canonical_name": "Rosamond Oliver",
+      "aliases": [
+        "Miss Oliver",
+        "Rosamond",
+        "the visitress",
+        "the Rose of the World"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The narrator refers to her as 'Rosamond Oliver' and 'Miss'",
+      "age": "young_adult",
+      "description": "A young woman who visits the narrator and is engaged to St. John Rivers.; St. John's former love interest, now engaged to Mr. Granby.; The daughter of Mr. Oliver, who pays for the education and clothing of an orphan and furnishes the school mistress's house.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032",
+        "0034",
+        "0036",
+        "0039"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "amy-eshton",
+      "canonical_name": "Amy Eshton",
+      "aliases": [
+        "Amy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to her as 'Amy', 'Amy Eshton', and 'the",
+      "age": "young_adult",
+      "description": "Amy Eshton is the daughter of Mr. and Mrs. Eshton. She is described as 'little and lively' and is shown to be 'chattering like a wren' and 'quiz; Amy Eshton is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy; Amy is the younger daughter of Mrs. Eshton, described as rather little and child-like.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0020"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lord-ingram",
+      "canonical_name": "Lord Ingram",
+      "aliases": [
+        "the eldest son",
+        "Old Lord Ingram"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "adult",
+      "description": "A nobleman attending the party at the Leas.; Lord Ingram is the brother of Mary Ingram. He is described as 'very tall', 'handsome', but with an 'apathetic and listless look'. He is shown to be 'leaning; Asks Miss Ingram what the fortune-teller said.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0019",
+        "0020"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "louisa-eshton",
+      "canonical_name": "Louisa Eshton",
+      "aliases": [
+        "Louisa"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "Louisa Eshton is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy; Titters under her breath and asks questions about the fortune-teller.; Louisa is the older daughter of Mrs. Eshton, described as taller and more elegant than her sister.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0020"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "madame-pierrot",
+      "canonical_name": "Madame Pierrot",
+      "aliases": [
+        "the French teacher",
+        "the Madame"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Madame Pierrot'",
+      "age": "adult",
+      "description": "A French teacher at Lowood who comes from Lisle.; Someone who showed Jane a French story.; A French lady who taught Jane French. She is mentioned by Jane but does not appear or speak in this ",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0010",
+        "0013"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-smith",
+      "canonical_name": "Miss Smith",
+      "aliases": [
+        "the laundress"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Miss Smith'",
+      "age": "adult",
+      "description": "A teacher at Lowood who attends to work and cuts out clothes.; Miss Smith is a teacher at Lowood School, described as 'neat', 'punctual', and 'particular'. She is referred to as 'Miss Smith' and 'the teacher'.; The housekeeper and laundress at Lowood.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0009"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-briggs",
+      "canonical_name": "Mr. Briggs",
+      "aliases": [
+        "the solicitor",
+        "the lawyer",
+        "the intruder",
+        "Briggs"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A solicitor who objects to the marriage.; A solicitor in London who wrote to Mr. St. John regarding the narrator's identity and inheritance.; Correspondent regarding the will.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028",
+        "0035",
+        "0036"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-eshton",
+      "canonical_name": "Mr. Eshton",
+      "aliases": [
+        "the magistrate of the district"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'Mr. Eshton' and 'the",
+      "age": "adult",
+      "description": "Mr. Eshton is the 'magistrate of the district'. He is described as 'gentleman-like' with 'white hair' and 'dark eyebrows and whiskers'. He is shown to be 'argu; Mr. Eshton is a gentleman at Thornfield Hall who is often referred to as the leader of the group. He is described as a tall, dark-haired man with a swarthy (; Mentioned as someone who threatened to put the fortune-teller in stocks.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0020"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-eyre",
+      "canonical_name": "Mr. Eyre",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Mr.), male pronouns (his, him)",
+      "age": "adult",
+      "description": "The narrator's father's brother who visited Gateshead years ago.; Jane's uncle, mentioned as being ill.; The narrator's uncle who died and left his fortune to the narrator.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012",
+        "0028",
+        "0035"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-lloyd",
+      "canonical_name": "Mr. Lloyd",
+      "aliases": [
+        "the apothecary",
+        "the good apothecary",
+        "the gentleman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title Mr.",
+      "age": "adult",
+      "description": "An apothecary called in by Mrs. Reed to treat Jane Eyre.; A person Jane had a discourse with (mentioned in the opening sentence).; A man who visited Jane and corroborated her story.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005",
+        "0006",
+        "0010"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-dent",
+      "canonical_name": "Mrs. Dent",
+      "aliases": [
+        "Mrs. Colonel Dent"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mrs. Dent is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy (; The Colonel's wife, a guest at the house.; Mrs. Colonel Dent is a lady who arrives at Thornfield. She is described as less showy but more lady-like than Lady Lynn.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0020",
+        "0021"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-eshton",
+      "canonical_name": "Mrs. Eshton",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title",
+      "age": "adult",
+      "description": "A lady attending the party at the Leas.; Mrs. Eshton is one of the ladies who arrives at Thornfield, accompanied by her two daughters, Amy and Louisa.; Mrs. Eshton is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy (",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0019",
+        "0020"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-evil-one",
+      "canonical_name": "the Evil One",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Metaphorical reference to the source of Jane's alleged sin.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bessie-leaven",
+      "canonical_name": "Bessie Leaven",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name",
+      "age": "adult",
+      "description": "A friend of Jane Eyre who previously saw her.; Robert Leaven's wife, former maid at Gateshead.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "currer-bell",
+      "canonical_name": "CURRER BELL",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The name 'CURRER BELL' is signed at the end of the text.",
+      "age": "adult",
+      "description": "The author of the preface, signing off as 'CURRER BELL'.; The author of the third edition of 'Jane Eyre' who is addressing the Public to clarify her claim to the title of novelist.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001",
+        "0002"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "carlo",
+      "canonical_name": "Carlo",
+      "aliases": [
+        "the dog"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Referred to as 'his father's old pointer, Carlo'",
+      "age": "adult",
+      "description": "Mr. St. John's dog, a pointer.; Mr. Rivers' pointer dog. He is described as 'old' and 'austerity'.",
+      "first_chapter": "0032",
+      "chapters": [
+        "0032",
+        "0033"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "david",
+      "canonical_name": "David",
+      "aliases": [
+        "the fiddler David"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'the fiddler David'",
+      "age": "adult",
+      "description": "David is a historical figure mentioned by Miss Ingram as a fiddler.; David is mentioned by Mr. Rochester in a biblical allusion regarding Saul and the evil spirit.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019",
+        "0039"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lady-lynn",
+      "canonical_name": "Lady Lynn",
+      "aliases": [
+        "the titled dame"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), title 'Lady'",
+      "age": "adult",
+      "description": "Lady Lynn is a large, stout, and haughty lady who arrives with her daughters, Blanche and Mary. She is the wife of Sir George Lynn.; Lady Lynn is the wife of Henry Lynn and the mother of Mary Lynn. She is described as a 'proud dowager' and is shown to be 'confabulating with Lady Ingram",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "little-adele",
+      "canonical_name": "Little Adèle",
+      "aliases": [
+        "Miss Adèle"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The passage refers to her as 'Little Adèle' and ",
+      "age": "child",
+      "description": "Little Adèle is the adopted daughter of Mr. Rochester and the pupil of Jane. She is a young child. She is of; Mr. Rochester's ward.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024",
+        "0038"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-rowland-rochester",
+      "canonical_name": "Mr. Rowland Rochester",
+      "aliases": [
+        "Rowland"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (Mr.), and",
+      "age": "adult",
+      "description": "adult male, elder brother of Mr. Edward Rochester, who combined with the old gentleman.; Mr. Rochester's older brother, who is an idiot.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015",
+        "0029"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "robert-leaven",
+      "canonical_name": "Robert Leaven",
+      "aliases": [
+        "Robert",
+        "Leaven",
+        "the coachman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, male pronouns (his, him)",
+      "age": "adult",
+      "description": "Bessie's husband and the coachman at Gateshead.; Former coachman for Mrs. Reed, now married to Bessie.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012",
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-doctor",
+      "canonical_name": "The Doctor",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male role, implied by context of medical advice",
+      "age": "adult",
+      "description": "Doctor attending to Mrs. Reed.; A medical professional who forbade anything that could painfully excite Mrs. Reed.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "theodore",
+      "canonical_name": "Theodore",
+      "aliases": [
+        "Tedo"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Master' and male pronouns (he/him)",
+      "age": "child",
+      "description": "Mr. Brocklehurst's son.; Theodore is the brother of Miss Ingram. He is described as having 'drawled' and is shown to be 'remembering the merry days' of playing tricks on governesses",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0019"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-farmer",
+      "canonical_name": "the farmer",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to him as 'the farmer' and 'he'.",
+      "age": "adult",
+      "description": "A farmer sitting at a farmhouse door who gives the narrator a piece of bread.; A farmer whose daughters are the narrator's pupils.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030",
+        "0034"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hired-nurse",
+      "canonical_name": "the hired nurse",
+      "aliases": [
+        "the nurse"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and role as a caregiver.",
+      "age": "adult",
+      "description": "A nurse who cares for Helen Burns and guards the door to her room.; A hired nurse who attends to Mrs. Reed but is little looked after and slips out of the room.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-ostler",
+      "canonical_name": "the ostler",
+      "aliases": [
+        "the host"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The passage refers to him as 'the ostler' and ",
+      "age": "adult",
+      "description": "The ostler is the person who takes care of the horses at the George Inn. He is an adult man. He is of; The innkeeper at the Rochester Arms.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024",
+        "0038"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ahab",
+      "canonical_name": "Ahab",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Ahab as 'he' and mentions his dislike for",
+      "age": "unknown",
+      "description": "A character from literature mentioned as an example of someone who did not like Micaiah.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "alice-wood",
+      "canonical_name": "Alice Wood",
+      "aliases": [
+        "Alice"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Referred to as 'Alice Wood' and 'the attendant'.",
+      "age": "young_adult",
+      "description": "The narrator's attendant/handmaid. She is described as 'teachable' and 'handy'.",
+      "first_chapter": "0033",
+      "chapters": [
+        "0033"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "antoinetta",
+      "canonical_name": "Antoinetta",
+      "aliases": [
+        "the Creole"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Bertha's mother, mentioned in the document.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "augusta",
+      "canonical_name": "Augusta",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and title 'my second daughter'",
+      "age": "child",
+      "description": "Mr. Brocklehurst's daughter.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "barbara",
+      "canonical_name": "Barbara",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns",
+      "age": "adult",
+      "description": "A servant at Lowood School who brings tea.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bill-oliver",
+      "canonical_name": "Bill Oliver",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, he), referred to as 'Mr. Oliver', 'jour",
+      "age": "unknown",
+      "description": "Bill Oliver is the owner of the grand hall in Morton Vale. He is described as a journeyman needlemaker whose father was also a journeyman needlemaker. He is",
+      "first_chapter": "0031",
+      "chapters": [
+        "0031"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "bobby",
+      "canonical_name": "Bobby",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, male pronouns (his, him)",
+      "age": "child",
+      "description": "Bessie and Robert's three-year-old son.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "captain-fitzjames",
+      "canonical_name": "Captain Fitzjames",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he/him), explicit statement ('Diana's husband is a",
+      "age": "adult",
+      "description": "Diana's husband, a gallant officer in the navy.",
+      "first_chapter": "0040",
+      "chapters": [
+        "0040"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "catherine-johnstone",
+      "canonical_name": "Catherine Johnstone",
+      "aliases": [
+        "Catherine"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name",
+      "age": "child",
+      "description": "A pupil invited to tea.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "charles-the-first",
+      "canonical_name": "Charles the First",
+      "aliases": [
+        "Charles I",
+        "Charles"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Charles I. as 'he', 'him', and 'king'.",
+      "age": "adult",
+      "description": "Charles I. is a historical figure, described as 'murdered king'. He is referred to as 'Charles I.', 'Charles the First', and 'Charles'.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "clara",
+      "canonical_name": "Clara",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (she/her), context ('a German, Clara', 'Clara was'",
+      "age": "adult",
+      "description": "Mr. Rochester's third mistress, described as 'honest and quiet; but heavy, mindless, and unimpressible'. He gave her money to set her up in business.",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "damer-de-rochester",
+      "canonical_name": "Damer de Rochester",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "An ancestor mentioned on the tombstone.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dives",
+      "canonical_name": "Dives",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him), explicit reference as 'Dives",
+      "age": "unknown",
+      "description": "A biblical figure mentioned by St. John.",
+      "first_chapter": "0037",
+      "chapters": [
+        "0037"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "elizabeth",
+      "canonical_name": "Elizabeth",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "unknown",
+      "description": "Damer de Rochester's wife, mentioned on the tombstone.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "fielding",
+      "canonical_name": "Fielding",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Fielding as 'Fielding' and mentions his",
+      "age": "unknown",
+      "description": "An author mentioned as a comparison to the satirist of 'Vanity Fair'.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "franz",
+      "canonical_name": "Franz",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The name 'Franz' is typically male, and he is referred to as",
+      "age": "unknown",
+      "description": "A man mentioned in a story being read by Diana and Mary.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "george-the-third",
+      "canonical_name": "George the Third",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'George the Third', ",
+      "age": "adult",
+      "description": "A historical figure whose portrait hangs on the wall of the George Inn. He is mentioned but does not appear or speak in this ",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "giacinta",
+      "canonical_name": "Giacinta",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (she/her), context ('an Italian, Giacinta', 'Giac'",
+      "age": "adult",
+      "description": "Mr. Rochester's second mistress, described as 'unprincipled and violent'. He tired of her in three months.",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "god",
+      "canonical_name": "God",
+      "aliases": [
+        "the Spirit"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (His, Him), explicit reference as 'God",
+      "age": "unknown",
+      "description": "The deity who is prayed to and heard in a voice.",
+      "first_chapter": "0037",
+      "chapters": [
+        "0037"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "henry-lynn",
+      "canonical_name": "Henry Lynn",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'Henry Lynn'",
+      "age": "young_adult",
+      "description": "Henry Lynn is one of the gentlemen present at the gathering. He is described as a 'dashing spark' and is shown to be 'trying to talk French with Adèle'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hercules",
+      "canonical_name": "Hercules",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "A mythological figure mentioned by Jane in comparison to Mr. Rochester.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hope",
+      "canonical_name": "Hope",
+      "aliases": [
+        "the sweet wind from Europe"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A personification of hope mentioned in the passage as 'Hope'",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "james-hepburn",
+      "canonical_name": "James Hepburn",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'James Hepburn'",
+      "age": "adult",
+      "description": "James Hepburn is a historical figure mentioned by Miss Ingram as a 'wild, fierce, bandit hero'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-green",
+      "canonical_name": "John Green",
+      "aliases": [
+        "the clerk"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "An assistant to the clergyman.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jonas-mason",
+      "canonical_name": "Jonas Mason",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Bertha's father, mentioned in the document.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "julia-severn",
+      "canonical_name": "Julia Severn",
+      "aliases": [
+        "the awful object",
+        "Julia"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "name, pronouns (her, she)",
+      "age": "child",
+      "description": "A pupil with naturally curly hair.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lord-edwin-vere",
+      "canonical_name": "Lord Edwin Vere",
+      "aliases": [
+        "the titled conquest"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Lord, his",
+      "age": "adult",
+      "description": "A titled man whom Georgiana was involved with, whose prospects were ruined by Eliza.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "madame-frederic",
+      "canonical_name": "Madame Frédéric",
+      "aliases": [
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Madame', ",
+      "age": "adult",
+      "description": "A lady who cared for Adela after her mother died. She is not related to Adela and is described as poor. She is mentioned by Adela but does not appear or ",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "madame-joubert",
+      "canonical_name": "Madame Joubert",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to her as 'Madame Joubert'",
+      "age": "adult",
+      "description": "Madame Joubert is a former governess who was the target of Miss Ingram and Theodore's pranks. She is described as having 'raging passions' and being driven to",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "martha-abbot",
+      "canonical_name": "Martha Abbot",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'little girl'",
+      "age": "child",
+      "description": "Mentioned in a story about a dream of a child.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "martha-g",
+      "canonical_name": "Martha G——",
+      "aliases": [
+        "the Liar"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and reference to 'her soul'",
+      "age": "child",
+      "description": "A deceased child mentioned in a pamphlet given to Jane.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-ann-wilson",
+      "canonical_name": "Mary Ann Wilson",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and context of being a girl pupil.",
+      "age": "young_adult",
+      "description": "A shrewd, observant, and witty girl pupil at Lowood who is Jane's close friend.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary-garrett",
+      "canonical_name": "Mary Garrett",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name",
+      "age": "young_adult",
+      "description": "A pupil at the school who became a teacher and is mentioned by the narrator.",
+      "first_chapter": "0035",
+      "chapters": [
+        "0035"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "master-broughton-brocklehurst",
+      "canonical_name": "Master Broughton Brocklehurst",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Master' and male pronouns (he/him)",
+      "age": "child",
+      "description": "Mr. Brocklehurst's younger son.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "memory",
+      "canonical_name": "Memory",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'her'",
+      "age": "unknown",
+      "description": "An allegorical figure representing Jane's past experiences.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mesrour",
+      "canonical_name": "Mesrour",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name, referred to as 'horse' and 'steed'",
+      "age": "adult",
+      "description": "Mr. Rochester's horse.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "micaiah",
+      "canonical_name": "Micaiah",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Micaiah as 'he' and mentions that Ahab",
+      "age": "unknown",
+      "description": "A prophet mentioned in the context of Ahab's dislike for him.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-gryce",
+      "canonical_name": "Miss Gryce",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title (Miss), female pronouns (her, she)",
+      "age": "adult",
+      "description": "A teacher at Lowood described as a heavy Welshwoman who snores.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-rosamond",
+      "canonical_name": "Miss Rosamond",
+      "aliases": [
+        "the heiress",
+        "the Peri",
+        "the young girl",
+        "the laughing girl"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Referred to as 'Miss Rosamond', 'Miss Oliver', and 'she'.",
+      "age": "young_adult",
+      "description": "The daughter of Mr. Oliver. She is described as beautiful, 'gay', 'thoughtless', and 'giddy'.",
+      "first_chapter": "0033",
+      "chapters": [
+        "0033"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-wilson",
+      "canonical_name": "Miss Wilson",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to her as 'Miss Wilson'",
+      "age": "adult",
+      "description": "Miss Wilson is a former governess who was the target of Miss Ingram and Theodore's pranks. She is described as a 'poor sickly thing, lachrymose and low-spirited",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-bates",
+      "canonical_name": "Mr. Bates",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title (Mr.) and male pronouns (he/him).",
+      "age": "adult",
+      "description": "The surgeon who visits Helen Burns and informs Jane of her condition.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-edward",
+      "canonical_name": "Mr. Edward",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title (Mr.), and",
+      "age": "adult",
+      "description": "adult male, younger brother of Mr. Rowland Rochester, who broke with his family.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-gibson",
+      "canonical_name": "Mr. Gibson",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The passage refers to him as 'Mr. Gibson' and ",
+      "age": "adult",
+      "description": "Mr. Gibson is Georgiana's uncle who has come down to direct his sister's interment and settle the family affairs. He is an adult man. He is of",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-granby",
+      "canonical_name": "Mr. Granby",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Mr.'",
+      "age": "unknown",
+      "description": "Rosamond Oliver's fiancé.",
+      "first_chapter": "0036",
+      "chapters": [
+        "0036"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-henry-lynn",
+      "canonical_name": "Mr. Henry Lynn",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Mr. Henry Lynn is a gentleman at Thornfield Hall who is often referred to as the leader of the group. He is described as a tall, dark-haired man with a swarthy",
+      "first_chapter": "0020",
+      "chapters": [
+        "0020"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-reed",
+      "canonical_name": "Mr. Reed",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title and context of being a ghost",
+      "age": "adult",
+      "description": "Jane Eyre's deceased father, referred to as a ghost.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-thackeray",
+      "canonical_name": "Mr. Thackeray",
+      "aliases": [
+        "Thackeray"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to Thackeray as 'Mr. Thackeray' and 'he'.",
+      "age": "unknown",
+      "description": "The author of 'Vanity Fair' mentioned as the first social regenerator of the day.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-vining",
+      "canonical_name": "Mr. Vining",
+      "aliases": [
+        "the parson in the pip"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'Mr. Vining', 'whey-faced Mr. V",
+      "age": "adult",
+      "description": "Mr. Vining is a former tutor who was the target of Miss Ingram and Theodore's pranks. He is described as 'whey-faced' and 'the parson in the pip'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-wharton",
+      "canonical_name": "Mr. Wharton",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (he/him), explicit statement ('Mary's is a",
+      "age": "adult",
+      "description": "Mary's husband, a clergyman and college friend of Diana's brother.",
+      "first_chapter": "0040",
+      "chapters": [
+        "0040"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-wood",
+      "canonical_name": "Mr. Wood",
+      "aliases": [
+        "Wood",
+        "the solicitor",
+        "the priest",
+        "the clergyman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The clergyman officiating the wedding.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-grey",
+      "canonical_name": "Mrs. Grey",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to her as 'Mrs. Grey'",
+      "age": "adult",
+      "description": "Mrs. Grey is a former governess who was the target of Miss Ingram and Theodore's pranks. She is described as 'coarse and insensible'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-harden",
+      "canonical_name": "Mrs. Harden",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns",
+      "age": "adult",
+      "description": "The housekeeper at Lowood School.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-lynn",
+      "canonical_name": "Mrs. Lynn",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Mrs. Lynn is a lady at Thornfield Hall who is often referred to as the leader of the group. She is described as a tall, dark-haired woman with a swarthy (",
+      "first_chapter": "0020",
+      "chapters": [
+        "0020"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "naomi-brocklehurst",
+      "canonical_name": "Naomi Brocklehurst",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Naomi Brockle'",
+      "age": "adult",
+      "description": "The woman who rebuilt the new part of Lowood Institution.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "reason",
+      "canonical_name": "Reason",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "referred to as 'her' and 'Memory having given her evidence'",
+      "age": "unknown",
+      "description": "An allegorical figure representing Jane's rational mind.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sam",
+      "canonical_name": "Sam",
+      "aliases": [
+        "the ambassador"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "Acts as an ambassador between the ladies and the fortune-teller, and later waits in the hall.",
+      "first_chapter": "0020",
+      "chapters": [
+        "0020"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "samson",
+      "canonical_name": "Samson",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "A biblical figure mentioned by Jane in comparison to Mr. Rochester.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sarah",
+      "canonical_name": "Sarah",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and context of sleeping with Bess",
+      "age": "young_adult",
+      "description": "A servant who joins Bessie in the nursery.",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "saul",
+      "canonical_name": "Saul",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him),",
+      "age": "adult",
+      "description": "Saul is mentioned by Mr. Rochester in a biblical allusion regarding David and the evil spirit.",
+      "first_chapter": "0039",
+      "chapters": [
+        "0039"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "signior-eduardo",
+      "canonical_name": "Signior Eduardo",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "the passage refers to him as 'Signior Eduardo'",
+      "age": "adult",
+      "description": "Signior Eduardo is a guest at the gathering who is asked by Miss Ingram to sing.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sir-frederic-granby",
+      "canonical_name": "Sir Frederic Granby",
+      "aliases": [
+        "Sir Frederic"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Sir'",
+      "age": "adult",
+      "description": "Mr. Granby's grandfather.",
+      "first_chapter": "0036",
+      "chapters": [
+        "0036"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-moon",
+      "canonical_name": "The Moon",
+      "aliases": [
+        "the light",
+        "the gleam"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A celestial body mentioned in the passage as 'the moon'",
+      "first_chapter": "0029",
+      "chapters": [
+        "0029"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "uncle-reed",
+      "canonical_name": "Uncle Reed",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Uncle' and male pronouns (he/him)",
+      "age": "adult",
+      "description": "Mrs. Reed's husband, deceased.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "wolfe",
+      "canonical_name": "Wolfe",
+      "aliases": [
+        "the general"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Wolfe', ",
+      "age": "adult",
+      "description": "A historical figure whose death is depicted in a painting at the George Inn. He is mentioned but does not appear or speak in this ",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-archdeacon",
+      "canonical_name": "the Archdeacon",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Archdeacon' and male pronouns (he/him)",
+      "age": "adult",
+      "description": "A clergyman associated with Mr. Brocklehurst.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-holy-virgin",
+      "canonical_name": "the Holy Virgin",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'Holy Virgin', ",
+      "age": "unknown",
+      "description": "A religious figure to whom Adela's mother is said to have gone. She is mentioned but does not appear or speak in this ",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-misses-eshton",
+      "canonical_name": "the Misses Eshton",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "title 'Misses', referred to as 'she' (plural context)",
+      "age": "adult",
+      "description": "Two guests at Thornfield Hall.",
+      "first_chapter": "0022",
+      "chapters": [
+        "0022"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-prince-of-wales",
+      "canonical_name": "the Prince of Wales",
+      "aliases": [
+        "the Prince"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Prince of Wales', ",
+      "age": "adult",
+      "description": "A historical figure whose portrait hangs on the wall of the George Inn. He is mentioned but does not appear or speak in this ",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-public",
+      "canonical_name": "the Public",
+      "aliases": [
+        "the indulgent ear"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "The public is mentioned as a group that has inclined an 'indulgent ear' to the tale.",
+      "first_chapter": "0001",
+      "chapters": [
+        "0001"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-rev-mr-nasmyth",
+      "canonical_name": "the Rev. Mr. Nasmyth",
+      "aliases": [
+        "Mr. Nasmyth"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Rev. Mr.), male pronouns (his)",
+      "age": "adult",
+      "description": "The clergyman who marries Miss Temple.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-sibyl",
+      "canonical_name": "the Sibyl",
+      "aliases": [
+        "the strange being",
+        "the old crone",
+        "the gipsy"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "She had on a red cloak and a black bonnet... like a prayer-\\",
+      "age": "unknown",
+      "description": "Seated in an easy-chair at the chimney-corner, wearing a red cloak, black bonnet, and broad-brimmed gipsy hat. She reads a black book by the fire, mutters words",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-carrier",
+      "canonical_name": "the carrier",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A servant who informs the narrator that a person wishes to see her.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-elderly-person",
+      "canonical_name": "the elderly person",
+      "aliases": [
+        "the old woman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The narrator refers to her as 'an elderly woman' and 'she'.",
+      "age": "elderly",
+      "description": "An elderly woman knitting a stocking in the kitchen of the house on the moor.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-girl",
+      "canonical_name": "the girl",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), referred to as 'girl'",
+      "age": "young_adult",
+      "description": "A girl at Lowood who shares a book with Jane and discusses the institution.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-guard",
+      "canonical_name": "the guard",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'guard'",
+      "age": "adult",
+      "description": "The coach guard who takes care of Jane during the journey.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-old-servant",
+      "canonical_name": "the old servant",
+      "aliases": [
+        "the woman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "pronouns (she/her), titles (servant), dialogue tags",
+      "age": "adult",
+      "description": "An older female servant who manages the household, stirs the fire, and initially refuses entry to the narrator.",
+      "first_chapter": "0030",
+      "chapters": [
+        "0030"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Georgy": [
+      "georgiana",
+      "eliza"
+    ],
+    "Mrs. Rochester": [
+      "jane-eyre",
+      "bertha-antoinetta-mason"
+    ],
+    "Rivers": [
+      "mr-rochester",
+      "st-john-rivers"
+    ],
+    "the Abigail": [
+      "bessie-lee",
+      "abbot"
+    ],
+    "the Spirit": [
+      "st-john-rivers",
+      "god"
+    ],
+    "the child": [
+      "jane-eyre",
+      "adele"
+    ],
+    "the clergyman": [
+      "st-john-rivers",
+      "mr-wood"
+    ],
+    "the creature": [
+      "adele",
+      "john-reed",
+      "grace-poole"
+    ],
+    "the fiend": [
+      "grace-poole",
+      "pilot"
+    ],
+    "the gentleman": [
+      "st-john-rivers",
+      "mr-lloyd"
+    ],
+    "the heiress": [
+      "jane-eyre",
+      "miss-rosamond"
+    ],
+    "the instrument": [
+      "mr-rochester",
+      "jane-eyre"
+    ],
+    "the intruder": [
+      "richard-mason",
+      "mr-briggs"
+    ],
+    "the lady": [
+      "jane-eyre",
+      "mrs-reed",
+      "blanche-ingram",
+      "maria-temple",
+      "abbot",
+      "madame-frederic"
+    ],
+    "the little girl": [
+      "jane-eyre",
+      "adele"
+    ],
+    "the mad lady": [
+      "jane-eyre",
+      "bertha-antoinetta-mason"
+    ],
+    "the mistress": [
+      "jane-eyre",
+      "mrs-reed",
+      "diana"
+    ],
+    "the mother": [
+      "mrs-reed",
+      "celine-varens"
+    ],
+    "the new-comer": [
+      "st-john-rivers",
+      "richard-mason"
+    ],
+    "the proprietor": [
+      "mr-rochester",
+      "mr-oliver"
+    ],
+    "the servant": [
+      "leah",
+      "hannah",
+      "miss-miller"
+    ],
+    "the solicitor": [
+      "mr-briggs",
+      "mr-wood"
+    ],
+    "the stranger": [
+      "mr-rochester",
+      "richard-mason"
+    ],
+    "the wild beast": [
+      "grace-poole",
+      "pilot"
+    ]
+  },
+  "narrator": "jane-eyre"
+}

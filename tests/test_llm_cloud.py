@@ -1,13 +1,11 @@
 """Secrets from .env files, retries, and the Claude (Anthropic SDK) dialect against a stand-in client."""
 
-import os
 from types import SimpleNamespace
 
 import httpx
 import pytest
 from pydantic import BaseModel
 
-from incant import config as config_mod
 from incant import llm as llm_mod
 from incant import llm_anthropic
 from incant.config import LLMConfig, exposed_env_files, load_config, secret
@@ -75,6 +73,7 @@ def fake_client(stop="end_turn", parsed=Out(x=3)):
 
 
 def test_anthropic_dialect(tmp_path, monkeypatch):
+    pytest.importorskip("anthropic")  # the anthropic extra (in the Docker image)
     cfg = LLMConfig(dialect="anthropic", model="claude-opus-5-5", effort="low", effort_thinking="high")
     llm = llm_mod.LLM(cfg, cache_dir=tmp_path / "cache")
     api, msgs = fake_client()

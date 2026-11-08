@@ -95,6 +95,8 @@ def main() -> int:
         gold = json.loads(g.read_text())
         book = gold["book"]
         real = WorkDir.for_slug(cfg.paths.work_dir, book)
+        if not (real.root / "text.md").exists():  # not in your work directory: the copy shipped in eval/books/
+            real = WorkDir(ROOT / "eval" / "books" / book)
         dst = tmp / "work" / book
         dst.mkdir()
         for f in ("meta.json", "text.md"):

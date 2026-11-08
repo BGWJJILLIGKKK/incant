@@ -1,8 +1,22 @@
 [project]
 name = "incant"
 version = "0.2.0"
-description = "Turn books (txt, epub, URLs) into fully-voiced, multi-speaker m4b audiobooks using local LLMs and TTS."
+description = "Ingest Novels, Cast Actors, Narrate Tales: multi-voice audiobooks from EPUB, Kindle, PDF, Word and web pages, with local or cloud LLMs and TTS."
 readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+authors = [{ name = "BGWJJILLIGKKK", email = "BGWJJILLIGKKK@testsinprod.dev" }]
+keywords = ["audiobook", "text-to-speech", "tts", "epub", "llm", "speaker-attribution", "kokoro"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Text Processing",
+]
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.9",
@@ -32,6 +46,12 @@ torch = [  # the incant_local image: ingest=docling (OCR for scanned PDFs) on CP
     "torch>=2.4",
     "torchvision",  # listed so it also comes from the CPU index, matching torch
 ]
+
+[project.urls]
+Homepage = "https://github.com/BGWJJILLIGKKK/incant"
+Documentation = "https://github.com/BGWJJILLIGKKK/incant/blob/main/docs/quickstart.md"
+Issues = "https://github.com/BGWJJILLIGKKK/incant/issues"
+Changelog = "https://github.com/BGWJJILLIGKKK/incant/blob/main/CHANGELOG.md"
 
 [project.scripts]
 incant = "incant.cli:main"

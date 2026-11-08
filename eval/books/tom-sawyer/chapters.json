@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "method": "headings",
+  "chapters": [
+    {
+      "id": "0001",
+      "index": 1,
+      "title": "PREFACE",
+      "file": "chapters/0001.txt",
+      "word_count": 159,
+      "speak_title": true
+    },
+    {
+      "id": "0002",
+      "index": 2,
+      "title": "CHAPTER I",
+      "file": "chapters/0002.txt",
+      "word_count": 2377,
+      "speak_title": true
+    },
+    {
+      "id": "0003",
+      "index": 3,
+      "title": "CHAPTER II",
+      "file": "chapters/0003.txt",
+      "word_count": 1844,
+      "speak_title": true
+    },
+    {
+      "id": "0004",
+      "index": 4,
+      "title": "CHAPTER III",
+      "file": "chapters/0004.txt",
+      "word_count": 2247,
+      "speak_title": true
+    },
+    {
+      "id": "0005",
+      "index": 5,
+      "title": "CHAPTER IV",
+      "file": "chapters/0005.txt",
+      "word_count": 3376,
+      "speak_title": true
+    },
+    {
+      "id": "0006",
+      "index": 6,
+      "title": "CHAPTER V",
+      "file": "chapters/0006.txt",
+      "word_count": 1913,
+      "speak_title": true
+    },
+    {
+      "id": "0007",
+      "index": 7,
+      "title": "CHAPTER VI",
+      "file": "chapters/0007.txt",
+      "word_count": 3491,
+      "speak_title": true
+    },
+    {
+      "id": "0008",
+      "index": 8,
+      "title": "CHAPTER VII",
+      "file": "chapters/0008.txt",
+      "word_count": 1907,
+      "speak_title": true
+    },
+    {
+      "id": "0009",
+      "index": 9,
+      "title": "CHAPTER VIII",
+      "file": "chapters/0009.txt",
+      "word_count": 1738,
+      "speak_title": true
+    },
+    {
+      "id": "0010",
+      "index": 10,
+      "title": "CHAPTER IX",
+      "file": "chapters/0010.txt",
+      "word_count": 2128,
+      "speak_title": true
+    },
+    {
+      "id": "0011",
+      "index": 11,
+      "title": "CHAPTER X",
+      "file": "chapters/0011.txt",
+      "word_count": 2030,
+      "speak_title": true
+    },
+    {
+      "id": "0012",
+      "index": 12,
+      "title": "CHAPTER XI",
+      "file": "chapters/0012.txt",
+      "word_count": 1467,
+      "speak_title": true
+    },
+    {
+      "id": "0013",
+      "index": 13,
+      "title": "CHAPTER XII",
+      "file": "chapters/0013.txt",
+      "word_count": 1676,
+      "speak_title": true
+    },
+    {
+      "id": "0014",
+      "index": 14,
+      "title": "CHAPTER XIII",
+      "file": "chapters/0014.txt",
+      "word_count": 2447,
+      "speak_title": true
+    },
+    {
+      "id": "0015",
+      "index": 15,
+      "title": "CHAPTER XIV",
+      "file": "chapters/0015.txt",
+      "word_count": 2066,
+      "speak_title": true
+    },
+    {
+      "id": "0016",
+      "index": 16,
+      "title": "CHAPTER XV",
+      "file": "chapters/0016.txt",
+      "word_count": 1676,
+      "speak_title": true
+    },
+    {
+      "id": "0017",
+      "index": 17,
+      "title": "CHAPTER XVI",
+      "file": "chapters/0017.txt",
+      "word_count": 3168,
+      "speak_title": true
+    },
+    {
+      "id": "0018",
+      "index": 18,
+      "title": "CHAPTER XVII",
+      "file": "chapters/0018.txt",
+      "word_count": 1119,
+      "speak_title": true
+    },
+    {
+      "id": "0019",
+      "index": 19,
+      "title": "CHAPTER XVIII",
+      "file": "chapters/0019.txt",
+      "word_count": 2879,
+      "speak_title": true
+    },
+    {
+      "id": "0020",
+      "index": 20,
+      "title": "CHAPTER XIX",
+      "file": "chapters/0020.txt",
+      "word_count": 777,
+      "speak_title": true
+    },
+    {
+      "id": "0021",
+      "index": 21,
+      "title": "CHAPTER XX",
+      "file": "chapters/0021.txt",
+      "word_count": 1673,
+      "speak_title": true
+    },
+    {
+      "id": "0022",
+      "index": 22,
+      "title": "CHAPTER XXI",
+      "file": "chapters/0022.txt",
+      "word_count": 2109,
+      "speak_title": true
+    },
+    {
+      "id": "0023",
+      "index": 23,
+      "title": "CHAPTER XXII",
+      "file": "chapters/0023.txt",
+      "word_count": 1005,
+      "speak_title": true
+    },
+    {
+      "id": "0024",
+      "index": 24,
+      "title": "CHAPTER XXIII",
+      "file": "chapters/0024.txt",
+      "word_count": 1913,
+      "speak_title": true
+    },
+    {
+      "id": "0025",
+      "index": 25,
+      "title": "CHAPTER XXIV",
+      "file": "chapters/0025.txt",
+      "word_count": 408,
+      "speak_title": true
+    },
+    {
+      "id": "0026",
+      "index": 26,
+      "title": "CHAPTER XXV",
+      "file": "chapters/0026.txt",
+      "word_count": 2049,
+      "speak_title": true
+    },
+    {
+      "id": "0027",
+      "index": 27,
+      "title": "CHAPTER XXVI",
+      "file": "chapters/0027.txt",
+      "word_count": 2577,
+      "speak_title": true
+    },
+    {
+      "id": "0028",
+      "index": 28,
+      "title": "CHAPTER XXVII",
+      "file": "chapters/0028.txt",
+      "word_count": 954,
+      "speak_title": true
+    },
+    {
+      "id": "0029",
+      "index": 29,
+      "title": "CHAPTER XXVIII",
+      "file": "chapters/0029.txt",
+      "word_count": 1083,
+      "speak_title": true
+    },
+    {
+      "id": "0030",
+      "index": 30,
+      "title": "CHAPTER XXIX",
+      "file": "chapters/0030.txt",
+      "word_count": 2539,
+      "speak_title": true
+    },
+    {
+      "id": "0031",
+      "index": 31,
+      "title": "CHAPTER XXX",
+      "file": "chapters/0031.txt",
+      "word_count": 2998,
+      "speak_title": true
+    },
+    {
+      "id": "0032",
+      "index": 32,
+      "title": "CHAPTER XXXI",
+      "file": "chapters/0032.txt",
+      "word_count": 2990,
+      "speak_title": true
+    },
+    {
+      "id": "0033",
+      "index": 33,
+      "title": "CHAPTER XXXII",
+      "file": "chapters/0033.txt",
+      "word_count": 1019,
+      "speak_title": true
+    },
+    {
+      "id": "0034",
+      "index": 34,
+      "title": "CHAPTER XXXIII",
+      "file": "chapters/0034.txt",
+      "word_count": 3314,
+      "speak_title": true
+    },
+    {
+      "id": "0035",
+      "index": 35,
+      "title": "CHAPTER XXXIV",
+      "file": "chapters/0035.txt",
+      "word_count": 864,
+      "speak_title": true
+    },
+    {
+      "id": "0036",
+      "index": 36,
+      "title": "CHAPTER XXXV",
+      "file": "chapters/0036.txt",
+      "word_count": 1879,
+      "speak_title": true
+    }
+  ]
+}

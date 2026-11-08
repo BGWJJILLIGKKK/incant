@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "slug": "alice-in-wonderland",
+  "title": "Alice's Adventures in Wonderland",
+  "author": "Lewis Carroll",
+  "language": "en",
+  "source": "https://www.gutenberg.org/ebooks/11",
+  "source_format": "epub"
+}

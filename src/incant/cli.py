@@ -37,6 +37,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from . import __version__
 from .config import load_config
 from .pipeline import ResolveError, StageInfo, Step, discover, instantiate, load_method_class, resolve, run_pipeline
 from .stages.base import Context
@@ -172,6 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--chapters", help="restrict per-chapter stages, e.g. 1-3,7")
     ap.add_argument("--dry-run", action="store_true", help="show the resolved plan and exit")
     ap.add_argument("--list", action="store_true", help="list stages and methods")
+    ap.add_argument("--version", action="version", version=f"incant {__version__}")
     ap.add_argument("--licenses", action="store_true", help="known license terms per method, and gaps")
     ap.add_argument("--check", action="store_true", help="check readiness of the resolved methods (endpoints, voices, tools)")
     ap.add_argument("--review", action="store_true", help="serve the review/edit page for an existing book")
@@ -191,6 +193,9 @@ def main(argv: list[str] | None = None) -> int:
 
     # INPUT: new source, an existing book (slug or work dir) to resume, or a directory of sources (batch)
     source: str | None = args.input
+    if args.check and source and not Path(source).exists() and not (cfg.paths.work_dir / source).exists() \
+            and (source.partition("=")[0] in {s.name for s in stages} or any(source in s.methods for s in stages)):
+        args.methods, source = [source, *args.methods], None  # `--check characters speakers`: methods, no book
     if source and not source.startswith(("http://", "https://")) and not Path(source).exists() \
             and (cfg.paths.data_dir / source).exists():
         source = str(cfg.paths.data_dir / source)  # "books/x.epub" from anywhere: it's in the data directory

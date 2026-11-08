@@ -1,0 +1,2292 @@
+{
+  "schema_version": 1,
+  "characters": [
+    {
+      "id": "lord-godalming",
+      "canonical_name": "Lord Godalming",
+      "aliases": [
+        "Arthur",
+        "Godalming",
+        "Arthur Holmwood",
+        "Mr. Holmwood",
+        "Holmwood",
+        "Hon. Arthur Holmwood",
+        "the husbandman",
+        "the chaplain",
+        "Jack",
+        "the latter",
+        "the poor dear fellow",
+        "Arthur of Miss Lucy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A distant relative and friend of the family.; Lord Godalming, friend of Van Helsing and Lucy Westenra.; Arthur's friend and a member of the aristocracy who helps them investigate Lucy's death.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029"
+      ],
+      "mentions": 36,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "professor-van-helsing",
+      "canonical_name": "Professor Van Helsing",
+      "aliases": [
+        "Van Helsing",
+        "Dr. Van Helsing",
+        "The Professor",
+        "the doctor",
+        "the Dutchman",
+        "the undertaker",
+        "Abraham Van Helsing",
+        "the professor",
+        "King Laugh",
+        "the old fox",
+        "the Professor came in",
+        "Professor",
+        "the great specialist",
+        "the old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and title 'Professor'",
+      "age": "adult",
+      "description": "Van Helsing is the recipient of the telegrams from Seward. He is not present in the scene with the patient.; A specialist doctor who comes to help Lucy.; A professor who assists the narrator in treating Lucy.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0029"
+      ],
+      "mentions": 33,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jonathan-harker",
+      "canonical_name": "Jonathan Harker",
+      "aliases": [
+        "Jonathan",
+        "Harker",
+        "John",
+        "Mitchell",
+        "Mr. Harker",
+        "the poor fellow",
+        "Mr. Jonathan",
+        "the Herr Englishman",
+        "the poor dear",
+        "Jack",
+        "Friend John",
+        "the English Herr"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "Mina's fiancé, a doctor traveling in Transylvania.; Mina's husband, feared to be at sea.; The narrator's fiancé, who is ill in a sanatorium.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0006",
+        "0008",
+        "0009",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029"
+      ],
+      "mentions": 31,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "quincey-morris",
+      "canonical_name": "Quincey Morris",
+      "aliases": [
+        "Quincey",
+        "Mr. Morris",
+        "Morris",
+        "Mr. Quincey Morris",
+        "Mr. Quincey P. Morris",
+        "the wounded man",
+        "Morris Quincey"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A man who arrives with a message from Arthur and later offers his blood for Lucy.; American friend of Arthur and Van Helsing, who accompanied Arthur to Ring.; A friend of Lord Godalming who is recovering with him.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029"
+      ],
+      "mentions": 31,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mina-harker",
+      "canonical_name": "Mina Harker",
+      "aliases": [
+        "Mina",
+        "Madam Mina",
+        "Mrs. Harker",
+        "Mina Murray",
+        "the woman",
+        "the worthless wretch",
+        "the dear girl",
+        "Wilhelmina",
+        "the white-clad figure",
+        "the poor wretch",
+        "Madam",
+        "the lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Referenced by the narrator as someone who might receive the diary.; The narrator's wife or fiancée, mentioned in his thoughts.; A woman to whom the narrator intends to write secret letters. She is not present in the scene but is referred to by name.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0004",
+        "0005",
+        "0006",
+        "0008",
+        "0010",
+        "0013",
+        "0014",
+        "0015",
+        "0018",
+        "0020",
+        "0021",
+        "0022",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029"
+      ],
+      "mentions": 30,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "john-seward",
+      "canonical_name": "John Seward",
+      "aliases": [
+        "Dr. Seward",
+        "Seward",
+        "Dr. John Seward",
+        "Jack Seward",
+        "the doctor",
+        "the old fool Van Helsing",
+        "Jack",
+        "the lunatic-asylum man",
+        "the American interviewer"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The diary writer and asylum doctor.; A doctor, Lucy's physician, Arthur's friend.; A doctor who is Lucy's caretaker and Van Helsing's colleague.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0023",
+        "0024",
+        "0025",
+        "0026",
+        "0027",
+        "0028",
+        "0029"
+      ],
+      "mentions": 27,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "lucy-westenra",
+      "canonical_name": "Lucy Westenra",
+      "aliases": [
+        "Lucy",
+        "Miss Westenra",
+        "the poor child",
+        "the young lady",
+        "the poor girl",
+        "the Un-Dead",
+        "L",
+        "the dear child",
+        "the dead woman",
+        "the sweet young dear"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "described as 'more excitable than ever' and 'otherwise well'; Mina's wife, who sleepwalks.; The narrator's companion who is upset by the events and sensitive to influences.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0007",
+        "0008",
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0013",
+        "0014",
+        "0015",
+        "0016",
+        "0017",
+        "0018",
+        "0019",
+        "0020",
+        "0023",
+        "0026"
+      ],
+      "mentions": 24,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "renfield",
+      "canonical_name": "Renfield",
+      "aliases": [
+        "Mr. Renfield",
+        "Patrick Hennessey",
+        "R. M. Renfield",
+        "Dr. Hennessey",
+        "the patient",
+        "the man",
+        "the lunatic",
+        "the sanest lunatic",
+        "the case",
+        "the unhappy husband",
+        "the poor fellow",
+        "the poor man",
+        "the patient Renfield",
+        "the patient twice ran away",
+        "the poor soul"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The asylum patient with religious mania.; A patient in Dr. Seward's care, suffering from madness.; A patient in an asylum who has an outbreak.",
+      "first_chapter": "0006",
+      "chapters": [
+        "0006",
+        "0009",
+        "0010",
+        "0013",
+        "0015",
+        "0018",
+        "0019",
+        "0020",
+        "0021",
+        "0022",
+        "0023"
+      ],
+      "mentions": 17,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "count-dracula",
+      "canonical_name": "Count Dracula",
+      "aliases": [
+        "the Count",
+        "The Count",
+        "Dracula",
+        "the monster",
+        "Count",
+        "D",
+        "the hunter",
+        "the Draculas",
+        "Voivode Dracula",
+        "the Vampire",
+        "the brute beasts",
+        "the old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), title 'Count'",
+      "age": "adult",
+      "description": "The nobleman of Transylvania who is the destination of the journey.; A tall, old, clean-shaven man with a long white moustache, clad in black. He is the owner of the castle and the estate in London.; The vampire antagonist; escaped to Transylvania; referred to as 'Count' and 'our enemy'.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003",
+        "0015",
+        "0019",
+        "0020",
+        "0024",
+        "0025"
+      ],
+      "mentions": 10,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "peter-hawkins",
+      "canonical_name": "Peter Hawkins",
+      "aliases": [
+        "Mr. Hawkins",
+        "Mr. Peter Hawkins",
+        "the dear old man",
+        "the old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title \"Mr.\",",
+      "age": "adult",
+      "description": "A friend of the Count from Exeter. He entrusted the narrator with a letter and is involved in the purchase of the estate.; A man who the narrator has written letters to. He is described as being in his late 20s or early 30s.; Jonathan's friend who sends letters to Mina.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003",
+        "0004",
+        "0005",
+        "0009",
+        "0013",
+        "0015"
+      ],
+      "mentions": 8,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "simmons",
+      "canonical_name": "Simmons",
+      "aliases": [
+        "the attendant",
+        "the man",
+        "the watchman",
+        "the attendants",
+        "the night-watchman",
+        "the night attendant"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.29,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The asylum staff member who monitors Renfield.; Staff members who care for Renfield.; The attendant is responsible for monitoring the patient and summoning aid when the patient becomes violent. The attendant also reports the patient's screams to ",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0010",
+        "0018",
+        "0021",
+        "0022",
+        "0023"
+      ],
+      "mentions": 7,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-westenra",
+      "canonical_name": "Mrs. Westenra",
+      "aliases": [
+        "the poor lady",
+        "the mistress",
+        "Madame",
+        "Mother",
+        "the old woman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (\"her\", \"she\") and title \"Mrs.\",",
+      "age": "adult",
+      "description": "Lucy's mother, who is ill.; Lucy's mother.; Lucy's mother; the wife of the deceased Mr. Westenra; the one who removes the flowers from Lucy's room.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0010",
+        "0011",
+        "0012",
+        "0014",
+        "0015"
+      ],
+      "mentions": 6,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-lucy-westenra",
+      "canonical_name": "Miss Lucy Westenra",
+      "aliases": [
+        "Miss Lucy",
+        "the dead"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "young_adult",
+      "description": "The patient who is ill and the subject of the garlic treatment.; The deceased woman whose grave is being discussed; referred to as 'dead' and 'Un-Dead'.; Mentioned as a past victim of the Count; her experience serves as a warning.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011",
+        "0015",
+        "0016",
+        "0025"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-swales",
+      "canonical_name": "Mr. Swales",
+      "aliases": [
+        "the Aud Man",
+        "the poor old man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title \"Mr.\",",
+      "age": "elderly",
+      "description": "described as 'poor old man' and 'aud' (daffled); A man found dead on the seat, whose death is described as a cause for Lucy's restlessness.; A character mentioned by Lucy in a dream/memory.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008",
+        "0009"
+      ],
+      "mentions": 4,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "captain-donelson",
+      "canonical_name": "Captain Donelson",
+      "aliases": [
+        "the captain",
+        "the Old Mon",
+        "the skipper",
+        "the captain come",
+        "Donelson",
+        "the dead seaman",
+        "the dead steersman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "The captain of the Demeter who died at the helm.; Captain of the *Czarina Catherine*; interacts with the Count and the group.; The captain of the Czarina Catherine. He is superstitious and has a quick voyage.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008",
+        "0025",
+        "0027"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "samuel-f-billington",
+      "canonical_name": "Samuel F. Billington",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name in letter signature",
+      "age": "adult",
+      "description": "A recipient of one of the narrator's letters, addressed at No. 7, The Crescent, Whitby.; A solicitor in Whitby writing a letter about goods delivery.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004",
+        "0009"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sister-agatha",
+      "canonical_name": "Sister Agatha",
+      "aliases": [
+        "the good Sister",
+        "the dear sisters"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female title \"Sister\" and context of nursing care",
+      "age": "adult",
+      "description": "A nurse at the sanatorium caring for Jonathan.; A nurse at the asylum where Jonathan is recovering.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0010"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "thomas-snelling",
+      "canonical_name": "Thomas Snelling",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.67,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A carrier who was defeated by a madman and was employed by Harris & Sons.; A person Jonathan plans to visit to trace the boxes.; Assistant to Smollet, found drunk at home.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013",
+        "0020",
+        "0021"
+      ],
+      "mentions": 3,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-strange-driver",
+      "canonical_name": "the strange driver",
+      "aliases": [
+        "the driver",
+        "the coachman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), role as coach driver",
+      "age": "adult",
+      "description": "The driver of the calèche that picks up Jonathan Harker.; The person driving the carriage who checks the horses, disappears into the darkness, forms a device with stones, commands the wolves, and pulls up the horses at; A strong man who drives the calèche that brings the narrator to the castle. He is noted for his prodigious strength.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0003"
+      ],
+      "mentions": 3,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "art",
+      "canonical_name": "Art",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "The text refers to him as 'Art' and 'he'.",
+      "age": "adult",
+      "description": "A man who is being comforted and is mentioned by Mr. Morris.; One of the group looking after horses.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018",
+        "0021"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "geordie",
+      "canonical_name": "Geordie",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "A character mentioned by Lucy in a dream/memory.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "god",
+      "canonical_name": "God",
+      "aliases": [
+        "the real God"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "The deity referenced in Renfield's delusions.; Referenced as a divine figure watching over humanity.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009",
+        "0025"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "h-b-m-vice-consul",
+      "canonical_name": "H. B. M. Vice-Consul",
+      "aliases": [
+        "the Vice-Consul",
+        "the official",
+        "Vice-Consul"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "unknown",
+      "description": "Official in Varna; later in Galatz; aids the group.; An official who is sick when the group arrives at Galatz.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026",
+        "0027"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mitchell-sons-candy",
+      "canonical_name": "Mitchell, Sons, & Candy",
+      "aliases": [
+        "Sons",
+        "the House"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A house agents firm.; Part of the firm Mitchell, Sons & Candy.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-joseph-smollet",
+      "canonical_name": "Mr. Joseph Smollet",
+      "aliases": [
+        "Smollet",
+        "the depite",
+        "the depity",
+        "Mr. Smollet",
+        "the responsible person"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his, Mr.",
+      "age": "adult",
+      "description": "Responsible person at Carfax, works with Thomas Snelling.; A lodging-house keeper at Corcoran's, misspelled as 'depite' or 'depity'.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "slovak",
+      "canonical_name": "Slovak",
+      "aliases": [
+        "the Slovaks"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A group of Slovaks who have come to the castle and are trying to help the narrator escape. They are described as being in their late 20s or early 30s.; The Slovaks are a group of people mentioned alongside the Szgany. They are described as coming closer with the Szgany, and are referred to as 'the Slovaks of",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the driver of the coach"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and titles (Count, boyar)",
+      "age": "adult",
+      "description": "The owner of the castle and the narrator's captor. He is referred to as a 'boyar' and claims descent from the Szekelys and Dracula. He is described as having a ; A furious man who saves the narrator from the girl and commands the other women.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-2",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the horrid thing",
+        "the monster",
+        "the vile body",
+        "the devil",
+        "the being"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (he/him) and explicit reference to 'Count Drac",
+      "age": "unknown",
+      "description": "A vampire who has taken over the castle and is trying to prevent the narrator from escaping. He is described as having a smooth, diabolical smile and being able; The Count is described as having white hair and moustache that changed to dark iron-grey, with cheeks fuller and skin ruby-red. He has deep, burning eyes, bloat",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-3",
+      "canonical_name": "the Count",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and referred to as 'the Count' by",
+      "age": "unknown",
+      "description": "The vampire antagonist hunting Mina.; Referred to as a strong and wily enemy; suspected of using the place freely; possibly in the house.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-4",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the evil-doer",
+        "the criminal",
+        "Count",
+        "the enemy"
+      ],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (he/him), title Count",
+      "age": "unknown",
+      "description": "Dracula; currently in a box on the ship; communicates with Mina via trance.; A vampire who invaded Turkey Land and London, fled back to his home, and has knowledge of Mina's mind.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-5",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the Deil"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Count, Count's, he, him",
+      "age": "unknown",
+      "description": "The antagonist who is trapped in a box and trying to get back to his castle.; The antagonist being pursued; described as strong, subtle, and cunning.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 2,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-szgany",
+      "canonical_name": "the Szgany",
+      "aliases": [
+        "the chorus of the Szgany"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A group of gypsies who have come to the castle and are trying to help the narrator escape. They are described as being in their late 20s or early 30s.; The Szgany are a group of people, likely gypsies, who are singing and passing by in the distance. They are described as 'merry voices' and 'awful women' by the",
+      "first_chapter": "0005",
+      "chapters": [
+        "0005"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-child",
+      "canonical_name": "the child",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 0.5,
+      "gender_evidence": "male pronouns (he/him), referred to as 'the child' and 'the",
+      "age": "child",
+      "description": "A young child who was bitten by Lucy while she was a vampire. He is found in the churchyard.; A child is found among the graves and later held by the Un-Dead Lucy. The child is described as 'small' and 'unharmed' initially, but later 'moaning' and 'grow",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016",
+        "0017"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-coastguard-on-duty",
+      "canonical_name": "the coastguard on duty",
+      "aliases": [
+        "the coastguard"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "implied male based on role and context of 'hand on the wheel",
+      "age": "adult",
+      "description": "arrives with a spy-glass and discusses a strange ship; The coastguard who first climbed aboard the derelict ship.",
+      "first_chapter": "0007",
+      "chapters": [
+        "0007",
+        "0008"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-fair-girl",
+      "canonical_name": "the fair girl",
+      "aliases": [
+        "the girl",
+        "the fair woman",
+        "the fair"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and description (fair",
+      "age": "young_adult",
+      "description": "One of the three young women, described as fair with golden hair and sapphire eyes. She is the first to speak and advances towards the narrator.; A voluptuous woman who attempts to attack the narrator's throat before being stopped by the Count.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-landlady",
+      "canonical_name": "the landlady",
+      "aliases": [
+        "the old lady"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), description as 'elderly woman'",
+      "age": "elderly",
+      "description": "The woman who received Jonathan Harker at the Golden Krone Hotel in Bistritz.; Provides food and provisions to Mina and Van Helsing.",
+      "first_chapter": "0002",
+      "chapters": [
+        "0002",
+        "0027"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-second",
+      "canonical_name": "the second",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and context (one of the three)",
+      "age": "young_adult",
+      "description": "One of the two dark young women who speaks after the fair girl.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-third",
+      "canonical_name": "the third",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her) and context (one of the three)",
+      "age": "young_adult",
+      "description": "The third young woman, one of the two dark ones.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 2,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "abramoff",
+      "canonical_name": "Abramoff",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A crew member who relieved Petrofsky.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "archimedes",
+      "canonical_name": "Archimedes",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "historical figure quoted by name",
+      "age": "unknown",
+      "description": "A historical figure quoted regarding the fulcrum.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "arminius",
+      "canonical_name": "Arminius",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him)",
+      "age": "unknown",
+      "description": "Friend of Van Helsing from Buda-Pesth University, referred to as 'Arminius' and 'my friend Arminius'.",
+      "first_chapter": "0019",
+      "chapters": [
+        "0019"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "arminus-of-buda-pesth",
+      "canonical_name": "Arminus of Buda-Pesth",
+      "aliases": [
+        "Arminus"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), titles (Arminus of Buda-Pesth),",
+      "age": "unknown",
+      "description": "A friend of the Professor who was a soldier, statesman, and alchemist.",
+      "first_chapter": "0024",
+      "chapters": [
+        "0024"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "carter-paterson",
+      "canonical_name": "Carter Paterson",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A business office where Jonathan inquires about the transaction of the boxes.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "count-de-ville",
+      "canonical_name": "Count de Ville",
+      "aliases": [
+        "Candy"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns and title",
+      "age": "adult",
+      "description": "Part of the firm Mitchell, Sons & Candy.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "coutts-co",
+      "canonical_name": "Coutts & Co",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A bank in London to whom the narrator writes a letter.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "dr-vincent",
+      "canonical_name": "Dr. Vincent",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him), referred to as 'Dr. Vincent' and 'Dr",
+      "age": "adult",
+      "description": "A doctor at the North Hospital who examines the child with the bite marks. He is skeptical of the vampire theory.",
+      "first_chapter": "0016",
+      "chapters": [
+        "0016"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hans-andersen",
+      "canonical_name": "Hans Andersen",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "Author of 'The Ugly Duckling'; mentioned by Van Helsing.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "hardy",
+      "canonical_name": "Hardy",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and explicit reference to him as 'One",
+      "age": "adult",
+      "description": "An attendant who has a finger broken while restraining Renfield.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "herr-leutner",
+      "canonical_name": "Herr Leutner",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title (Herr)",
+      "age": "unknown",
+      "description": "A recipient of one of the narrator's letters, located in Varna.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "herren-klopstock-billreuth",
+      "canonical_name": "Herren Klopstock & Billreuth",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "Bankers in Buda-Pesth to whom the narrator writes a letter.",
+      "first_chapter": "0004",
+      "chapters": [
+        "0004"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "immanuel-hildesheim",
+      "canonical_name": "Immanuel Hildesheim",
+      "aliases": [
+        "Hildesheim"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Immanuel, he, him",
+      "age": "adult",
+      "description": "A Hebrew man who received a box from London and gave it to Skinsky. He is described as having a nose like a sheep and wearing a fez.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jack-sheppard",
+      "canonical_name": "Jack Sheppard",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "A historical figure mentioned as a comparison for Renfield's strength.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "jack-smollet",
+      "canonical_name": "Jack Smollet",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "adult",
+      "description": "A carrier who was defeated by a madman, took the narrator's name, and was employed by Harris & Sons.",
+      "first_chapter": "0013",
+      "chapters": [
+        "0013"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "judge-moneybag",
+      "canonical_name": "Judge Moneybag",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "unknown",
+      "description": "Judge in Varna; bribed to ensure the ship cannot enter port without warning.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mary",
+      "canonical_name": "Mary",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female name",
+      "age": "unknown",
+      "description": "A servant who opens the door for Dr. Van Helsing.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "miss-murray",
+      "canonical_name": "Miss Murray",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (she/her), title 'Miss'",
+      "age": "unknown",
+      "description": "A person who found Lucy at East Cliff.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-billington",
+      "canonical_name": "Mr. Billington",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A Yorkshire man who gives Jonathan information about the boxes. He has a son, Billington junior.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-marquand",
+      "canonical_name": "Mr. Marquand",
+      "aliases": [
+        "the solicitor"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'solicitor', 'gentle",
+      "age": "adult",
+      "description": "The solicitor representing Mrs. Westenra's estate.",
+      "first_chapter": "0014",
+      "chapters": [
+        "0014"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-s-f-billington",
+      "canonical_name": "Mr. S. F. Billington",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A solicitor who took possession of the goods from the Demeter.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mr-de-ville",
+      "canonical_name": "Mr. de Ville",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Mr., he, him",
+      "age": "unknown",
+      "description": "A man in London who sent a letter to Hildesheim instructing him to receive a box.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "mrs-tom",
+      "canonical_name": "Mrs. Tom",
+      "aliases": [
+        "the old woman"
+      ],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female pronouns (her, she), referred to as 'Mrs' and 'old",
+      "age": "adult",
+      "description": "Thomas Bilder's wife; the one who laughs at Thomas's joke about the wolf.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "olgaren",
+      "canonical_name": "Olgaren",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A crew member who reported seeing a strange man.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "petrof-skinsky",
+      "canonical_name": "Petrof Skinsky",
+      "aliases": [
+        "Skinsky"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Skinsky, he, him",
+      "age": "adult",
+      "description": "A man who deals with Slovaks and traded down the river to the port. He was murdered.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "petrofsky",
+      "canonical_name": "Petrofsky",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A crew member who went missing.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ristics",
+      "canonical_name": "Ristics",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "An agent in Varna who will receive the box containing the Count.",
+      "first_chapter": "0025",
+      "chapters": [
+        "0025"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "rufus-smith",
+      "canonical_name": "Rufus Smith",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male name",
+      "age": "unknown",
+      "description": "Agent at Lloyd's, London; sends telegrams to Lord Godalming.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "sam-bloxam",
+      "canonical_name": "Sam Bloxam",
+      "aliases": [
+        "Bloxam",
+        "the old gent",
+        "Mr. Bloxam",
+        "Sam"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Sam, Mr. Bloxam, he, him, his",
+      "age": "adult",
+      "description": "A man who worked on a dusty job at Purfleet and later at a house in Piccadilly.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "st-joseph",
+      "canonical_name": "St. Joseph",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "A saint mentioned in the opening prayer.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "ste-mary",
+      "canonical_name": "Ste. Mary",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "unknown",
+      "description": "A saint mentioned in the opening prayer.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "surgeon-j-m-caffyn",
+      "canonical_name": "Surgeon J. M. Caffyn",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "adult",
+      "description": "A surgeon who examined the dead seaman.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "szgany",
+      "canonical_name": "Szgany",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "People who brought the Count from the castle and delivered their cargo to Slovaks.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-westminster-gazette",
+      "canonical_name": "The Westminster Gazette",
+      "aliases": [
+        "the paper"
+      ],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A newspaper containing an article about children being decoyed.",
+      "first_chapter": "0015",
+      "chapters": [
+        "0015"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "thomas-bilder",
+      "canonical_name": "Thomas Bilder",
+      "aliases": [
+        "the keeper",
+        "Thomas"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'Thomas' and 'keeper",
+      "age": "adult",
+      "description": "The keeper of the wolf department at the Zoological Gardens; the one interviewed by the narrator.",
+      "first_chapter": "0012",
+      "chapters": [
+        "0012"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "vanderpool",
+      "canonical_name": "Vanderpool",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "A friend of Van Helsing who grows herbs in glass-houses.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-austrian",
+      "canonical_name": "the Austrian",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A historical group mentioned by the Count in the context of battles in the region.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-blessed-virgin",
+      "canonical_name": "the Blessed Virgin",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "unknown",
+      "description": "A religious figure mentioned by the captain.",
+      "first_chapter": "0008",
+      "chapters": [
+        "0008"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-captain",
+      "canonical_name": "the Captain",
+      "aliases": [
+        "Captain"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male title",
+      "age": "unknown",
+      "description": "Captain of the Czarina Catherine; gives permission to search the ship.",
+      "first_chapter": "0026",
+      "chapters": [
+        "0026"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-consul",
+      "canonical_name": "the Consul",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "Consul, he, him",
+      "age": "unknown",
+      "description": "An official who is away when the group arrives at Galatz.",
+      "first_chapter": "0027",
+      "chapters": [
+        "0027"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-6",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the man himself",
+        "the dark man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he, him), referred to as 'man', 'Count',",
+      "age": "unknown",
+      "description": "A mysterious dark man observed by Jonathan and Mina.",
+      "first_chapter": "0014",
+      "chapters": [
+        "0014"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-7",
+      "canonical_name": "the Count",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "The vampire who is the subject of the investigation. He landed at Whitby and is hiding in London.",
+      "first_chapter": "0018",
+      "chapters": [
+        "0018"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-8",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the wretch"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his, the Count",
+      "age": "adult",
+      "description": "Antagonist distributing boxes, referred to as 'the Count' and 'the wretch'.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-9",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the vampire"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (him, his) and title (the Count)",
+      "age": "adult",
+      "description": "The Count is the vampire who attacks Mrs. Harker. He is referred to as 'the Count', 'He', 'the vampire', and 'the devil'.",
+      "first_chapter": "0022",
+      "chapters": [
+        "0022"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-count-10",
+      "canonical_name": "the Count",
+      "aliases": [
+        "the Thing",
+        "the dead man"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him, he), title 'Count'",
+      "age": "unknown",
+      "description": "The entity imprisoned in the chest; referred to as 'the Thing' and 'the Count'.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-hungarian",
+      "canonical_name": "the Hungarian",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A historical group mentioned by the Count in the context of battles in the region.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-master",
+      "canonical_name": "the Master",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male",
+      "age": "unknown",
+      "description": "The figure Renfield believes is God or a divine presence.",
+      "first_chapter": "0009",
+      "chapters": [
+        "0009"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-professor",
+      "canonical_name": "the Professor",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him, he), title 'Dr.'",
+      "age": "adult",
+      "description": "A man accompanying Mina; referred to as 'the Professor' and identified as Dr. Van Helsing.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-saxon",
+      "canonical_name": "the Saxon",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A historical group mentioned by the Count in the context of battles in the region.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-superior",
+      "canonical_name": "the Superior",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "adult",
+      "description": "The head of the convent where the wedding is to take place.",
+      "first_chapter": "0010",
+      "chapters": [
+        "0010"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-turk",
+      "canonical_name": "the Turk",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A historical group mentioned by the Count in the context of battles in the region.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-wallachian",
+      "canonical_name": "the Wallachian",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A historical group mentioned by the Count in the context of battles in the region.",
+      "first_chapter": "0003",
+      "chapters": [
+        "0003"
+      ],
+      "mentions": 1,
+      "speaks": false,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-cabman",
+      "canonical_name": "the cabman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and referred to as 'cabman' by",
+      "age": "unknown",
+      "description": "The driver of the cab carrying the locksmith.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gentleman",
+      "canonical_name": "the gentleman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "he, him, his, The gentleman",
+      "age": "adult",
+      "description": "A representative from Mitchell, Sons, & Candy.",
+      "first_chapter": "0021",
+      "chapters": [
+        "0021"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-gypsies",
+      "canonical_name": "the gypsies",
+      "aliases": [],
+      "gender": "unknown",
+      "gender_confidence": 0.0,
+      "age": "unknown",
+      "description": "A group of mounted men, peasants or gypsies, pursuing the cart.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-leader-of-the-gypsies",
+      "canonical_name": "the leader of the gypsies",
+      "aliases": [
+        "the leader"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (his, him, he), context of leading men",
+      "age": "adult",
+      "description": "The leader of the gypsy party; described as a splendid-looking fellow.",
+      "first_chapter": "0028",
+      "chapters": [
+        "0028"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-locksmith",
+      "canonical_name": "the locksmith",
+      "aliases": [
+        "the workman"
+      ],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and referred to as 'workman' by",
+      "age": "adult",
+      "description": "A locksmith hired to break into the house in Piccadilly.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-maids",
+      "canonical_name": "the maids",
+      "aliases": [],
+      "gender": "female",
+      "gender_confidence": 1.0,
+      "gender_evidence": "female",
+      "age": "adult",
+      "description": "Two maids who ask to sit up with Lucy.",
+      "first_chapter": "0011",
+      "chapters": [
+        "0011"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    },
+    {
+      "id": "the-policeman",
+      "canonical_name": "the policeman",
+      "aliases": [],
+      "gender": "male",
+      "gender_confidence": 1.0,
+      "gender_evidence": "male pronouns (he/him) and referred to as 'policeman' by",
+      "age": "unknown",
+      "description": "A police officer who witnesses the locksmith breaking into the house.",
+      "first_chapter": "0023",
+      "chapters": [
+        "0023"
+      ],
+      "mentions": 1,
+      "speaks": true,
+      "line_count": 0,
+      "locked": false,
+      "origin": "profile"
+    }
+  ],
+  "ambiguous_aliases": {
+    "Count": [
+      "count-dracula",
+      "the-count-4"
+    ],
+    "Jack": [
+      "lord-godalming",
+      "jonathan-harker",
+      "john-seward"
+    ],
+    "the Count": [
+      "count-dracula",
+      "the-count",
+      "the-count-2",
+      "the-count-3",
+      "the-count-4",
+      "the-count-5",
+      "the-count-6",
+      "the-count-7",
+      "the-count-8",
+      "the-count-9",
+      "the-count-10"
+    ],
+    "the doctor": [
+      "professor-van-helsing",
+      "john-seward"
+    ],
+    "the man": [
+      "renfield",
+      "simmons"
+    ],
+    "the monster": [
+      "count-dracula",
+      "the-count-2"
+    ],
+    "the old man": [
+      "professor-van-helsing",
+      "count-dracula",
+      "peter-hawkins"
+    ],
+    "the old woman": [
+      "mrs-westenra",
+      "mrs-tom"
+    ],
+    "the poor fellow": [
+      "jonathan-harker",
+      "renfield"
+    ]
+  },
+  "narrator": "mina-harker"
+}

@@ -50,3 +50,25 @@ def test_titles_and_lone_numerals():
 
 def test_roman_to_int():
     assert [roman_to_int(r) for r in ("I", "IV", "XIV", "MCMLXXXIV", "IIII", "")] == [1, 4, 14, 1984, None, None]
+
+
+def test_measure_lufs_survives_old_ffmpeg(monkeypatch, tmp_path):
+    """ffmpeg 5.1 rejects ebur128=framelog=quiet, prints a summary of zeros and fails: that is no measurement."""
+    import subprocess
+    from types import SimpleNamespace
+
+    from incant import audio
+
+    calls = []
+
+    def fake_run(cmd, **kw):
+        af = cmd[cmd.index("-af") + 1]
+        calls.append(af)
+        if "framelog" in af:  # the old ffmpeg's failure
+            return SimpleNamespace(returncode=1, stderr="Summary:\n  Integrated loudness:\n    I:   0.0 LUFS\nConversion failed!")
+        return SimpleNamespace(returncode=0, stderr="[x] t: 0.1 M: -30 S: -30 I: -70.0 LUFS\nSummary:\n    I: -22.5 LUFS\n")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    assert audio.measure_lufs(tmp_path / "clip.wav") == -22.5 and len(calls) == 2
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kw: SimpleNamespace(returncode=1, stderr="Summary:\n I: 0.0 LUFS"))
+    assert audio.measure_lufs(tmp_path / "clip.wav") is None

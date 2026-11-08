@@ -65,12 +65,19 @@ def trim_silence(data: bytes, pad_ms: int = 40, threshold_db: float = -45.0) -> 
 
 
 def measure_lufs(path: Path) -> float | None:
-    """Integrated loudness (EBU R128) of a clip; None if too short or silent to measure."""
-    p = subprocess.run(["ffmpeg", "-nostats", "-hide_banner", "-i", str(path), "-af", "ebur128=framelog=quiet",
-                        "-f", "null", "-"], capture_output=True, text=True)
-    m = re.findall(r"I:\s+(-?[\d.]+) LUFS", p.stderr)
-    v = float(m[-1]) if m else None
-    return v if v is not None and v > -60 else None
+    """Integrated loudness (EBU R128) of a clip; None if it can't be measured (too short, silent, or ffmpeg failed).
+
+    ffmpeg < 6 rejects ebur128's framelog=quiet and then prints a summary of zeros: only a successful run's
+    Summary block counts, and without framelog support the per-frame log is skipped by reading that block."""
+    for af in ("ebur128=framelog=quiet", "ebur128"):
+        p = subprocess.run(["ffmpeg", "-nostats", "-hide_banner", "-i", str(path), "-af", af, "-f", "null", "-"],
+                           capture_output=True, text=True)
+        summary = p.stderr.rpartition("Summary:")[2]
+        m = re.search(r"I:\s+(-?[\d.]+) LUFS", summary)
+        if p.returncode == 0 and m:
+            v = float(m.group(1))
+            return v if v > -60 else None
+    return None
 
 
 def wav_duration_ms(path: Path) -> int:

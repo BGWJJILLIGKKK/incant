@@ -51,7 +51,28 @@ def paragraphs_from_markdown(md: str, max_repeats: int) -> list[str]:
             out.append(heading(text) if text.strip() else SCENE_BREAK)
             continue
         out.append(clean_paragraph(b))
-    return [p for p in out if p]
+    return repair_breaks([p for p in out if p])
+
+
+_END = re.compile(r"[.!?:;…”’\"')\]]\s*$")
+
+
+def repair_breaks(paras: list[str]) -> list[str]:
+    """OCR splits paragraphs at line and page ends: join a paragraph that doesn't end a sentence to a following
+    one that starts in lowercase ("en-" + "treaty" -> "entreaty"); drop page numbers and OCR debris."""
+    out: list[str] = []
+    for p in paras:
+        if re.fullmatch(r"\d{1,4}", p.strip()):
+            continue  # a page number
+        if not p.startswith("#") and p != SCENE_BREAK and not re.search(r"[A-Za-z]{3}", p):
+            continue  # debris: no word of three letters ("o , ts « a a ,,")
+        prev = out[-1] if out else ""
+        if (prev and not prev.startswith("#") and prev != SCENE_BREAK and p[:1].islower()
+                and (prev.endswith("-") or not _END.search(prev))):
+            out[-1] = prev[:-1] + p if re.search(r"[a-z]-$", prev) else f"{prev} {p}"
+            continue
+        out.append(p)
+    return out
 
 
 class DoclingIngest(PdfIngest):

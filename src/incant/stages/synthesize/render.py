@@ -173,7 +173,11 @@ class Renderer:
 
     def measure(self, segs: list[Segment]) -> None:
         """Loudness of each segment's clip, cached beside it (with the voice, for per-voice statistics)."""
-        todo = [s for s in segs if self._cache_path(s.cache_key).exists() and not self._lvl_path(s.cache_key).exists()]
+        def stale(key: str) -> bool:  # missing, or the 0.0 an old ffmpeg failure left behind (speech is always < 0 LUFS)
+            p = self._lvl_path(key)
+            return not p.exists() or json.loads(p.read_text()).get("lufs") == 0.0
+
+        todo = [s for s in segs if self._cache_path(s.cache_key).exists() and stale(s.cache_key)]
 
         def one(s: Segment):
             atomic_write(self._lvl_path(s.cache_key),
@@ -188,7 +192,7 @@ class Renderer:
         levels: dict[str, list[float]] = {}
         for f in self.wd.cache_dir.glob("*/*.lvl.json"):
             rec = json.loads(f.read_text())
-            if rec.get("voice") and rec.get("lufs") is not None:
+            if rec.get("voice") and rec.get("lufs") is not None and rec["lufs"] < 0:
                 levels.setdefault(rec["voice"], []).append(rec["lufs"])
         gains = {}
         for v, ls in levels.items():

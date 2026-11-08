@@ -19,3 +19,14 @@ def test_docling_is_a_pdf_child_and_stays_out_of_auto_without_docling(tmp_path):
         pdf = tmp_path / "scan.pdf"
         pdf.write_bytes(b"%PDF-1.4\n%%EOF\n")
         assert _auto(INGEST, str(pdf)) == "pdf"  # lean install: pdf explains how to OCR
+
+
+def test_ocr_breaks_repaired():
+    from incant.stages.ingest.docling.docling import repair_breaks
+
+    paras = ["The spirit stopped; the hand was pointed else-", "where.", "120", "o , ts « a a ,,",
+             "He was strong in his", "entreaty, and held it.", "# STAVE FIVE", "Yes! and the bedpost.",
+             '"What?" said he.', "by which it stood."]
+    assert repair_breaks(paras) == ["The spirit stopped; the hand was pointed elsewhere.",
+                                    "He was strong in his entreaty, and held it.", "# STAVE FIVE",
+                                    "Yes! and the bedpost.", '"What?" said he.', "by which it stood."]

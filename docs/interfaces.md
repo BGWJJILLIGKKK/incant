@@ -354,7 +354,7 @@ Keys are matched as whole words, case-insensitive; the longest key wins.
 | Method | Runs | Voices | Emotion | Notes |
 |---|---|---|---|---|
 | `indextts` | HTTP (IndexTTS-2.5 server) | `voices/voices.json` | free text + strength | best quality; GPU |
-| `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
+| `kokoro` | local CPU (kokoro-onnx, `uv sync --extra kokoro`; `g2p = "misaki"` with the nlp extra) | 54 built-in (+ `voices/kokoro.json`, blends) | none | ~3–5× real time on 16 cores; model files (~340 MB) download on first use; the stage `DEFAULT` |
 | `openai` | HTTP, any OpenAI `/v1/audio/speech` (Kokoro-FastAPI, openedai-speech, LocalAI, OpenAI) | built-in `kokoro` or `openai` list (+ `voices/openai.json`) | `instructions` (gpt-4o-mini-tts) if `instructions = true` | `api_key_env` |
 | `elevenlabs` | HTTP, ElevenLabs API (`xi-api-key`) | account voices (`/v1/voices`, gender/age labels → tags) + `voices/elevenlabs.json` | lowers `stability` | paid; 24 kHz PCM; `seed` per QA take; stops before exceeding the subscription's remaining characters unless `allow_over_quota` |
 | `dummy` | local | any id | — | beeps; tests |
@@ -647,6 +647,11 @@ Edits take effect on the next run of the stage that reads them.
   - `"~a|b"`, which matches any character whose names contain `a` or `b`.
 - **`baseline.json`:** `{slug: {ok, n}}`.
 - **`suite.py`:** re-attributes the gold chapters only and flags a drop of 2 or more quotes per book.
+- **`compare.py --parse P --attribute A`:** any combination on scratch copies of the gold books (the data
+  directory is never written); `--parse keep` reuses each book's characters.json. Strict score (names must match
+  the character list) and loose score (shared name/alias/surname; for self-built lists).
+- **`g2p_ab.py --out DIR`:** Kokoro with espeak vs Misaki pronunciation, scored by whisper WER on the same
+  segments; writes paired WAVs for listening (heteronyms can't be judged by WER).
 - **Adding a book:**
   1. Run ingest and parse.
   2. Label every quote in at least one chapter from the text, not from model output. Leave out lines with no single correct answer.

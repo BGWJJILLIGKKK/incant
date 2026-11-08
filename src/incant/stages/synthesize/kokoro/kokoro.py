@@ -43,6 +43,9 @@ class KokoroSettings(SynthSettings):
     threads: int = 0  # onnxruntime threads per segment; 0 = all cores
     concurrency: int = 1  # one model; it already uses every core
     max_segment_chars: int = 400
+    # Pronunciation for the English voices: "espeak" (kokoro-onnx's built-in phonemizer) or "misaki" (Kokoro's
+    # own dictionary-based G2P with spaCy part-of-speech for heteronyms, espeak for unknown words; extra: nlp).
+    g2p: Literal["espeak", "misaki"] = "espeak"
 
 
 class KokoroTTS(SynthesizeMethod):
@@ -60,7 +63,21 @@ class KokoroTTS(SynthesizeMethod):
 
     def identity(self) -> str:
         s = self.settings
-        return f"kokoro-onnx:v1.0:{s.model}:speed={s.speed}:p{PROTOCOL}"
+        g2p = f":g2p={s.g2p}" if s.g2p != "espeak" else ""  # (espeak keeps the original key: cache stays valid)
+        return f"kokoro-onnx:v1.0:{s.model}:speed={s.speed}{g2p}:p{PROTOCOL}"
+
+    _g2ps: dict[bool, object] = {}
+
+    def misaki(self, british: bool):
+        """Misaki's English G2P (one per accent, shared), with espeak for words not in its dictionary."""
+        with self._lock:
+            if british not in self._g2ps:
+                try:
+                    from misaki import en, espeak
+                except ImportError:
+                    raise RuntimeError('g2p = "misaki" needs the nlp extra: uv sync --extra nlp') from None
+                self._g2ps[british] = en.G2P(trf=False, british=british, fallback=espeak.EspeakFallback(british=british))
+            return self._g2ps[british]
 
     # ------------------------------------------------------------ model files
 
@@ -118,8 +135,15 @@ class KokoroTTS(SynthesizeMethod):
         base = next(iter(voice.mix)) if voice.mix else voice.id
         lang = voice.lang or KOKORO_LANG.get(base[:1], "en-us")
         speed = self.settings.speed * (1.0, 0.96, 1.04)[variant % 3]  # deterministic model: retry = other tempo
-        with self._lock:  # the phonemizer (espeak) isn't thread-safe
-            audio, rate = kokoro.create(text, voice=self._style(kokoro, voice), speed=speed, lang=lang)
+        style = self._style(kokoro, voice)
+        if self.settings.g2p == "misaki" and lang in ("en-us", "en-gb"):
+            g2p = self.misaki(british=lang == "en-gb")
+            with self._lock:  # spaCy and espeak aren't thread-safe
+                phonemes = g2p(text)[0].replace("❓", "")
+                audio, rate = kokoro.create(phonemes, voice=style, speed=speed, lang=lang, is_phonemes=True)
+        else:
+            with self._lock:  # the phonemizer (espeak) isn't thread-safe
+                audio, rate = kokoro.create(text, voice=style, speed=speed, lang=lang)
         pcm = (np.clip(audio, -1.0, 1.0) * 32767).astype(np.int16).tobytes()
         buf = io.BytesIO()
         with wave.open(buf, "wb") as w:

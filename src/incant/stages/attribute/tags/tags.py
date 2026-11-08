@@ -244,27 +244,10 @@ class Roster:
         return [cid for _, cid in sorted(found)]
 
 
-def build_roster(book: dict[str, list[list[Span]]], log=None) -> CharacterList:
-    """Characters from dialogue-tag names (no characters.json): one per person, gender from titles/pronouns."""
-    counts: Counter[str] = Counter()
-    for paras in book.values():
-        for para in paras:
-            if para[-1].kind is SpanKind.narration and (m := TRAILING.search(para[-1].text[-200:])):
-                key = strip_article(clean_subject(m.group("subj")))
-                if key and key[0].isupper() and _plausible(key):
-                    counts[key] += 1
-            for i, s in enumerate(para):
-                if s.kind is not SpanKind.dialogue:
-                    continue
-                after = next((x.text for x in para[i + 1:i + 2] if x.kind is SpanKind.narration), None)
-                before = para[i - 1].text if i and para[i - 1].kind is SpanKind.narration else None
-                t = find_tag(after, before)
-                if t and t.subj not in ("he", "she", "I", "we", "they"):
-                    key = strip_article(t.subj)
-                    if key and not re.search(r"['’]s\s", key):  # possessive roles ("Scrooge's nephew") resolve later
-                        counts[key if key[0].isupper() else key.casefold()] += 1
-    names = [n for n, k in counts.items()
-             if n[0].isupper() or (k >= 2 and n.split()[-1] in PERSON_NOUNS and n.split()[-1] not in ("other", "one"))]
+def roster_from_names(names: list[str], counts: Counter, text: str, speaking: set[str], origin: str) -> list[Character]:
+    """One character per person from name strings: bare first names / surnames merged into the one longer name
+    they belong to ("Elizabeth" -> "Elizabeth Bennet"), gender from titles, role nouns or the pronouns that
+    follow the name in `text`; mentions from `counts`; speaks if any alias is in `speaking`."""
     # Merge bare first names / surnames into the one longer name they belong to ("Elizabeth" -> "Elizabeth Bennet").
     groups: dict[str, set[str]] = {}
     for n in sorted(names, key=lambda x: (-len(x.split()), -counts[x])):
@@ -280,8 +263,7 @@ def build_roster(book: dict[str, list[list[Span]]], log=None) -> CharacterList:
             groups[target].add(n)
         elif toks:
             groups[n] = {n}
-    text = " ".join(s.text for paras in book.values() for para in paras for s in para if s.kind is SpanKind.narration)
-    chars = []
+        chars = []
     for canon, aliases in groups.items():
         g = honorific_gender(canon)
         if g is None and canon[0].islower():
@@ -301,13 +283,45 @@ def build_roster(book: dict[str, list[list[Span]]], log=None) -> CharacterList:
                                aliases=sorted(aliases - {canon}), gender=Gender(g) if g else Gender.unknown,
                                gender_confidence=0.9 if g and not votes else (0.6 if g else 0.0),
                                gender_evidence="title" if g and not votes else (f"pronouns {dict(votes)}" if votes else None),
-                               mentions=lines, speaks=True, origin="attribution"))
+                               mentions=lines, speaks=bool(aliases & speaking), origin=origin))
     seen: set[str] = set()
     for c in chars:  # unique ids
         base, n = c.id, 2
         while c.id in seen:
             c.id, n = f"{base}-{n}", n + 1
         seen.add(c.id)
+    return chars
+
+
+def tag_name_counts(book: dict[str, list[list[Span]]]) -> Counter:
+    """How often each name (or role, lowercased) is the subject of a dialogue tag."""
+    counts: Counter[str] = Counter()
+    for paras in book.values():
+        for para in paras:
+            if para[-1].kind is SpanKind.narration and (m := TRAILING.search(para[-1].text[-200:])):
+                key = strip_article(clean_subject(m.group("subj")))
+                if key and key[0].isupper() and _plausible(key):
+                    counts[key] += 1
+            for i, s in enumerate(para):
+                if s.kind is not SpanKind.dialogue:
+                    continue
+                after = next((x.text for x in para[i + 1:i + 2] if x.kind is SpanKind.narration), None)
+                before = para[i - 1].text if i and para[i - 1].kind is SpanKind.narration else None
+                t = find_tag(after, before)
+                if t and t.subj not in ("he", "she", "I", "we", "they"):
+                    key = strip_article(t.subj)
+                    if key and not re.search(r"['’]s\s", key):  # possessive roles ("Scrooge's nephew") resolve later
+                        counts[key if key[0].isupper() else key.casefold()] += 1
+    return counts
+
+
+def build_roster(book: dict[str, list[list[Span]]], log=None) -> CharacterList:
+    """Characters from dialogue-tag names (no characters.json): one per person, gender from titles/pronouns."""
+    counts = tag_name_counts(book)
+    names = [n for n, k in counts.items()
+             if n[0].isupper() or (k >= 2 and n.split()[-1] in PERSON_NOUNS and n.split()[-1] not in ("other", "one"))]
+    text = " ".join(s.text for paras in book.values() for para in paras for s in para if s.kind is SpanKind.narration)
+    chars = roster_from_names(names, counts, text, speaking=set(names), origin="attribution")
     if log:
         log(f"  no characters.json: {len(chars)} speakers found in dialogue tags")
     return CharacterList(characters=chars)

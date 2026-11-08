@@ -14,7 +14,7 @@ separate image, **`incant_local`**, built from the same Dockerfile; the default 
 | `synthesize=elevenlabs` | core | mock tests (live once a key exists) |
 | Misaki pronunciation for Kokoro | `nlp` extra, lean image | A/B: whisper WER not worse + listening |
 | `parse=names` — spaCy name roster, no LLM | `nlp` extra, lean image | no-LLM suite beats 68% by ≥ 5 points |
-| `parse=booknlp` | `torch` extra → `incant_local` | beats `names` by ≥ 3 points |
+| `parse=booknlp` | `torch` extra → `incant_local` | no-LLM suite ≥ 73% (the bar `names` missed) |
 | `ingest=docling` — child of `pdf` | `torch` extra → `incant_local` | scanned-PDF text clearly better than `pdf` |
 
 **Not added:** FastCoref (BookNLP covers coreference), CTC alignment QA (whisper QA exists), NeMo normalization
@@ -87,3 +87,11 @@ gold suite, nothing written to the data directory by tests, then commit.
 - **Phase 4** — `synthesize=elevenlabs` on the shared HTTP client (new `request` / `decode` / `auth_headers`
   hooks; IndexTTS and `openai` requests unchanged) with a quota guard. Request shape checked against the API
   reference and tested against a mock server; live test pending a key.
+- **Phase 5** — `eval/compare.py` (any parse × attribute on scratch copies; strict + loose scores) and
+  `eval/g2p_ab.py`. **Misaki** (extra `nlp`, no PyTorch, +110 MB): on par with espeak by speech-to-text (mean WER
+  0.036 vs 0.037, 3/70 failing each; fixes "wound/wound", slightly worse on a few names) → shipped as
+  `[synthesize.kokoro] g2p = "misaki"`, default unchanged, not in the default image. **`parse=names`** (spaCy
+  person names) **missed its gate and was removed**: as a full roster 62.7% (non-speakers crowd pronoun
+  resolution), as enrichment of the speaking roster 67.9% — equal to `basic` + `tags` (needed ≥ 73%). Names alone
+  can't give what the LLM roster gives `tags` (79.5%): role descriptions ("Scrooge's nephew", "wife of
+  Mr. Bennet"). The tags roster code is now shared (`roster_from_names`, `tag_name_counts`).

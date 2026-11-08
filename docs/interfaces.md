@@ -159,6 +159,14 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
   `ingest=docling` works on any PDF. Headings that repeat (`max_repeats`, default 2) are running headers and
   dropped; image placeholders dropped. ~7 s per page on CPU. Models: `$INCANT_DOCLING_DIR` (baked in the image).
 
+### Kindle books (`mobi`, child of `ebook`)
+- `.mobi .azw .azw3 .prc .kf8`, read with the `mobi` package (KindleUnpack; extra `mobi`, in the defaults),
+  no Calibre needed. KF8/AZW3 unpacks to an EPUB, read by `epub`. MOBI 6 unpacks to one HTML file in Kindle's
+  old markup: large-font (`<font size>` ≥ 5) short paragraphs and `<h1-4>` become headings, `<mbp:pagebreak>`
+  scene breaks, the contents table is dropped; title/author from its `content.opf`, cover from the unpacked
+  images. Gutenberg boilerplate removed. Without the package, `ebook` converts these with Calibre. DRM fails.
+- Gutenberg's Alice: MOBI 6 and AZW3 both give the EPUB edition's 12 chapters (~26,400 words).
+
 ### Plain text and Project Gutenberg
 - `txt`: the file as is; `Title:`/`Author:` header lines name the book. `clean(raw)` is the hook for subclasses.
 - `gutenberg` (inherits `txt`): picked for `.txt` files with `*** START OF THE PROJECT GUTENBERG …` in the first

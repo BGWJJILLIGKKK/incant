@@ -21,6 +21,7 @@ qa = ["faster-whisper>=1.1"]  # speech-to-text check of rendered segments (CPU)
 browser = ["playwright>=1.47"]  # render JavaScript-built pages (then: playwright install chromium)
 kokoro = ["kokoro-onnx>=0.4"]  # local Kokoro-82M TTS on CPU (model files download on first use, ~340 MB)
 anthropic = ["anthropic>=2.6"]  # [llm] dialect = "anthropic": Claude through the official SDK
+mobi = ["mobi>=0.4"]  # Kindle books (mobi, azw3) without Calibre; KindleUnpack, GPL-3.0 (a tool), ~100 KB
 nlp = [  # Misaki pronunciation for Kokoro (the default when installed): spaCy + model, ~110 MB, no PyTorch
     "spacy>=3.8,<3.9",
     "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
@@ -44,6 +45,7 @@ build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = ["ignore:'imghdr' is deprecated:DeprecationWarning"]  # inside the mobi package (has a 3.13 shim)
 
 [tool.hatch.metadata]
 allow-direct-references = true  # the spaCy model (nlp extra) is a wheel URL, not on PyPI

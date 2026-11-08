@@ -40,7 +40,7 @@ audio is cached per segment, so only changed lines are re-rendered.
 
 | Stage | Methods |
 |---|---|
-| ingest | `epub` (└ `ebook`: Kindle, Word, ODT, RTF, FB2, HTML via Calibre or Pandoc), `pdf` (└ `docling`: OCR for scans), `txt` (└ `gutenberg`), `url`, `bookmark` |
+| ingest | `epub` (└ `ebook`: Word, ODT, RTF, FB2, HTML via Calibre or Pandoc; └ `mobi`: Kindle mobi/azw3, built in), `pdf` (└ `docling`: OCR for scans), `txt` (└ `gutenberg`), `url`, `bookmark` |
 | parse | `basic` (chapters), `characters` (+ LLM character profiles) |
 | attribute | `narrator` (one voice), `tags` (rules), `speakers` (LLM) |
 | normalize | `rules` (numbers, Roman numerals, abbreviations… for the TTS), `none` |
@@ -153,7 +153,7 @@ docker compose run --rm incant --check
 docker compose run --rm incant books/book.epub
 ```
 
-- About 3.3 GB. Build args: `BAKE_MODELS=0` (models download on first use), `EXTRAS=""` (no browser, QA or
+- About 3.7 GB. Build args: `BAKE_MODELS=0` (models download on first use), `EXTRAS=""` (no browser, QA or
   Kokoro), `CONVERTERS=pandoc` or `calibre` (for `ebook`).
 - `incant_local` (about 6.7 GB) adds CPU-only PyTorch and Docling, which OCRs scanned PDFs without a text
   layer: `docker compose --profile local build incant_local`. Outside Docker: `uv sync --extra torch`.

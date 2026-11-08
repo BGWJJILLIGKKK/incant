@@ -13,7 +13,7 @@ directory itself. Relative input paths that don't exist where you are resolve th
 Environment:
   INCANT_DATA        the data directory (overrides .env)
   INCANT_NO_SYNC=1   skip uv's dependency sync and run the .venv directly (faster startup)
-  INCANT_EXTRAS      comma-separated optional extras to include (default: qa,browser,kokoro,anthropic,nlp)
+  INCANT_EXTRAS      comma-separated optional extras to include (default: qa,browser,kokoro,anthropic,nlp,mobi)
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ def main() -> None:
     no_sync = os.environ.get("INCANT_NO_SYNC") == "1"
 
     if uv and not no_sync:
-        extras = [e.strip() for e in os.environ.get("INCANT_EXTRAS", "qa,browser,kokoro,anthropic,nlp").split(",") if e.strip()]
+        extras = [e.strip() for e in os.environ.get("INCANT_EXTRAS", "qa,browser,kokoro,anthropic,nlp,mobi").split(",") if e.strip()]
         cmd = [uv, "run", "--quiet", "--project", str(HOME)]
         for e in extras:
             cmd += ["--extra", e]
@@ -58,7 +58,7 @@ def main() -> None:
         cmd = [str(VENV_PYTHON), "-m", "incant", *args]
     else:
         sys.exit(f"incant: no environment found. Install uv (https://docs.astral.sh/uv/) or run\n"
-                 f"  cd {HOME} && uv sync --extra qa --extra browser --extra kokoro --extra anthropic --extra nlp")
+                 f"  cd {HOME} && uv sync --extra qa --extra browser --extra kokoro --extra anthropic --extra nlp --extra mobi")
     try:
         os.execv(cmd[0], cmd)  # replace this process: signals and exit codes pass straight through
     except OSError as e:

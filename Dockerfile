@@ -6,7 +6,7 @@
 #   docker build -t incant .                                   # everything (~3.3 GB)
 #   docker build -t incant:lean --build-arg BAKE_MODELS=0 .    # models download on first use into /data
 #   docker build -t incant --build-arg CONVERTERS=pandoc .    # + docx/odt/rtf/fb2/html (calibre: + Kindle)
-#   docker build -t incant_local --build-arg EXTRAS="qa browser kokoro anthropic nlp torch" .
+#   docker build -t incant_local --build-arg EXTRAS="qa browser kokoro anthropic nlp mobi torch" .
 #                                       # + PyTorch (CPU) and Docling: OCR for scanned PDFs (compose: incant_local)
 #   docker build -t incant:min --build-arg EXTRAS="" .         # no browser, QA or Kokoro (HTTP TTS only, ~1.1 GB)
 #
@@ -16,7 +16,7 @@
 # /data holds books, work/, output/ and your incant.local.toml (settings, secrets, cookies paths).
 
 ARG PYTHON=3.12
-ARG EXTRAS="qa browser kokoro anthropic nlp"
+ARG EXTRAS="qa browser kokoro anthropic nlp mobi"
 
 # ---------------------------------------------------------------- build: the virtualenv
 FROM python:${PYTHON}-slim-bookworm AS build

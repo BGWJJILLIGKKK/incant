@@ -27,7 +27,7 @@ services:
     build:
       context: .
       args:
-        EXTRAS: "qa browser kokoro anthropic nlp torch"
+        EXTRAS: "qa browser kokoro anthropic nlp mobi torch"
     image: incant_local
     user: "${UID:-1000}:${GID:-1000}"
     network_mode: host

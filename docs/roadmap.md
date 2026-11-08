@@ -1,0 +1,78 @@
+# Roadmap: stage alternatives
+
+Which alternatives from the stage-alternatives survey get added, how, and in what order. The filter: realistic
+without a tremendous amount of work, fills a gap, and doesn't bloat the project. PyTorch-based options go into a
+separate image, **`incant_local`**, built from the same Dockerfile; the default `incant` image stays lean.
+
+## Decisions
+
+| Item | Lands in | Gate before merging |
+|---|---|---|
+| Secrets from `.env` + cloud LLM presets (Gemini, Claude, OpenRouter, Ollama) | core | live smoke test + one gold book |
+| `ingest=ebook` — Calibre / Pandoc, child of `epub` | core (tools via Docker `CONVERTERS`) | real docx/odt/mobi conversions |
+| Credits / license report + `--licenses` gap report | core | — |
+| `synthesize=elevenlabs` | core | mock tests (live once a key exists) |
+| Misaki pronunciation for Kokoro | `nlp` extra, lean image | A/B: whisper WER not worse + listening |
+| `parse=names` — spaCy name roster, no LLM | `nlp` extra, lean image | no-LLM suite beats 68% by ≥ 5 points |
+| `parse=booknlp` | `torch` extra → `incant_local` | beats `names` by ≥ 3 points |
+| `ingest=docling` — child of `pdf` | `torch` extra → `incant_local` | scanned-PDF text clearly better than `pdf` |
+
+**Not added:** FastCoref (BookNLP covers coreference), CTC alignment QA (whisper QA exists), NeMo normalization
+(small gain over `rules`; pynini + transformers), StyleTTS 2 / F5-TTS (GPU; usable through the `openai` method
+when served), Piper (overlaps Kokoro; now GPL-3), Crawl4AI (Playwright + trafilatura), spaCy dialogue rules and
+the dialogue alternator (both in `attribute=tags`), ChatTTS / XTTS-v2 (non-commercial, heavy).
+
+## Phases
+
+Each phase: tests for the new code, the full suite green, defaults unchanged, quality measured on the 10-book
+gold suite, nothing written to the data directory by tests, then commit.
+
+### 1. Secrets and cloud LLMs
+- `secret(name)`: process environment, then the data directory's `.env`, then the project's `.env`. Used for
+  `[llm] api_key_env`, speech `api_key_env`, URL `password_env` / `bearer_env`. Never logged or fingerprinted.
+- `--check` warns about a group/world-readable `.env` that holds keys.
+- Tested presets for Gemini and Claude (OpenAI-compatible endpoints), OpenRouter, Ollama, llama.cpp; single-pass
+  cast extraction for long-context models (`[parse.characters] window_words`, `[llm] context_tokens`).
+- Done when: `--check` passes per provider and a short book plus one gold book run end to end, with accuracy,
+  time and token cost recorded here.
+
+### 2. `ingest=ebook`
+- `EbookIngest(EpubIngest)`: mobi / azw / azw3 / docx / odt / rtf / fb2 / lit / pdb / local HTML (not bookmark
+  exports) → EPUB with `ebook-convert` or `pandoc` → the `epub` reader. `converter = auto | calibre | pandoc`.
+- Dockerfile `ARG CONVERTERS=""` (`pandoc`, `calibre`).
+- Done when: a docx and an odt convert in the image built with `CONVERTERS=pandoc`.
+
+### 3. Credits and license report
+- Methods may declare `LICENSE` / `OUTPUT_TERMS` (unknown when absent); a `[credits]` config table holds terms
+  the user knows (LLM, IndexTTS…); voices use their `license` / `source` / `consent` fields. Never required.
+- The output stage writes `credits.txt` beside the audiobook: source, methods, models and servers, voices,
+  required attributions, the weakest known terms, and the gaps (what is unknown).
+- `incant --licenses`: known terms per stage, and the stages where no method with known permissive terms exists.
+
+### 4. `synthesize=elevenlabs`
+- On the shared HTTP speech client (new `request()` / `decode()` hooks; IndexTTS and `openai` requests unchanged).
+- Account voices with their gender/age labels for casting, `voices/elevenlabs.json` overrides, a seed per QA retry,
+  and a quota guard: stop before rendering more characters than the subscription has left.
+
+### 5. `nlp` extra: Misaki and `parse=names` (lean image)
+- First, `eval/compare.py`: score any parse × attribute combination on scratch copies of the gold books.
+- Extra `nlp`: spaCy + `en_core_web_sm`, Misaki without its `[en]` extra (which pulls in PyTorch).
+- Kokoro `g2p = espeak | misaki`; default changes only if the A/B wins.
+- `NamesParse(BasicParse)`: people's names, aliases, gender from titles and pronouns, mention counts.
+- Either piece shipping adds `nlp` to the default image (~150 MB).
+
+### 6. `incant_local` (PyTorch)
+- Extra `torch` (BookNLP, Docling) with PyTorch from the CPU-only index, so the lean install never touches it.
+- `docker build --build-arg EXTRAS="qa browser kokoro nlp torch" -t incant_local .` (~6–7 GB, models baked).
+- `BooknlpParse`: characters from BookNLP's entities and coreference. `DoclingIngest(PdfIngest)`: layout and OCR
+  for PDFs whose text layer is missing or poor.
+- `--check` and `--list` say which methods need `incant_local`.
+
+## Risks
+- BookNLP is old and requires TensorFlow: confirm it installs on Python 3.12 before writing code for it.
+- Anthropic's OpenAI-compatible endpoint may ignore structured output: fall back to `structured = "json_object"`.
+- ElevenLabs is untested live until a key exists.
+- Misaki pins Python < 3.13.
+
+## Results
+Filled in as phases land.

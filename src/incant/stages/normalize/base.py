@@ -8,7 +8,8 @@ from typing import ClassVar
 
 from pydantic import BaseModel
 
-from ...schemas import ChapterSpeech, Span, SpanKind
+from ...normalize import unescape_prose
+from ...schemas import Chapter, ChapterSpeech, SpanKind
 from ...workdir import WorkDir
 from ..base import Context, Method
 
@@ -26,6 +27,11 @@ SAY_OVERRIDES = "say_overrides.json"  # {span id: {"text": original span text, "
 def read_say_overrides(wd: WorkDir) -> dict[str, dict]:
     p = wd.root / SAY_OVERRIDES
     return json.loads(p.read_text()) if p.exists() else {}
+
+
+def override_matches(override: dict, text: str) -> bool:
+    original = override.get("text")
+    return isinstance(original, str) and unescape_prose(original) == unescape_prose(text)
 
 
 class Lexicon:
@@ -63,6 +69,21 @@ class NormalizeMethod(Method):
     def lexicon(self, wd: WorkDir) -> Lexicon:
         return Lexicon.load(self.cfg.resolve(Path(self.settings.lexicon)), wd.root / "lexicon.toml")
 
+    def chapter_speech(self, wd: WorkDir, ch: Chapter, lex: Lexicon, overrides: dict) -> ChapterSpeech:
+        spans = wd.read_spans(ch.id)
+        for span in spans:
+            override = overrides.get(span.id)
+            if not override or not override_matches(override, span.text):
+                override = {}
+            if override.get("omit"):
+                span.omitted = True
+                span.say = ""
+            elif "say" in override:
+                span.say = override["say"]
+            else:
+                span.say = lex.apply(self.say(span.text, span.kind))
+        return ChapterSpeech(chapter_id=ch.id, title_say=lex.apply(self.say(ch.title, None, title=True)), spans=spans)
+
     def run(self, ctx: Context):
         wd = ctx.need_wd()
         lex = self.lexicon(wd)
@@ -70,12 +91,12 @@ class NormalizeMethod(Method):
         applied = 0
         changed, total, examples, report = 0, 0, [], []
         for ch in wd.read_chapters().chapters:
-            spans: list[Span] = wd.read_spans(ch.id)
-            for s in spans:
-                s.say = lex.apply(self.say(s.text, s.kind))
+            if ctx.chapters is not None and ch.id not in ctx.chapters:
+                continue
+            speech = self.chapter_speech(wd, ch, lex, overrides)
+            for s in speech.spans:
                 o = overrides.get(s.id)
-                if o and o.get("text") == s.text:  # hand-edited spoken text (review page) wins
-                    s.say = o["say"]
+                if o and override_matches(o, s.text):  # hand-edited spoken text (review page) wins
                     applied += 1
                 total += 1
                 plain = " ".join(s.text.replace("*", "").strip("“”\" ").split())
@@ -85,8 +106,7 @@ class NormalizeMethod(Method):
                     report.append(s.id + "\n" + "".join(f"  - {x}\n  + {y}\n" for x, y in regions))
                     if len(examples) < self.settings.show_examples:
                         examples.append(regions[0])
-            title_say = lex.apply(self.say(ch.title, None, title=True))
-            wd.write_speech(ChapterSpeech(chapter_id=ch.id, title_say=title_say, spans=spans))
+            wd.write_speech(speech)
         (wd.root / "speech" / "changes.txt").write_text("".join(report))
         ctx.log(f"  {changed:,} of {total:,} spans respelled (all listed in speech/changes.txt); "
                 f"lexicon: {len(lex.entries)} entries; hand edits: {applied}")

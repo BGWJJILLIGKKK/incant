@@ -4,6 +4,9 @@ A stage is a package under incant/stages/ whose __init__.py defines:
     ORDER: int            position in the pipeline
     DESCRIPTION: str
     Base: type[Method]    the stage's method base class (stage-specific hooks)
+    PRE: bool             optional; True marks a stage consulted on the raw input before the pipeline
+                          runs, to decide how ingestion is handled (preingest). PRE stages are not
+                          per-book steps: they never appear in a resolved plan.
 
 A method is a directory incant/stages/<stage>/<name>/ containing __init__.py
 and <name>.py; <name>.py defines exactly one subclass of the stage's Base.

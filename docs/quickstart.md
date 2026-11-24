@@ -1,6 +1,8 @@
 # Quickstart
 
-From nothing to a finished audiobook with Docker on Linux, Mac or Windows. There are two images:
+From nothing to a finished audiobook with Docker on Linux, Mac or Windows. Pre-built release images are
+pulled from the GitHub Container Registry (`ghcr.io/bgwjjilligkkk`), or you build them from the checkout.
+There are two images:
 
 | Image | Size | Adds |
 |---|---|---|
@@ -60,16 +62,21 @@ cache is many small files. For faster runs, use a WSL shell (`wsl`, Ubuntu by de
 steps there, with the data directory in your WSL home.
 
 Optional, in the data directory:
-- `.env` with API keys (`CLAUDE_API_KEY`, `GEMINI_API_KEY`, `ELEVENLABS_API_KEY`), `chmod 600`.
+- `.env` with API keys (`CLAUDE_API_KEY`, `GEMINI_API_KEY`, `ELEVENLABS_API_KEY`), `chmod 600`. Keys go only
+  here (or in the environment), never in a TOML file; settings name them with `api_key_env`.
 - `incant.local.toml` to point at your own servers, e.g. `[llm] base_url = "http://my-gpu-box:8080/v1"` (**Adding an LLM**).
-  The defaults expect an OpenAI-style LLM and TTS server (such as llama-swap) at `localhost:8080` (README: "Configuration" for Ollama, Claude, Gemini).
+  The LLM methods and IndexTTS expect an OpenAI-style server (such as llama-swap) at `localhost:8080` unless you
+  say otherwise; the default pipeline needs no server (README: "Configuration" for Ollama, Claude, Gemini).
   On a Mac or Windows, a server on the same computer is at `host.docker.internal` instead (**Docker Desktop**).
 
-## 2. Build and check
+## 2. Pull and check
+
+Pull the release images (or build them from this checkout with `docker compose build`, and
+`docker compose --profile local build incant_local`):
 
 ```sh
-docker compose build                                  # incant
-docker compose --profile local build incant_local     # only if you need OCR for scanned PDFs
+docker compose pull                                  # incant
+docker compose --profile local pull incant_local     # only if you need OCR for scanned PDFs
 docker compose run --rm incant --check
 ```
 
@@ -125,6 +132,12 @@ writes a file per chapter plus a playlist.
 Finished books land in `<data>/output/<author>/<title>/` with a `credits.txt` (what made the book, under which
 terms, and what isn't known). Per-book state is in `<data>/work/<book>/`.
 
+Start the local dashboard with `docker compose run --rm incant --serve` and open
+`http://localhost:8765/`. With the Docker Desktop override, run
+`docker compose run --rm --service-ports incant --serve`. The dashboard handles pipeline jobs, downloads,
+review and both TOML configuration files. Use `docker compose run -d --service-ports incant --serve` with
+the Desktop override to leave the daemon running in the background.
+
 ```sh
 docker compose run --rm incant alice-s-adventures-in-wonderland --review                 # http://localhost:8765 (Mac/Windows: below)
 docker compose run --rm incant alice-s-adventures-in-wonderland kokoro mp3 --chapters 4-6  # three more chapters
@@ -160,8 +173,8 @@ and two things differ:
 
   Servers on other machines, and cloud APIs (Claude, Gemini, ElevenLabs), work unchanged.
 
-The release images are built for both Intel/AMD (`linux/amd64`) and ARM (`linux/arm64`), so Apple Silicon
-Macs run them natively, and `docker compose build` builds for your own machine.
+The release images are published for both Intel/AMD (`linux/amd64`) and ARM (`linux/arm64`),
+so Apple Silicon Macs pull and run them natively.
 If a long run stops with exit code 137, Docker ran out of memory: raise the limit in Docker Desktop's
 **Settings → Resources** (`incant_local`'s OCR needs the most).
 
@@ -285,3 +298,23 @@ attribute = "speakers"
 Whole books score better than a single chapter on its own, because the other chapters give the model context.
 On one isolated chapter, Claude Opus 5.5 and Gemini 3.8 Flash both scored 81%, the local 9B model 28%. On whole
 books the local model reaches 95%.
+
+## Debian system service (without Docker)
+
+For a native installation on Debian, build and install the package using the
+[Debian installation guide](../packaging/debian/README.md). Then start the service:
+
+```sh
+sudo systemctl enable --now incant.service
+```
+
+Open [the dashboard](http://127.0.0.1:8765/) and choose **Ebook** or **Audiobook**
+in **Jobs**. Upload a source or enter a URL, then queue the run. Open **Library**
+to review the book or download its export. The service uses `/var/lib/incant` for
+its library and `/etc/incant/incant.toml` for its system configuration.
+
+For Caddy on the same machine, leave `[review].host` at `127.0.0.1` and set
+`public_domains` to your public hostname and `trusted_proxy_ips` to
+`["127.0.0.1"]`. Restart Incant after editing the TOML. See the
+[Caddy example](../packaging/debian/README.md#authenticated-https-through-caddy)
+for TLS, password protection, and the separate-machine setup.

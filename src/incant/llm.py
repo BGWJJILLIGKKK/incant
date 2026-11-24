@@ -8,15 +8,23 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import TypeVar
+
+try:
+    import fcntl
+except ImportError:
+    fcntl = None
 
 import httpx
 from pydantic import BaseModel
 
 from .config import LLMConfig, secret
+from .lanes import llm_endpoint
 from .workdir import atomic_write
 
 M = TypeVar("M", bound=BaseModel)
@@ -30,25 +38,112 @@ class TokenBudget:
     """Admission control for the server's shared KV cache: a request reserves its worst case
     (estimated prompt + max_tokens) before it is sent and releases it when done."""
 
-    def __init__(self, total: int):
+    def __init__(self, total: int, lock_path: Path | None = None):
         self.total = total
         self.free = total
         self.cond = threading.Condition()
+        self.lock_path = None
+        if lock_path and fcntl is not None:
+            try:
+                lock_path.parent.mkdir(parents=True, exist_ok=True)
+                lock_path.touch(exist_ok=True)
+                self.lock_path = lock_path
+            except OSError:
+                pass
 
     def acquire(self, n: int) -> int:
         n = min(n, self.total)  # an oversized request runs alone rather than never
         with self.cond:
             self.cond.wait_for(lambda: self.free >= n)
             self.free -= n
+        try:
+            if self.lock_path is not None:
+                self._acquire_cross_process(n)
+        except BaseException:
+            self._release_local(n)
+            raise
         return n
 
     def release(self, n: int) -> None:
+        try:
+            if self.lock_path is not None:
+                self._release_cross_process(n)
+        finally:
+            self._release_local(n)
+
+    def _release_local(self, n: int) -> None:
         with self.cond:
             self.free += n
             self.cond.notify_all()
 
+    @contextmanager
+    def _reservation_file(self):
+        # flock is attached to the open file description. Each transaction needs its own
+        # descriptor so threads in one process contend for the lock just like separate processes.
+        with self.lock_path.open("a+b") as file:
+            fcntl.flock(file.fileno(), fcntl.LOCK_EX)
+            yield file
 
-_budgets: dict[str, TokenBudget] = {}
+    @staticmethod
+    def _read_reservations(file) -> list[dict]:
+        file.seek(0)
+        raw = file.read().decode("utf-8", errors="replace").lstrip()
+        if not raw:
+            return []
+        try:
+            # Older Incant builds could leave extra JSON after a complete reservation list.
+            entries, _ = json.JSONDecoder().raw_decode(raw)
+        except ValueError:
+            return []
+        if not isinstance(entries, list):
+            return []
+        return [entry for entry in entries if isinstance(entry, dict)
+                and type(entry.get("pid")) is int and entry["pid"] > 0
+                and type(entry.get("tokens")) is int and entry["tokens"] >= 0
+                and type(entry.get("time")) in (int, float)]
+
+    @staticmethod
+    def _write_reservations(file, entries: list[dict]) -> None:
+        file.seek(0)
+        file.truncate()
+        file.write(json.dumps(entries).encode())
+        file.flush()
+
+    def _acquire_cross_process(self, n: int) -> None:
+        while True:
+            with self._reservation_file() as file:
+                reservations = self._read_reservations(file)
+                now = time.time()
+                active = []
+                for r in reservations:
+                    if now - r["time"] >= 600:
+                        continue
+                    try:
+                        os.kill(r["pid"], 0)
+                    except ProcessLookupError:
+                        continue
+                    except PermissionError:
+                        pass  # an existing process owned by another user
+                    active.append(r)
+                used = sum(r["tokens"] for r in active)
+                if used + n <= self.total or not active:
+                    active.append({"pid": os.getpid(), "tokens": n, "time": now})
+                    self._write_reservations(file, active)
+                    return
+            time.sleep(0.05)
+
+    def _release_cross_process(self, n: int) -> None:
+        with self._reservation_file() as file:
+            reservations = self._read_reservations(file)
+            pid = os.getpid()
+            for i, r in enumerate(reservations):
+                if r["pid"] == pid and r["tokens"] == n:
+                    reservations.pop(i)
+                    break
+            self._write_reservations(file, reservations)
+
+
+_budgets: dict[object, TokenBudget] = {}
 _budgets_lock = threading.Lock()
 
 
@@ -56,13 +151,29 @@ def estimate_tokens(text: str) -> int:
     return len(text) // 3 + 64  # conservative for English (~4 chars/token) plus chat-template overhead
 
 
+def prompt_char_budget(cfg: LLMConfig, system: str, schema: type[BaseModel], max_tokens: int,
+                       ceiling: int | None = None) -> int:
+    """Estimated room for user text, after allowing for instructions, schema and completion."""
+    limit = min(cfg.context_tokens, ceiling) if ceiling is not None else cfg.context_tokens
+    reserve = max(max_tokens, cfg.min_max_tokens)
+    if cfg.dialect == "anthropic":
+        from .llm_anthropic import MIN_MAX_TOKENS
+
+        reserve = max(reserve, MIN_MAX_TOKENS)
+    return max(0, (limit - reserve - estimate_tokens(system + json.dumps(schema.model_json_schema())) - 128) * 3)
+
+
 class LLM:
     def __init__(self, cfg: LLMConfig, cache_dir: Path | None = None):
         self.cfg = cfg
         self.cache_dir = cache_dir
-        with _budgets_lock:  # one budget per server, shared by every client in the process
-            self.budget = _budgets.setdefault(cfg.base_url, TokenBudget(cfg.context_tokens))
-        key = (secret(cfg.api_key_env) or "") if cfg.api_key_env else cfg.api_key
+        with _budgets_lock:  # one budget per server/model/context, shared by clients
+            ep = llm_endpoint(cfg)
+            key = (ep, cfg.model, cfg.context_tokens)
+            lock_dir = Path(os.environ.get("INCANT_LOCK_DIR", Path("/tmp/incant_locks")))
+            lock_name = hashlib.sha256(f"{ep}:{cfg.model}:{cfg.context_tokens}".encode()).hexdigest()[:16] + ".lock"
+            self.budget = _budgets.setdefault(key, TokenBudget(cfg.context_tokens, lock_path=lock_dir / lock_name))
+        key = (secret(cfg.api_key_env) or "") if cfg.api_key_env else "none"  # local servers ignore it
         self._anthropic = None
         self.http = httpx.Client(
             base_url=cfg.base_url.rstrip("/"), timeout=cfg.timeout_s, headers={"Authorization": f"Bearer {key}"}
@@ -104,7 +215,8 @@ class LLM:
             return [m.id for m in llm_anthropic.client(self.cfg).models.list()]
         r = self.http.get("/models")
         r.raise_for_status()
-        return [m["id"] for m in r.json().get("data", [])]
+        # Gemini's OpenAI-style endpoint lists "models/<name>" but takes the bare name in requests.
+        return [m["id"].removeprefix("models/") for m in r.json().get("data", [])]
 
     def chat_json(self, system: str, user: str, schema: type[M], *, think: bool = False, max_tokens: int = 4096) -> M:
         anthropic_api = self.cfg.dialect == "anthropic"
@@ -119,7 +231,8 @@ class LLM:
         if cached and cached.exists():
             return schema.model_validate_json(cached.read_text())
         data = None
-        need = self.budget.acquire(estimate_tokens(system + user) + max_tokens)
+        sent_system = body["system"] if anthropic_api else body["messages"][0]["content"]
+        need = self.budget.acquire(estimate_tokens(sent_system + user) + body["max_tokens"])
         if anthropic_api:
             try:
                 if self._anthropic is None:

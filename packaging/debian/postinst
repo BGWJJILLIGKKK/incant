@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+if [ "$1" = configure ]; then
+    if ! getent passwd incant >/dev/null; then
+        adduser --system --group --home /var/lib/incant --no-create-home incant
+    fi
+    if [ "$(id -gn incant)" != incant ] || [ "$(id -u incant)" = 0 ]; then
+        echo "incant: expected a dedicated non-root incant user with primary group incant" >&2
+        exit 1
+    fi
+    install -d -m 0750 -o incant -g incant /var/lib/incant /var/cache/incant
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload
+        if systemctl is-active --quiet incant.service; then
+            deb-systemd-invoke restart incant.service
+        fi
+    fi
+fi

@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import statistics
+import tomllib
 import wave
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -21,8 +23,8 @@ from typing import TYPE_CHECKING
 from ...audio import loudnorm, measure_lufs, to_canonical_wav, trim_silence, wav_duration_ms
 from ...config import Config
 from ...normalize import is_scene_break
-from ...qa import Transcriber, compare
-from ...schemas import NARRATOR_ID, AudioManifest, Cast, Chapter, ChapterAudio, Emotion, Segment, Voice
+from ...qa import Transcriber, compare, words
+from ...schemas import NARRATOR_ID, AudioManifest, Cast, Chapter, ChapterAudio, ChapterSpeech, Emotion, Segment, Span, Voice
 from ...textprep import chunk
 from ...voices import VoiceLibrary
 from ...workdir import WorkDir, atomic_write
@@ -70,6 +72,25 @@ class Renderer:
         self.backend_id = backend.identity()
         self._resolved: dict[str, Voice] = {}  # voice id -> Voice, filled during planning
         self.qa = qa
+        self._whitelist = self._build_whitelist()
+
+    def _build_whitelist(self) -> set[str]:
+        wl: set[str] = set()
+        chars = self.wd.read_characters()
+        if chars:
+            for c in chars.characters:
+                for n in (c.canonical_name, *c.aliases):
+                    wl.update(words(n))
+        for p in (self.wd.root / "lexicon.toml", Path(self.cfg.resolve(Path("lexicon.toml")))):
+            if p.exists():
+                try:
+                    entries = tomllib.loads(p.read_text()).get("words", {})
+                    for k, v in entries.items():
+                        wl.update(words(str(k)))
+                        wl.update(words(str(v)))
+                except Exception:
+                    pass
+        return wl
 
     # ------------------------------------------------------------ planning
 
@@ -98,16 +119,18 @@ class Renderer:
             parts.append({"mix": voice.mix, "lang": voice.lang})
         return hashlib.sha256(json.dumps(parts, sort_keys=True).encode()).hexdigest()[:32]
 
-    def _groups(self, ch: Chapter) -> list[_Group | None]:
+    def _groups(self, spans: list[Span]) -> list[_Group | None]:
         """Merge consecutive spans in a paragraph that would be read by the same voice with the
         same emotion, so e.g. quote + dialogue tag + quote is one TTS call with natural prosody
         when a single voice reads all three. None marks a scene break."""
         out: list[_Group | None] = []
-        speech = self.wd.read_speech(ch.id)
-        spans = speech.spans if speech else self.wd.read_spans(ch.id)  # (no normalize stage output: raw text)
         for s in spans:
+            if s.omitted:
+                continue
             if is_scene_break(s.text):
                 out.append(None)
+                continue
+            if s.say == "":
                 continue
             emo = s.emotion.model_dump() if s.emotion else None
             key = (s.para, self.cast.voice_for(s.speaker), json.dumps(emo, sort_keys=True))
@@ -120,9 +143,11 @@ class Renderer:
                 out.append(_Group(key, s.para, s.speaker, s.emotion, words, [s.id]))
         return out
 
-    def plan(self, ch: Chapter) -> list[Segment]:
+    def plan(self, ch: Chapter, *, speech: ChapterSpeech | None = None) -> list[Segment]:
         a = self.cfg.audio
         segs: list[Segment] = []
+        if speech is None:
+            speech = self.wd.read_speech(ch.id)
 
         def add(span_ids: list[str], text: str, speaker: str | None, emotion, pause_ms: int):
             voice = self._voice(speaker)
@@ -130,11 +155,10 @@ class Renderer:
                                 cache_key=self._key(text, voice, emotion), pause_after_ms=pause_ms))
 
         if ch.speak_title:
-            speech = self.wd.read_speech(ch.id)
             for t in chunk(speech.title_say if speech else ch.title, self.backend.settings.max_segment_chars):
                 add([f"{ch.id}-title"], t, NARRATOR_ID, None, a.pause_title_ms)
 
-        groups = self._groups(ch)
+        groups = self._groups(speech.spans if speech else self.wd.read_spans(ch.id))
         for g, nxt in zip(groups, [*groups[1:], None]):
             if g is None:  # scene break
                 if segs:
@@ -186,19 +210,36 @@ class Renderer:
         with ThreadPoolExecutor(max_workers=8) as ex:
             list(ex.map(one, todo))
 
-    def voice_gains(self) -> dict[str, float]:
-        """dB per voice: target minus the median loudness of every measured clip of that voice in this book."""
+    def voice_gains(self, segs: Iterable[Segment], partial: bool = False) -> dict[str, float]:
+        """Match voices using measured clips from the current render plan."""
         a = self.cfg.audio
+        baseline_path = self.wd.root / "audio" / "gain_baseline.json"
+        scope = hashlib.sha256(json.dumps(
+            [self.backend_id, self.cast.roles, self.cast.default_voice, a.sample_rate,
+             a.voice_target_lufs, a.max_voice_gain_db],
+            sort_keys=True,
+        ).encode()).hexdigest()
+        gains: dict[str, float] = {}
+        if partial and baseline_path.exists():
+            try:
+                saved = json.loads(baseline_path.read_text())
+                if saved.get("scope") == scope:
+                    gains = {voice: float(db) for voice, db in saved["gains"].items()}
+            except (OSError, ValueError, TypeError, KeyError, AttributeError):
+                pass
         levels: dict[str, list[float]] = {}
-        for f in self.wd.cache_dir.glob("*/*.lvl.json"):
-            rec = json.loads(f.read_text())
-            if rec.get("voice") and rec.get("lufs") is not None and rec["lufs"] < 0:
-                levels.setdefault(rec["voice"], []).append(rec["lufs"])
-        gains = {}
-        for v, ls in levels.items():
-            ls.sort()
-            median = ls[len(ls) // 2]
-            gains[v] = round(max(-a.max_voice_gain_db, min(a.max_voice_gain_db, a.voice_target_lufs - median)), 1)
+        active = {s.cache_key: s.voice for s in segs if s.voice and s.voice not in gains}
+        for key, voice in active.items():
+            path = self._lvl_path(key)
+            if path.exists():
+                level = json.loads(path.read_text()).get("lufs")
+                if isinstance(level, (int, float)) and level < 0:
+                    levels.setdefault(voice, []).append(level)
+        for voice, samples in levels.items():
+            median = statistics.median(samples)
+            gains[voice] = round(max(-a.max_voice_gain_db, min(a.max_voice_gain_db, a.voice_target_lufs - median)), 1)
+        if not partial or levels:
+            atomic_write(baseline_path, json.dumps({"scope": scope, "gains": gains}, indent=2) + "\n")
         return gains
 
     def _qa_path(self, key: str) -> Path:
@@ -216,7 +257,7 @@ class Renderer:
         if path.exists() and (self.qa is None or qa_path.exists()):
             rec = json.loads(qa_path.read_text()) if qa_path.exists() else None
             if rec and not rec["ok"]:  # re-score the stored transcript: the comparison may have improved
-                chk = compare(rec["text"], rec["heard"])
+                chk = compare(rec["text"], rec["heard"], whitelist=self._whitelist)
                 if chk.ok(self.backend.settings.qa_max_wer):
                     rec.update(ok=True, wer=round(chk.wer, 3))
                     atomic_write(qa_path, json.dumps(rec) + "\n")
@@ -229,7 +270,10 @@ class Renderer:
             if self.qa is None:
                 atomic_write(path, wav)
                 return None
-            chk = self.qa.check(wav, seg.text)
+            try:
+                chk = self.qa.check(wav, seg.text, whitelist=self._whitelist)
+            except TypeError:
+                chk = self.qa.check(wav, seg.text)
             rec = {"ok": chk.ok(st.qa_max_wer), "wer": round(chk.wer, 3), "heard": chk.heard, "text": seg.text,
                    "voice": seg.voice, "variant": variant, "span_ids": seg.span_ids, "key": seg.cache_key}
             if best is None or chk.wer < best[0]:
@@ -267,9 +311,10 @@ class Renderer:
         gains = gains or {}
         out = self.wd.chapter_audio_dir / f"{ch.id}.wav"
         sidecar = out.with_suffix(".json")
+        empty_pause = [] if segs else [a.pause_chapter_end_ms]
         fingerprint = hashlib.sha256(
             json.dumps([[s.cache_key, s.pause_after_ms, gains.get(s.voice or "", 0.0)] for s in segs]
-                       + [a.target_lufs, a.true_peak_db]).encode()
+                       + [a.target_lufs, a.true_peak_db] + empty_pause).encode()
         ).hexdigest()
         if out.exists() and sidecar.exists() and json.loads(sidecar.read_text()).get("fingerprint") == fingerprint:
             return ChapterAudio(chapter_id=ch.id, title=ch.title, file=str(out.relative_to(self.wd.root)),
@@ -282,6 +327,8 @@ class Renderer:
             w.setnchannels(1)
             w.setsampwidth(2)
             w.setframerate(rate)
+            if not segs:
+                w.writeframes(b"\x00\x00" * max(1, rate * a.pause_chapter_end_ms // 1000))
             for s in segs:
                 with wave.open(str(self._cache_path(s.cache_key))) as r:
                     frames = r.readframes(r.getnframes())
@@ -299,25 +346,29 @@ class Renderer:
     def render(self, only: set[str] | None = None, progress: Progress | None = None) -> AudioManifest:
         chapters = self.wd.read_chapters().chapters
         prior = {c.chapter_id: c for c in self.wd.read_manifest().chapters} if self.wd.manifest_path.exists() else {}
-        results: list[ChapterAudio] = []
+        plans: dict[str, list[Segment]] = {}
         qa_fail: list[dict] = []
         for ch in chapters:
             if only is not None and ch.id not in only:
-                if ch.id in prior:
-                    results.append(prior[ch.id])
                 continue
             segs = self.plan(ch)
+            plans[ch.id] = segs
             if progress:
                 progress(f"chapter {ch.id} '{ch.title}': {len(segs)} segments")
             qa_fail += self.synthesize(segs, progress)
-            gains = {}
             if self.cfg.audio.level_match:
                 self.measure(segs)
-                gains = self.voice_gains()
-                used = sorted({s.voice for s in segs if s.voice}, key=lambda v: gains.get(v, 0.0))
-                if progress and used:
-                    progress("  level match (dB): " + ", ".join(f"{v} {gains.get(v, 0.0):+.1f}" for v in used))
-            results.append(self.assemble(ch, segs, gains))
+        gains = {}
+        if self.cfg.audio.level_match and plans:
+            gains = self.voice_gains((s for segs in plans.values() for s in segs), partial=len(plans) < len(chapters))
+            if progress and gains:
+                progress("  level match (dB): " + ", ".join(f"{v} {db:+.1f}" for v, db in sorted(gains.items())))
+        results = []
+        for ch in chapters:
+            if ch.id in plans:
+                results.append(self.assemble(ch, plans[ch.id], gains))
+            elif ch.id in prior:
+                results.append(prior[ch.id])
         manifest = AudioManifest(sample_rate=self.cfg.audio.sample_rate, chapters=results)
         self.wd.write_manifest(manifest)
         if self.qa is not None:

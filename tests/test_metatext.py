@@ -6,7 +6,18 @@ from incant.config import load_config
 from incant.pipeline import discover, instantiate
 from incant.schemas import BookMeta
 from incant.stages.parse.chapters import build_chapters
-from incant.stages.parse.metatext import MetatextSettings, strip_metatext
+from incant.stages.parse.metatext import MetatextSettings, llm_labels, strip_metatext
+
+
+def test_llm_sees_full_edge_paragraph_and_only_returns_sent_ids():
+    text = "An introductory paragraph. " * 40 + "A note from the author."
+
+    class Model:
+        def chat_json(self, system, prompt, schema, **kwargs):
+            assert text in prompt
+            return schema(not_story=[0, 1])
+
+    assert llm_labels(Model(), "Title", [text, "Interior paragraph."], [0]) == {0}
 from incant.workdir import WorkDir
 
 STORY = [

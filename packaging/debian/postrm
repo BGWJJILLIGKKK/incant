@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+if [ "$1" = remove ] || [ "$1" = purge ]; then
+    # Remove the enablement link, including in a chroot without a running systemd.
+    systemctl --root=/ disable incant.service >/dev/null 2>&1 || true
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload
+    fi
+fi

@@ -27,11 +27,12 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from ....llm import LLM, LLMError
+from ....llm import LLM, LLMError, estimate_tokens, prompt_char_budget
 from ....normalize import slugify
-from ....schemas import AgeBracket, Character, CharacterList, Gender
+from ....schemas import AgeBracket, Character, CharacterList, Gender, SpanKind
 from ....workdir import WorkDir
 from ...base import Context
+from ...attribute.spans import split_paragraph
 from ..base import ParseMethod
 from ..chapters import build_chapters
 from ..metatext import MetatextSettings
@@ -43,6 +44,11 @@ class CharactersSettings(MetatextSettings):
     # Chapters longer than this are split for extraction. A 9B model gets sloppy on big windows (aliases
     # attached to the wrong person, characters missed): 2000 words is close to a typical novel chapter.
     window_words: int = 2000
+    extraction_mode: Literal["chapter", "neighbors", "batch"] = "neighbors"
+    context_tokens: int = Field(default=262144, gt=0)  # prompt and completion per extraction request
+    context_chapters: int = Field(default=1, ge=0)  # on either side of each target
+    batch_chapters: int = Field(default=4, ge=1)
+    batch_max_tokens: int = Field(default=16384, gt=0)
     think: bool = False  # for extraction: ~10x slower per window for little gain
     max_tokens: int = 4096
     # Linking: a fast answer is accepted when the names corroborate it ("George Wickham" ⊇ "Wickham");
@@ -52,6 +58,7 @@ class CharactersSettings(MetatextSettings):
     # then skipped, which is the conservative outcome. Lower = less time wasted on those.
     max_tokens_thinking: int = 6144
     max_characters_per_window: int = 40
+    link_candidates: int = Field(default=12, ge=1)
 
 
 # ------------------------------------------------------------------ LLM schemas + prompts
@@ -67,11 +74,28 @@ class _Mention(BaseModel):
     speaks: bool = Field(description="says words aloud in quotation marks in this passage")
 
 
-def _extraction_model(max_items: int) -> type[BaseModel]:
+class _ContextMention(_Mention):
+    spoken_quote: str = Field(max_length=160, description="exact words this person speaks in the target chapter, empty otherwise")
+    context_name: str = Field(max_length=60, description="name for the same person used in another supplied chapter, empty if uncertain")
+
+
+def _extraction_model(max_items: int, *, contextual: bool = False) -> type[BaseModel]:
+    mention_type = _ContextMention if contextual else _Mention
+
     class _Extraction(BaseModel):
-        characters: list[_Mention] = Field(max_length=max_items)
+        characters: list[mention_type] = Field(max_length=max_items)
 
     return _Extraction
+
+
+def _batch_model(max_items: int, max_chapters: int) -> type[BaseModel]:
+    class _ChapterExtraction(_extraction_model(max_items, contextual=True)):
+        chapter: str
+
+    class _BatchExtraction(BaseModel):
+        chapters: list[_ChapterExtraction] = Field(max_length=max_chapters)
+
+    return _BatchExtraction
 
 
 class _Link(BaseModel):
@@ -90,6 +114,21 @@ Rules:
 - age: best estimate from the passage and context (a married parent of grown children is an adult; unmarried daughters of a family seeking husbands are young adults); "unknown" only if there is no clue.
 - speaks: true only if the passage contains words this person says aloud, in quotation marks, attributed to them. Being talked about or having their words reported does not count.
 - Use only information in the passage. List each person once."""
+
+NEIGHBOR_SYSTEM = EXTRACT_SYSTEM + """
+The passage contains a marked TARGET and optional CONTEXT chapters. Use context to disambiguate
+identities, but report only people attested in TARGET. Names, aliases, evidence phrases, and spoken
+dialogue must be attested in TARGET. Do not count people who speak only in CONTEXT.
+For speaks=true, give a short exact excerpt in spoken_quote; otherwise leave it empty.
+Use context_name for a distinct name of the same person found only in another supplied chapter, or leave it empty."""
+
+BATCH_SYSTEM = EXTRACT_SYSTEM + """
+The passage contains labeled chapters. Use the complete passage to disambiguate identities, then
+return one chapter entry for each supplied chapter ID, even if its characters list is empty.
+Apply all the extraction rules independently to each chapter entry. Names, aliases, evidence phrases,
+and spoken dialogue must be attested in the chapter whose ID you return.
+For speaks=true, give a short exact excerpt in spoken_quote; otherwise leave it empty.
+Use context_name for a distinct name of the same person found only in another supplied chapter, or leave it empty."""
 
 LINK_SYSTEM = """You help consolidate the character list of a novel. Entries were extracted chapter by chapter,
 so one person can appear under several names (e.g. "Lizzy" and "Elizabeth Bennet").
@@ -174,10 +213,12 @@ def core_tokens(name: str) -> frozenset[str]:
 class Entry:
     name: str
     alias_counts: Counter = field(default_factory=Counter)
+    context_names: set[str] = field(default_factory=set)
     genders: Counter = field(default_factory=Counter)
     evidence: list[str] = field(default_factory=list)
     ages: Counter = field(default_factory=Counter)
     descriptions: list[str] = field(default_factory=list)
+    passages: list[tuple[str, str]] = field(default_factory=list)
     chapters: list[str] = field(default_factory=list)
     mentions: int = 0
     speaks: bool = False
@@ -190,12 +231,19 @@ class Entry:
 
     def add(self, m: _Mention, chapter: str, text: str) -> None:
         self.alias_counts.update(clean_aliases(self.name, [m.name, *m.aliases], text))
+        if isinstance(m, _ContextMention) and m.context_name:
+            self.context_names.add(m.context_name)
         self.genders[m.gender] += 1
         if m.gender_evidence and m.gender != "unknown":
             self.evidence.append(m.gender_evidence)
         self.ages[m.age] += 1
         if m.description and m.description not in self.descriptions:
             self.descriptions.append(m.description)
+        if len(self.passages) < 3 and chapter not in {cid for cid, _ in self.passages}:
+            match = re.search(r"(?<!\w)" + re.escape(_norm(m.name)) + r"(?!\w)", text, re.I)
+            if match:
+                excerpt = " ".join(text[max(0, match.start() - 300):match.end() + 400].split())
+                self.passages.append((chapter, excerpt))
         if chapter not in self.chapters:
             self.chapters.append(chapter)
         self.mentions += 1
@@ -212,7 +260,8 @@ class Entry:
         g, _ = self.gender()
         al = f"; also called {', '.join(self.aliases[:5])}" if self.aliases else ""
         ch = ", ".join(self.chapters[:5]) + ("…" if len(self.chapters) > 5 else "")
-        return f"{label} {self.name} ({g}{al}; chapters {ch}): " + " | ".join(self.descriptions[:3])
+        hints = f"; possible names from other chapters: {', '.join(sorted(self.context_names))}" if self.context_names else ""
+        return f"{label} {self.name} ({g}{al}; chapters {ch}{hints}): " + " | ".join(self.descriptions[:3])
 
 
 def pool(mentions: list[tuple[str, str, _Mention]]) -> list[Entry]:
@@ -260,18 +309,27 @@ def candidates(entries: list[Entry], j: int, limit: int = 6) -> list[int]:
     e = entries[j]
     ct = core_tokens(e.name)
     names_j = {e.name.casefold(), *(a.casefold() for a in e.aliases)}
-    out = []
+    hinted, out = [], []
     for i in range(j):
         o = entries[i]
         if not compatible(e.genders, o.genders):
             continue
-        if (e.scoped or o.scoped) and not set(e.chapters) & set(o.chapters):
-            continue  # a bare title only refers to someone in the same chapter
-        co = core_tokens(o.name)
         names_i = {o.name.casefold(), *(a.casefold() for a in o.aliases)}
+        if not (e.scoped and o.scoped) and (
+            _context_matches(e, names_i) or _context_matches(o, names_j)
+        ):
+            hinted.append(i)
+            continue
+        if (e.scoped or o.scoped) and not set(e.chapters) & set(o.chapters):
+            continue  # bare titles without corroborating context are chapter-specific
+        co = core_tokens(o.name)
         if (ct and co and (ct <= co or co <= ct)) or (names_j & names_i) or _role_described(e, o) or _role_described(o, e):
             out.append(i)
-    return out[:limit]
+    return (hinted + out)[:limit]
+
+
+def _context_matches(entry: Entry, names: set[str]) -> bool:
+    return any(hint.casefold() in names for hint in entry.context_names)
 
 
 def _role_described(role: Entry, other: Entry) -> bool:
@@ -288,6 +346,8 @@ def corroborated(a: Entry, b: Entry) -> bool:
     """Names alone support a link: one name's core words contain the other's ("George Wickham" ⊇ "Mr. Wickham").
     Roles never corroborate by name ("Scrooge's nephew" contains "Scrooge")."""
     if a.role or b.role:
+        return False
+    if (a.scoped or b.scoped) and not set(a.chapters) & set(b.chapters):
         return False
     ca, cb = core_tokens(a.name), core_tokens(b.name)
     return bool(ca and cb and (ca <= cb or cb <= ca))
@@ -400,13 +460,25 @@ def ambiguous(chars: list[Character]) -> dict[str, list[str]]:
     return {a: ids for a, ids in sorted(owners.items()) if len(ids) > 1}
 
 
-def windows(text: str, max_words: int) -> list[str]:
+def windows(text: str, max_words: int | None, *, max_chars: int | None = None) -> list[str]:
     out, cur, n = [], [], 0
-    for p in text.split("\n\n"):
+    paragraphs = []
+    for paragraph in text.split("\n\n"):
+        while max_chars and len(paragraph) > max_chars:
+            split = paragraph.rfind(" ", 0, max_chars + 1)
+            split = split if split > 0 else max_chars
+            paragraphs.append(paragraph[:split])
+            paragraph = paragraph[split:].lstrip()
+        paragraphs.append(paragraph)
+    chars = 0
+    for p in paragraphs:
         w = len(p.split())
-        if cur and n + w > max_words:
+        if cur and ((max_words is not None and n + w > max_words)
+                    or (max_chars is not None and chars + 2 + len(p) > max_chars)):
             out.append("\n\n".join(cur))
             cur, n = [], 0
+            chars = 0
+        chars += len(p) + (2 if cur else 0)
         cur.append(p)
         n += w
     if cur:
@@ -425,7 +497,9 @@ class CharactersParse(ParseMethod):
     settings: CharactersSettings
 
     def fingerprint(self) -> str:
-        return super().fingerprint() + ":" + self.cfg.llm.model
+        fingerprint = f"{super().fingerprint()}:{self.cfg.llm.model}:{self.cfg.llm.context_tokens}:{self.cfg.llm.min_max_tokens}"
+        # Refresh books previously profiled with the per-chapter word cap in batch mode.
+        return fingerprint + ":token-batch" if self.settings.extraction_mode == "batch" else fingerprint
 
     def check(self) -> list[tuple[bool, str]]:
         try:
@@ -442,8 +516,8 @@ class CharactersParse(ParseMethod):
         ctx.log(f"  {len(cl.chapters)} chapters via {cl.method}")
 
         llm = LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
-        jobs = [(ch.id, w) for ch in cl.chapters for w in windows(wd.read_chapter_text(ch.file), self.settings.window_words)]
-        mentions = self._extract(llm, jobs, ctx)
+        chapters = [(ch.id, wd.read_chapter_text(ch.file)) for ch in cl.chapters]
+        mentions = self._extract(llm, chapters, ctx)
         entries = pool(mentions)
         ctx.log(f"  {len(mentions)} mentions -> {len(entries)} verified distinct names")
 
@@ -480,22 +554,126 @@ class CharactersParse(ParseMethod):
             ctx.log(f"  WARNING: {failed} {label} calls failed")
         return [r for r in results if r is not None]
 
-    def _extract(self, llm: LLM, jobs: list[tuple[str, str]], ctx: Context) -> list[tuple[str, str, _Mention]]:
-        schema = _extraction_model(self.settings.max_characters_per_window)
+    def _extract(self, llm: LLM, chapters: list[tuple[str, str]], ctx: Context) -> list[tuple[str, str, _Mention]]:
+        s = self.settings
+        is_batch = s.extraction_mode == "batch"
+        system = {"chapter": EXTRACT_SYSTEM, "neighbors": NEIGHBOR_SYSTEM, "batch": BATCH_SYSTEM}[s.extraction_mode]
+        schema = (_batch_model(s.max_characters_per_window, s.batch_chapters) if is_batch
+                  else _extraction_model(s.max_characters_per_window, contextual=s.extraction_mode == "neighbors"))
+        output = s.batch_max_tokens if is_batch else s.max_tokens
+        reserve = max(output, self.cfg.llm.min_max_tokens)
+        if self.cfg.llm.dialect == "anthropic":
+            from ....llm_anthropic import MIN_MAX_TOKENS
 
-        def one(chapter: str, text: str):
-            r = llm.chat_json(EXTRACT_SYSTEM, text, schema, think=self.settings.think, max_tokens=self.settings.max_tokens)
-            return [(chapter, text, m) for m in r.characters]
+            reserve = max(reserve, MIN_MAX_TOKENS)
+        limit = min(s.context_tokens, self.cfg.llm.context_tokens)
+        # Include schema and framing overhead, including providers that place the schema in the prompt.
+        overhead = estimate_tokens(system + str(schema.model_json_schema())) + 128
+        max_chars = (limit - reserve - overhead) * 3
+        if max_chars < 256:
+            raise ValueError("character profiling context is too small for the prompt and response budget")
+
+        def block(kind: str, chapter: str, text: str) -> str:
+            return f'<{kind} chapter="{chapter}">\n{text}\n</{kind}>'
+
+        jobs: list[tuple[list[tuple[str, str]], str, dict[str, str] | None]] = []
+        targets: list[tuple[str, str]] = []
+        user = ""
+        word_limit = None if is_batch else s.window_words
+        for i, (chapter, text) in enumerate(chapters):
+            for focal in windows(text, word_limit, max_chars=max_chars - 128):
+                if is_batch:
+                    entry = block("chapter", chapter, focal)
+                    if targets and (len(targets) >= s.batch_chapters or targets[-1][0] == chapter
+                                    or len(user) + len(entry) + 2 > max_chars):
+                        jobs.append((targets, user, None))
+                        targets, user = [], ""
+                    targets.append((chapter, focal))
+                    user = f"{user}\n\n{entry}" if user else entry
+                elif s.extraction_mode == "neighbors":
+                    passage = block("target", chapter, focal)
+                    neighbors = []
+                    remaining = max_chars - len(passage)
+                    for distance in range(1, min(s.context_chapters, len(chapters) - 1) + 1):
+                        for j in (i - distance, i + distance):
+                            if 0 <= j < len(chapters):
+                                entry = block("context", *chapters[j])
+                                if len(entry) + 2 <= remaining:
+                                    neighbors.append((j, entry))
+                                    remaining -= len(entry) + 2
+                    before = [entry for j, entry in sorted(neighbors) if j < i]
+                    after = [entry for j, entry in sorted(neighbors) if j > i]
+                    context = dict(chapters[j] for j, _ in neighbors)
+                    jobs.append(([(chapter, focal)], "\n\n".join([*before, passage, *after]), context))
+                else:
+                    jobs.append(([(chapter, focal)], focal, None))
+        if targets:
+            jobs.append((targets, user, None))
+        if jobs:
+            largest = max(estimate_tokens(system + prompt) for _, prompt, _ in jobs)
+            ctx.log(f"  extract: {len(jobs)} {s.extraction_mode} requests, up to ~{largest:,} prompt tokens "
+                    f"({reserve:,} reserved for response, {limit:,} total-token ceiling)")
+
+        def validated(chapter, focal, mentions, context):
+            dialogue = []
+            if s.extraction_mode != "chapter" and any(m.speaks for m in mentions):
+                dialogue = [text for paragraph in focal.split("\n\n")
+                            for kind, text in split_paragraph(paragraph) if kind == SpanKind.dialogue]
+            for mention in mentions:
+                if isinstance(mention, _ContextMention):
+                    quote = mention.spoken_quote.strip().strip('“”"').strip()
+                    hint = _norm(mention.context_name)
+                    if (_is_bad_name(hint) or _BARE_TITLE.match(hint) or _occurs(hint, focal)
+                            or not any(_occurs(hint, text) for cid, text in context.items() if cid != chapter)):
+                        hint = ""
+                    speaks = mention.speaks and bool(quote) and any(_occurs(quote, text) for text in dialogue)
+                    mention = mention.model_copy(update={"speaks": speaks, "context_name": hint})
+                yield chapter, focal, mention
+
+        def one(targets: list[tuple[str, str]], prompt: str, neighbors: dict[str, str] | None = None):
+            try:
+                r = llm.chat_json(system, prompt, schema, think=s.think, max_tokens=output)
+                if not is_batch:
+                    return list(validated(*targets[0], r.characters, neighbors or {}))
+                by_chapter = {entry.chapter: entry.characters for entry in r.chapters}
+                if len(r.chapters) != len(targets) or set(by_chapter) != {chapter for chapter, _ in targets}:
+                    raise LLMError("character extraction returned missing, duplicate or unexpected chapter IDs")
+                return [mention for chapter, focal in targets
+                        for mention in validated(chapter, focal, by_chapter[chapter], dict(targets))]
+            except LLMError as error:
+                if not is_batch or len(targets) == 1 or not str(error).startswith(
+                    ("hit max_tokens=", "invalid _BatchExtraction JSON", "character extraction returned")
+                ):
+                    raise
+                ctx.log(f"  extract: retrying {len(targets)} chapters in smaller batches ({error.args[0].splitlines()[0]})")
+                mid = len(targets) // 2
+                recovered = []
+                for half in (targets[:mid], targets[mid:]):
+                    try:
+                        recovered.extend(one(half, "\n\n".join(block("chapter", *target) for target in half)))
+                    except LLMError as failed:
+                        ctx.log(f"  extract failed: {failed}")
+                return recovered
 
         return [m for batch in self._parallel(one, jobs, ctx, "extract") for m in batch]
 
     def _link(self, llm: LLM, entries: list[Entry], ctx: Context) -> dict[int, int]:
-        asks = [(j, cands) for j in range(1, len(entries)) if (cands := candidates(entries, j))]
+        asks = [(j, cands) for j in range(1, len(entries)) if (cands := candidates(entries, j, self.settings.link_candidates))]
 
         def ask(j: int, cands: list[int], think: bool):
             prompt = entries[j].describe("ENTRY:") + "\n\nCANDIDATES:\n" + "\n".join(entries[i].describe(f"[{i}]") for i in cands)
-            r = llm.chat_json(LINK_SYSTEM, prompt, _Link, think=think,
-                              max_tokens=self.settings.max_tokens_thinking if think else 1024)
+            output = self.settings.max_tokens_thinking if think else 1024
+            room = prompt_char_budget(self.cfg.llm, LINK_SYSTEM, _Link, output, self.settings.context_tokens) - len(prompt)
+            for n in range(3 if think else 1):
+                for i in (j, *cands):
+                    if n < len(entries[i].passages):
+                        chapter, text = entries[i].passages[n]
+                        source = "ENTRY" if i == j else str(i)
+                        evidence = f"\n[{source}, chapter {chapter}] {text}"
+                        if len(evidence) <= room:
+                            prompt += evidence
+                            room -= len(evidence)
+            r = llm.chat_json(LINK_SYSTEM, prompt, _Link, think=think, max_tokens=output)
             return j, (r.match if r.match in cands else -1)
 
         quick = dict(self._parallel(lambda j, c: ask(j, c, False), asks, ctx, "link"))

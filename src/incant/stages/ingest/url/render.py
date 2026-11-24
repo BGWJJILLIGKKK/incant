@@ -35,10 +35,15 @@ def available() -> bool:
 
 
 def _cookies(fetcher: Fetcher) -> list[dict]:
+    """The jar's cookies for the browser, every one marked Secure (except for localhost): exported cookie files
+    often aren't, and the browser would then send them on a site's redirect through plain http."""
+    from .url import LOCAL_HOSTS
+
     out = []
     for c in fetcher.jar:
+        local = c.domain.lstrip(".") in LOCAL_HOSTS
         d = {"name": c.name, "value": c.value or "", "domain": c.domain, "path": c.path or "/",
-             "secure": bool(c.secure), "httpOnly": bool(c.has_nonstandard_attr("HttpOnly"))}
+             "secure": bool(c.secure) or not local, "httpOnly": bool(c.has_nonstandard_attr("HttpOnly"))}
         if c.expires:
             d["expires"] = float(c.expires)
         out.append(d)

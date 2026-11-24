@@ -16,12 +16,19 @@ import unicodedata
 SCENE_BREAK = "* * *"
 _SCENE_BREAK_RE = re.compile(r"^\s*([*#~•·=_-]\s*){3,}$|^\s*[⁂§]\s*$")
 _LIGATURES = str.maketrans({"ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl", " ": " ", "​": ""})
+_PROSE_ESCAPE = re.compile(r"""\\+(?=["'“”‘’*#_\[\]{}^])""")
+_PROSE_TRAILING_ESCAPE = re.compile(r"(?<=[.!?…])\\+(?=\s*$)")
 
 
 
 def clean_unicode(s: str) -> str:
     s = unicodedata.normalize("NFC", s).translate(_LIGATURES)
     return s.replace("\r\n", "\n").replace("\r", "\n")
+
+
+def unescape_prose(text: str) -> str:
+    """Remove escapes from prose punctuation while retaining literal paths and letter escapes."""
+    return _PROSE_TRAILING_ESCAPE.sub("", _PROSE_ESCAPE.sub("", text))
 
 
 def is_scene_break(p: str) -> bool:

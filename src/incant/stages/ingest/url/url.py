@@ -1,12 +1,13 @@
 """Single-page URL ingest via trafilatura, with optional per-site credentials.
 
-Credentials (all optional) go in incant.local.toml (git-ignored) or come from environment variables:
+Credentials (all optional): the site entry names environment variables; the secrets themselves live in the
+process environment or a .env file (data directory first), never in a TOML file:
 
     [ingest.url.sites."example.com"]          # this host and its subdomains
     username = "me"
-    password_env = "EXAMPLE_PASSWORD"         # or: password = "…"   (HTTP Basic)
-    # bearer_env = "EXAMPLE_TOKEN"            # or: bearer = "…"     (Authorization: Bearer)
-    # headers = { "X-Api-Key" = "…" }        # any extra request headers
+    password_env = "EXAMPLE_PASSWORD"         # HTTP Basic
+    # bearer_env = "EXAMPLE_TOKEN"            # Authorization: Bearer
+    # headers_env = { "X-Api-Key" = "EXAMPLE_API_KEY" }   # extra request headers: header = variable
     # cookies = "cookies.txt"                 # cookies.txt (Netscape format) from a logged-in browser; relative
     #                                         # paths are in the data directory
 
@@ -25,11 +26,11 @@ from http.cookiejar import LoadError, MozillaCookieJar
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Literal
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin, urlsplit, urlunsplit
 
 import httpx
 import trafilatura
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from ....config import secret
 from ....normalize import clean_unicode, paragraphs_from_plain
@@ -40,6 +41,7 @@ from . import render as render_mod
 __all__ = ["UrlIngest", "Page", "Part", "Series", "fetch_page", "ingest_url"]
 
 MAX_REDIRECTS = 10
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "::1")  # plain http may carry credentials here
 _PASSWORD_FIELD = re.compile(r"<input[^>]+type\s*=\s*[\"']?password", re.I)
 LOGIN_PAGE_MAX_WORDS = 300  # a page this short with a password box is a login wall, not the article
 # Interstitials served instead of the content: age gates, consent walls, bot checks, JavaScript-only pages.
@@ -52,12 +54,21 @@ _GATE = re.compile(
 
 class Site(BaseModel):
     username: str | None = None
-    password: str | None = None
     password_env: str | None = None
-    bearer: str | None = None
     bearer_env: str | None = None
-    headers: dict[str, str] = Field(default_factory=dict)
+    headers_env: dict[str, str] = Field(default_factory=dict)  # header name -> environment variable
     cookies: str | None = None  # path to a Netscape cookies.txt
+
+    @model_validator(mode="before")
+    @classmethod
+    def _no_inline_secrets(cls, data):
+        if isinstance(data, dict):
+            inline = [k for k in ("password", "bearer", "headers") if k in data]
+            if inline:
+                raise ValueError(f"{', '.join(inline)}: secrets are no longer read from configuration files; put "
+                                 "them in a .env file and use password_env / bearer_env / headers_env "
+                                 "(header = variable name)")
+        return data
 
 
 class UrlSettings(BaseModel):
@@ -148,6 +159,28 @@ class Fetcher:
     def _has_cookies(self, host: str) -> bool:
         return any(host == c.domain.lstrip(".") or host.endswith("." + c.domain.lstrip(".")) for c in self.jar)
 
+    def has_credentials(self, host: str) -> bool:
+        """Whether requests to this host would carry secrets (site entry, ~/.netrc or cookies)."""
+        found = self.site_for(host)
+        if found:
+            site = found[1]
+            if site.headers_env or site.username is not None or site.password_env or site.bearer_env:
+                return True
+        elif self._netrc_auth(host):
+            return True
+        return self._has_cookies(host)
+
+    def upgrade(self, url: str) -> str:
+        """A redirect to plain http on a host we hold secrets for goes to https instead. Sites that bounce
+        through http on their way back to https (www.example.com -> http://example.com -> https://…) then work
+        without the secrets ever being offered over http."""
+        u = urlsplit(url)
+        host = (u.hostname or "").lower()
+        if u.scheme == "http" and host not in LOCAL_HOSTS and self.has_credentials(host):
+            netloc = host if u.port == 80 else u.netloc
+            return urlunsplit(u._replace(scheme="https", netloc=netloc))
+        return url
+
     def credentials(self, url: str) -> tuple[dict[str, str], httpx.Auth | None, bool]:
         """(headers, auth, has_credentials) for this URL's host. Only https gets secrets, except localhost."""
         u = urlsplit(url)
@@ -157,17 +190,18 @@ class Fetcher:
         auth = None
         if found:
             _, site = found
-            headers.update(site.headers)
-            pw = site.password if site.password is not None else _env(site.password_env, "password", host)
+            for name, var in site.headers_env.items():
+                headers[name] = _env(var, f"header {name}", host) or ""
+            pw = _env(site.password_env, "password", host)
             if site.username is not None or pw is not None:
                 auth = httpx.BasicAuth(site.username or "", pw or "")
-            token = site.bearer if site.bearer is not None else _env(site.bearer_env, "token", host)
+            token = _env(site.bearer_env, "token", host)
             if token:
                 headers["Authorization"] = f"Bearer {token}"
         elif na := self._netrc_auth(host):
             auth = httpx.BasicAuth(*na)
         has = bool(headers or auth) or self._has_cookies(host)
-        if has and u.scheme != "https" and host not in ("localhost", "127.0.0.1", "::1"):
+        if has and u.scheme != "https" and host not in LOCAL_HOSTS:
             raise FetchError(f"refusing to send credentials for {host} over plain http; use the https URL")
         return headers, auth, has
 
@@ -182,7 +216,7 @@ class Fetcher:
             except httpx.HTTPError as e:
                 raise FetchError(f"could not fetch {url}: {type(e).__name__}: {e}") from None
             if r.is_redirect and "location" in r.headers:
-                url = urljoin(str(r.url), r.headers["location"])
+                url = self.upgrade(urljoin(str(r.url), r.headers["location"]))
                 continue
             if r.status_code in (401, 403, 407):
                 host = urlsplit(url).hostname
@@ -350,7 +384,7 @@ class UrlIngest(IngestMethod):
     def check(self) -> list[tuple[bool, str]]:
         out = []
         for host, site in self.settings.sites.items():
-            for var in (site.password_env, site.bearer_env):
+            for var in (site.password_env, site.bearer_env, *site.headers_env.values()):
                 if var:
                     out.append((secret(var) is not None, f"{host}: environment variable {var}"))
             if site.cookies:

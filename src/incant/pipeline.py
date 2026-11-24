@@ -37,7 +37,14 @@ class StageInfo:
         )
 
 
-def discover() -> list[StageInfo]:
+PUBLISHING_MODES = ("audiobook", "ebook")
+
+
+def stages_for(stages: list[StageInfo], mode: str) -> list[StageInfo]:
+    return [s for s in stages if mode in getattr(s.module, "MODES", ("audiobook",))]
+
+
+def discover(mode: str | None = "audiobook") -> list[StageInfo]:
     out = []
     for mi in pkgutil.iter_modules(stages_pkg.__path__):
         if not mi.ispkg or mi.name.startswith("_"):
@@ -46,7 +53,8 @@ def discover() -> list[StageInfo]:
         if not hasattr(mod, "ORDER") or not hasattr(mod, "Base"):
             continue
         out.append(StageInfo(mi.name, mod.ORDER, getattr(mod, "DESCRIPTION", ""), Path(mod.__file__).parent, mod))
-    return sorted(out, key=lambda s: s.order)
+    ordered = sorted(out, key=lambda s: s.order)
+    return ordered if mode is None else stages_for(ordered, mode)
 
 
 def load_method_class(stage: StageInfo, name: str) -> type[Method]:
@@ -64,7 +72,7 @@ def load_method_class(stage: StageInfo, name: str) -> type[Method]:
 
 
 def parent_methods(stage: StageInfo, cls: type) -> list[str]:
-    """Methods of the same stage that `cls` inherits from, nearest first (ebook -> [epub])."""
+    """Methods of the same stage that `cls` inherits from, nearest first (mobi -> [ebook])."""
     out = []
     prefix = f"{stages_pkg.__name__}.{stage.name}."
     for base in cls.__mro__[1:]:
@@ -125,6 +133,7 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
     - A trailing output path picks the output method writing that extension (out.mp3 -> mp3).
     - Stages left over take [pipeline] defaults from config, then 'auto' guessing, then a sole method,
       then the stage's own DEFAULT.
+    - PRE stages (preingest) are consulted on the raw input before the pipeline runs; they get no step.
     """
     by_name = {s.name: s for s in stages}
     owners: dict[str, list[StageInfo]] = {}
@@ -132,6 +141,7 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
         for m in s.methods:
             owners.setdefault(m, []).append(s)
 
+    output_suffixes = OUTPUT_SUFFIXES | {".epub"} if "publish" in by_name else OUTPUT_SUFFIXES
     chosen: dict[str, str] = {}
     out_path: Path | None = None
     last_order = -1
@@ -147,7 +157,7 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
         else:
             cand = owners.get(tok, [])
         if not cand:
-            if i == len(tokens) - 1 and (Path(tok).suffix.lower() in OUTPUT_SUFFIXES or "/" in tok):
+            if i == len(tokens) - 1 and (Path(tok).suffix.lower() in output_suffixes or "/" in tok):
                 out_path = Path(tok)
                 continue
             all_methods = sorted(owners)
@@ -173,11 +183,14 @@ def resolve(tokens: list[str], source: str | None, cfg: Config, stages: list[Sta
                 chosen[s.name] = hits[0]
 
     steps: list[Step] = []
+    per_book = [s for s in stages if not getattr(s.module, "PRE", False)]
     for s in stages:
+        if getattr(s.module, "PRE", False):
+            continue  # consulted on the raw input before the pipeline (cli.expand_source), not a per-book step
         if s.name in chosen:
             steps.append(Step(s, chosen[s.name], "cli"))
             continue
-        if resuming and s.order == stages[0].order:
+        if resuming and s is per_book[0]:
             steps.append(Step(s, "-", "existing"))
             continue
         default = cfg.pipeline.get(s.name)
@@ -214,13 +227,21 @@ def _auto(stage: StageInfo, source: str | None) -> str | None:
 # ------------------------------------------------------------------ execution
 
 
-def _records_path(wd: WorkDir) -> Path:
-    return wd.root / "pipeline.json"
+def _records_path(wd: WorkDir, *, ebook: bool = False) -> Path:
+    return wd.root / ("ebook-pipeline.json" if ebook else "pipeline.json")
 
 
-def _read_records(wd: WorkDir) -> dict:
-    p = _records_path(wd)
+def read_records(wd: WorkDir, *, ebook: bool = False) -> dict:
+    p = _records_path(wd, ebook=ebook)
     return json.loads(p.read_text()) if p.exists() else {}
+
+
+def validate_stage_range(names: list[str], start: str | None, stop: str | None) -> None:
+    for name in (start, stop):
+        if name is not None and name not in names:
+            raise ResolveError(f"unknown stage '{name}' (stages: {', '.join(names)})")
+    if start is not None and stop is not None and names.index(start) > names.index(stop):
+        raise ResolveError(f"--from {start} comes after --until {stop}")
 
 
 def run_pipeline(steps: list[Step], ctx: Context, *, start: str | None = None, stop: str | None = None,
@@ -271,11 +292,10 @@ def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, sto
                force: set[str] | None = None, log_skips: bool = True) -> Context:
     force = force or set()
     names = [s.stage.name for s in steps]
-    for n in (start, stop):
-        if n and n not in names:
-            raise ResolveError(f"unknown stage '{n}' (stages: {', '.join(names)})")
+    validate_stage_range(names, start, stop)
     active = False if start else True
     upstream_hash = ""
+    checked_chapters = False
     for step in steps:
         name = step.stage.name
         if start and name == start:
@@ -288,21 +308,36 @@ def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, sto
             if log_skips:
                 ctx.log(f"[{name}] skipped ({'existing book' if step.method == '-' else 'before --from'})")
         else:
+            if ctx.chapters is not None and not checked_chapters and name in ("attribute", "normalize", "synthesize", "output"):
+                available = {ch.id for ch in ctx.need_wd().read_chapters().chapters}
+                if missing := ctx.chapters - available:
+                    raise ResolveError(f"unknown chapter(s): {', '.join(sorted(missing))}")
+                checked_chapters = True
             method = instantiate(ctx.cfg, step.stage, step.method)
             key = f"{method.fingerprint()}:{upstream_hash}"
-            rec = _read_records(ctx.wd).get(name) if ctx.wd else None
+            if name == "attribute":
+                scope = "all" if ctx.chapters is None else ",".join(sorted(ctx.chapters))
+                key += f":chapters={scope}"
+            ebook = getattr(step.stage.module, "MODES", ()) == ("ebook",)
+            rec = read_records(ctx.wd, ebook=ebook).get(name) if ctx.wd else None
             outs = method.outputs(ctx.wd) if ctx.wd else []
+            if name == "attribute" and ctx.wd:
+                outs = [ctx.wd.spans_path(ch.id) for ch in ctx.wd.read_chapters().chapters
+                        if ctx.chapters is None or ch.id in ctx.chapters]
             fresh = (method.SKIP_IF_UNCHANGED and name not in force and "all" not in force and rec
-                     and rec.get("key") == key and outs and all(p.exists() for p in outs))
+                     and rec.get("key") == key and not rec.get("incomplete") and outs and all(p.exists() for p in outs))
             if fresh:
                 ctx.log(f"[{name}] {step.method}: up to date")
             else:
                 ctx.log(f"[{name}] {step.method}")
                 ctx.results[name] = method.run(ctx)
                 if ctx.wd:
-                    recs = _read_records(ctx.wd)
-                    recs[name] = {"method": step.method, "key": key}
-                    atomic_write(_records_path(ctx.wd), json.dumps(recs, indent=2) + "\n")
+                    recs = read_records(ctx.wd, ebook=ebook)
+                    rec_entry = {"method": step.method, "key": key}
+                    if name == "attribute" and (ctx.wd.root / "attribution_errors.json").exists():
+                        rec_entry["incomplete"] = True
+                    recs[name] = rec_entry
+                    atomic_write(_records_path(ctx.wd, ebook=ebook), json.dumps(recs, indent=2) + "\n")
             upstream_hash = hash_paths(method.outputs(ctx.need_wd()))
         if stop and name == stop:
             break

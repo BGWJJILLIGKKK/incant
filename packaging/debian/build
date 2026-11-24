@@ -1,0 +1,122 @@
+#!/bin/sh
+# Build a binary .deb using the target Debian release and architecture's system Python.
+#
+# Like tools/build-images.sh, the package is built from committed files only: HEAD is exported with
+# `git archive` into the staging directory and everything (sources, uv.lock, notices, license texts, voice list,
+# config, packaging assets) is taken from that export, so untracked or ignored files in the working copy (voice
+# previews, reference audio, local config) never reach the package. Uncommitted changes are left out too.
+#
+#   INCANT_DEB_FROM_WORKTREE=1   build from the working tree instead, to test uncommitted changes locally
+#                                (never for a release: whatever is lying around in voices/ etc. is not copied,
+#                                but uncommitted edits to the copied files are)
+#   INCANT_DEB_EXTRAS="qa ..."   extras on top of the default "kokoro mobi"
+#   INCANT_DEB_REVISION=N        Debian revision (default 1)
+set -eu
+repo=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+dest=${1:-"$repo/dist"}
+if [ "$#" -gt 1 ]; then
+    echo "Usage: $0 [artifact-directory]" >&2
+    exit 2
+fi
+for tool in uv dpkg dpkg-deb git tar /usr/bin/python3; do
+    if ! command -v "$tool" >/dev/null; then
+        echo "incant package build requires $tool" >&2
+        exit 2
+    fi
+done
+
+stage=$(mktemp -d "${TMPDIR:-/tmp}/incant-deb.XXXXXX")
+trap 'rm -rf -- "$stage"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+if [ "${INCANT_DEB_FROM_WORKTREE:-}" = 1 ]; then
+    src=$repo
+    echo "note: building from the working tree (INCANT_DEB_FROM_WORKTREE=1), not from a commit" >&2
+else
+    src="$stage/src-tree"
+    mkdir -p "$src"
+    if ! git -C "$repo" diff --quiet HEAD --; then
+        echo "note: uncommitted changes are not included (building $(git -C "$repo" rev-parse --short HEAD))" >&2
+    fi
+    git -C "$repo" archive --format=tar HEAD | tar -x -C "$src"
+    if [ ! -f "$src/packaging/debian/incant" ]; then
+        echo "packaging/debian is not committed at HEAD; commit it, or set INCANT_DEB_FROM_WORKTREE=1 to test" >&2
+        exit 2
+    fi
+fi
+assets="$src/packaging/debian"
+
+python_tag=$(/usr/bin/python3 -c 'import sys; assert sys.version_info >= (3, 12), "Python 3.12+ required"; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+version=$(/usr/bin/python3 -c 'import sys, tomllib; print(tomllib.load(open(sys.argv[1], "rb"))["project"]["version"])' "$src/pyproject.toml")
+version="$version-${INCANT_DEB_REVISION:-1}"
+dpkg --validate-version "$version"
+arch=$(dpkg --print-architecture)
+tree="$stage/package"
+project="$stage/project"
+library="$tree/usr/lib/incant"
+share="$tree/usr/share/incant"
+
+mkdir -p "$tree/DEBIAN" "$tree/etc/incant" "$tree/usr/bin" "$tree/usr/lib/systemd/system" "$library" "$share" "$project"
+cp "$src"/pyproject.toml "$src"/uv.lock "$src"/README.md "$src"/LICENSE "$src"/THIRD_PARTY_NOTICES.md "$project/"
+cp -R "$src/src" "$project/"
+find "$project/src" -type d -name __pycache__ -prune -exec rm -rf {} +
+extras="kokoro mobi ${INCANT_DEB_EXTRAS:-}"
+set --
+for extra in $extras; do
+    case "$extra" in
+        kokoro|mobi|browser|qa|anthropic|nlp|torch) set -- "$@" --extra "$extra" ;;
+        *) echo "Unknown Incant extra: $extra" >&2; exit 2 ;;
+    esac
+done
+export UV_PROJECT_ENVIRONMENT="$library/venv"
+export UV_PYTHON_DOWNLOADS=never
+export UV_LINK_MODE=copy
+uv venv --relocatable --python "/usr/bin/python$python_tag" "$UV_PROJECT_ENVIRONMENT"
+uv sync --project "$project" --python "/usr/bin/python$python_tag" --frozen --no-dev --no-editable "$@"
+
+install -m 0755 "$assets/incant" "$tree/usr/bin/incant"
+install -m 0644 "$assets/incant.service" "$tree/usr/lib/systemd/system/incant.service"
+install -m 0644 "$src/lexicon.toml" "$tree/etc/incant/lexicon.toml"
+install -m 0600 "$assets/service.env" "$tree/etc/incant/service.env"
+sed -e 's@^voices_dir = "voices".*@voices_dir = "/usr/share/incant/voices"@' \
+    -e 's@^lexicon = "lexicon.toml".*@lexicon = "/etc/incant/lexicon.toml"@' \
+    "$src/incant.toml" > "$tree/etc/incant/incant.toml"
+# Only the voice list and its README: a voices/ directory may also hold local previews and reference audio.
+mkdir -p "$share/voices"
+install -m 0644 "$src/voices/README.md" "$src/voices/voices.json" "$share/voices/"
+# Keep the stock pronunciation lexicon available as a reference.
+install -m 0644 "$src/lexicon.toml" "$share/lexicon.toml"
+doc="$tree/usr/share/doc/incant"
+mkdir -p "$doc"
+# Machine-readable (DEP-5) copyright: incant's BSD-3-Clause, and the bundled components' notices and texts.
+install -m 0644 "$assets/copyright" "$doc/copyright"
+install -m 0644 "$src/LICENSE" "$doc/LICENSE"
+install -m 0644 "$src/THIRD_PARTY_NOTICES.md" "$doc/THIRD_PARTY_NOTICES.md"
+install -m 0644 "$assets/README.md" "$doc/installation.md"
+install -m 0644 "$assets/Caddyfile.example" "$doc/Caddyfile.example"
+cp -R "$src/LICENSES" "$doc/"
+for file in postinst prerm postrm; do
+    install -m 0755 "$assets/$file" "$tree/DEBIAN/$file"
+done
+install -m 0644 "$assets/conffiles" "$tree/DEBIAN/conffiles"
+size=$(du -sk "$tree" | awk '{print $1}')
+cat > "$tree/DEBIAN/control" <<CONTROL
+Package: incant
+Version: $version
+Section: sound
+Priority: optional
+Architecture: $arch
+Maintainer: Incant contributors <BGWJJILLIGKKK@testsinprod.dev>
+Depends: python$python_tag, adduser, init-system-helpers, ca-certificates, ffmpeg, libgomp1, libsndfile1, libstdc++6
+Recommends: pandoc
+Installed-Size: $size
+Homepage: https://github.com/BGWJJILLIGKKK/incant
+Description: Local ebook and audiobook publishing studio
+ Incant imports documents, ebooks and web fiction and produces EPUB
+ ebooks or multi-voice audiobooks. Includes a command-line interface,
+ local web dashboard and systemd service.
+CONTROL
+"$library/venv/bin/python" -m incant --version
+mkdir -p "$dest"
+deb="$dest/incant_${version}_${arch}.deb"
+dpkg-deb --root-owner-group --build "$tree" "$deb"

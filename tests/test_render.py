@@ -1,6 +1,7 @@
 """Browser rendering (real headless Chromium against a local server): a page that fetches its text with
 JavaScript after loading, with credentials scoped to their own host."""
 
+import os
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -59,10 +60,11 @@ def server():
 
 
 def settings(tmp_path, **kw):
+    os.environ["INCANT_TEST_RENDER_TOKEN"] = "tok"
     jar = tmp_path / "cookies.txt"
     jar.write_text("# Netscape HTTP Cookie File\nlocalhost\tFALSE\t/\tFALSE\t0\tsess\tok\n")
     return UrlSettings(netrc=False, render_timeout_s=20,
-                       sites={"localhost": {"cookies": str(jar), "bearer": "tok"}}, **kw)
+                       sites={"localhost": {"cookies": str(jar), "bearer_env": "INCANT_TEST_RENDER_TOKEN"}}, **kw)
 
 
 def test_renders_javascript_loaded_text_with_scoped_credentials(server, tmp_path):

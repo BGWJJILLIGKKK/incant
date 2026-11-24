@@ -1,13 +1,16 @@
-"""Bookmark files as containers: parsing, detection, and batch expansion (no network: url ingest is faked)."""
+"""The preingest stage: bookmark files as containers — parsing, detection, and batch expansion
+(no network: url ingest is faked)."""
 
 import json
 
 import pytest
 
 from incant.cli import main
+from incant.pipeline import discover
+from incant.stages.base import Context
 from incant.stages.ingest.base import Ingested, unique_slug
-from incant.stages.ingest.bookmark.bookmark import BookmarkIngest
 from incant.stages.ingest.url import url as url_mod
+from incant.stages.preingest.bookmark.bookmark import BookmarkPreIngest
 
 NETSCAPE = """<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file. -->
@@ -47,13 +50,13 @@ CONF = ('[paths]\nwork_dir = "work"\n[pipeline]\nparse = "basic"\nattribute = "n
 
 
 def urls(path):
-    return [(i.source, i.title) for i in BookmarkIngest.expand(str(path))]
+    return [(i.source, i.title) for i in BookmarkPreIngest.expand(str(path))]
 
 
 def test_netscape_export(tmp_path):
     p = tmp_path / "bookmarks.html"
     p.write_text(NETSCAPE)
-    assert BookmarkIngest.accepts(str(p))
+    assert BookmarkPreIngest.accepts(str(p))
     assert urls(p) == [  # http(s) only; duplicates (ignoring #fragment) keep the first title
         ("https://example.com/story-1", "Story & One"),
         ("https://example.com/story-2#comments", "Story Two"),
@@ -70,7 +73,7 @@ def test_json_formats(tmp_path):
     ]:
         p = tmp_path / name
         p.write_text(json.dumps(data))
-        assert BookmarkIngest.accepts(str(p)), name
+        assert BookmarkPreIngest.accepts(str(p)), name
         assert urls(p) == want, name
 
 
@@ -82,16 +85,44 @@ def test_ordinary_files_are_not_claimed(tmp_path):
     bad = tmp_path / "broken.json"
     bad.write_text("{not json")
     for p in (page, pkg, bad):
-        assert not BookmarkIngest.accepts(str(p)), p.name
-        assert BookmarkIngest.expand(str(p)) is None
-    assert not BookmarkIngest.accepts("https://example.com/bookmarks.html")
+        assert not BookmarkPreIngest.accepts(str(p)), p.name
+        assert BookmarkPreIngest.expand(str(p)) is None
+    assert not BookmarkPreIngest.accepts("https://example.com/bookmarks.html")
 
 
-def test_load_refuses_container(tmp_path):
+def test_run_refuses_container(tmp_path):
     p = tmp_path / "b.html"
     p.write_text(NETSCAPE)
     with pytest.raises(RuntimeError, match="bookmark file"):
-        BookmarkIngest(None, None).load(str(p))
+        BookmarkPreIngest(None, None).run(Context(cfg=None, source=str(p)))
+
+
+def test_preingest_is_a_stage_not_a_pipeline_step():
+    stages = discover()
+    assert [s.name for s in stages][0] == "preingest"
+    assert getattr(stages[0].module, "PRE", False)
+    assert "bookmark" in stages[0].methods
+
+
+def test_naming_the_container_expands_it_and_naming_an_ingest_method_does_not(tmp_path, fake_web, capsys):
+    conf = tmp_path / "incant.toml"
+    conf.write_text(CONF)
+    bm = tmp_path / "bookmarks.html"
+    bm.write_text(NETSCAPE)
+    assert main([str(bm), "preingest=bookmark", "-c", str(conf), "--dry-run"]) == 0
+    assert "batch: 3 books" in capsys.readouterr().out
+    # naming an ingest method says "ingest this file itself": no expansion, the plan has no preingest step
+    assert main([str(bm), "ingest=url", "-c", str(conf), "--dry-run"]) == 0
+    out = capsys.readouterr().out
+    assert "plan: ingest=url ->" in out and "preingest" not in out
+    # naming the container for a file it doesn't claim is an error, not a silently dropped token
+    page = tmp_path / "page.html"
+    page.write_text("<html><body><p>Hi.</p></body></html>")
+    assert main([str(page), "bookmark", "-c", str(conf), "--dry-run"]) == 2
+    assert "not a container" in capsys.readouterr().err
+    # naming the container for a URL is also an error, not silently ignored
+    assert main(["https://example.com/story", "bookmark", "-c", str(conf), "--dry-run"]) == 2
+    assert "not a container" in capsys.readouterr().err
 
 
 def test_unique_slug(tmp_path):

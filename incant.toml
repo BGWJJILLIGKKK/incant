@@ -35,12 +35,18 @@ main_unique = 8              # the N characters with most lines never share a vo
 # llm = "provider terms: Qwen license"
 # "synthesize.indextts" = "non-commercial: check your checkpoint's license"
 
-[review]                     # ./incant <book> --review
-host = "127.0.0.1"           # "0.0.0.0" to open it from another machine (no authentication)
+[review]
+host = "127.0.0.1"           # local access and same-machine Caddy
 port = 8765
+# Set both for Caddy HTTPS access. Use exact DNS names and Caddy's actual TCP source IP.
+# public_domains = ["incant.example.com"]
+# trusted_proxy_ips = ["127.0.0.1"]
+# For Caddy on another machine, bind to Incant's LAN IP and trust Caddy's LAN IP.
 
 # All LLM stages run over the whole book before synthesis starts, so one GPU can serve the LLM and then the
 # TTS (llama-swap swaps models on demand).
+# Select a named profile with current_llm = "name" (or [llm] active = "name", or CLI --llm name).
+# Named profiles can be subtables ([llm.<name>]), [llms.<name>], or top-level tables ([<name>]).
 [llm]                        # for parse = "characters" / attribute = "speakers" (README: "Configuration")
 base_url = "http://localhost:8080/v1"
 # dialect = "llama.cpp" (default) | "openai" (Ollama, LM Studio, OpenRouter, OpenAI, Gemini) | "anthropic" (Claude);
@@ -61,23 +67,37 @@ true_peak_db = -3.0
 [ingest.url]                 # web pages (also every page of a bookmark file)
 timeout_s = 30
 netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
-# Logins: put these in incant.local.toml (git-ignored), never here. Sent only to that host (and subdomains).
+# Logins: put these in incant.local.toml (git-ignored). Sent only to that host (and subdomains). The secrets
+# themselves go in the environment or a .env file, never in TOML; these settings name the variables.
 # [ingest.url.sites."example.com"]
 # username = "me"
-# password_env = "EXAMPLE_PASSWORD"       # or password = "…"; or bearer / bearer_env; or headers = {…}
+# password_env = "EXAMPLE_PASSWORD"       # or bearer_env = "…"; headers_env = { "X-Api-Key" = "VARIABLE" }
 # cookies = "~/cookies/example.txt"      # cookies.txt exported from a logged-in browser
+
+# [ingest.ao3]                 # Archive of Our Own works: every chapter of a work as one book (inherits [ingest.url])
+# view_adult = true            # pass the site's age confirmation (view_adult cookie + ?view_adult=true)
+# max_parts = 200              # chapters per work
+# part_delay_s = 1.0           # pause between chapter fetches
 
 # Author's notes, intros, sign-offs and site text at chapter edges ("This is a story about…", "Thanks for
 # reading!", "Click here to tip"): metatext = "auto" (rules for web pages, off for books) | "rules" | "llm" | "off".
 # What was removed is listed in work/<book>/removed.txt. Set it per parse method, e.g. [parse.basic] metatext = "llm".
 [parse.characters]
-window_words = 5000          # chapters longer than this are split for extraction
+window_words = 5000          # split long chapters in chapter and neighbors modes
+extraction_mode = "neighbors" # one target chapter plus surrounding text. "batch" profiles several together.
+context_tokens = 262144      # 256 Ki tokens per extraction request, including the response and subject to [llm]
+context_chapters = 1         # neighboring chapters on each side, as space allows
+# batch_chapters = 4         # maximum target chapters per request in batch mode
+# batch_max_tokens = 16384   # generated-token reserve for batch mode
 think = false                # thinking for extraction: ~10x slower, little gain
 verify_links_with_thinking = true
 max_tokens_thinking = 6144
 
 [attribute.speakers]
 max_quotes = 25              # quotations per request
+context_tokens = 262144      # estimated total request budget, capped by [llm]
+# context_paragraphs = 4     # optional maximum on either side of the target. Unset uses the token budget.
+# narrator_chapters = 5      # sample the book from beginning to end for first-person narrator identification
 emotion_scale = 0.8          # intensity -> IndexTTS emo_alpha
 min_intensity = 0.3          # weaker emotions are rendered neutral
 

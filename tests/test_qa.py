@@ -26,6 +26,17 @@ def test_edit_distance_and_short_line_tolerance():
     assert not Check(wer=0.5, edits=3, heard="").ok(0.25)
 
 
+def test_whitelist_proper_nouns_discounted():
+    from incant.qa import compare
+
+    # "fezziwig" misheard as "fuzzywig"
+    chk_no_wl = compare("mr fezziwig laughed", "mr fuzzywig laughed")
+    assert chk_no_wl.edits == 1
+    chk_wl = compare("mr fezziwig laughed", "mr fuzzywig laughed", whitelist={"fezziwig"})
+    assert chk_wl.edits == 0
+    assert chk_wl.wer == 0.0
+
+
 def test_renderer_retries_failed_take_and_keeps_best(tmp_path):
     from incant.config import Config, PathsConfig
     from incant.pipeline import discover, instantiate

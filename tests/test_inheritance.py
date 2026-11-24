@@ -15,7 +15,11 @@ INGEST = {s.name: s for s in discover()}["ingest"]
 
 def test_parents_and_settings_inherit(tmp_path):
     mobi = load_method_class(INGEST, "mobi")
-    assert parent_methods(INGEST, mobi) == ["ebook", "epub"]
+    epub = load_method_class(INGEST, "epub")
+    ebook = load_method_class(INGEST, "ebook")
+    assert parent_methods(INGEST, mobi) == ["ebook"]
+    assert parent_methods(INGEST, epub) == ["ebook"]
+    assert parent_methods(INGEST, ebook) == []
     assert parent_methods(INGEST, load_method_class(INGEST, "gutenberg")) == ["txt"]
     assert parent_methods(INGEST, load_method_class(INGEST, "url")) == []
     conf = tmp_path / "incant.toml"
@@ -56,6 +60,7 @@ def test_list_nests_children(capsys):
     i = next(k for k, ln in enumerate(lines) if ln.split()[:1] == ["txt"] or " txt " in ln[:20])
     assert "└─ gutenberg" in lines[i + 1]
     assert any("└─ mobi" in ln for ln in lines)
+    assert any("└─ epub" in ln for ln in lines)
 
 
 # ------------------------------------------------------------ series via the url hook

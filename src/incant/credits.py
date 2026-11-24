@@ -9,7 +9,9 @@ voices carry `license` / `source` / `consent`; the user can declare the rest in 
     "voice.a_janelle_risa" = "consent: recorded for this project"
 
 Terms are ranked none < attribution < provider terms < non-commercial; unknown terms are listed as gaps, never
-assumed. This is bookkeeping, not legal advice.
+assumed. A voice's consent is tracked apart from its terms: a recording can be free to use ("public domain") while
+nobody has recorded the speaker's consent to a cloned voice, so a voice without `consent` gets a "not recorded" line
+naming its provenance, whatever its terms. This is bookkeeping, not legal advice.
 """
 
 from __future__ import annotations
@@ -45,6 +47,7 @@ class Item:
     license: str | None
     terms: str | None  # as declared
     note: str = ""
+    consent: str = ""  # voices only: "" when consent is recorded (or not applicable), else what is missing
 
     @property
     def kind(self) -> str | None:
@@ -67,6 +70,20 @@ class Report:
     @property
     def attributions(self) -> list[Item]:
         return [i for i in self.items if i.kind == "attribution"]
+
+    @property
+    def consent_gaps(self) -> list[Item]:
+        return [i for i in self.items if i.consent]
+
+
+def consent_gap(v, declared_terms: str | None) -> str:
+    """What is missing about a voice's speaker consent ("" when recorded). Independent of the recording's terms."""
+    if (v is not None and v.consent) or (declared_terms or "").casefold().startswith("consent:"):
+        return ""
+    provenance = f"voice provenance: {v.source if v is not None and v.source else 'unknown'}"
+    if v is not None and v.consent is False:
+        return f"recorded as not given ({provenance})"
+    return f"not recorded ({provenance})"
 
 
 def declared(cfg: Config) -> dict[str, str]:
@@ -117,7 +134,8 @@ def for_book(cfg: Config, wd, records: dict) -> Report:
                 terms = user.get(f"voice.{vid}") or (v.license if v and v.license else None)
                 note = ", ".join(x for x in (f"source {v.source}" if v and v.source else "",
                                              "consent recorded" if v and v.consent else "") if x)
-                rep.items.append(Item(f"voice {vid}", v.license if v else None, terms, note))
+                rep.items.append(Item(f"voice {vid}", v.license if v else None, terms, note,
+                                      consent=consent_gap(v, user.get(f"voice.{vid}"))))
     return rep
 
 
@@ -128,6 +146,8 @@ def text(rep: Report, title: str) -> str:
         lines.append(f"  {i.what}")
         lines.append(f"      license: {i.license or 'unknown'}")
         lines.append(f"      terms:   {i.terms or 'unknown'}" + (f"  ({i.note})" if i.note else ""))
+        if i.consent:
+            lines.append(f"      consent: {i.consent}")
     lines += ["", f"Weakest known terms: {rep.weakest or 'none known'}"
               + (f" ({len(rep.gaps)} item{'s' if len(rep.gaps) != 1 else ''} unknown, below)" if rep.gaps else "")]
     if rep.attributions:
@@ -135,13 +155,17 @@ def text(rep: Report, title: str) -> str:
     if rep.gaps:
         lines += ["", "Gaps (terms not known; declare them under [credits] in your config to close them):"]
         lines += [f"  - {i.what}" for i in rep.gaps]
+    if rep.consent_gaps:
+        lines += ["", "Speaker consent not recorded (separate from the terms above; set the voice's `consent` field,",
+                  "or declare it under [credits] as \"voice.<id>\" = \"consent: ...\", once you have it):"]
+        lines += [f"  - {i.what}: {i.consent}" for i in rep.consent_gaps]
     lines += ["", "Bookkeeping from what incant was told, not legal advice."]
     return "\n".join(lines) + "\n"
 
 
 def write(cfg: Config, wd, first: Path) -> Path:
     """credits.txt in the book's own output folder; <file>.credits.txt beside an -o FILE elsewhere."""
-    from .pipeline import _read_records
+    from .pipeline import read_records
     from .stages.output.base import book_name
 
     folder = first.parent
@@ -149,7 +173,7 @@ def write(cfg: Config, wd, first: Path) -> Path:
     path = folder / ("credits.txt" if in_tree else f"{first.stem}.credits.txt")
     from .workdir import atomic_write
 
-    atomic_write(path, text(for_book(cfg, wd, _read_records(wd)), wd.read_meta().title))
+    atomic_write(path, text(for_book(cfg, wd, read_records(wd)), wd.read_meta().title))
     return path
 
 
@@ -172,7 +196,8 @@ def licenses_table(cfg: Config, stages) -> str:
             extra = f"  + {items[1].what}: {items[1].terms or 'unknown'}" if len(items) > 1 else ""
             lines.append(f"     {m:<11} {label:<15} {cls.LICENSE or 'license unknown'}{extra}")
     lines.append("")
-    missing = [s for s, ms in permissive.items() if not ms]
+    pipeline_stages = [st for st in stages if not getattr(st.module, "PRE", False)]
+    missing = [st.name for st in pipeline_stages if not permissive.get(st.name)]
     if missing:
         lines.append("Gap: no method with known permissive terms for: " + ", ".join(missing))
     else:
@@ -185,7 +210,7 @@ def licenses_table(cfg: Config, stages) -> str:
                     return want
             return ms[0]
 
-        chain = " ".join(f"{st.name}={pick(st)}" for st in stages)
+        chain = " ".join(f"{st.name}={pick(st)}" for st in pipeline_stages)
         lines.append(f"A chain with known permissive terms exists, e.g.: {chain}")
     lines.append("Unknown = not declared (method class or [credits] in config); bookkeeping, not legal advice.")
     return "\n".join(lines)

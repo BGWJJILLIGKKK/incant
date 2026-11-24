@@ -44,7 +44,7 @@ def client(cfg: LLMConfig):
         import anthropic
     except ImportError:
         raise RuntimeError('[llm] dialect = "anthropic" needs the Anthropic SDK: uv sync --extra anthropic') from None
-    key = secret(cfg.api_key_env) if cfg.api_key_env else (cfg.api_key if cfg.api_key != "none" else None)
+    key = secret(cfg.api_key_env) if cfg.api_key_env else None  # None: the SDK reads ANTHROPIC_API_KEY
     base = cfg.base_url if "anthropic" in cfg.base_url else None  # the llama.cpp default isn't meant for Claude
     return anthropic.Anthropic(api_key=key, base_url=base, timeout=cfg.timeout_s, max_retries=3)
 

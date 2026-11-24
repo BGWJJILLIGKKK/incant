@@ -17,6 +17,7 @@ from pathlib import Path
 
 from ....normalize import SCENE_BREAK, clean_paragraph, clean_unicode, heading
 from ..base import Ingested
+from ..gutenberg.gutenberg import strip_gutenberg_pdf
 from ..pdf.pdf import PdfIngest, _info, read_pages
 
 __all__ = ["DoclingIngest"]
@@ -100,7 +101,7 @@ class DoclingIngest(PdfIngest):
                                   artifacts_path=artifacts if artifacts and Path(artifacts).is_dir() else None)
         conv = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=opts)})
         md = conv.convert(str(path)).document.export_to_markdown()
-        paragraphs = paragraphs_from_markdown(md, self.settings.max_repeats)
+        paragraphs = strip_gutenberg_pdf(paragraphs_from_markdown(md, self.settings.max_repeats))
         if sum(len(p.split()) for p in paragraphs) < 50:
             raise RuntimeError(f"{path.name}: Docling found almost no text (OCR off, or not a text document?)")
         info = _info(path)

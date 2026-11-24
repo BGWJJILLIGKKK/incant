@@ -2,6 +2,7 @@
 
 work/<slug>/
   meta.json            stage 1  BookMeta
+  source.json          stage 1  ordered source blocks as recovered by ingest
   text.md              stage 1  normalized text; '# ' lines are structural headings
   cover.<ext>          stage 1  (optional)
   chapters.json        stage 2  ChapterList
@@ -14,6 +15,8 @@ work/<slug>/
   audio/cache/<k2>/<key>.wav  stage 5  content-addressed segment cache (+ .lvl.json loudness, .qa.json check)
   audio/chapters/<id>.wav stage 5 assembled, loudness-normalized chapter
   audio/manifest.json  stage 5  AudioManifest
+  ebook.json                   reviewed ebook draft
+  ebook-output.json            published EPUB path
   output.json          stage 6  {"files": [absolute paths written]}; the files live in the output tree
 """
 
@@ -25,6 +28,22 @@ from pathlib import Path
 from typing import TypeVar
 
 from pydantic import BaseModel
+
+
+class ProtectedFileError(ValueError):
+    """A .env or .toml file named as a book source or an output destination."""
+
+
+def is_protected_file(path: str | os.PathLike) -> bool:
+    """Configuration and secrets files (.env, .env.*, *.env, *.toml): never read as a book or written as output,
+    so neither a dashboard job nor a typo can turn keys into book text or overwrite a configuration."""
+    name = Path(path).name.lower()
+    return name == ".env" or name.startswith(".env.") or name.endswith(".env") or name.endswith(".toml")
+
+
+def refuse_protected(path: str | os.PathLike, what: str) -> None:
+    if is_protected_file(path):
+        raise ProtectedFileError(f"{what} can't be a .env or .toml file (configuration and keys): {Path(path).name}")
 
 from .schemas import AudioManifest, BookMeta, Cast, ChapterList, ChapterSpeech, CharacterList, Span
 
@@ -55,6 +74,7 @@ class WorkDir:
     # paths
     meta_path = property(lambda s: s.root / "meta.json")
     text_path = property(lambda s: s.root / "text.md")
+    source_path = property(lambda s: s.root / "source.json")
     chapters_path = property(lambda s: s.root / "chapters.json")
     characters_path = property(lambda s: s.root / "characters.json")
     cast_path = property(lambda s: s.root / "cast.json")

@@ -32,6 +32,7 @@ class BookMeta(BaseModel):
     language: str = "en"
     source: str  # original path or URL
     source_format: Literal["txt", "epub", "url", "md", "pdf"]
+    input_format: str | None = None  # actual input before any intermediate conversion
     cover: str | None = None  # filename inside the work dir
     series: str | None = None
     series_index: float | None = None
@@ -135,6 +136,7 @@ class Span(BaseModel):
     confidence: float | None = None
     locked: bool = False
     say: str | None = None  # TTS-ready text, set by the normalize stage (text itself is never changed)
+    omitted: bool | None = None  # set in normalized speech when review excludes the span
 
 
 class ChapterSpeech(BaseModel):

@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import json
 import re
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from zipfile import BadZipFile, ZipFile
 
 from ...normalize import render_text_md, slugify
 from ...schemas import BookMeta
-from ...workdir import WorkDir, atomic_write
+from ...workdir import WorkDir, atomic_write, refuse_protected
 from ..base import Context, Method
 
 
@@ -24,14 +26,7 @@ class Ingested:
     # Canonical address when it differs from what was given (a series' folder for one of its parts), so every
     # part of a series lands in the same book.
     source: str | None = None
-
-
-@dataclass
-class SourceItem:
-    """One source produced by expanding a container (a bookmark file, a reading list)."""
-
-    source: str  # a file path or URL that another ingest method accepts
-    title: str | None = None  # the container's name for it; used when the source has no title of its own
+    input_format: str | None = None
 
 
 class IngestMethod(Method):
@@ -39,12 +34,6 @@ class IngestMethod(Method):
     def accepts(cls, source: str) -> bool:
         """True if this method can handle `source`; drives auto-detection."""
         return False
-
-    @classmethod
-    def expand(cls, source: str) -> list[SourceItem] | None:
-        """Container methods return the sources inside `source` (each runs as its own book, as in a batch);
-        ordinary methods return None and are run through load()."""
-        return None
 
     def load(self, source: str) -> Ingested:
         raise NotImplementedError
@@ -59,8 +48,8 @@ class IngestMethod(Method):
     def run(self, ctx: Context) -> WorkDir:
         if not ctx.source:
             raise RuntimeError("ingest needs an input source")
-        if self.expand(ctx.source) is not None:
-            raise RuntimeError(f"'{ctx.source}' holds several sources; run it as a batch (pass it as the input)")
+        if "://" not in ctx.source:
+            refuse_protected(ctx.source, "A book source")
         ing = self.load(ctx.source)
         for w in ing.warnings:
             ctx.log(f"  warning: {w}")
@@ -80,9 +69,13 @@ class IngestMethod(Method):
             cover_name = f"cover.{ext}"
             atomic_write(wd.root / cover_name, data)
 
+        atomic_write(wd.source_path, json.dumps({"paragraphs": ing.paragraphs}, ensure_ascii=False) + "\n")
         atomic_write(wd.text_path, render_text_md(ing.paragraphs))
+        original = ing.input_format or ing.source_format
+        if ing.source_format != "url" and is_epub_file(Path(ctx.source)):
+            original = "epub"
         wd.write_meta(BookMeta(slug=slug, title=ing.title, author=ing.author, language=ing.language, source=src,
-                               source_format=ing.source_format, cover=cover_name, description=ing.description))  # type: ignore[arg-type]
+                               source_format=ing.source_format, input_format=original, cover=cover_name, description=ing.description))  # type: ignore[arg-type]
         ctx.wd = wd
         ctx.log(f"  '{ing.title}' by {ing.author or 'unknown'}: {len(ing.paragraphs)} paragraphs, "
                 f"cover={'yes' if cover_name else 'no'} -> {wd.root}")
@@ -136,3 +129,16 @@ def unique_slug(work_dir: Path, slug: str, source: str) -> str:
         if owner == source:
             return cand
         n += 1
+
+
+
+def is_epub_file(path: Path) -> bool:
+    """Recognize an EPUB container even under a misleading source filename."""
+    try:
+        with path.open("rb") as source:
+            if source.read(4) != b"PK\x03\x04":
+                return False
+            with ZipFile(source) as archive, archive.open("mimetype") as mime:
+                return mime.read(21) == b"application/epub+zip"
+    except (BadZipFile, KeyError, OSError, RuntimeError):
+        return False

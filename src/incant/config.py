@@ -24,20 +24,25 @@ from __future__ import annotations
 import os
 import re
 import tomllib
+from ipaddress import ip_address
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class LLMConfig(BaseModel):
     """Any OpenAI-compatible chat server: llama.cpp / llama-swap, vLLM, Ollama (http://localhost:11434/v1),
     LM Studio, OpenRouter, OpenAI. `dialect` picks the extra request fields the server understands."""
 
+    model_config = ConfigDict(extra="allow")
+
+    active: str | None = None  # name of the active LLM profile (when set in [llm])
     base_url: str = "http://localhost:8080/v1"
     model: str = "qwen3.5-9b"
-    api_key: str = "none"
-    api_key_env: str | None = None  # read the key from this environment variable instead
+    # The key's environment variable, read from the process environment or a .env file (data directory first).
+    # Keys never go in a TOML file: the dashboard shows and edits those.
+    api_key_env: str | None = None
     # "llama.cpp": Qwen-style thinking switch (chat_template_kwargs) and top_k/min_p sampling (also vLLM, SGLang).
     # "openai": standard fields only; thinking is off and the thinking sampling extras are dropped
     #           (OpenAI, Ollama, LM Studio, OpenRouter, most hosted APIs).
@@ -63,6 +68,14 @@ class LLMConfig(BaseModel):
     temperature: float = 0.0  # non-thinking calls: greedy
     # Thinking calls loop under greedy decoding; Qwen's recommended thinking-mode sampling, fixed seed.
     thinking_sampling: dict = {"temperature": 0.6, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "seed": 1234}
+
+    @model_validator(mode="before")
+    @classmethod
+    def _no_inline_key(cls, data):
+        if isinstance(data, dict) and "api_key" in data:
+            raise ValueError('api_key is no longer read from configuration files: put the key in a .env file '
+                             '(KEY_NAME=…, mode 600) and set api_key_env = "KEY_NAME"')
+        return data
 
 
 class AudioConfig(BaseModel):
@@ -99,8 +112,27 @@ class CastConfig(BaseModel):
 
 
 class ReviewConfig(BaseModel):
-    host: str = "127.0.0.1"  # "0.0.0.0" to reach it from another machine (no authentication!)
+    host: str = "127.0.0.1"
     port: int = 8765
+    public_domains: list[str] = Field(default_factory=list)
+    trusted_proxy_ips: list[str] = Field(default_factory=list)
+
+    @field_validator("public_domains")
+    @classmethod
+    def validate_domains(cls, values: list[str]) -> list[str]:
+        label = r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"
+        domains = [value.lower() for value in values]
+        if any(len(domain) > 253 or not re.fullmatch(rf"(?:{label}\.)+{label}", domain)
+               or domain.rsplit(".", 1)[-1].isdigit() for domain in domains):
+            raise ValueError("public_domains must contain exact DNS names without schemes, ports, or wildcards")
+        return domains
+
+    @field_validator("trusted_proxy_ips")
+    @classmethod
+    def validate_proxy_ips(cls, values: list[str]) -> list[str]:
+        if any("%" in value for value in values):
+            raise ValueError("trusted_proxy_ips must contain unscoped IP addresses")
+        return [str(ip_address(value)) for value in values]
 
 
 class RunConfig(BaseModel):
@@ -118,7 +150,9 @@ class Config(BaseModel):
     model_config = ConfigDict(extra="allow")  # [<stage>] tables land here
 
     pipeline: dict[str, str] = {}
+    current_llm: str | None = None
     llm: LLMConfig = LLMConfig()
+    llm_profiles: dict[str, dict[str, Any]] = Field(default_factory=dict)
     audio: AudioConfig = AudioConfig()
     paths: PathsConfig = PathsConfig()
     cast: CastConfig = CastConfig()
@@ -184,30 +218,105 @@ def _deep_merge(base: dict, over: dict) -> dict:
     return out
 
 
-def load_config(path: Path | None = None) -> Config:
+def _resolve_llm_profile(data: dict, current_llm: str | None = None) -> None:
+    """Resolve active LLM profile (from current_llm, INCANT_LLM, [llm] active/current, or top-level setting)."""
+    profiles: dict[str, dict] = {}
+
+    llm_dict = dict(data.get("llm") or {})
+    # Extract any sub-tables under [llm] (e.g. [llm.gemini], [llm.claude])
+    for k, v in list(llm_dict.items()):
+        if isinstance(v, dict):
+            profiles[k] = v
+            del llm_dict[k]
+
+    # Extract any tables under [llms] (e.g. [llms.gemini])
+    llms_dict = data.get("llms") or {}
+    if isinstance(llms_dict, dict):
+        for k, v in llms_dict.items():
+            if isinstance(v, dict):
+                profiles[k] = v
+
+    # Extract any top-level tables matching profile conventions:
+    # e.g. [allm], [bllm], or tables containing LLM keys like 'model' or 'dialect'
+    standard_tables = {
+        "pipeline", "audio", "paths", "cast", "review", "run", "llm", "llms",
+        "credits", "words", "preingest", "ingest", "parse", "attribute", "normalize", "synthesize", "output"
+    }
+    for k, v in data.items():
+        if k not in standard_tables and isinstance(v, dict) and (k.endswith("llm") or "model" in v or "dialect" in v):
+            profiles[k] = v
+
+    target = (
+        current_llm
+        or os.environ.get("INCANT_LLM")
+        or data.get("current_llm")
+        or llm_dict.get("active")
+        or llm_dict.get("current")
+    )
+    if target is not None:
+        target = str(target).strip()
+
+    if target:
+        if target in profiles:
+            selected = profiles[target]
+        elif target in data and target not in standard_tables and isinstance(data[target], dict):
+            selected = data[target]
+            profiles[target] = selected
+        else:
+            avail = ", ".join(sorted(profiles)) or "none"
+            raise ValueError(f"Unknown LLM profile '{target}' (available: {avail})")
+
+        llm_dict = _deep_merge(llm_dict, selected)
+        llm_dict["active"] = target
+        data["current_llm"] = target
+
+    data["llm"] = llm_dict
+    data["llm_profiles"] = profiles
+
+
+def config_paths(path: Path | None = None) -> tuple[Path, Path | None, list[Path]]:
     if path:
-        files = [path, path.with_name(path.stem + ".local.toml")]
         base = path.resolve().parent
+        files = [path.resolve(), path.with_name(path.stem + ".local.toml").resolve()]
     else:
-        dirs = [Path.cwd()] + ([Path(os.environ["INCANT_HOME"])] if os.environ.get("INCANT_HOME") else [])
-        base = next((d for d in dirs if (d / "incant.toml").exists()), Path.cwd())
+        cwd = Path.cwd()
+        home = Path(os.environ["INCANT_HOME"]).resolve() if os.environ.get("INCANT_HOME") else None
+        dirs = [cwd, home] if home is not None else [cwd]
+        if home is not None and os.environ.get("INCANT_DATA") and cwd == Path(os.environ["INCANT_DATA"]).expanduser().resolve():
+            dirs = [home, cwd]  # the mounted base override keeps the installation's resource directory
+        base = next((d for d in dirs if (d / "incant.toml").exists()), Path.cwd()).resolve()
         files = [base / "incant.toml", base / "incant.local.toml"]
     data_env = os.environ.get("INCANT_DATA") or env_file(base / ".env").get("INCANT_DATA")
-    data_env = str(Path(data_env).expanduser()) if data_env else None
-    if data_env and (extra := Path(data_env) / "incant.local.toml") not in files:
+    data_dir = Path(data_env).expanduser() if data_env else None
+    if data_dir is not None and not data_dir.is_absolute():
+        data_dir = base / data_dir
+    if data_dir and (extra := data_dir / "incant.local.toml") not in files:
         files.append(extra)  # the user's own settings and secrets, outside the program's directory
+    return base, data_dir, files
+
+
+def load_config(path: Path | None = None, *, current_llm: str | None = None,
+                edits: dict[Path, str] | None = None, publish_secrets: bool = True) -> Config:
+    base, data_dir, files = config_paths(path)
+    edits = edits or {}
+    # A daemon can edit the base configuration in the mounted data directory of a read-only image.
+    # Keep resource paths relative to the original installation.
+    if path is None and data_dir and ((replacement := data_dir / "incant.toml").is_file() or replacement in edits):
+        files[0] = replacement
     data: dict = {}
     used = []
     for f in files:
-        if f.exists():
-            data = _deep_merge(data, tomllib.loads(f.read_text()))
+        if f in edits or f.exists():
+            data = _deep_merge(data, tomllib.loads(edits[f] if f in edits else f.read_text()))
             used.append(f)
+    _resolve_llm_profile(data, current_llm)
     cfg = Config.model_validate({**data, "base_dir": base.resolve(), "files": used})
-    if data_env:
-        cfg.paths.data_dir = Path(data_env)
+    if data_dir:
+        cfg.paths.data_dir = data_dir
     cfg.paths.data_dir = cfg.resolve(cfg.paths.data_dir.expanduser()).resolve()
     cfg.paths.work_dir = cfg.paths.data_dir / cfg.paths.work_dir  # (an absolute path stays as it is)
     cfg.paths.output_dir = cfg.paths.data_dir / cfg.paths.output_dir
     cfg.paths.voices_dir = cfg.resolve(cfg.paths.voices_dir)
-    _SECRET_FILES[:] = list(dict.fromkeys([cfg.paths.data_dir / ".env", base.resolve() / ".env"]))
+    if publish_secrets:
+        _SECRET_FILES[:] = list(dict.fromkeys([cfg.paths.data_dir / ".env", base.resolve() / ".env"]))
     return cfg

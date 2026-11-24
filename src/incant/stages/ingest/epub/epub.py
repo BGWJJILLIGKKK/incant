@@ -10,7 +10,8 @@ from pathlib import Path
 from bs4 import BeautifulSoup, NavigableString, Tag, XMLParsedAsHTMLWarning
 
 from ....normalize import SCENE_BREAK, clean_paragraph, clean_unicode, heading, is_scene_break
-from ..base import Ingested, IngestMethod
+from ..base import Ingested
+from ..ebook.ebook import EbookIngest
 from .container import EpubFile
 
 __all__ = ["EpubIngest"]
@@ -133,7 +134,7 @@ def ingest_epub(path: Path) -> Ingested:
     )
 
 
-class EpubIngest(IngestMethod):
+class EpubIngest(EbookIngest):
     """EPUB 2/3: spine order, book-wide chapter heading level, TOC titles, cover, Gutenberg cleanup."""
     LICENSE = 'project code (BSD-3-Clause)'
     OUTPUT_TERMS = 'none'
@@ -144,3 +145,6 @@ class EpubIngest(IngestMethod):
 
     def load(self, source: str) -> Ingested:
         return ingest_epub(Path(source))
+
+    def check(self) -> list[tuple[bool, str]]:
+        return []

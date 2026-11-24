@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Incant · Publishing Studio</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --ink: #19221e;
+    --muted: #536259;
+    --surface: #ffffff;
+    --surface-alt: #f6f8f6;
+    --surface-hover: #edf2ee;
+    --bg: #f4f6f4;
+    --line: #d3ded6;
+    --line-subtle: #e4ebe5;
+    --accent: #1e5a42;
+    --accent-hover: #164633;
+    --accent-light: #e5f2eb;
+    --accent-border: #9ecab5;
+    --light: #eaf1ed;
+    --error: #b91c1c;
+    --error-bg: #fef2f2;
+    --error-line: #fecaca;
+    --warn: #b45309;
+    --warn-bg: #fffbeb;
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.08), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 8px 20px -3px rgba(15, 23, 42, 0.12), 0 3px 6px -2px rgba(15, 23, 42, 0.05);
+    --radius-sm: 0.375rem;
+    --radius: 0.65rem;
+    --radius-lg: 0.85rem;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: "Newsreader", "Charter", "Iowan Old Style", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e8eee9;
+      --muted: #95a59b;
+      --surface: #18201b;
+      --surface-alt: #121815;
+      --surface-hover: #222c26;
+      --bg: #0d120f;
+      --line: #2a372f;
+      --line-subtle: #1e2822;
+      --accent: #2e8b65;
+      --accent-hover: #38a579;
+      --accent-light: #162f23;
+      --accent-border: #235c44;
+      --light: #1a251e;
+      --error: #ef4444;
+      --error-bg: #2b1414;
+      --error-line: #451b1b;
+      --warn: #f59e0b;
+      --warn-bg: #2e1d08;
+      --success: #22c55e;
+      --success-bg: #0f2918;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 20px -3px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  header {
+    background: #14241e;
+    color: #f1f8f3;
+    padding: 0.85rem max(1.25rem, calc((100vw - 1200px) / 2));
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .brand-group { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit; }
+  .brand-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #2d7a58, #184431);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);
+  }
+  .brand-text { display: flex; flex-direction: column; }
+  .brand-name { font-family: var(--serif); font-size: 1.55rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .brand-tagline { font-size: 0.75rem; color: #a4beae; font-weight: 400; letter-spacing: 0.02em; }
+
+  nav { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-left: auto; }
+  nav button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+    font-weight: 550;
+    color: #c9ded1;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  nav button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  nav button[aria-pressed=true] {
+    background: #2b5543;
+    color: #ffffff;
+    border-color: rgba(255,255,255,0.18);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* Main Container */
+  main { max-width: 1220px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  h1, h2, h3 { margin: 0; font-family: var(--serif); line-height: 1.2; color: var(--ink); }
+  h1 { font-size: clamp(1.75rem, 3.5vw, 2.3rem); margin-bottom: 0.35rem; }
+  h2 { font-size: 1.3rem; margin-bottom: 0.25rem; }
+  h3 { font-size: 1rem; font-family: var(--font); font-weight: 650; }
+  p { margin: 0.4rem 0; }
+  small, .muted { color: var(--muted); font-size: 0.86rem; }
+  .header-desc { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.98rem; max-width: 780px; }
+
+  /* Guide Banner */
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.35rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: 0.85rem;
+  }
+  .guide-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .guide-title { font-weight: 650; font-size: 0.98rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+  .guide-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .guide-step {
+    background: var(--surface-alt);
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.95rem;
+    font-size: 0.88rem;
+  }
+  .guide-step strong { display: block; color: var(--ink); margin-bottom: 0.2rem; }
+  .guide-step p { margin: 0; color: var(--muted); font-size: 0.82rem; }
+
+  /* Presets Bar */
+  .preset-bar {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .preset-bar-title { font-size: 0.85rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .preset-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .preset-btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+  }
+  .preset-btn:hover { border-color: var(--accent); background: var(--surface-hover); color: var(--accent); }
+  .preset-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+  /* Layout */
+  .workspace { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1.35rem;
+    box-shadow: var(--shadow);
+    min-width: 0;
+  }
+  .stack { display: grid; gap: 1rem; }
+  .row { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; }
+  .pair { display: grid; gap: 0.85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .space { flex: 1; }
+
+  /* Form Controls */
+  button, input, select, textarea { font: inherit; }
+  button, a.action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0.58rem 0.95rem;
+    color: var(--ink);
+    background: var(--surface);
+    cursor: pointer;
+    font-weight: 550;
+    font-size: 0.92rem;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  button:hover, a.action:hover { border-color: var(--accent); background: var(--surface-hover); }
+  button:active, a.action:active { transform: translateY(1px); }
+  button.primary {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+    box-shadow: 0 1px 3px rgba(30, 90, 66, 0.35);
+  }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  button:disabled { opacity: 0.55; cursor: default; transform: none; box-shadow: none; }
+  a { color: var(--accent); text-decoration: none; font-weight: 550; }
+  a:hover { text-decoration: underline; }
+  a.action { text-decoration: none; }
+
+  input, select, textarea {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    padding: 0.58rem 0.75rem;
+    width: 100%;
+    min-width: 0;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  label { display: grid; font-size: 0.92rem; font-weight: 600; gap: 0.35rem; min-width: 0; color: var(--ink); }
+  .field-desc { font-weight: 400; font-size: 0.81rem; color: var(--muted); margin-top: -0.15rem; line-height: 1.4; }
+
+  /* Input Box & Drag-drop */
+  .source-row { display: grid; grid-template-columns: 1fr auto; gap: 0.55rem; align-items: stretch; }
+  .drop-zone {
+    border: 2px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.85rem;
+    background: var(--surface-alt);
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+
+  /* Disclosure panels */
+  details {
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius);
+    background: var(--surface-alt);
+    padding: 0.75rem 0.95rem;
+    transition: all 0.2s ease;
+  }
+  details[open] { background: var(--surface); border-color: var(--line); }
+  summary {
+    cursor: pointer;
+    font-weight: 650;
+    font-size: 0.93rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "▾"; font-size: 0.85rem; color: var(--muted); transition: transform 0.2s ease; }
+  details[open] summary::after { transform: rotate(180deg); }
+  details .details-content { margin-top: 0.85rem; display: grid; gap: 0.85rem; }
+
+  /* Stage Method Cards inside #methods */
+  .stage-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .stage-header { display: flex; align-items: center; justify-content: space-between; }
+  .stage-title { font-weight: 650; font-size: 0.9rem; text-transform: capitalize; color: var(--ink); }
+  .stage-badge { font-size: 0.72rem; padding: 0.15rem 0.45rem; border-radius: 1rem; background: var(--light); color: var(--muted); font-weight: 550; }
+  .stage-desc { font-size: 0.79rem; color: var(--muted); margin: 0; line-height: 1.35; }
+
+  /* Queue & Jobs */
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+  .job {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    text-align: left;
+    gap: 0.4rem 0.75rem;
+    width: 100%;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.95rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .job:hover { border-color: var(--accent); background: var(--surface-hover); }
+  .job[aria-pressed=true] {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .job strong, .book-name, .path { overflow-wrap: anywhere; }
+  .state {
+    border-radius: 1rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--light);
+    color: var(--muted);
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 600;
+    align-self: start;
+    text-transform: capitalize;
+  }
+  .state.running { color: #0369a1; background: #e0f2fe; }
+  .state.queued { color: #b45309; background: #fef3c7; }
+  .state.succeeded { color: var(--success); background: var(--success-bg); }
+  .state.failed, .state.interrupted { color: var(--error); background: var(--error-bg); }
+
+  pre {
+    background: #0f1612;
+    color: #e5ece7;
+    border-radius: var(--radius);
+    padding: 0.95rem;
+    font: 0.85rem/1.6 var(--mono);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: 28rem;
+    overflow: auto;
+    margin: 0;
+    min-height: 8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Library Grid */
+  .books { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
+  .book-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    display: grid;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .book-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .book-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+  .book-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: var(--radius-sm);
+    background: var(--accent-light);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .progress-bar-wrap { background: var(--surface-alt); border-radius: 1rem; height: 6px; overflow: hidden; margin-top: 0.35rem; }
+  .progress-bar-fill { background: var(--accent); height: 100%; border-radius: 1rem; transition: width 0.3s ease; }
+  .export-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.65rem;
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+  }
+
+  /* Configuration view */
+  textarea { min-height: 25rem; height: 56vh; resize: vertical; font: 0.9rem/1.55 var(--mono); tab-size: 2; }
+  .config-cheat {
+    background: var(--surface-alt);
+    border: 1px solid var(--line-subtle);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    font-size: 0.84rem;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .config-cheat code { font-family: var(--mono); background: var(--surface); padding: 0.1rem 0.35rem; border-radius: 3px; border: 1px solid var(--line); }
+
+  /* Feedback Alert */
+  #feedback {
+    margin: 0 0 1.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius);
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+  }
+  #feedback.error {
+    background: var(--error-bg);
+    border-color: var(--error-line);
+    color: var(--error);
+  }
+
+  [hidden] { display: none !important; }
+  @media(max-width: 860px) {
+    .workspace { grid-template-columns: 1fr; }
+    .pair { grid-template-columns: 1fr; }
+    header { padding: 0.75rem 1rem; }
+  }
+</style>
+<script src="/dashboard.js" defer></script>
+</head>
+<body>
+<header>
+  <div class="brand-group">
+    <div class="brand-logo" aria-hidden="true">📖</div>
+    <div class="brand-text">
+      <span class="brand-name">Incant</span>
+      <span class="brand-tagline">Ingest Novels · Cast Actors · Narrate Tales</span>
+    </div>
+  </div>
+  <nav aria-label="Dashboard views">
+    <button type="button" data-view="jobs" aria-pressed="true">
+      <span>⚙️</span> Jobs & Pipeline
+    </button>
+    <button type="button" data-view="library" aria-pressed="false">
+      <span>📚</span> Library & Review
+    </button>
+    <button type="button" data-view="configuration" aria-pressed="false">
+      <span>🛠️</span> Configuration
+    </button>
+  </nav>
+</header>
+
+<main>
+  <div id="feedback" role="status" hidden></div>
+
+  <!-- VIEW 1: JOBS -->
+  <section id="jobs">
+    <h1>Pipeline Jobs</h1>
+    <p class="header-desc">
+      Queue a publishing run, preview its stage plan, or monitor live progress.
+    </p>
+
+    <!-- Novice Guide Banner -->
+    <div class="guide-card" data-audio-only>
+      <div class="guide-header">
+        <span class="guide-title">💡 How It Works for Complete Beginners</span>
+        <small class="muted">No terminal commands needed</small>
+      </div>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <strong>1. Choose Source</strong>
+          <p>Provide an eBook (EPUB, PDF, Kindle, TXT) or paste a web story URL (e.g., AO3, Gutenberg).</p>
+        </div>
+        <div class="guide-step">
+          <strong>2. Pick Voice Quality</strong>
+          <p>Choose an instant preset: Fast Local CPU (free & offline) or Full-Cast AI (multi-character acting).</p>
+        </div>
+        <div class="guide-step">
+          <strong>3. Queue & Review</strong>
+          <p>Hit "Queue Run". Once done, open the Studio in Library to audit character voices and download your audiobook!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <!-- NEW RUN FORM -->
+      <form id="pipeline" class="panel stack" aria-label="New publishing run">
+        <div>
+          <h2 id="run-title">New Audiobook Run</h2>
+          <p class="muted" id="run-description">Choose a source and how you want it voiced.</p>
+          <label>Publishing mode
+            <select name="publishing" id="publishing">
+              <option value="audiobook">Audiobook</option>
+              <option value="ebook">Ebook</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- SOURCE INPUT -->
+        <div>
+          <label for="source">
+            Book Source (File, Web URL, or Existing Book)
+            <span class="field-desc">Upload an eBook file, paste an online story link (e.g., AO3, Gutenberg), or type an existing book slug from your library.</span>
+          </label>
+          <div class="source-row" style="margin-top:0.4rem">
+            <input id="source" name="source" required placeholder="e.g., https://archiveofourown.org/works/... or drop an EPUB/PDF file">
+            <button id="upload" type="button" title="Select a file from your computer">📂 Upload File</button>
+            <input id="upload-file" type="file" hidden accept=".epub,.pdf,.txt,.md,.markdown,.mobi,.azw,.azw3,.prc,.kf8,.docx,.odt,.rtf,.fb2,.lit,.pdb,.html,.htm,.json">
+          </div>
+          <div id="drop-indicator" class="drop-zone" style="margin-top:0.45rem">
+            📁 Drag and drop an EPUB, PDF, Word, MOBI, or TXT file here
+          </div>
+        </div>
+
+        <!-- ALLOWED DIRECTORIES -->
+        <details>
+          <summary>Allowed directories on your machine</summary>
+          <div class="details-content">
+            <p class="field-desc">For security, Incant will only read local file paths from within these authorized directories:</p>
+            <div id="allowed-paths" class="stack path" style="gap:0.35rem"></div>
+          </div>
+        </details>
+
+        <!-- NOVICE PRESETS BAR -->
+        <div class="preset-bar" data-audio-only>
+          <div class="preset-bar-title">Quick Presets (1-Click Setup)</div>
+          <div class="preset-buttons">
+            <button type="button" class="preset-btn active" data-preset="recommended" title="Extracts character profiles, uses AI for speaker detection (95% accuracy), and voices lines with natural models">
+              🌟 Full-Cast AI (Recommended)
+            </button>
+            <button type="button" class="preset-btn" data-preset="cpu" title="Runs 100% locally on your computer with Kokoro. No API key, GPU, or internet required">
+              ⚡ Fast & Free (Local CPU / No LLM)
+            </button>
+            <button type="button" class="preset-btn" data-preset="narrator" title="Single narrator voice for the entire book without character voice changes">
+              🎙️ Classic Solo Narrator
+            </button>
+          </div>
+        </div>
+
+        <!-- PIPELINE METHODS -->
+        <details open>
+          <summary>Pipeline stages & methods</summary>
+          <div class="details-content">
+            <p class="field-desc">
+              Choose methods for the selected publishing mode.
+            </p>
+            <div id="methods" class="pair"></div>
+          </div>
+        </details>
+
+        <!-- ADVANCED RUN OPTIONS -->
+        <details>
+          <summary>Advanced run options</summary>
+          <div class="details-content stack">
+            <div class="pair">
+              <label>
+                Start at stage
+                <span class="field-desc">Resume processing from an intermediate step.</span>
+                <select name="start"><option value="">Start from beginning</option></select>
+              </label>
+              <label>
+                Stop after stage
+                <span class="field-desc">Stop at an intermediate stage to review before publishing.</span>
+                <select name="stop"><option value="">Run through completion</option></select>
+              </label>
+            </div>
+            <div class="pair">
+              <label data-audio-only>
+                Specific Chapters
+                <span class="field-desc">e.g. <code>1-3</code> or <code>1,4,7</code> to test voices on a snippet first.</span>
+                <input name="chapters" placeholder="All chapters (leave blank)">
+              </label>
+              <label>
+                Force re-running stages
+                <span class="field-desc">e.g. <code>attribute</code> or <code>all</code> to ignore cache.</span>
+                <input name="force" placeholder="None (use cached when valid)">
+              </label>
+            </div>
+            <label data-audio-only>
+              LLM Model Profile
+              <span class="field-desc">The AI backend used to analyze characters and dialogue attribution.</span>
+              <select name="llm"><option value="">Default configured profile</option></select>
+            </label>
+            <div class="pair">
+              <label>
+                Custom Book Slug
+                <span class="field-desc">Optional folder name in your library (e.g. <code>pride-and-prejudice</code>).</span>
+                <input name="slug" placeholder="Auto-generated from title">
+              </label>
+              <label>
+                Output File Path
+                <span class="field-desc">Custom destination for the finished book.</span>
+                <input name="output" placeholder="Default library output folder">
+              </label>
+            </div>
+            <small id="output-path" class="path muted"></small>
+          </div>
+        </details>
+
+        <!-- ACTIONS -->
+        <div class="row" style="margin-top:0.5rem">
+          <button class="primary" name="mode" value="run" title="Queue the selected publishing pipeline">
+            🚀 Queue Run
+          </button>
+          <button name="mode" value="plan" title="Preview the execution steps without running audio generation">
+            📋 Preview Plan
+          </button>
+          <button name="mode" value="check" title="Verify that models, servers, and dependencies are reachable">
+            🔍 Check Readiness
+          </button>
+        </div>
+      </form>
+
+      <!-- QUEUE PANEL -->
+      <section class="panel stack" aria-labelledby="queue-title">
+        <div class="row">
+          <h2 id="queue-title">Execution Queue</h2>
+          <span class="space"></span>
+          <small id="queue-status-hint" class="muted">Live updates every 2s</small>
+          <button id="clear-finished" type="button" hidden>Clear finished history</button>
+        </div>
+        <p id="empty-jobs" class="muted" style="padding:1.5rem 0; text-align:center">
+          No jobs in the queue yet. Select a book source on the left to start!
+        </p>
+        <ul class="list" id="job-list" aria-label="Job list"></ul>
+
+        <!-- JOB DETAIL LOG -->
+        <section id="job-detail" class="stack" hidden>
+          <div class="row">
+            <h3>Live Execution Log</h3>
+            <span class="space"></span>
+            <button id="copy-log" type="button" class="btn" style="padding:0.35rem 0.65rem; font-size:0.8rem">📋 Copy Log</button>
+            <button id="cancel" type="button" style="color:var(--error); border-color:var(--error-line)">⏹ Cancel Job</button>
+          </div>
+          <pre id="log" tabindex="0" aria-label="Job log"></pre>
+        </section>
+      </section>
+    </div>
+  </section>
+
+  <!-- VIEW 2: LIBRARY -->
+  <section id="library" hidden>
+    <div class="row" style="margin-bottom:1rem">
+      <div>
+        <h1 id="library-title">Audiobook Library</h1>
+        <label>Publishing mode <select id="library-publishing"><option value="audiobook">Audiobook</option><option value="ebook">Ebook</option></select></label>
+        <p class="header-desc" style="margin-bottom:0">
+          Open a shared source in the selected mode to review or download its output.
+        </p>
+      </div>
+      <span class="space"></span>
+      <input id="library-search" type="search" placeholder="Filter books..." style="max-width:240px">
+    </div>
+
+    <p id="empty-books" class="muted" style="padding:2.5rem 0; text-align:center">
+      No books have been ingested yet. Start a new run from the Jobs tab to build your library!
+    </p>
+    <div class="books" id="book-list"></div>
+  </section>
+
+  <!-- VIEW 3: CONFIGURATION -->
+  <section id="configuration" hidden>
+    <h1>Configuration & Settings</h1>
+    <p class="header-desc">
+      Incant reads configuration hierarchically: base settings from <code>incant.toml</code> and user overrides from <code>incant.local.toml</code>. Changes apply automatically to the next queued job.
+    </p>
+
+    <!-- Config Cheat Sheet for Novices -->
+    <div class="config-cheat">
+      <strong>💡 Common Configuration Examples</strong>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:0.75rem; margin-top:0.25rem">
+        <div>
+          <b>Using Local Llama.cpp / Ollama (No Cloud Key)</b>
+          <p class="muted" style="margin:0.2rem 0">Set <code>[llm] base_url = "http://localhost:11434/v1"</code> and model name.</p>
+        </div>
+        <div>
+          <b>Using Cloud LLM (Claude or OpenAI)</b>
+          <p class="muted" style="margin:0.2rem 0">Set <code>[llm] model = "claude-3-7-sonnet"</code> and put your key in <code>.env</code>.</p>
+        </div>
+        <div>
+          <b>Default Voice Engine</b>
+          <p class="muted" style="margin:0.2rem 0">Set <code>[pipeline] synthesize = "kokoro"</code> for fast CPU or <code>"indextts"</code> for GPU.</p>
+        </div>
+      </div>
+    </div>
+
+    <form id="config-form" class="panel stack" style="margin-top:1.25rem">
+      <div class="row">
+        <label style="flex:1">
+          Active Configuration Layer
+          <select id="config-file"></select>
+        </label>
+        <span class="space"></span>
+        <span id="config-state" class="muted" role="status" style="font-weight:600"></span>
+      </div>
+      <p class="muted path" id="config-path" style="font-size:0.82rem; margin-top:-0.3rem"></p>
+
+      <label for="config-text">TOML Content</label>
+      <textarea id="config-text" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+
+      <div class="row">
+        <button class="primary" type="submit">💾 Save Configuration</button>
+      </div>
+    </form>
+  </section>
+</main>
+</body>
+</html>

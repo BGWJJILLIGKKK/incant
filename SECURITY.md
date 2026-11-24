@@ -14,7 +14,8 @@ Only the latest release is supported.
 incant runs locally on your own files, but some parts handle untrusted input or secrets:
 
 - **Untrusted documents and pages**: EPUB, Kindle, PDF, Word and HTML parsing, and web pages fetched by
-  `ingest=url` (including the headless browser).
+  `ingest=url` (including the headless browser). With `[ingest.url] allow_bogons = false` (the default), a
+  submitted URL, a redirect or a rendered page reaching a private or reserved address is in scope.
 - **Credentials**: logins, tokens and cookies under `[ingest.url.sites]` must only ever be sent to their own
   host (and its subdomains); API keys must never be logged, cached or written to the work directory. Keys live
   only in the environment or `.env` files; configuration files name them (`api_key_env`, `*_env`) and a key

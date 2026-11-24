@@ -151,7 +151,8 @@ chapters at a time (`--chapters`), and its audio must credit ElevenLabs.
 **Logins for web pages** — under `[ingest.url.sites."example.com"]`: `username` with `password_env`, a
 `bearer_env` token, `headers_env = { "X-Api-Key" = "VARIABLE" }`, or `cookies = "cookies.txt"` exported from
 a logged-in browser; `~/.netrc` also works. The `*_env` settings name variables in the environment or a
-`.env` file, as for LLM keys. Credentials are only ever sent to their own site.
+`.env` file, as for LLM keys. Credentials are only ever sent to their own site. URLs that resolve to your own
+network (localhost, LAN, cloud metadata) are refused unless `[ingest.url] allow_bogons = true`.
 
 **Credits** — `credits.txt` beside each audiobook lists what it was made with and under which terms, and what
 isn't known. Declare terms you know under `[credits]` (e.g. `"synthesize.indextts" = "non-commercial: …"`);

@@ -67,6 +67,8 @@ true_peak_db = -3.0
 [ingest.url]                 # web pages (also every page of a bookmark file)
 timeout_s = 30
 netrc = true                 # ~/.netrc logins for hosts without a [sites] entry
+allow_bogons = false         # refuse URLs, redirects and rendered-page requests to loopback, LAN, link-local
+                             # (cloud metadata) and other non-public addresses; true for pages on your own network
 # Logins: put these in incant.local.toml (git-ignored). Sent only to that host (and subdomains). The secrets
 # themselves go in the environment or a .env file, never in TOML; these settings name the variables.
 # [ingest.url.sites."example.com"]

@@ -133,7 +133,13 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 
 ### Web pages (`url`) and credentials
 - Title and author: the page metadata's, with a trailing `- Site` / `| Site` removed when it names the site (og:site_name or a domain label). With no author in the metadata, a trailing `by Name` becomes the author if it looks like a name (capitalized words, ≤4; or one handle in a site-templated title).
-`[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), and `sites`: `{host: Site}`.
+`[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), `allow_bogons` (default false), and `sites`: `{host: Site}`.
+- **Bogons:** with `allow_bogons = false`, every request is checked before it is sent: the URL, each redirect
+  hop, and (rendering) each request the page makes in the browser. A host that resolves to any address that
+  isn't public (loopback, RFC 1918 and other private ranges, link-local including cloud metadata
+  169.254.169.254, carrier-grade NAT, multicast, reserved, IPv6 equivalents) is refused with an error naming the
+  setting; the browser blocks such requests. The check resolves the name just before the request, so a DNS
+  server that answers differently a moment later (rebinding) isn't covered.
 - A `sites` key matches that host and its subdomains; the most specific key wins.
 - `Site` fields (all optional):
   - `username` + `password_env` → HTTP Basic

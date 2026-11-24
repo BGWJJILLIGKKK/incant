@@ -4,7 +4,8 @@ The browser gets the same per-site credentials as plain fetching, scoped the sam
   * cookies from the configured cookies.txt files, added to the browser with their own domains;
   * Basic auth, bearer tokens and extra headers, injected per request, only into requests for the
     configured site (never into third-party scripts, CDNs or trackers the page loads).
-Images, media and fonts are not downloaded.
+Images, media and fonts are not downloaded. Unless [ingest.url] allow_bogons is set, every request the page makes
+to a private or reserved address (loopback, LAN, link-local, cloud metadata) is blocked, like plain fetching.
 
 Optional: `uv sync --extra browser && .venv/bin/playwright install chromium`.
 """
@@ -72,10 +73,26 @@ def render(url: str, fetcher: Fetcher, timeout_s: float, settle_ms: int = 1500) 
     from playwright.sync_api import Error as PlaywrightError
     from playwright.sync_api import sync_playwright
 
+    from urllib.parse import urlsplit
+
+    from .url import bogon
+
+    checked: dict[str, str | None] = {}
+
+    def private(request_url: str) -> bool:
+        if fetcher.s.allow_bogons:
+            return False
+        host = urlsplit(request_url).hostname or ""
+        if host not in checked:
+            checked[host] = bogon(host)
+        return checked[host] is not None
+
     def route(r):
         req = r.request
         if req.resource_type in SKIP_RESOURCES:
             return r.abort()
+        if private(req.url):
+            return r.abort("blockedbyclient")
         extra = _auth_headers(fetcher, req.url)
         return r.continue_(headers={**req.headers, **extra}) if extra else r.continue_()
 

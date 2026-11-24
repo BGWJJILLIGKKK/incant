@@ -30,9 +30,9 @@ class Recorder:
         return self.routes(req)
 
 
-def fetcher(sites=None, routes=None, netrc=False):
+def fetcher(sites=None, routes=None, netrc=False, allow_bogons=False):
     rec = Recorder(routes or (lambda r: httpx.Response(200, html=ARTICLE)))
-    s = UrlSettings(sites=sites or {}, netrc=netrc, render="never")
+    s = UrlSettings(sites=sites or {}, netrc=netrc, render="never", allow_bogons=allow_bogons)
     return Fetcher(s, transport=httpx.MockTransport(rec)), rec
 
 
@@ -219,3 +219,28 @@ def test_browser_cookies_are_secure(tmp_path):
                    "localhost\tFALSE\t/\tFALSE\t0\tdev\t1\n")
     f, _ = fetcher({"example.com": {"cookies": str(jar)}, "localhost": {"cookies": str(jar)}})
     assert {c["domain"]: c["secure"] for c in _cookies(f)} == {".example.com": True, "localhost": False}
+
+
+def test_private_addresses_refused_unless_allowed():
+    """allow_bogons off (the default): a URL, or a redirect, to loopback, a LAN or cloud metadata is refused
+    before any request is sent; on: fetched as usual."""
+    for url in ("http://127.0.0.1:8765/api/config", "http://169.254.169.254/latest/meta-data/",
+                "http://192.168.1.1/admin", "http://[::1]/", "http://localhost/", "http://100.64.0.1/"):
+        f, rec = fetcher(allow_bogons=False)
+        with pytest.raises(FetchError, match="private or reserved address"):
+            f.get(url)
+        assert rec.seen == []
+
+    def routes(r):
+        if r.url.host == "public.test":
+            return httpx.Response(302, headers={"location": "http://10.0.0.5/secret"})
+        return httpx.Response(200, html=ARTICLE)
+
+    f, rec = fetcher(routes=routes, allow_bogons=False)
+    with pytest.raises(FetchError, match=r"10\.0\.0\.5"):
+        f.get("https://public.test/story")
+    assert [h for h, *_ in rec.seen] == ["public.test"]
+
+    f, rec = fetcher(routes=routes, allow_bogons=True)
+    assert f.get("https://public.test/story")[0] == "http://10.0.0.5/secret"
+    assert UrlSettings().allow_bogons is False

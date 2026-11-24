@@ -22,6 +22,8 @@ from __future__ import annotations
 import netrc as netrc_mod
 import os
 import re
+import socket
+from ipaddress import ip_address
 from http.cookiejar import LoadError, MozillaCookieJar
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -86,10 +88,42 @@ class UrlSettings(BaseModel):
     # (needs the `browser` extra). "auto": only when the page and its embedded data have too little text.
     render: Literal["auto", "always", "never"] = "auto"
     render_timeout_s: float = 45.0
+    # Bogons: addresses that aren't on the public internet (loopback, private LANs, link-local and cloud
+    # metadata 169.254.169.254, carrier-grade NAT, multicast, reserved). Off: a URL (or a redirect, or a
+    # rendered page's request) that resolves to one is refused, so a submitted URL can't read your own network.
+    # On: needed to ingest pages from your own servers (an intranet wiki, a local test server).
+    allow_bogons: bool = False
 
 
 class FetchError(RuntimeError):
     pass
+
+
+def _resolve(host: str) -> list[str]:
+    """The addresses `host` resolves to (literal IPs as themselves); [] when it doesn't resolve."""
+    try:
+        return [info[4][0] for info in socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)]
+    except (socket.gaierror, UnicodeError):
+        return []
+
+
+def bogon(host: str) -> str | None:
+    """The first non-public address `host` resolves to, or None when every address is a public one."""
+    for addr in _resolve(host.strip("[]")):
+        ip = ip_address(addr.split("%", 1)[0])
+        ip = getattr(ip, "ipv4_mapped", None) or ip
+        if not ip.is_global or ip.is_multicast:
+            return str(ip)
+    return None
+
+
+def refuse_bogon(url: str, settings: UrlSettings) -> None:
+    if settings.allow_bogons:
+        return
+    host = urlsplit(url).hostname or ""
+    if addr := bogon(host):
+        raise FetchError(f"{url}: {host} is a private or reserved address ({addr}), not a public web page; "
+                         "set [ingest.url] allow_bogons = true to read pages from your own network")
 
 
 def _env(name: str | None, what: str, host: str) -> str | None:
@@ -209,6 +243,7 @@ class Fetcher:
         """(final url, html, credentials used)."""
         used = False
         for _ in range(MAX_REDIRECTS + 1):
+            refuse_bogon(url, self.s)  # every hop: a public page can redirect into the local network
             headers, auth, has = self.credentials(url)
             used |= has
             try:

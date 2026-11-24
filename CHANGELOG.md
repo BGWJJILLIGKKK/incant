@@ -20,6 +20,9 @@ and versions follow [Semantic Versioning](https://semver.org/).
   `ssh -L 8765:127.0.0.1:8765`.
 - Dashboard and review responses can't be framed (`X-Frame-Options: DENY`, `frame-ancestors 'none'`), and
   their sockets time out after 30 s without data, including while reading request headers.
+- URL ingest refuses private and reserved addresses (loopback, LAN, link-local and cloud metadata, CGNAT,
+  multicast) for the URL, every redirect hop and every request a rendered page makes, so a submitted URL can't
+  read your own network. `[ingest.url] allow_bogons = true` allows them (pages on your own servers).
 - Pandoc conversions read the document under `--sandbox` and drop images, raw HTML and file-naming metadata
   (such as `cover-image`) before writing the EPUB, so a document can't pull local files or URLs into a book.
 

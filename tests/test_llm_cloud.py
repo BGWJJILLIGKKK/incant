@@ -57,6 +57,16 @@ def test_transient_errors_are_retried(monkeypatch, tmp_path):
         llm.chat_json("s", "other", Out)  # a 4xx isn't retried
 
 
+def test_models_strip_gemini_prefix():
+    """Gemini lists "models/<name>" but is configured and called with the bare name, which --check looks up."""
+    def handler(req):
+        return httpx.Response(200, json={"data": [{"id": "models/gemini-3.8-flash"}, {"id": "qwen3.5-9b"}]})
+
+    llm = llm_mod.LLM(LLMConfig(base_url="http://llm.test/v1", dialect="openai"))
+    llm.http = httpx.Client(base_url="http://llm.test/v1", transport=httpx.MockTransport(handler))
+    assert llm.models() == ["gemini-3.8-flash", "qwen3.5-9b"]
+
+
 class FakeMessages:
     def __init__(self, response):
         self.response, self.kwargs = response, None

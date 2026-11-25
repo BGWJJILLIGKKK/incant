@@ -13,6 +13,9 @@ __all__ = ["GutenbergIngest", "strip_gutenberg"]
 
 _START = re.compile(r"^\*{3}\s*START OF (THE|THIS) PROJECT GUTENBERG.*$", re.I | re.M)
 _END = re.compile(r"^\*{3}\s*END OF (THE|THIS) PROJECT GUTENBERG.*$", re.I | re.M)
+_LAYOUT_MARKER = re.compile(
+    r"\*{3}\s*(START|END)\s+OF\s+(?:THE|THIS)\s+PROJECT\s+GUTENBERG\b[^*]{0,300}\*{3}", re.I
+)
 _ILLUSTRATION = re.compile(r"\[Illustration[^\]]*\]", re.I | re.S)
 _CAPTION_HEADING = re.compile(r"^\s*((chapter|book|part|volume)\s+[\w.]+\.?)\s*$", re.I)
 SNIFF_BYTES = 64 * 1024  # the START marker comes after the header block, well within this
@@ -25,6 +28,21 @@ def strip_gutenberg(s: str) -> str:
     if m := _END.search(s):
         s = s[: m.start()]
     return _ILLUSTRATION.sub(_keep_heading, s)
+
+
+def strip_gutenberg_pdf(paragraphs: list[str]) -> list[str]:
+    """Strip explicit Gutenberg markers that PDF extraction can join into body paragraphs."""
+    text = "\n\n".join(paragraphs)
+    start = end = None
+    for marker in _LAYOUT_MARKER.finditer(text):
+        if start is None and marker[1].upper() == "START":
+            start = marker.end()
+        elif marker[1].upper() == "END":
+            end = marker.start()
+            break
+    if start is None and end is None:
+        return paragraphs
+    return [p for part in text[start:end].split("\n\n") if (p := part.strip()) and p != "#"]
 
 
 def _keep_heading(m: re.Match) -> str:

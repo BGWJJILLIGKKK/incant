@@ -12,3 +12,12 @@ incant.local.toml
 /eval/results/
 /output/
 .env
+.egm/
+
+# Built installation packages
+/dist/
+
+# Dashboard state and uploads when the data directory is this checkout; internal notes
+/.incant/
+/uploads/
+/concepts_brief.md

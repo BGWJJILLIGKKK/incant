@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+# Resolve the installed and extracted package layouts identically.
+prefix=$(dirname -- "$(dirname -- "$(readlink -f -- "$0")")")
+export INCANT_HOME="${INCANT_HOME:-$prefix/lib/incant}"
+export INCANT_DATA="${INCANT_DATA:-/var/lib/incant}"
+export INCANT_KOKORO_DIR="${INCANT_KOKORO_DIR:-/var/cache/incant/kokoro}"
+export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-/var/cache/incant/playwright}"
+exec "$prefix/lib/incant/venv/bin/python" -m incant --config "${INCANT_CONFIG:-/etc/incant/incant.toml}" "$@"

@@ -1,0 +1,54 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: incant
+Upstream-Contact: https://github.com/BGWJJILLIGKKK/incant/issues
+Source: https://github.com/BGWJJILLIGKKK/incant
+Comment: This is the binary package's copyright file.
+ incant's own code is BSD-3-Clause. The package also bundles, in the Python
+ virtual environment under /usr/lib/incant/venv, third-party Python packages
+ and the native libraries inside their wheels. With the default extras
+ (kokoro mobi) these include GPL-3.0 components that incant loads in-process:
+ mobi 0.4.x (GPL-3.0-only), phonemizer (GPL-3.0-or-later) and espeakng-loader,
+ which bundles libespeak-ng and espeak-ng-data (GPL-3.0-or-later). The package
+ as a whole is therefore distributed under the terms of the GNU GPL version 3,
+ while incant's own files remain under BSD-3-Clause and can be reused under it.
+ .
+ Every bundled component, its version and its license are listed in
+ /usr/share/doc/incant/THIRD_PARTY_NOTICES.md. License texts are in each
+ package's dist-info directory under
+ /usr/lib/incant/venv/lib/python3.*/site-packages/ and, for components that do
+ not ship one (and for the GPL/LGPL/MPL family), in
+ /usr/share/doc/incant/LICENSES/. THIRD_PARTY_NOTICES.md also says how to obtain
+ the Corresponding Source of the GPL, LGPL and MPL components.
+
+Files: *
+Copyright: 2026 BGWJJILLIGKKK
+License: BSD-3-Clause
+
+Files: usr/lib/incant/venv/*
+Copyright: The respective authors of each bundled package; see
+ /usr/share/doc/incant/THIRD_PARTY_NOTICES.md and each package's dist-info.
+License: bundled
+ Each bundled component is under its own license, as listed in
+ /usr/share/doc/incant/THIRD_PARTY_NOTICES.md. These include permissive
+ licenses (MIT, BSD, Apache-2.0, PSF-2.0 and others), weak copyleft
+ (LGPL-2.1-or-later num2words; MPL-2.0 certifi and tqdm; tld under
+ MPL-1.1 or GPL-2.0-only or LGPL-2.1-or-later) and strong copyleft (GPL-3.0
+ mobi, phonemizer and espeak-ng via espeakng-loader). With the optional qa
+ extra, PyAV's bundled FFmpeg build with libx264 and libx265
+ (GPL-2.0-or-later) is included as well.
+ .
+ On Debian systems, the complete texts of the GNU General Public License
+ versions 2 and 3, the GNU Lesser General Public License versions 2.1 and 3,
+ the Mozilla Public License 2.0 and the Apache License 2.0 are also in
+ /usr/share/common-licenses/.
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ .
+ 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ .
+ 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

@@ -5,20 +5,22 @@ Spans are still cut deterministically (spans.py). The model sees a passage with 
 "other" — an unnamed speaker by role — or "unknown")
 plus a short delivery description and intensity. It never writes book text.
 
-Chapters are cut into windows of at most `max_quotes` quotations, each preceded by a few paragraphs of
-unlabelled context; windows run in parallel (bounded by the LLM token budget).
+Chapters are cut into target windows surrounded by unlabelled context within the request budget.
 """
 
 from __future__ import annotations
 
+import json
 import re
+import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from itertools import zip_longest
 from typing import Literal
 
 from pydantic import BaseModel, Field, create_model
 
-from ....llm import LLM, LLMError
+from ....llm import LLM, LLMError, prompt_char_budget
 from ....normalize import slugify
 from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Gender, Span, SpanKind
 from ...base import Context
@@ -37,7 +39,9 @@ _NEUTRAL = re.compile(r"^\s*(neutral|plain|normal|calm|none|flat|matter[- ]of[- 
 class SpeakersSettings(BaseModel):
     max_quotes: int = 25  # quotations labelled per request
     max_window_words: int = 2500
-    context_paragraphs: int = 4  # unlabelled paragraphs shown before each window
+    context_paragraphs: int | None = Field(default=None, ge=0)  # limit on either side, None uses the token budget
+    context_tokens: int = Field(default=262144, gt=0)
+    narrator_chapters: int = Field(default=5, ge=1)
     roster_top: int = 10  # always include the N most-mentioned characters, besides those in the chapter
     # Books with at most this many speaking characters put all of them in every roster. Off by default:
     # extra names are distractors (P&P ch. I-II: 95.3% -> 87.5% with all 36). The text-based additions in
@@ -69,10 +73,10 @@ Deciding the speaker:
 - In untagged back-and-forth conversation, speakers usually alternate between the two people talking.
 - What a quotation says (who it addresses, what it refers to) is evidence: people do not usually address themselves by name.
 - Characters may be named by any alias listed.
-Text marked [context] is earlier text for reference only; it has no markers."""
+Text marked [context] is earlier or later prose for reference only. Label only marked quotations."""
 
 
-def render_passage(context: list[list[Span]], window: list[list[Span]]) -> tuple[str, dict[int, str]]:
+def render_passage(context: list[list[Span]], window: list[list[Span]], following=()) -> tuple[str, dict[int, str]]:
     """Text with ⟦n⟧ before each dialogue span in the window; returns (text, marker -> span id)."""
     lines = ["[context] " + "".join(s.text for s in para) for para in context]
     markers: dict[int, str] = {}
@@ -87,7 +91,26 @@ def render_passage(context: list[list[Span]], window: list[list[Span]]) -> tuple
             else:
                 parts.append(s.text)
         lines.append("".join(parts))
+    lines.extend("[context] " + "".join(s.text for s in para) for para in following)
     return "\n\n".join(lines), markers
+
+
+def fit_context(before, after, room: int):
+    """Take the nearest paragraphs on each side without displacing the target."""
+    leading, trailing = [], []
+    open_side = [True, True]
+    for prior, later in zip_longest(reversed(before), after):
+        for side, (paragraph, selected) in enumerate(((prior, leading), (later, trailing))):
+            if open_side[side] and paragraph is not None:
+                size = 14 + sum(len(span.text) for span in paragraph)
+                if size <= room:
+                    selected.append(paragraph)
+                    room -= size
+                else:
+                    open_side[side] = False
+        if room <= 0 or not any(open_side):
+            break
+    return leading[::-1], trailing
 
 
 NARRATOR_SYSTEM = """This novel is narrated in the first person. From the passage and the character list, decide
@@ -199,7 +222,7 @@ class SpeakersAttribute(AttributeMethod):
     settings: SpeakersSettings
 
     def fingerprint(self) -> str:
-        return super().fingerprint() + ":" + self.cfg.llm.model
+        return f"{super().fingerprint()}:{self.cfg.llm.model}:{self.cfg.llm.context_tokens}:{self.cfg.llm.min_max_tokens}"
 
     def check(self) -> list[tuple[bool, str]]:
         try:
@@ -215,6 +238,9 @@ class SpeakersAttribute(AttributeMethod):
 
     def run(self, ctx: Context):
         wd = ctx.need_wd()
+        errors_file = wd.root / "attribution_errors.json"
+        if errors_file.exists():
+            errors_file.unlink()
         chars = wd.read_characters()
         if not chars:
             raise RuntimeError("speakers needs characters.json — run the parse stage with the 'characters' method")
@@ -223,8 +249,9 @@ class SpeakersAttribute(AttributeMethod):
             raise RuntimeError(f"character profiling found no characters in {words:,} words of text — check "
                                f"{wd.text_path} (a short or wrong page?), or use attribute=narrator for one voice")
         llm = LLM(self.cfg.llm, cache_dir=wd.root / "llm_cache")
-        # Unnamed speakers from a previous run are rebuilt below (hand-edited ones are kept).
-        chars.characters = [c for c in chars.characters if c.origin != "attribution" or c.locked]
+        # Rebuild unnamed speakers only for the chapters being attributed.
+        chars.characters = [c for c in chars.characters if c.origin != "attribution" or c.locked
+                            or (ctx.chapters is not None and c.first_chapter not in ctx.chapters)]
         chars.narrator = self._find_narrator(llm, wd, chars, ctx)
         wd.write_characters(chars)
 
@@ -235,32 +262,47 @@ class SpeakersAttribute(AttributeMethod):
                 if not wd.spans_path(ch.id).exists():  # keep other chapters' existing labels
                     wd.write_spans(ch.id, split_chapter(ch.id, wd.read_chapter_text(ch.file)))
                 continue
-            spans = split_chapter(ch.id, wd.read_chapter_text(ch.file))
+            text = wd.read_chapter_text(ch.file)
+            spans = split_chapter(ch.id, text)
             book[ch.id] = spans
             paras: list[list[Span]] = []
             for s in spans:
                 if not paras or paras[-1][0].para != s.para:
                     paras.append([])
                 paras[-1].append(s)
-            roster = roster_for(chars, ch.id, self.settings.roster_top, self.settings.full_roster_max,
-                                text=wd.read_chapter_text(ch.file))
+            roster = roster_for(chars, ch.id, self.settings.roster_top, self.settings.full_roster_max, text=text)
             if chars.narrator and chars.narrator != NARRATOR_ID and chars.narrator not in {c.id for c in roster}:
                 roster.insert(0, next(c for c in chars.characters if c.id == chars.narrator))
             for a, b in windows(paras, self.settings.max_quotes, self.settings.max_window_words):
-                jobs.append((ch.id, paras[max(0, a - self.settings.context_paragraphs):a], paras[a:b], roster, chars.narrator))
+                limit = self.settings.context_paragraphs
+                start = 0 if limit is None else max(0, a - limit)
+                end = len(paras) if limit is None else b + limit
+                jobs.append((ch.id, paras[start:a], paras[a:b], roster, chars.narrator, paras[b:end]))
 
         labels: dict[str, tuple] = {}
         failed = 0
+        failed_windows: list[dict] = []
         with ThreadPoolExecutor(max_workers=max(1, self.cfg.llm.concurrency)) as ex:
-            futs = [ex.submit(self._label, llm, *j) for j in jobs]
+            futs = {ex.submit(self._label_with_retry, llm, *j): j for j in jobs}
             for done, f in enumerate(as_completed(futs), 1):
+                j = futs[f]
                 try:
                     labels.update(f.result())
                 except LLMError as e:
                     failed += 1
+                    ch_id = j[0]
+                    failed_windows.append({
+                        "chapter": ch_id,
+                        "quotes": sum(s.kind is SpanKind.dialogue for p in j[2] for s in p),
+                        "error": str(e),
+                    })
                     ctx.log(f"  window failed: {e}")
                 if done % 20 == 0 or done == len(jobs):
                     ctx.log(f"  labelled {done}/{len(jobs)} windows")
+
+        if failed_windows:
+            wd.root.mkdir(parents=True, exist_ok=True)
+            errors_file.write_text(json.dumps(failed_windows, indent=2) + "\n")
 
         minor = self._minor_characters(chars, labels, book)
         counts: dict[str, int] = {}
@@ -289,7 +331,7 @@ class SpeakersAttribute(AttributeMethod):
         if ctx.chapters is None:  # line counts drive casting priority; only meaningful for a full run
             for c in chars.characters:
                 c.line_count = counts.get(c.id, 0)
-            wd.write_characters(chars)
+        wd.write_characters(chars)
         n_minor = len(set(minor.values()))
         ctx.log(f"  {total:,} quotations: {total - unknown:,} attributed, {unknown:,} unknown"
                 + (f"; {n_minor} unnamed speakers added as minor characters" if n_minor else "")
@@ -342,24 +384,41 @@ class SpeakersAttribute(AttributeMethod):
         if rate < self.settings.first_person_rate:
             ctx.log(f"  third-person narration ({rate:.1f} first-person words per 1000)")
             return None
-        # Sample the story itself, not prefaces or notes (Jane Eyre's preface is signed by "Currer Bell"):
-        # ~500 words from chapters a quarter, half and three quarters of the way through.
+        # Sample throughout the story, excluding prefaces and notes.
         chapters = [ch for ch in wd.read_chapters().chapters if not _FRONT.match(ch.title)] or wd.read_chapters().chapters
-        picks = sorted({chapters[int(len(chapters) * f)] .id: chapters[int(len(chapters) * f)] for f in (0.25, 0.5, 0.75)}.values(),
-                       key=lambda c: c.index)
-        excerpt = "\n\n[…]\n\n".join(" ".join(wd.read_chapter_text(c.file).split()[:500]) for c in picks)
-        roster = sorted(chars.characters, key=lambda c: -c.mentions)[:15]
-        ids = [c.id for c in roster] + [UNNAMED]
-        schema = create_model("Narrator", reason=(str, Field(max_length=300)), narrator=(Literal[tuple(ids)], ...))
-        r = llm.chat_json(NARRATOR_SYSTEM, f"CHARACTERS:\n{roster_text(roster)}\n\nPASSAGE:\n{excerpt}", schema,
+        count = min(len(chapters), self.settings.narrator_chapters)
+        picks = [chapters[round(i * (len(chapters) - 1) / max(1, count - 1))] for i in range(count)]
+        roster = sorted(chars.characters, key=lambda c: -c.mentions)
+        while True:
+            ids = [c.id for c in roster] + [UNNAMED]
+            schema = create_model("Narrator", reason=(str, Field(max_length=300)), narrator=(Literal[tuple(ids)], ...))
+            roster_prompt = f"CHARACTERS:\n{roster_text(roster)}\n\nPASSAGE:\n"
+            room = prompt_char_budget(self.cfg.llm, NARRATOR_SYSTEM, schema, 1024, self.settings.context_tokens) - len(roster_prompt)
+            if room >= 256 or not roster:
+                break
+            roster = roster[:len(roster) // 2]
+        if room < 256:
+            raise LLMError("narrator identification has insufficient context for the prompt")
+        excerpts = []
+        passages = [(f"[chapter {c.id}]\n", wd.read_chapter_text(c.file)) for c in picks[:room // 64]]
+        room -= sum(len(header) + 2 for header, _ in passages)
+        for n, (header, text) in enumerate(sorted(passages, key=lambda p: len(p[1]))):
+            share = room // (len(passages) - n)
+            if len(text) > share:
+                edge = (share - 7) // 2
+                text = text[:edge] + "\n[…]\n" + text[-edge:] if edge > 0 else text[:share]
+            excerpts.append((header, text))
+            room -= len(text)
+        excerpt = "\n\n".join(header + text for header, text in sorted(excerpts))
+        r = llm.chat_json(NARRATOR_SYSTEM, roster_prompt + excerpt, schema,
                           think=False, max_tokens=1024)
         who = NARRATOR_ID if r.narrator == UNNAMED else r.narrator
         ctx.log(f"  first-person narration ({rate:.1f}/1000): narrator = {who} — {r.reason}")
         return who
 
     def _label(self, llm: LLM, chapter: str, context, window, roster: list[Character],
-               narrator: str | None = None) -> dict[str, tuple[str, Emotion | None]]:
-        text, markers = render_passage(context, window)
+               narrator: str | None = None, following=()) -> dict[str, tuple[str, Emotion | None]]:
+        text, markers = render_passage([], window)
         ids = [c.id for c in roster] + [NARRATOR_ID]
         schema = label_schema(len(markers), ids)
         note = ""
@@ -367,14 +426,51 @@ class SpeakersAttribute(AttributeMethod):
             who = "an unnamed narrator (id narrator)" if narrator == NARRATOR_ID else f"{narrator}"
             note = (f"NOTE: this book is narrated in the first person by {who}. \"I\"/\"me\" in the narration is that "
                     f"character, so quotations the narrator speaks (\"said I\", \"I answered\") belong to {narrator}.\n\n")
-        prompt = f"{note}CHARACTERS:\n{roster_text(roster, narrator)}\n\nPASSAGE:\n{text}"
+        prefix = f"{note}CHARACTERS:\n{roster_text(roster, narrator)}\n\nPASSAGE:\n"
         s = self.settings
-        r = llm.chat_json(SYSTEM, prompt, schema, think=s.think, max_tokens=s.max_tokens_thinking if s.think else s.max_tokens)
+        output = s.max_tokens_thinking if s.think else s.max_tokens
+        room = prompt_char_budget(self.cfg.llm, SYSTEM, schema, output, s.context_tokens) - len(prefix) - len(text)
+        if room < 0:
+            raise LLMError(f"chapter {chapter} target quotations exceed the prompt budget")
+        before, after = fit_context(context, following, room)
+        passage, _ = render_passage(before, window, after)
+        r = llm.chat_json(SYSTEM, prefix + passage, schema, think=s.think, max_tokens=output)
+        returned = [q.id for q in r.quotes]
+        if len(returned) != len(markers) or set(returned) != markers.keys():
+            raise LLMError(f"chapter {chapter} returned missing, duplicate or unexpected quote IDs")
         out = {}
         for q in r.quotes:
             sid = markers.get(q.id)
             if sid and sid not in out:
                 out[sid] = (q.speaker, self.emotion(q.emotion, q.intensity), q.other_role, q.other_gender)
         return out
+
+    def _label_with_retry(self, llm: LLM, chapter, before, window, roster, narrator=None, following=(),
+                          *, retries: int = 2) -> dict[str, tuple]:
+        for attempt in range(retries + 1):
+            try:
+                return self._label(llm, chapter, before, window, roster, narrator, following)
+            except LLMError as e:
+                detail = str(e)
+                if detail.startswith(("hit max_tokens=", "invalid Labels JSON")) or detail.startswith(f"chapter {chapter} "):
+                    if len(window) > 1:
+                        mid = len(window) // 2
+                        left, right = window[:mid], window[mid:]
+                    elif len(window[0]) > 1:
+                        mid = len(window[0]) // 2
+                        left, right = [window[0][:mid]], [window[0][mid:]]
+                    else:
+                        raise
+                    out = {}
+                    for prefix, target, suffix in ((before, left, [*right, *following]),
+                                                   ([*before, *left], right, following)):
+                        if any(span.kind == SpanKind.dialogue for para in target for span in para):
+                            out.update(self._label_with_retry(llm, chapter, prefix, target, roster, narrator, suffix,
+                                                              retries=retries))
+                    return out
+                if attempt < retries:
+                    time.sleep(1.0 * (attempt + 1))
+                    continue
+                raise
 
 

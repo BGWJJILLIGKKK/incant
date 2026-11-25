@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ebook review · Incant</title>
+<style>
+:root { color-scheme:light; --ink:#202b26; --muted:#52635b; --paper:#f2f3ee; --edge:#d5ded6; --green:#245a46 }
+* { box-sizing:border-box } body { margin:0; background:var(--paper); color:var(--ink); font:1rem/1.55 system-ui,sans-serif }
+a { color:var(--green) } header { background:white; border-bottom:1px solid var(--edge) }
+nav,main { max-width:74rem; margin:auto; padding:1rem 1.5rem }
+nav { display:flex; gap:1rem; align-items:center } nav strong { margin-right:auto; font: bold 1.4rem Georgia,serif }
+h1 { font:clamp(2rem,5vw,3.4rem)/1.1 Georgia,serif; margin:.7rem 0 1.2rem }
+h2 { font-size:1.2rem; margin-top:0 } .grid { display:grid; grid-template-columns:minmax(15rem,1fr) minmax(0,2.4fr); gap:1rem; align-items:start }
+.panel { border:1px solid var(--edge); background:white; border-radius:.65rem; padding:1.25rem }
+label { display:block; margin:0 0 .8rem } input,select,textarea { display:block; width:100%; color:inherit;
+ background:white; font:inherit; border:1px solid #aebdb3; border-radius:.35rem; padding:.55rem .65rem }
+textarea { resize:vertical } .actions { display:flex; flex-wrap:wrap; align-items:center; gap:.55rem; margin:.8rem 0 }
+button { font:inherit; border:1px solid var(--green); color:white; background:var(--green); cursor:pointer; border-radius:.35rem; padding:.4rem .7rem }
+button.secondary { background:white; color:var(--green) } button:disabled { opacity:.5; cursor:default }
+[hidden] { display:none!important } [role=status] { color:var(--muted) } [role=status].error { color:#842c25 }
+:focus-visible { outline:2px solid #368665; outline-offset:2px } @media(max-width:720px) { .grid { grid-template-columns:1fr } }
+</style>
+<script defer src="/ebook.js"></script>
+</head>
+<body>
+<header><nav><strong>Incant</strong><a href="/?view=library&amp;publishing=ebook">Ebook library</a></nav></header>
+<main>
+<h1 id="title">Ebook review</h1>
+<p id="status" role="status">Loading draft…</p>
+<form id="review" hidden>
+<div class="grid">
+<section class="panel">
+<h2>Book details</h2>
+<label>Title<input name="title" required></label>
+<label>Author<input name="author"></label>
+<label>Language tag<input name="language" required></label>
+<label>Description<textarea name="description" rows="4"></textarea></label>
+</section>
+<section class="panel">
+<h2>Chapters</h2>
+<label>Choose chapter<select id="outline"></select></label>
+<div class="actions">
+<button type="button" class="secondary" id="add">Add chapter</button>
+<button type="button" class="secondary" id="earlier">Move earlier</button>
+<button type="button" class="secondary" id="later">Move later</button>
+<button type="button" class="secondary" id="remove">Remove chapter</button>
+</div>
+<label>Chapter title<input id="chapter-title" required></label>
+<label>Chapter text<textarea id="prose" rows="18"></textarea></label>
+<p>Separate paragraphs with blank lines. Use *asterisks* for emphasis and * * * on its own line for a scene break.</p>
+</section>
+</div>
+<div class="actions">
+<button name="action" value="save">Save draft</button>
+<button name="action" value="publish">Save and export EPUB</button>
+<a id="download" hidden>Download EPUB</a>
+</div>
+</form>
+</main>
+</body>
+</html>

@@ -3,146 +3,380 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>incant review</title>
+<title>Incant · Audiobook Review Studio</title>
 <style>
   :root {
-    --bg: #fbfaf7; --panel: #ffffff; --ink: #1f2328; --muted: #6b7078; --line: #e4e1da;
-    --accent: #2f6fde; --warn: #c2410c; --ok: #15803d; --chip-l: 92%; --chip-ink-l: 30%;
-    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    color-scheme: light dark;
+    --bg: #f9f8f5;
+    --panel: #ffffff;
+    --panel-alt: #f4f2ec;
+    --panel-hover: #ece9e1;
+    --ink: #1b201d;
+    --muted: #5e6862;
+    --line: #dedad0;
+    --line-subtle: #eae7de;
+    --accent: #1e5a42;
+    --accent-hover: #164633;
+    --accent-light: #e5f1eb;
+    --accent-border: #9ecab5;
+    --warn: #c2410c;
+    --warn-bg: #fff7ed;
+    --warn-line: #ffedd5;
+    --ok: #15803d;
+    --ok-bg: #f0fdf4;
+    --chip-l: 92%;
+    --chip-ink-l: 25%;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: "Newsreader", "Charter", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 8px 20px -3px rgba(15, 23, 42, 0.12);
+    --radius-sm: 0.375rem;
+    --radius: 0.65rem;
+    --radius-lg: 0.85rem;
   }
+
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #16181c; --panel: #1e2126; --ink: #e6e6e3; --muted: #9aa0a8; --line: #30343b;
-            --accent: #6ea0ff; --warn: #fb923c; --ok: #4ade80; --chip-l: 26%; --chip-ink-l: 82%; }
+    :root {
+      --bg: #0f1411;
+      --panel: #171d19;
+      --panel-alt: #131915;
+      --panel-hover: #1f2722;
+      --ink: #e8eee9;
+      --muted: #95a39a;
+      --line: #2a362f;
+      --line-subtle: #1e2822;
+      --accent: #2e8b65;
+      --accent-hover: #38a579;
+      --accent-light: #162f23;
+      --accent-border: #235c44;
+      --warn: #fb923c;
+      --warn-bg: #2e1d08;
+      --warn-line: #452408;
+      --ok: #4ade80;
+      --ok-bg: #0f2918;
+      --chip-l: 25%;
+      --chip-ink-l: 85%;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 20px -3px rgba(0, 0, 0, 0.6);
+    }
   }
+
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--font); }
-  header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line);
-           padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
-  header h1 { font-size: 15px; margin: 0; font-weight: 650; }
-  header .sub { color: var(--muted); font-size: 12px; }
-  nav { display: flex; gap: 4px; }
-  nav button { border: 1px solid transparent; background: none; color: var(--muted); padding: 5px 10px; border-radius: 6px; cursor: pointer; font: inherit; }
-  nav button[aria-selected="true"] { color: var(--ink); border-color: var(--line); background: var(--bg); }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1.25rem;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .book-meta { display: flex; flex-direction: column; min-width: 0; }
+  header h1 { font-family: var(--serif); font-size: 1.25rem; margin: 0; font-weight: 700; line-height: 1.2; }
+  header .sub { color: var(--muted); font-size: 0.82rem; margin-top: 0.15rem; }
+
+  nav { display: flex; gap: 0.35rem; }
+  nav button {
+    border: 1px solid transparent;
+    background: none;
+    color: var(--muted);
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 550;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  nav button:hover { background: var(--panel-hover); color: var(--ink); }
+  nav button[aria-selected="true"] {
+    color: var(--accent);
+    border-color: var(--accent-border);
+    background: var(--accent-light);
+    font-weight: 650;
+  }
+
   select, input, textarea, button { font: inherit; color: inherit; }
-  select, input[type=text], textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; }
-  button.btn { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
-  button.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  button.btn:disabled { opacity: .5; cursor: default; }
+  select, input[type=text], textarea {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.65rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  select:focus-visible, input[type=text]:focus-visible, textarea:focus-visible, button:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  button.btn {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.85rem;
+    cursor: pointer;
+    font-weight: 550;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  button.btn:hover { border-color: var(--accent); background: var(--panel-hover); }
+  button.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 1px 3px rgba(30, 90, 66, 0.3); }
+  button.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  button.btn:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
   .spacer { flex: 1; }
-  main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 0; min-height: calc(100vh - 52px); }
-  @media (max-width: 900px) { main { grid-template-columns: 1fr; } aside { position: static !important; border-left: 0 !important; border-top: 1px solid var(--line); } }
-  .view { padding: 16px 24px 80px; max-width: 860px; }
-  .view.wide { max-width: none; grid-column: 1 / -1; }
-  aside { border-left: 1px solid var(--line); background: var(--panel); padding: 16px; position: sticky; top: 52px; align-self: start; max-height: calc(100vh - 52px); overflow: auto; }
-  .toolbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 14px; color: var(--muted); font-size: 13px; }
-  .script p { font: 17px/1.75 var(--serif); margin: 0 0 1em; }
-  .script .title { font: 600 20px/1.3 var(--serif); margin-bottom: 18px; }
-  .s { cursor: pointer; border-radius: 3px; }
-  .s:hover { outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); }
-  .s.sel { outline: 2px solid var(--accent); }
-  .q { background: hsl(var(--h) 60% var(--chip-l)); padding: 1px 2px; }
-  .q .who { font: 600 10.5px/1 var(--font); color: hsl(var(--h) 55% var(--chip-ink-l)); vertical-align: super; margin-left: 2px; letter-spacing: .02em; }
-  .q.unknown { background: color-mix(in srgb, var(--warn) 18%, transparent); }
-  .q.unknown .who { color: var(--warn); }
-  .q.locked .who::after { content: " ✎"; }
-  .dim .q:not(.unknown) { background: none; } .dim .q:not(.unknown) .who { opacity: .35; }
-  .respelled { text-decoration: underline dotted color-mix(in srgb, var(--accent) 60%, transparent); text-underline-offset: 4px; }
-  aside h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
-  aside label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
-  aside textarea { width: 100%; min-height: 84px; resize: vertical; font: 14px/1.4 var(--serif); }
+
+  /* Main Workspace */
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; min-height: calc(100vh - 58px); }
+  @media (max-width: 960px) {
+    main { grid-template-columns: 1fr; }
+    aside { position: static !important; border-left: 0 !important; border-top: 1px solid var(--line); max-height: none !important; }
+  }
+
+  .view { padding: 1.25rem 2rem 5rem; max-width: 940px; margin: 0 auto; width: 100%; }
+  .view.wide { max-width: 1200px; grid-column: 1 / -1; }
+
+  /* Aside Inspector */
+  aside {
+    border-left: 1px solid var(--line);
+    background: var(--panel);
+    padding: 1.25rem;
+    position: sticky;
+    top: 58px;
+    align-self: start;
+    max-height: calc(100vh - 58px);
+    overflow-y: auto;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.03);
+  }
+
+  /* Explainer Cards */
+  .guide-callout {
+    background: var(--panel);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.88rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .guide-callout strong { color: var(--accent); display: flex; align-items: center; gap: 0.4rem; font-size: 0.92rem; }
+  .guide-callout p { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    align-items: center;
+    margin-bottom: 1.15rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.95rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Script Reading Pane */
+  .script p { font: 18px/1.85 var(--serif); margin: 0 0 1.2em; color: var(--ink); }
+  .script .title { font: 700 24px/1.3 var(--serif); margin-bottom: 1.25rem; color: var(--ink); border-bottom: 1px solid var(--line-subtle); padding-bottom: 0.75rem; }
+  .s { cursor: pointer; border-radius: 4px; padding: 1px 2px; transition: all 0.12s ease; }
+  .s:hover { outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); background: var(--accent-light); }
+  .s.sel { outline: 2px solid var(--accent); background: var(--accent-light); }
+  .q {
+    background: hsl(var(--h) 65% var(--chip-l));
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .q .who {
+    font: 600 11px/1 var(--font);
+    color: hsl(var(--h) 55% var(--chip-ink-l));
+    vertical-align: super;
+    margin-left: 3px;
+    letter-spacing: 0.02em;
+    background: rgba(255,255,255,0.6);
+    padding: 1px 4px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .q.unknown { background: var(--warn-bg); border-bottom: 1px dashed var(--warn); }
+  .q.unknown .who { color: var(--warn); background: var(--warn-line); font-weight: 700; }
+  .q.locked .who::after { content: " ✎"; color: var(--accent); }
+  .dim .q:not(.unknown) { background: none; }
+  .dim .q:not(.unknown) .who { opacity: 0.35; }
+  .respelled { text-decoration: underline dotted color-mix(in srgb, var(--accent) 70%, transparent); text-underline-offset: 4px; }
+  .s.omitted { text-decoration: line-through; color: var(--muted); opacity: 0.65; }
+
+  /* Aside Inspector */
+  aside h2 { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin: 0 0 0.85rem; display: flex; align-items: center; justify-content: space-between; }
+  aside label { display: block; font-size: 0.83rem; font-weight: 600; color: var(--ink); margin: 0.85rem 0 0.3rem; }
+  aside label .note { font-weight: normal; color: var(--muted); }
+  aside textarea { width: 100%; min-height: 84px; resize: vertical; font: 14px/1.5 var(--serif); }
   aside select, aside input[type=text] { width: 100%; }
-  .orig { font: 14px/1.5 var(--serif); padding: 8px 10px; background: var(--bg); border-radius: 6px; border: 1px dashed var(--line); }
-  .row { display: flex; gap: 8px; align-items: center; }
-  .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
-  .warn { color: var(--warn); } .okc { color: var(--ok); }
-  audio { width: 100%; height: 34px; margin-top: 8px; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  th { font-size: 12px; color: var(--muted); font-weight: 600; position: sticky; top: 52px; background: var(--bg); }
-  td .aka { color: var(--muted); font-size: 12px; }
-  .badge { font-size: 11px; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
-  .badge.manual { color: var(--accent); border-color: var(--accent); }
-  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: hsl(var(--h) 60% 55%); margin-right: 6px; }
-  .play { border: 1px solid var(--line); background: var(--bg); border-radius: 50%; width: 26px; height: 26px; cursor: pointer; line-height: 1; }
-  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; }
-  .toast.show { opacity: .95; }
-  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--bg); border: 1px solid var(--line); padding: 1px 5px; border-radius: 4px; user-select: all; }
-  .empty { color: var(--muted); padding: 24px 0; }
+  .orig { font: 15px/1.6 var(--serif); padding: 0.75rem 0.95rem; background: var(--panel-alt); border-radius: var(--radius-sm); border: 1px dashed var(--line); color: var(--ink); margin-bottom: 0.5rem; }
+  .row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .note { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.4; }
+  .warn { color: var(--warn); font-weight: 600; }
+  .okc { color: var(--ok); font-weight: 600; }
+  audio { width: 100%; height: 36px; margin-top: 0.5rem; }
+
+  /* Table styling */
+  table { border-collapse: collapse; width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+  th, td { text-align: left; padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-size: 0.82rem; color: var(--muted); font-weight: 650; text-transform: uppercase; letter-spacing: 0.03em; background: var(--panel-alt); }
+  td .aka { color: var(--muted); font-size: 0.8rem; }
+  .badge { font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 1rem; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; font-weight: 550; }
+  .badge.manual { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: hsl(var(--h) 65% 55%); margin-right: 0.45rem; vertical-align: middle; }
+  .play { border: 1px solid var(--line); background: var(--panel-alt); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: all 0.15s ease; }
+  .play:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #18221c; color: #f1f7f3; padding: 0.65rem 1.15rem; border-radius: var(--radius); font-size: 0.88rem; font-weight: 500; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; max-width: 90vw; z-index: 100; box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.15); }
+  .toast.show { opacity: 0.98; transform: translateX(-50%) translateY(-4px); }
+  code { font: 0.82rem var(--mono); background: var(--panel-alt); border: 1px solid var(--line); padding: 0.1rem 0.4rem; border-radius: 4px; user-select: all; }
+  .empty { color: var(--muted); padding: 2rem 0; text-align: center; font-size: 0.95rem; }
+  .sidebar-section { background: var(--panel-alt); border: 1px solid var(--line-subtle); border-radius: var(--radius); padding: 0.85rem; margin-top: 0.85rem; }
 </style>
 </head>
 <body>
 <header>
-  <div><h1 id="bookTitle">…</h1><div class="sub" id="bookSub"></div></div>
-  <nav role="tablist">
-    <button role="tab" data-tab="script" aria-selected="true">Script</button>
-    <button role="tab" data-tab="cast">Cast</button>
-    <button role="tab" data-tab="lexicon">Pronunciations</button>
-    <button role="tab" data-tab="qa">QA <span id="qaCount"></span></button>
+  <div class="book-meta">
+    <h1 id="bookTitle">Loading book…</h1>
+    <div class="sub" id="bookSub"></div>
+  </div>
+  <nav role="tablist" aria-label="Review Studio tabs">
+    <button role="tab" data-tab="script" aria-selected="true" title="Dialogue script, line audition, and speaker attribution">
+      📖 Script
+    </button>
+    <button role="tab" data-tab="cast" title="Character voice assignments and auditions">
+      🎭 Cast & Voices
+    </button>
+    <button role="tab" data-tab="lexicon" title="Custom pronunciation and phonetic respellings">
+      🔤 Pronunciations
+    </button>
+    <button role="tab" data-tab="qa" title="Speech-to-text accuracy checks and potential misreads">
+      🔍 Quality Check <span id="qaCount"></span>
+    </button>
   </nav>
   <span class="spacer"></span>
-  <select id="chapterSel" aria-label="Chapter"></select>
+  <a class="btn" id="dashboardLink" href="/" hidden title="Return to Main Pipeline Dashboard">← Dashboard</a>
+  <select id="chapterSel" aria-label="Select Chapter to review"></select>
 </header>
+
 <main>
   <section class="view" id="view"></section>
-  <aside id="side"></aside>
+  <aside id="side" aria-label="Line Inspector and Audio Editor"></aside>
 </main>
-<div class="toast" id="toast"></div>
+
+<div class="toast" id="toast" role="status"></div>
 <audio id="player" hidden></audio>
 
 <script>
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const state = { book: null, chapter: null, tab: "script", sel: null, onlyUnknown: false };
+const reviewPrefix = location.pathname.match(/^\/review\/[^/]+/)?.[0] || "";
+if (reviewPrefix) $("#dashboardLink").hidden = false;
 
 async function api(path, body) {
-  const r = await fetch(path, body === undefined ? {} : {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const r = await fetch(reviewPrefix + path, body === undefined ? {} : {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || r.statusText);
   return data;
 }
-function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 3500); }
-function hue(id) { let h = 0; for (const c of id || "") h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+function hue(id) {
+  let h = 0;
+  for (const c of id || "") h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+}
+
 const chars = () => Object.fromEntries((state.book?.characters || []).map(c => [c.id, c]));
 function nameOf(id) {
   if (!id) return "unknown";
   if (id === "narrator") return "narrator";
   return chars()[id]?.canonical_name || id;
 }
-function voiceLabel(v) { return v ? `${v.id}${v.gender ? ` — ${v.gender}/${v.age || "?"}/${v.tone || "?"}` : " (untagged)"}` : ""; }
-function rerunHint(ch) {
-  return `./incant ${state.book.meta.slug} --from normalize --chapters ${parseInt(ch, 10)}`;
-}
-function play(url) { const p = $("#player"); p.src = url; p.play().catch(() => toast("No audio for this yet")); }
 
-// ------------------------------------------------------------------ boot
+function voiceLabel(v) {
+  return v ? `${v.id}${v.gender ? ` (${v.gender}/${v.age || "?"}/${v.tone || "?"})` : " (untagged)"}` : "";
+}
+
+function rerunHint(ch) {
+  const {meta, normalize, synthesize} = state.book;
+  return `./incant ${meta.slug} normalize=${normalize} synthesize=${synthesize} --from normalize --chapters ${parseInt(ch, 10)}`;
+}
+
+function play(url) {
+  const p = $("#player");
+  p.src = reviewPrefix + url;
+  p.play().catch(() => toast("Audio preview not available for this segment yet"));
+}
+
+// ------------------------------------------------------------------ BOOT
 async function boot() {
   state.book = await api("/api/book");
   const b = state.book;
-  document.title = `Review — ${b.meta.title}`;
+  document.title = `Review Studio — ${b.meta.title}`;
   $("#bookTitle").textContent = b.meta.title;
-  $("#bookSub").textContent = [b.meta.author, `${b.chapters.length} chapters`, `${b.characters.filter(c => c.line_count).length} speaking characters`,
-    b.narrator_character ? `narrated by ${nameOf(b.narrator_character)}` : null].filter(Boolean).join(" · ");
+  $("#bookSub").textContent = [
+    b.meta.author,
+    `${b.chapters.length} chapters`,
+    `${b.characters.filter(c => c.line_count).length} speaking characters`,
+    b.narrator_character ? `narrated by ${nameOf(b.narrator_character)}` : null
+  ].filter(Boolean).join(" · ");
   $("#qaCount").textContent = b.qa.length ? `(${b.qa.length})` : "";
   const sel = $("#chapterSel");
-  sel.innerHTML = b.chapters.map(c => `<option value="${c.id}">${esc(c.title)}${c.rendered ? " ♪" : ""}</option>`).join("");
+  sel.innerHTML = b.chapters.map(c => `<option value="${esc(c.id)}">${esc(c.title)}${c.rendered ? " ♪ (voiced)" : ""}</option>`).join("");
   const firstRendered = b.chapters.find(c => c.rendered) || b.chapters[0];
   sel.value = location.hash.slice(1) || firstRendered.id;
   sel.onchange = () => { location.hash = sel.value; loadChapter(); };
   document.querySelectorAll("nav button").forEach(btn => btn.onclick = () => setTab(btn.dataset.tab));
   await loadChapter();
 }
+
 function setTab(tab) {
   state.tab = tab;
   document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
   $("#chapterSel").style.visibility = tab === "script" ? "visible" : "hidden";
   render();
+  if (tab === "script") refreshChapter($("#chapterSel").value).catch(e => toast(e.message));
 }
+
 async function loadChapter() {
   state.chapter = await api(`/api/chapter/${$("#chapterSel").value}`);
   state.sel = null;
   render();
 }
+
 function render() {
   const v = $("#view");
   v.classList.toggle("wide", state.tab !== "script");
@@ -150,94 +384,227 @@ function render() {
   ({script: renderScript, cast: renderCast, lexicon: renderLexicon, qa: renderQA})[state.tab]();
 }
 
-// ------------------------------------------------------------------ script
-function spanById(id) { for (const p of state.chapter.paragraphs) for (const s of p) if (s.id === id) return s; }
+// ------------------------------------------------------------------ SCRIPT TAB
+function spanById(id) {
+  for (const p of state.chapter.paragraphs) {
+    for (const s of p) {
+      if (s.id === id) return s;
+    }
+  }
+}
+
 function renderScript() {
   const c = state.chapter, ch = c.chapter;
-  const unknown = c.paragraphs.flat().filter(s => s.kind === "dialogue" && !s.speaker).length;
-  const quotes = c.paragraphs.flat().filter(s => s.kind === "dialogue").length;
+  const dialogue = c.paragraphs.flat().filter(s => s.kind === "dialogue" && !s.omitted);
+  const unknown = dialogue.filter(s => !s.speaker).length;
+  const quotes = dialogue.length;
+
   $("#view").innerHTML = `
-    <div class="toolbar">
-      <span>${quotes} quotations · <span class="${unknown ? "warn" : "okc"}">${unknown} unknown speaker${unknown === 1 ? "" : "s"}</span></span>
-      <label class="row"><input type="checkbox" id="onlyUnknown" ${state.onlyUnknown ? "checked" : ""}> highlight unknown only</label>
-      <button class="btn" id="nextUnknown" ${unknown ? "" : "disabled"}>Next unknown ↓</button>
-      <span class="spacer"></span>
-      ${c.audio ? `<button class="btn" id="playChapter">▶ Chapter audio</button>` : `<span>not rendered yet</span>`}
+    <!-- Novice Guide -->
+    <div class="guide-callout">
+      <strong>💡 Studio Script Guide</strong>
+      <p>
+        Every quotation is highlighted by character speaker. Click any line to audition its voice, reassign who speaks, tweak emotional delivery, or edit pronunciations. Hand edits are permanently saved and will never be overwritten.
+      </p>
     </div>
+
+    <div class="toolbar">
+      <span><strong>${quotes}</strong> quotations · <span class="${unknown ? "warn" : "okc"}">${unknown} unknown speaker${unknown === 1 ? "" : "s"}</span></span>
+      <label class="row" style="font-size:0.85rem; cursor:pointer">
+        <input type="checkbox" id="onlyUnknown" ${state.onlyUnknown ? "checked" : ""}>
+        Highlight unknown quotes only
+      </label>
+      <button class="btn" id="nextUnknown" ${unknown ? "" : "disabled"} title="Jump to the next unassigned quote">
+        Next unknown ↓
+      </button>
+      <span class="spacer"></span>
+      ${c.audio ? `<button class="btn" id="playChapter" title="Play the full rendered chapter audio">▶ Play Chapter Audio</button>` : `<span class="note">Chapter not synthesized yet</span>`}
+      <button class="btn primary" id="renderChapterBtn" ${c.paragraphs.length ? "" : "disabled"} title="Re-synthesizes the chapter incorporating your saved edits">
+        ⚡ Re-render Chapter
+      </button>
+    </div>
+
     <div class="script ${state.onlyUnknown ? "dim" : ""}">
       <div class="title">${esc(ch.title)}${c.title_say && c.title_say !== ch.title ? ` <span class="note">(read as “${esc(c.title_say)}”)</span>` : ""}</div>
-      ${c.paragraphs.length ? c.paragraphs.map(p => `<p>${p.map(spanHtml).join("")}</p>`).join("") : `<div class="empty">No spans yet — run the attribute stage.</div>`}
+      ${c.paragraphs.length ? c.paragraphs.map(p => `<p>${p.map(spanHtml).join("")}</p>`).join("") : `<div class="empty">No text spans found for this chapter.</div>`}
     </div>`;
+
   $("#onlyUnknown").onchange = e => { state.onlyUnknown = e.target.checked; renderScript(); };
   $("#nextUnknown").onclick = () => {
-    const all = c.paragraphs.flat().filter(s => s.kind === "dialogue" && !s.speaker);
+    const all = dialogue.filter(s => !s.speaker);
     const i = all.findIndex(s => s.id === state.sel);
     const next = all[(i + 1) % all.length];
-    select(next.id, true);
+    if (next) select(next.id, true);
   };
   if (c.audio) $("#playChapter").onclick = () => play(`/audio/chapter/${ch.id}.wav`);
+  $("#renderChapterBtn").onclick = async () => {
+    const btn = $("#renderChapterBtn");
+    btn.disabled = true;
+    btn.textContent = "⏳ Synthesizing chapter…";
+    try {
+      const res = await api("/api/render", {chapter_id: ch.id});
+      await refreshChapter(ch.id);
+      toast("Chapter audio re-rendered successfully! ✓");
+      play(res.audio_url || `/audio/chapter/${ch.id}.wav`);
+    } catch (e) {
+      toast("Render failed: " + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "⚡ Re-render Chapter";
+    }
+  };
   $("#view").querySelectorAll(".s").forEach(el => el.onclick = () => select(el.dataset.id));
   renderEditor();
 }
+
 function spanHtml(s) {
   const plain = s.text.replace(/\*/g, "");
   const respelled = s.say && s.say_overridden ? " respelled" : "";
   const sel = s.id === state.sel ? " sel" : "";
-  if (s.kind !== "dialogue") return `<span class="s${sel}${respelled}" data-id="${s.id}">${esc(plain)}</span>`;
+  if (s.omitted) return `<span class="s omitted${sel}" data-id="${esc(s.id)}" title="Removed from audiobook (click to restore)">${esc(plain)}</span>`;
+  if (s.kind !== "dialogue") return `<span class="s${sel}${respelled}" data-id="${esc(s.id)}">${esc(plain)}</span>`;
   const cls = `s q${s.speaker ? "" : " unknown"}${s.locked ? " locked" : ""}${sel}${respelled}`;
-  return `<span class="${cls}" style="--h:${hue(s.speaker)}" data-id="${s.id}">${esc(plain)}<span class="who">${esc(nameOf(s.speaker))}</span></span>`;
+  return `<span class="${cls}" style="--h:${hue(s.speaker)}" data-id="${esc(s.id)}">${esc(plain)}<span class="who" title="Speaker: ${esc(nameOf(s.speaker))}">${esc(nameOf(s.speaker))}</span></span>`;
 }
+
 function select(id, scroll) {
   state.sel = id;
   document.querySelectorAll(".s.sel").forEach(e => e.classList.remove("sel"));
-  const el = document.querySelector(`.s[data-id="${id}"]`);
-  if (el) { el.classList.add("sel"); if (scroll) el.scrollIntoView({block: "center", behavior: "smooth"}); }
+  const el = document.querySelector(`.s[data-id="${CSS.escape(id)}"]`);
+  if (el) {
+    el.classList.add("sel");
+    if (scroll) el.scrollIntoView({block: "center", behavior: "smooth"});
+  }
   renderEditor();
 }
+
+// ------------------------------------------------------------------ SIDEBAR EDITOR
 function renderEditor() {
   const side = $("#side");
   const s = state.sel && spanById(state.sel);
   if (!s) {
-    side.innerHTML = `<h2>Edit</h2><p class="note">Click any line of the script to change who says it, how it’s delivered, or exactly what the TTS reads. Underlined text has a hand-edited reading.</p>
-      <p class="note">Edits are saved to the book’s files and survive re-runs. Hear them by re-rendering the chapter:</p>
-      <p><code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+    side.innerHTML = `
+      <h2>Line Inspector</h2>
+      <div class="sidebar-section">
+        <strong>👈 Select any line</strong>
+        <p class="note" style="margin-top:0.4rem">
+          Click any sentence or quotation in the script to:
+        </p>
+        <ul style="margin:0.4rem 0 0; padding-left:1.2rem; font-size:0.84rem; color:var(--muted)">
+          <li>Assign or reassign the speaking character</li>
+          <li>Audition line audio immediately (⚡ Audition span)</li>
+          <li>Adjust emotion & delivery tone</li>
+          <li>Fix pronunciation or exclude line from audio</li>
+        </ul>
+      </div>`;
     return;
   }
+
+  if (s.omitted) {
+    side.innerHTML = `
+      <h2>Removed Line <span class="note">${esc(s.id)}</span></h2>
+      <div class="orig">${esc(s.text.replace(/\*/g, ""))}</div>
+      <p class="note">This line will be skipped when generating the audiobook.</p>
+      <button class="btn primary" id="restoreLine" style="margin-top:0.5rem">↩ Restore Line</button>`;
+    $("#restoreLine").onclick = () => saveSpan(s, {omit: false});
+    return;
+  }
+
   const isQ = s.kind === "dialogue";
   const cs = [...state.book.characters].filter(c => c.line_count || c.id === s.speaker).sort((a, b) => b.line_count - a.line_count);
   const others = state.book.characters.filter(c => !c.line_count && c.id !== s.speaker).sort((a, b) => a.canonical_name.localeCompare(b.canonical_name));
-  const opt = c => `<option value="${c.id}" ${c.id === s.speaker ? "selected" : ""}>${esc(c.canonical_name)}${c.line_count ? ` (${c.line_count})` : ""}</option>`;
+  const opt = c => `<option value="${esc(c.id)}" ${c.id === s.speaker ? "selected" : ""}>${esc(c.canonical_name)}${c.line_count ? ` (${c.line_count} lines)` : ""}</option>`;
   const seg = s.segment;
   const emo = s.emotion || {};
+
   side.innerHTML = `
-    <h2>${isQ ? "Quotation" : "Narration"} <span class="note">${s.id}</span></h2>
-    <div class="orig">${esc(s.text.replace(/\*/g, ""))}</div>
+    <h2>${isQ ? "🎭 Dialogue Line" : "📖 Narration Line"} <span class="note">${esc(s.id)}</span></h2>
+    <div class="orig" title="Original book text">${esc(s.text.replace(/\*/g, ""))}</div>
+
     ${isQ ? `
-      <label for="spk">Speaker</label>
+      <label for="spk">
+        Speaking Character
+        <div class="note">Select who says this quotation. If left unknown, the narrator voices it.</div>
+      </label>
       <select id="spk">
-        <option value="" ${!s.speaker ? "selected" : ""}>— unknown (narrator’s voice) —</option>
-        <option value="narrator" ${s.speaker === "narrator" ? "selected" : ""}>narrator</option>
-        <optgroup label="Speaking characters">${cs.map(opt).join("")}</optgroup>
-        <optgroup label="Other characters">${others.map(opt).join("")}</optgroup>
+        <option value="" ${!s.speaker ? "selected" : ""}>— Unknown (narrator fallback) —</option>
+        <option value="narrator" ${s.speaker === "narrator" ? "selected" : ""}>Narrator</option>
+        <optgroup label="Speaking Characters (${cs.length})">${cs.map(opt).join("")}</optgroup>
+        <optgroup label="Other Characters (${others.length})">${others.map(opt).join("")}</optgroup>
       </select>
-      <label for="emo">Delivery <span class="note">(empty = neutral)</span></label>
-      <input type="text" id="emo" value="${esc(emo.text || "")}" placeholder="e.g. teasing, amused">
-      <label for="alpha">Strength <span id="alphaV">${(emo.alpha ?? 0.5).toFixed(2)}</span></label>
+
+      <label for="emo">
+        Emotional Tone & Delivery
+        <div class="note">e.g., <i>whispering, terrified, playful, angry</i> (for expressive engines).</div>
+      </label>
+      <input type="text" id="emo" value="${esc(emo.text || "")}" placeholder="Neutral (default)">
+
+      <label for="alpha">
+        Emotion Intensity: <span id="alphaV" style="color:var(--accent); font-weight:700">${(emo.alpha ?? 0.5).toFixed(2)}</span>
+        <div class="note">0.1 = subtle nuance · 0.5 = natural speech · 0.9 = high drama</div>
+      </label>
       <input type="range" id="alpha" min="0.1" max="0.9" step="0.05" value="${emo.alpha ?? 0.5}" style="width:100%">
     ` : ""}
-    <label for="say">Spoken as ${s.say_overridden ? `<span class="badge manual">hand-edited</span>` : ""}</label>
-    <textarea id="say">${esc(s.say ?? "")}</textarea>
-    <div class="row" style="margin-top:6px">${s.say_overridden ? `<button class="btn" id="resetSay">Use automatic reading</button>` : ""}</div>
-    <div class="row" style="margin-top:14px"><button class="btn primary" id="save">Save</button><span class="note" id="saveNote"></span></div>
-    <label>Audio</label>
-    ${seg && seg.rendered ? `<button class="btn" id="playSeg">▶ Play segment</button>
-       <div class="note">voice ${esc(seg.voice || "?")}${seg.text !== (s.say ?? "") ? " · segment includes neighbouring text" : ""}</div>`
-      : `<div class="note">${seg && seg.message ? esc(seg.message) : "Not rendered with current settings."}</div>`}
-    <p class="note">Re-render to hear changes: <code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+
+    <label for="say">
+      Spoken Text (Phonetic / Respelling) ${s.say_overridden ? `<span class="badge manual">hand-edited</span>` : ""}
+      <div class="note">What the TTS engine actually reads. Useful for pronunciation fixes.</div>
+    </label>
+    <textarea id="say" placeholder="Leave blank to use book text">${esc(s.say ?? "")}</textarea>
+    <div class="row" style="margin-top:0.35rem">
+      ${s.say_overridden ? `<button class="btn" id="resetSay" style="font-size:0.8rem">↩ Reset to automatic text</button>` : ""}
+    </div>
+
+    <!-- AUDIO CONTROLS -->
+    <div class="sidebar-section">
+      <label style="margin-top:0">Audition & Audio Playback</label>
+      <div class="row" style="gap:0.4rem; margin-top:0.4rem">
+        <button class="btn primary" id="auditionSpanBtn" title="Synthesizes this single line immediately so you can listen">
+          ⚡ Audition Line
+        </button>
+        ${seg && seg.rendered ? `<button class="btn" id="playSeg" title="Play previously generated segment audio">▶ Play Segment</button>` : ""}
+      </div>
+      <div class="note" style="margin-top:0.5rem">
+        ${seg && seg.rendered
+          ? `Voice: <b>${esc(seg.voice || "?")}</b>${seg.text !== (s.say ?? "") ? " (includes adjacent sentence for pacing)" : ""}`
+          : (seg && seg.message ? esc(seg.message) : "Line not rendered yet. Click '⚡ Audition Line' to test.")}
+      </div>
+    </div>
+
+    <!-- SAVE & REMOVE -->
+    <div class="row" style="margin-top:1rem">
+      <button class="btn primary" id="save" style="flex:1">💾 Save Changes</button>
+      <button class="btn" id="removeLine" title="Skip this line during audio generation (e.g. footnotes)">🗑️ Skip Line</button>
+    </div>
+
+    <div class="note" style="margin-top:1.1rem; padding-top:0.75rem; border-top:1px solid var(--line-subtle)">
+      💡 <b>Terminal command:</b> To update the exported audiobook via CLI:
+      <div style="margin-top:0.3rem"><code>${esc(rerunHint(state.chapter.chapter.id))}</code></div>
+    </div>`;
+
   if (isQ) $("#alpha").oninput = e => $("#alphaV").textContent = (+e.target.value).toFixed(2);
   if (seg && seg.rendered) $("#playSeg").onclick = () => play(`/audio/segment/${seg.key}.wav`);
+  $("#auditionSpanBtn").onclick = async () => {
+    const btn = $("#auditionSpanBtn");
+    btn.disabled = true;
+    btn.textContent = "⏳ Generating audio…";
+    try {
+      const res = await api("/api/render", {span_id: s.id});
+      s.segment = {key: res.key, rendered: true, voice: res.voice, text: res.text};
+      toast("Line audition ready! Playing now… ✓");
+      play(res.audio_url || `/audio/segment/${res.key}.wav`);
+      renderEditor();
+    } catch (e) {
+      toast("Audition failed: " + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "⚡ Audition Line";
+    }
+  };
+
   const reset = $("#resetSay");
   if (reset) reset.onclick = () => saveSpan(s, {say: null});
+  $("#removeLine").onclick = () => saveSpan(s, {omit: true});
   $("#save").onclick = () => {
     const body = {};
     const sayNow = $("#say").value.trim();
@@ -250,102 +617,272 @@ function renderEditor() {
     saveSpan(s, body);
   };
 }
+
 async function saveSpan(s, body) {
   try {
-    const saved = await api("/api/span", {id: s.id, ...body});
-    Object.assign(s, {speaker: saved.speaker ?? null, emotion: saved.emotion ?? null, locked: true});
-    if ("say" in body) { s.say_overridden = body.say !== null; if (body.say !== null) s.say = body.say; }
-    toast(body.say === null ? "Automatic reading restored (applies on the next normalize run)" : "Saved");
-    const el = document.querySelector(`.s[data-id="${s.id}"]`);
-    if (el) { el.outerHTML = spanHtml(s); document.querySelector(`.s[data-id="${s.id}"]`).onclick = () => select(s.id); }
-    renderEditor();
-  } catch (e) { toast("Save failed: " + e.message); }
+    await api("/api/span", {id: s.id, ...body});
+    await refreshChapter(s.chapter_id);
+    if ("omit" in body) toast(body.omit ? "Line removed from audio. Re-render to update." : "Line restored.");
+    else toast(body.say === null ? "Automatic reading restored ✓" : "Changes saved successfully ✓");
+  } catch (e) {
+    toast("Save failed: " + e.message);
+  }
 }
 
-// ------------------------------------------------------------------ cast
+async function refreshChapter(id) {
+  const chapter = await api(`/api/chapter/${id}`);
+  if ($("#chapterSel").value === id) {
+    state.chapter = chapter;
+    if (state.tab === "script") renderScript();
+  }
+}
+
+// ------------------------------------------------------------------ CAST TAB
 function renderCast() {
   const b = state.book;
   const roles = b.cast.roles, auto = b.cast.auto || {};
   const voices = Object.fromEntries(b.voices.map(v => [v.id, v]));
   const tagged = b.voices.filter(v => v.gender), untagged = b.voices.filter(v => !v.gender);
-  const vopts = cur => `<option value="">(automatic)</option>
-    <optgroup label="Tagged">${tagged.map(v => `<option value="${v.id}" ${v.id === cur ? "selected" : ""}>${esc(voiceLabel(v))}</option>`).join("")}</optgroup>
-    <optgroup label="Untagged">${untagged.map(v => `<option value="${v.id}" ${v.id === cur ? "selected" : ""}>${esc(v.id)}</option>`).join("")}</optgroup>`;
+  const vopts = cur => `<option value="">(automatic best match)</option>
+    <optgroup label="Tagged Voices (${tagged.length})">${tagged.map(v => `<option value="${esc(v.id)}" ${v.id === cur ? "selected" : ""}>${esc(voiceLabel(v))}</option>`).join("")}</optgroup>
+    <optgroup label="Untagged Voices (${untagged.length})">${untagged.map(v => `<option value="${esc(v.id)}" ${v.id === cur ? "selected" : ""}>${esc(v.id)}</option>`).join("")}</optgroup>`;
   const speaking = b.characters.filter(c => c.line_count).sort((a, x) => x.line_count - a.line_count);
+  const names = [...b.characters].sort((a, x) => a.canonical_name.localeCompare(x.canonical_name));
+  const speakerOptions = names.map(c => `<option value="${esc(c.id)}">${esc(c.canonical_name)}</option>`).join("");
   const shared = {};
   for (const [c, v] of Object.entries(roles)) if (c !== "narrator") (shared[v] ||= []).push(c);
+
   const rows = [{id: "narrator", canonical_name: "Narrator", aliases: [], line_count: null, gender: null, age: null}, ...speaking].map(c => {
     const v = roles[c.id];
-    const kind = c.id === "narrator" ? "" : !v ? `<span class="badge">uncast</span>` : auto[c.id] === v ? `<span class="badge">auto</span>` : `<span class="badge manual">manual</span>`;
+    const kind = c.id === "narrator" ? "" : !v ? `<span class="badge">uncast</span>` : auto[c.id] === v ? `<span class="badge">auto</span>` : `<span class="badge manual">pinned</span>`;
     const others = (shared[v] || []).filter(x => x !== c.id).map(nameOf);
-    const sel = (field, list) => c.id === "narrator" ? "" : `<select data-char="${c.id}" data-field="${field}">${list.map(x => `<option ${x === c[field] ? "selected" : ""}>${x}</option>`).join("")}</select>`;
+    const sel = (field, list) => c.id === "narrator" ? "" : `<select data-char="${esc(c.id)}" data-field="${field}">${list.map(x => `<option ${x === c[field] ? "selected" : ""}>${x}</option>`).join("")}</select>`;
     return `<tr>
-      <td><span class="swatch" style="--h:${hue(c.id)}"></span><b>${esc(c.canonical_name)}</b>${c.locked ? ` <span class="badge manual">edited</span>` : ""}${c.origin === "attribution" ? ` <span class="badge" title="An unnamed speaker identified during attribution, in chapter ${esc((c.chapters || [])[0] || "")}">unnamed · ch ${parseInt((c.chapters || ["0"])[0], 10)}</span>` : ""}
-          ${c.aliases?.length ? `<div class="aka">${esc(c.aliases.slice(0, 4).join(", "))}</div>` : ""}</td>
-      <td>${sel("gender", b.genders)}</td><td>${sel("age", b.ages)}</td>
-      <td>${c.line_count ?? ""}</td>
-      <td><select data-cast="${c.id}">${vopts(v)}</select>
-          ${others.length ? `<div class="aka">shared with ${esc(others.slice(0, 3).join(", "))}</div>` : ""}</td>
-      <td>${v && voices[v]?.has_sample ? `<button class="play" data-voice="${v}" title="Play a sample">▶</button>` : ""}</td>
-      <td>${kind}</td></tr>`;
+      <td>
+        <span class="swatch" style="--h:${hue(c.id)}"></span>
+        <b>${esc(c.canonical_name)}</b>
+        ${c.locked ? ` <span class="badge manual" title="Hand-edited character details">locked</span>` : ""}
+        ${c.origin === "attribution" ? ` <span class="badge" title="Identified during attribution in chapter ${esc((c.chapters || [])[0] || "")}">ch ${parseInt((c.chapters || ["0"])[0], 10)}</span>` : ""}
+        ${c.aliases?.length ? `<div class="aka">Also known as: ${esc(c.aliases.slice(0, 4).join(", "))}</div>` : ""}
+      </td>
+      <td>${sel("gender", b.genders)}</td>
+      <td>${sel("age", b.ages)}</td>
+      <td><b>${c.line_count ?? "—"}</b></td>
+      <td>
+        <select data-cast="${esc(c.id)}">${vopts(v)}</select>
+        ${others.length ? `<div class="aka">Shared voice with: ${esc(others.slice(0, 3).join(", "))}</div>` : ""}
+      </td>
+      <td>${v && voices[v]?.has_sample ? `<button class="play" data-voice="${esc(v)}" title="Audition voice sample">▶</button>` : ""}</td>
+      <td>${kind}</td>
+    </tr>`;
   }).join("");
+
   $("#view").innerHTML = `
-    <div class="toolbar"><span>Voices for speaking characters. “(automatic)” lets casting choose from voice tags on each run; picking a voice pins it. Changes apply to chapters rendered after this.</span></div>
-    <table><thead><tr><th>Character</th><th>Gender</th><th>Age</th><th>Lines</th><th>Voice</th><th></th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    <!-- Novice Guide -->
+    <div class="guide-callout">
+      <strong>🎭 Casting & Character Voice Guide</strong>
+      <p>
+        Incant automatically matches character age, gender, and tone to suitable voices in your library. Selecting a specific voice pins it so it won't change on future pipeline re-runs. Click ▶ to audition any voice sample.
+      </p>
+    </div>
+
+    <!-- Reassign Form -->
+    ${names.length ? `
+    <div class="toolbar" style="display:grid; gap:0.65rem">
+      <strong>🔄 Merge / Reassign Character Lines</strong>
+      <div class="note" style="margin-top:-0.2rem">
+        If the AI detected the same character under two names (e.g. 'Elizabeth' and 'Miss Bennet'), move all lines to one character here:
+      </div>
+      <form id="reassignForm" class="row" aria-label="Reassign speaker lines">
+        <label class="row">From: <select name="source" required><option value="">Select speaker</option>${speakerOptions}</select></label>
+        <label class="row">To: <select name="target" required><option value="">Select speaker</option>${speakerOptions}<option value="narrator">Narrator</option></select></label>
+        <label class="row">Scope: <select name="scope"><option value="book">Entire book</option><option value="chapter">Current chapter only</option></select></label>
+        <button type="submit" class="btn primary">Move Lines</button>
+      </form>
+    </div>` : ""}
+
+    <table>
+      <thead>
+        <tr>
+          <th>Character</th>
+          <th>Gender</th>
+          <th>Age</th>
+          <th>Lines</th>
+          <th>Assigned Voice</th>
+          <th>Sample</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+  const form = $("#reassignForm");
+  if (form) form.onsubmit = async event => {
+    event.preventDefault();
+    const {source, target, scope} = Object.fromEntries(new FormData(form));
+    const chapter = state.chapter.chapter.id;
+    const button = form.querySelector("button");
+    button.disabled = true;
+    try {
+      const result = await api("/api/reassign", {source, target, chapter_id: scope === "chapter" ? chapter : null});
+      if (!result.moved) {
+        toast("No matching lines found for this character.");
+        return;
+      }
+      state.book = await api("/api/book");
+      await refreshChapter(chapter);
+      if (state.tab === "cast") renderCast();
+      toast(`Reassigned ${result.moved} lines across ${result.chapters.length} chapter(s). Re-render to update audio. ✓`);
+    } catch (e) {
+      toast("Reassignment failed: " + e.message);
+    } finally {
+      button.disabled = false;
+    }
+  };
+
   $("#view").querySelectorAll("select[data-cast]").forEach(el => el.onchange = async () => {
-    try { b.cast = await api("/api/cast", {character: el.dataset.cast, voice: el.value || null}); toast("Voice saved"); renderCast(); }
-    catch (e) { toast("Save failed: " + e.message); }
+    try {
+      b.cast = await api("/api/cast", {character: el.dataset.cast, voice: el.value || null});
+      toast("Voice choice saved ✓");
+      renderCast();
+    } catch (e) {
+      toast("Save failed: " + e.message);
+    }
   });
+
   $("#view").querySelectorAll("select[data-char]").forEach(el => el.onchange = async () => {
     try {
       const c = await api("/api/character", {id: el.dataset.char, [el.dataset.field]: el.value});
-      Object.assign(b.characters.find(x => x.id === c.id), c); toast("Character saved — recasting uses it on the next run"); renderCast();
-    } catch (e) { toast("Save failed: " + e.message); }
+      Object.assign(b.characters.find(x => x.id === c.id), c);
+      toast("Character profile updated ✓");
+      renderCast();
+    } catch (e) {
+      toast("Save failed: " + e.message);
+    }
   });
+
   $("#view").querySelectorAll("button[data-voice]").forEach(el => el.onclick = () => play(`/audio/voice/${el.dataset.voice}.wav`));
 }
 
-// ------------------------------------------------------------------ lexicon
+// ------------------------------------------------------------------ LEXICON TAB
 async function renderLexicon() {
   const words = await api("/api/lexicon");
   const rows = Object.entries(words).concat([["", ""]]);
+
   $("#view").innerHTML = `
-    <div class="toolbar"><span>How the TTS should say particular words in this book (whole words, any case). Write the word as it should sound, e.g. <i>Hermione → Her-my-oh-nee</i>.</span></div>
-    <table id="lex"><thead><tr><th>Word</th><th>Say it as</th><th></th></tr></thead><tbody>
-      ${rows.map(([k, v]) => `<tr><td><input type="text" value="${esc(k)}" placeholder="word"></td><td><input type="text" value="${esc(v)}" placeholder="respelling"></td><td><button class="btn" data-del>✕</button></td></tr>`).join("")}
-    </tbody></table>
-    <div class="row" style="margin-top:12px"><button class="btn" id="addRow">Add word</button><button class="btn primary" id="saveLex">Save</button></div>
-    <p class="note">Takes effect on the next normalize run, e.g. <code>${esc(rerunHint(state.chapter.chapter.id))}</code></p>`;
+    <!-- Novice Guide -->
+    <div class="guide-callout">
+      <strong>🔤 Custom Pronunciation Dictionary</strong>
+      <p>
+        Teach the speech engine how to say unusual names, fantasy words, or heteronyms. Write words phonetically as they should sound.
+        Examples: <i>Hermione → Her-my-oh-nee</i>, <i>Cthulhu → Kuh-thoo-loo</i>, <i>read (past) → red</i>. Replacements apply to whole words across all chapters.
+      </p>
+    </div>
+
+    <table id="lex">
+      <thead>
+        <tr>
+          <th style="width:45%">Book Word</th>
+          <th style="width:45%">Phonetic Respelling (Say it as)</th>
+          <th style="width:10%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(([k, v]) => `<tr>
+          <td><input type="text" value="${esc(k)}" placeholder="e.g. Hermione"></td>
+          <td><input type="text" value="${esc(v)}" placeholder="e.g. Her-my-oh-nee"></td>
+          <td><button class="btn" data-del title="Remove word">✕</button></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+
+    <div class="row" style="margin-top:1rem">
+      <button class="btn" id="addRow">➕ Add New Word</button>
+      <button class="btn primary" id="saveLex">💾 Save Pronunciations</button>
+    </div>
+    <p class="note">Saved pronunciations immediately apply to line auditions and chapter re-renders.</p>`;
+
   const tbody = $("#lex tbody");
   const wire = () => tbody.querySelectorAll("[data-del]").forEach(b => b.onclick = () => b.closest("tr").remove());
   wire();
-  $("#addRow").onclick = () => { tbody.insertAdjacentHTML("beforeend", `<tr><td><input type="text" placeholder="word"></td><td><input type="text" placeholder="respelling"></td><td><button class="btn" data-del>✕</button></td></tr>`); wire(); };
+  $("#addRow").onclick = () => {
+    tbody.insertAdjacentHTML("beforeend", `<tr>
+      <td><input type="text" placeholder="Word"></td>
+      <td><input type="text" placeholder="Phonetic respelling"></td>
+      <td><button class="btn" data-del title="Remove word">✕</button></td>
+    </tr>`);
+    wire();
+  };
   $("#saveLex").onclick = async () => {
     const out = {};
-    tbody.querySelectorAll("tr").forEach(tr => { const [k, v] = [...tr.querySelectorAll("input")].map(i => i.value.trim()); if (k && v) out[k] = v; });
-    try { await api("/api/lexicon", out); toast(`Saved ${Object.keys(out).length} pronunciations`); } catch (e) { toast("Save failed: " + e.message); }
+    tbody.querySelectorAll("tr").forEach(tr => {
+      const [k, v] = [...tr.querySelectorAll("input")].map(i => i.value.trim());
+      if (k && v) out[k] = v;
+    });
+    try {
+      await api("/api/lexicon", out);
+      toast(`Saved ${Object.keys(out).length} pronunciation rules ✓`);
+    } catch (e) {
+      toast("Save failed: " + e.message);
+    }
   };
 }
 
-// ------------------------------------------------------------------ QA
+// ------------------------------------------------------------------ QA TAB
 function renderQA() {
   const qa = state.book.qa;
-  $("#view").innerHTML = qa.length ? `
-    <div class="toolbar"><span>Segments whose best take still didn’t match their text when transcribed. Listen, then fix the text on the Script tab or add a pronunciation.</span></div>
-    <table><thead><tr><th></th><th>Text</th><th>Heard</th><th>Voice</th><th>WER</th></tr></thead><tbody>
-      ${qa.map(r => `<tr><td><button class="play" data-key="${esc(r.key || "")}" data-span="${esc((r.span_ids || [])[0] || "")}">▶</button></td>
-        <td>${esc(r.text)}</td><td class="warn">${esc(r.heard)}</td><td>${esc(r.voice || "")}</td><td>${(r.wer * 100).toFixed(0)}%</td></tr>`).join("")}
-    </tbody></table>` : `<div class="empty">No QA failures in the latest render. ✓</div>`;
+  $("#view").innerHTML = `
+    <!-- Novice Guide -->
+    <div class="guide-callout">
+      <strong>🔍 Automated Quality Assurance (Whisper Verification)</strong>
+      <p>
+        During audiobook generation, Incant runs an AI listener (Whisper) over the synthesized audio to compare what was spoken against the book text. Lines with a high Word Error Rate (WER) may contain dropped words, hallucinations, or garbled syllables. Click ▶ to listen, then fix the text on the Script tab or add a pronunciation rule.
+      </p>
+    </div>
+
+    ${qa.length ? `
+    <table>
+      <thead>
+        <tr>
+          <th>Listen</th>
+          <th>Original Text</th>
+          <th>What Whisper Heard</th>
+          <th>Voice</th>
+          <th>Word Error Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${qa.map(r => {
+          const werPct = Math.round(r.wer * 100);
+          const werClass = werPct > 35 ? "warn" : "";
+          return `<tr>
+            <td><button class="play" data-key="${esc(r.key || "")}" data-span="${esc((r.span_ids || [])[0] || "")}" title="Play audio take">▶</button></td>
+            <td>${esc(r.text)}</td>
+            <td class="warn">${esc(r.heard)}</td>
+            <td>${esc(r.voice || "")}</td>
+            <td class="${werClass}"><b>${werPct}%</b></td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>` : `<div class="empty">✓ No audio quality failures detected in this render! All spoken lines verified against the script.</div>`}`;
+
   $("#view").querySelectorAll("button[data-span]").forEach(b => b.onclick = async () => {
     if (b.dataset.key) return play(`/audio/segment/${b.dataset.key}.wav`);
     const sid = b.dataset.span, ch = sid.split("-")[0];
     const data = await api(`/api/chapter/${ch}`);
     const s = data.paragraphs.flat().find(x => x.id === sid);
-    if (s?.segment?.rendered) play(`/audio/segment/${s.segment.key}.wav`); else toast("Segment audio not found");
+    if (s?.segment?.rendered) play(`/audio/segment/${s.segment.key}.wav`);
+    else toast("Audio segment not found");
   });
 }
 
-boot().catch(e => { document.body.innerHTML = `<p style="padding:24px">Failed to load: ${esc(e.message)}</p>`; });
+boot().catch(e => {
+  document.body.innerHTML = `<div style="padding:2.5rem; max-width:600px; margin:2rem auto; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); text-align:center">
+    <h2>Failed to load Review Studio</h2>
+    <p class="warn">${esc(e.message)}</p>
+    <a class="btn" href="/" style="margin-top:1rem">Return to Dashboard</a>
+  </div>`;
+});
 </script>
 </body>
 </html>

@@ -36,7 +36,7 @@ def test_mobi6_html_to_paragraphs():
 
 def test_mobi_is_a_child_of_ebook_and_wins_auto_detection(tmp_path):
     cls = load_method_class(INGEST, "mobi")
-    assert parent_methods(INGEST, cls) == ["ebook", "epub"]
+    assert parent_methods(INGEST, cls) == ["ebook"]
     book = tmp_path / "book.azw3"
     book.write_bytes(b"BOOKMOBI")
     expected = "mobi" if importlib.util.find_spec("mobi") else "ebook"  # without the package: Calibre via ebook

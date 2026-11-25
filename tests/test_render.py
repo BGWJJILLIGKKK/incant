@@ -1,6 +1,7 @@
 """Browser rendering (real headless Chromium against a local server): a page that fetches its text with
 JavaScript after loading, with credentials scoped to their own host."""
 
+import os
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -59,10 +60,12 @@ def server():
 
 
 def settings(tmp_path, **kw):
+    os.environ["INCANT_TEST_RENDER_TOKEN"] = "tok"
     jar = tmp_path / "cookies.txt"
     jar.write_text("# Netscape HTTP Cookie File\nlocalhost\tFALSE\t/\tFALSE\t0\tsess\tok\n")
+    kw.setdefault("allow_bogons", True)  # the test server is on localhost
     return UrlSettings(netrc=False, render_timeout_s=20,
-                       sites={"localhost": {"cookies": str(jar), "bearer": "tok"}}, **kw)
+                       sites={"localhost": {"cookies": str(jar), "bearer_env": "INCANT_TEST_RENDER_TOKEN"}}, **kw)
 
 
 def test_renders_javascript_loaded_text_with_scoped_credentials(server, tmp_path):
@@ -80,6 +83,19 @@ def test_render_never_and_no_session(server, tmp_path):
     port, _ = server
     with pytest.raises(FetchError, match="page or its embedded data"):
         ingest_url(f"http://localhost:{port}/story", Fetcher(settings(tmp_path, render="never")))
-    anon = UrlSettings(netrc=False, render_timeout_s=20)
+    anon = UrlSettings(netrc=False, render_timeout_s=20, allow_bogons=True)
     with pytest.raises(FetchError, match="browser render"):
         ingest_url(f"http://localhost:{port}/story", Fetcher(anon))
+
+
+def test_render_blocks_private_addresses(server, tmp_path, monkeypatch):
+    """With allow_bogons off, requests the page makes to private addresses are blocked in the browser too. Here
+    "localhost" stands in for a public site (the stubbed resolver says so); the page's tracker.js at 127.0.0.1
+    is a private address and never reaches the server."""
+    from incant.stages.ingest.url import url as url_mod
+
+    monkeypatch.setattr(url_mod, "_resolve", lambda host: ["93.184.216.34"] if host == "localhost" else [host])
+    port, seen = server
+    ing = ingest_url(f"http://localhost:{port}/story", Fetcher(settings(tmp_path, allow_bogons=False)))
+    assert len(ing.paragraphs) >= 30
+    assert not [s for s in seen if s[1] == "/tracker.js"]

@@ -25,7 +25,7 @@ them with ffmpeg and the extras above. Docling tests need `uv sync --extra torch
 - **Defaults stay runnable without a server:** the default pipeline must keep working with only what incant
   bundles (CPU, no LLM, no GPU).
 - Docs follow the code: `README.md` for users, `docs/interfaces.md` for contracts, settings and file formats,
-  and a line in `CHANGELOG.md` under "Unreleased".
+  and a line in `CHANGELOG.md` under "Unreleased" (add that heading above the latest release if it isn't there).
 
 ## Design rules
 

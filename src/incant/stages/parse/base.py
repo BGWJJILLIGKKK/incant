@@ -19,6 +19,8 @@ class ParseMethod(Method):
         s = self.settings
         rest = s.model_dump(mode="json", exclude={"metatext", "metatext_max_share", "metatext_scan"})
         extra = s.metatext_fingerprint() if hasattr(s, "metatext_fingerprint") else {}
+        if getattr(s, "metatext", None) == "llm":
+            extra["llm"] = self.cfg.llm.model_dump(include={"model", "dialect", "context_tokens", "min_max_tokens"})
         blob = json.dumps([self.stage, self.name, rest] + ([extra] if extra else []), sort_keys=True)
         return hashlib.sha256(blob.encode()).hexdigest()[:16]
 

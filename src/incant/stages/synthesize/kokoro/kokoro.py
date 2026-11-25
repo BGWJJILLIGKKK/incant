@@ -41,7 +41,7 @@ class KokoroSettings(SynthSettings):
     model_dir: Path = Field(default_factory=lambda: Path(os.environ.get("INCANT_KOKORO_DIR", "~/.cache/incant/kokoro")))
     download: bool = True  # fetch missing model files from the kokoro-onnx release
     speed: float = 1.0
-    threads: int = 0  # onnxruntime threads per segment; 0 = all cores
+    threads: int = Field(default_factory=lambda: max(1, min((os.cpu_count() or 1) // 2, 8)))
     concurrency: int = 1  # one model; it already uses every core
     max_segment_chars: int = 400
     # Pronunciation for the English voices: "espeak" (kokoro-onnx's built-in phonemizer) or "misaki" (Kokoro's
@@ -51,7 +51,9 @@ class KokoroSettings(SynthSettings):
 
 
 class KokoroTTS(SynthesizeMethod):
-    LICENSE = 'Kokoro-82M: Apache-2.0 (code, weights and voices); kokoro-onnx (MIT)'
+    LICENSE = ('Kokoro-82M: Apache-2.0 (code, weights and voices); kokoro-onnx (MIT); G2P in-process: '
+               'espeak-ng via espeakng-loader and phonemizer (GPL-3.0-or-later libraries), misaki (Apache-2.0), '
+               'spaCy and en_core_web_sm (MIT); output audio not encumbered by these')
     OUTPUT_TERMS = 'none'
     Settings = KokoroSettings
     settings: KokoroSettings
@@ -113,7 +115,8 @@ class KokoroTTS(SynthesizeMethod):
 
     def model(self):
         model_path, voices_path = self.paths()
-        key = (str(model_path), self.settings.threads)
+        threads = self.settings.threads if self.settings.threads > 0 else max(1, min((os.cpu_count() or 1) // 2, 8))
+        key = (str(model_path), threads)
         with self._lock:
             if key not in self._models:
                 try:
@@ -125,8 +128,7 @@ class KokoroTTS(SynthesizeMethod):
                     if not p.exists():
                         self._download(p)
                 opts = ort.SessionOptions()
-                if self.settings.threads:
-                    opts.intra_op_num_threads = self.settings.threads
+                opts.intra_op_num_threads = threads
                 sess = ort.InferenceSession(str(model_path), opts, providers=["CPUExecutionProvider"])
                 self._models[key] = Kokoro.from_session(sess, str(voices_path))
             return self._models[key]

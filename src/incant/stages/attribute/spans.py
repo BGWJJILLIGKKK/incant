@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 
 from ...schemas import NARRATOR_ID, Span, SpanKind
+from ...normalize import unescape_prose
 from ...workdir import WorkDir
 
 _OPEN = "“"
@@ -100,17 +101,19 @@ def keep_locked(wd: WorkDir, chapter_id: str, spans: list[Span]) -> int:
     kept = 0
     for s in spans:
         o = old.get(s.id)
-        if o and o.text == s.text:
+        if o and unescape_prose(o.text) == unescape_prose(s.text):
             s.speaker, s.emotion, s.locked = o.speaker, o.emotion, True
             kept += 1
     return kept
 
 
-def build_spans(wd: WorkDir, force: bool = False) -> dict[str, int]:
-    """Write spans/<id>.jsonl for every chapter. Existing files are kept unless force,
+def build_spans(wd: WorkDir, force: bool = False, *, only: set[str] | None = None) -> dict[str, int]:
+    """Write spans/<id>.jsonl for the selected chapters. Existing files are kept unless force,
     because they may hold LLM attribution or hand edits."""
     counts: dict[str, int] = {}
     for ch in wd.read_chapters().chapters:
+        if only is not None and ch.id not in only:
+            continue
         path = wd.spans_path(ch.id)
         if path.exists() and not force:
             counts[ch.id] = -1

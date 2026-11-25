@@ -30,9 +30,9 @@ class Recorder:
         return self.routes(req)
 
 
-def fetcher(sites=None, routes=None, netrc=False):
+def fetcher(sites=None, routes=None, netrc=False, allow_bogons=False):
     rec = Recorder(routes or (lambda r: httpx.Response(200, html=ARTICLE)))
-    s = UrlSettings(sites=sites or {}, netrc=netrc, render="never")
+    s = UrlSettings(sites=sites or {}, netrc=netrc, render="never", allow_bogons=allow_bogons)
     return Fetcher(s, transport=httpx.MockTransport(rec)), rec
 
 
@@ -54,7 +54,9 @@ def test_credentials_not_forwarded_across_redirects(monkeypatch):
             return httpx.Response(302, headers={"location": "https://cdn.evil.test/page"})
         return httpx.Response(200, html=ARTICLE)
 
-    f, rec = fetcher({"example.com": {"bearer": "tok", "headers": {"X-Api-Key": "k"}}}, routes)
+    monkeypatch.setenv("EX_TOK", "tok")
+    monkeypatch.setenv("EX_KEY", "k")
+    f, rec = fetcher({"example.com": {"bearer_env": "EX_TOK", "headers_env": {"X-Api-Key": "EX_KEY"}}}, routes)
     final, _, used = f.get("https://example.com/story")
     assert final == "https://cdn.evil.test/page" and used
     assert rec.seen == [("example.com", "Bearer tok", None, "k"), ("cdn.evil.test", None, None, None)]
@@ -76,14 +78,16 @@ def test_errors_name_the_problem_not_the_secret(monkeypatch, tmp_path):
     with pytest.raises(FetchError, match="environment variable NOPE is not set"):
         f.get("https://example.com/a")
 
-    f, _ = fetcher({"example.com": {"password": "pw", "username": "me"}})
+    monkeypatch.setenv("EX_PW", "pw")
+    f, _ = fetcher({"example.com": {"password_env": "EX_PW", "username": "me"}})
     with pytest.raises(FetchError, match="plain http"):
         f.get("http://example.com/a")
 
     f, _ = fetcher(routes=lambda r: httpx.Response(401))
     with pytest.raises(FetchError, match=r'\[ingest\.url\.sites\."paywall\.test"\]'):
         f.get("https://paywall.test/a")
-    f, _ = fetcher({"paywall.test": {"bearer": "bad"}}, routes=lambda r: httpx.Response(403))
+    monkeypatch.setenv("BAD_TOK", "bad")
+    f, _ = fetcher({"paywall.test": {"bearer_env": "BAD_TOK"}}, routes=lambda r: httpx.Response(403))
     with pytest.raises(FetchError, match="rejected") as e:
         f.get("https://paywall.test/a")
     assert "bad" not in str(e.value)
@@ -117,21 +121,49 @@ def test_netrc_fallback(monkeypatch, tmp_path):
 def test_settings_from_local_config_and_secret_free_fingerprint(tmp_path, monkeypatch):
     (tmp_path / "incant.toml").write_text('[ingest.url]\ntimeout_s = 10\n')
     (tmp_path / "incant.local.toml").write_text(
-        '[ingest.url.sites."example.com"]\nusername = "me"\npassword = "hunter2"\nbearer_env = "TOK"\n')
+        '[ingest.url.sites."example.com"]\nusername = "me"\npassword_env = "PW"\nbearer_env = "TOK"\n')
     cfg = load_config(tmp_path / "incant.toml")
     ingest = next(s for s in discover() if s.name == "ingest")
     m = instantiate(cfg, ingest, "url")
-    assert m.settings.timeout_s == 10 and m.settings.sites["example.com"].password == "hunter2"
+    assert m.settings.timeout_s == 10 and m.settings.sites["example.com"].password_env == "PW"
     fp = m.fingerprint()
     (tmp_path / "incant.local.toml").write_text(
-        '[ingest.url.sites."example.com"]\nusername = "me"\npassword = "changed"\nbearer_env = "TOK"\n')
+        '[ingest.url.sites."example.com"]\nusername = "me"\npassword_env = "OTHER"\nbearer_env = "TOK"\n')
     assert instantiate(load_config(tmp_path / "incant.toml"), ingest, "url").fingerprint() == fp
+    monkeypatch.setenv("PW", "hunter2")
     monkeypatch.delenv("TOK", raising=False)
-    assert [ok for ok, _ in m.check()] == [False]
+    assert [ok for ok, _ in m.check()] == [True, False]
     assert "hunter2" not in json.dumps([msg for _, msg in m.check()])
 
 
-def test_gate_and_empty_pages_refused():
+def test_inline_secrets_refused(tmp_path):
+    """Keys live in the environment or a .env file, never in TOML (which the dashboard shows and edits)."""
+    from pydantic import ValidationError
+
+    from incant.config import LLMConfig
+
+    for inline in ({"password": "pw"}, {"bearer": "t"}, {"headers": {"X-Api-Key": "k"}}):
+        with pytest.raises(ValidationError, match="no longer read from configuration files"):
+            UrlSettings(sites={"example.com": inline})
+    with pytest.raises(ValidationError, match="api_key_env"):
+        LLMConfig(api_key="sk-x")
+    from incant.stages.synthesize.speech_http import SpeechHTTPSettings
+
+    with pytest.raises(ValidationError, match="api_key_env"):
+        SpeechHTTPSettings(api_key="sk-x")
+
+
+def test_inline_key_in_inactive_llm_profile_refused(tmp_path):
+    """A profile that isn't selected is still in the TOML the dashboard shows, so its key is refused too."""
+    from incant.config import load_config
+
+    cfg = tmp_path / "incant.toml"
+    cfg.write_text('[llm]\nmodel = "m"\n\n[llm.other]\nmodel = "x"\napi_key = "sk-y"\n')
+    with pytest.raises(ValueError, match=r"\[other\].*api_key_env"):
+        load_config(cfg)
+
+
+def test_gate_and_empty_pages_refused(monkeypatch):
     gate = ('<html><body><h1>Adult content</h1><p>This submission contains adult content. By continuing you '
             'confirm you are 18 or older.</p><button>I am 18 or older - Continue</button></body></html>')
     f, _ = fetcher(routes=lambda r: httpx.Response(200, html=gate))
@@ -143,7 +175,8 @@ def test_gate_and_empty_pages_refused():
     with pytest.raises(FetchError, match="JavaScript"):
         ingest_url("https://stories.test/s/2", f)
 
-    f, _ = fetcher({"stories.test": {"bearer": "t"}}, routes=lambda r: httpx.Response(200, html=gate))
+    monkeypatch.setenv("INCANT_TEST_GATE_TOKEN", "t")
+    f, _ = fetcher({"stories.test": {"bearer_env": "INCANT_TEST_GATE_TOKEN"}}, routes=lambda r: httpx.Response(200, html=gate))
     with pytest.raises(FetchError, match="may have expired"):
         ingest_url("https://stories.test/s/1", f)
 
@@ -167,3 +200,61 @@ def test_bad_cookie_file_error_does_not_echo_contents(tmp_path):
     with pytest.raises(FetchError, match="not a Netscape-format") as e:
         fetcher({"example.com": {"cookies": str(jar)}})
     assert "SECRETVALUE" not in str(e.value)
+
+
+def test_redirect_through_plain_http_is_upgraded(tmp_path):
+    """www.example.com/view/N -> http://example.com/… -> https://…: the http hop is skipped, never sent secrets."""
+    jar = tmp_path / "cookies.txt"
+    jar.write_text("# Netscape HTTP Cookie File\n.example.com\tTRUE\t/\tFALSE\t0\tsession\tabc123\n")
+
+    def routes(r):
+        if r.url.host == "www.example.com":
+            return httpx.Response(301, headers={"location": "http://example.com/?url=/view/1"})
+        if r.url.scheme == "http":
+            return httpx.Response(301, headers={"location": f"https://example.com{r.url.raw_path.decode()}"})
+        if r.url.path == "/":
+            return httpx.Response(302, headers={"location": "/s/abc"})
+        return httpx.Response(200, html=ARTICLE)
+
+    f, rec = fetcher({"example.com": {"cookies": str(jar)}}, routes=routes)
+    final, _, used = f.get("https://www.example.com/view/1")
+    assert final == "https://example.com/s/abc" and used
+    assert [h for h, *_ in rec.seen] == ["www.example.com", "example.com", "example.com"]  # no http request
+
+    f, rec = fetcher(routes=routes)  # no secrets for the site: its redirects are followed as given
+    assert f.get("https://www.example.com/view/1")[0] == "https://example.com/s/abc" and len(rec.seen) == 4
+
+
+def test_browser_cookies_are_secure(tmp_path):
+    from incant.stages.ingest.url.render import _cookies
+
+    jar = tmp_path / "cookies.txt"
+    jar.write_text("# Netscape HTTP Cookie File\n.example.com\tTRUE\t/\tFALSE\t0\tsession\tabc\n"
+                   "localhost\tFALSE\t/\tFALSE\t0\tdev\t1\n")
+    f, _ = fetcher({"example.com": {"cookies": str(jar)}, "localhost": {"cookies": str(jar)}})
+    assert {c["domain"]: c["secure"] for c in _cookies(f)} == {".example.com": True, "localhost": False}
+
+
+def test_private_addresses_refused_unless_allowed():
+    """allow_bogons off (the default): a URL, or a redirect, to loopback, a LAN or cloud metadata is refused
+    before any request is sent; on: fetched as usual."""
+    for url in ("http://127.0.0.1:8765/api/config", "http://169.254.169.254/latest/meta-data/",
+                "http://192.168.1.1/admin", "http://[::1]/", "http://localhost/", "http://100.64.0.1/"):
+        f, rec = fetcher(allow_bogons=False)
+        with pytest.raises(FetchError, match="private or reserved address"):
+            f.get(url)
+        assert rec.seen == []
+
+    def routes(r):
+        if r.url.host == "public.test":
+            return httpx.Response(302, headers={"location": "http://10.0.0.5/secret"})
+        return httpx.Response(200, html=ARTICLE)
+
+    f, rec = fetcher(routes=routes, allow_bogons=False)
+    with pytest.raises(FetchError, match=r"10\.0\.0\.5"):
+        f.get("https://public.test/story")
+    assert [h for h, *_ in rec.seen] == ["public.test"]
+
+    f, rec = fetcher(routes=routes, allow_bogons=True)
+    assert f.get("https://public.test/story")[0] == "http://10.0.0.5/secret"
+    assert UrlSettings().allow_bogons is False

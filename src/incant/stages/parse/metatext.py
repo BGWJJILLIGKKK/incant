@@ -23,6 +23,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from ...config import LLMConfig
+from ...llm import LLMError, prompt_char_budget
 from ...normalize import SCENE_BREAK
 
 Mode = Literal["auto", "off", "rules", "llm"]
@@ -149,6 +151,8 @@ class MetatextSettings(BaseModel):
     def metatext_fingerprint(self) -> dict:
         """Settings that change output, minus the defaults (so adding this option didn't re-parse every book)."""
         d = self.model_dump(include={"metatext", "metatext_max_share", "metatext_scan"})
+        if self.metatext == "llm":
+            d["prompt"] = "full-edge-paragraphs"
         return {} if d == MetatextSettings().model_dump(include=set(d)) else d
 
 
@@ -165,12 +169,38 @@ NOT listed. When unsure, do not list it."""
 
 
 def llm_labels(llm, title: str, paras: list[str], idx: list[int]) -> set[int]:
-    lines = [f"[{i}] {paras[i][:500]}" + ("…" if len(paras[i]) > 500 else "") for i in idx]
-    gap = next((k for k in range(1, len(idx)) if idx[k] != idx[k - 1] + 1), None)
-    if gap is not None:
-        lines.insert(gap, "[… middle of the chapter omitted …]")
-    r = llm.chat_json(LLM_SYSTEM, f"TITLE: {title}\n\n" + "\n\n".join(lines), _Labels, max_tokens=512)
-    return set(r.not_story) & set(idx)
+    prefix = f"TITLE: {title}\n\n"
+    room = prompt_char_budget(getattr(llm, "cfg", LLMConfig()), LLM_SYSTEM, _Labels, 512) - len(prefix)
+    if room < 128:
+        raise LLMError("author-note detection has insufficient context for the prompt")
+    labels = set()
+    lines: list[str] = []
+    sent: set[int] = set()
+    size = 0
+    previous = None
+
+    def flush():
+        if sent:
+            result = llm.chat_json(LLM_SYSTEM, prefix + "\n\n".join(lines), _Labels, max_tokens=512)
+            labels.update(set(result.not_story) & sent)
+
+    for i in idx:
+        label = f"[{i}] "
+        text = paras[i]
+        if len(label) + len(text) > room:
+            # A partly visible paragraph is unsafe to classify as removable.
+            continue
+        gap = "[… intervening paragraphs omitted …]\n\n" if previous is not None and i != previous + 1 else ""
+        line = label + text
+        if size + len(gap) + len(line) + 2 > room:
+            flush()
+            lines, sent, size, gap = [], set(), 0, ""
+        lines.append(gap + line)
+        sent.add(i)
+        size += len(gap) + len(line) + 2
+        previous = i
+    flush()
+    return labels
 
 
 def strip_metatext(chapters: list[list[str]], title: str, mode: str, settings: MetatextSettings,

@@ -71,12 +71,11 @@ class SynthesizeMethod(Method):
         puts it aside as cast.<space>.json and brings back the new backend's own (hand edits survive)."""
         space = self.voice_space()
         cast = wd.read_cast()
-        if space is None or cast is None or cast.engine == space:
-            return cast or Cast(roles={}, engine=space)
-        lib = self.voices().voices
-        ids = [*cast.roles.values(), *([cast.default_voice] if cast.default_voice else [])]
-        if cast.engine is None and all(v in lib for v in ids):
-            cast.engine = space  # an older cast.json, written for this backend
+        if cast is None:
+            return Cast(roles={}, engine=space)
+        if self.matches_cast(cast):
+            if cast.engine is None:
+                cast.engine = space  # an older cast.json, written for this backend
             return cast
         old = cast.engine or "unknown"
         wd.write_cast(cast, wd.cast_path_for(old))
@@ -86,10 +85,25 @@ class SynthesizeMethod(Method):
                 + (f", {space}'s restored" if saved else ""))
         return saved or Cast(roles={}, engine=space)
 
+    def matches_cast(self, cast: Cast) -> bool:
+        space = self.voice_space()
+        if space is None or cast.engine == space:
+            return True
+        if cast.engine is not None:
+            return False
+        lib = self.voices().voices
+        ids = [*cast.roles.values(), *([cast.default_voice] if cast.default_voice else [])]
+        return all(voice in lib for voice in ids)
+
     def ensure_cast(self, wd: WorkDir, log=None) -> Cast:
         """cast.json is hand-editable: existing roles are kept; the narrator comes from config and
         speaking characters without a role are cast automatically from the voice library's tags."""
-        cast = self.load_cast(wd, log)
+        cast = self.prepare_cast(wd, self.load_cast(wd, log), log)
+        wd.write_cast(cast)
+        return cast
+
+    def prepare_cast(self, wd: WorkDir, cast: Cast, log=None) -> Cast:
+        """Fill automatic roles without deciding where to store the cast."""
         narrator = self.narrator()
         if narrator and NARRATOR_ID not in cast.roles:
             cast.roles[NARRATOR_ID] = narrator
@@ -110,7 +124,6 @@ class SynthesizeMethod(Method):
                     log(f"    {cid:<28} -> {vid}" + (f"  [{note}]" if note else ""))
                 if len(new) > 20:
                     log(f"    … and {len(new) - 20} more (see cast.json)")
-        wd.write_cast(cast)
         return cast
 
     def run(self, ctx: Context) -> AudioManifest:

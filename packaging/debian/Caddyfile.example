@@ -1,0 +1,9 @@
+# Replace the hostname and hash. Generate the hash with caddy hash-password.
+# This example assumes Caddy runs on the same machine as Incant.
+incant.example.com {
+    basic_auth {
+        operator <password-hash>
+    }
+
+    reverse_proxy 127.0.0.1:8765
+}

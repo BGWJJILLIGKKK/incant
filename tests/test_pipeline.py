@@ -76,9 +76,10 @@ def setup(tmp_path):
 
 def test_discovery_finds_stages_and_methods_in_order():
     stages = discover()
-    assert [s.name for s in stages] == ["ingest", "parse", "attribute", "normalize", "synthesize", "output"]
+    assert [s.name for s in stages] == ["preingest", "ingest", "parse", "attribute", "normalize", "synthesize", "output"]
     by = {s.name: s for s in stages}
     assert {"epub", "txt", "url"} <= set(by["ingest"].methods)
+    assert "bookmark" in by["preingest"].methods
     for s in stages:
         for m in s.methods:
             cls = load_method_class(s, m)
@@ -110,6 +111,53 @@ def test_resolve_uses_config_default(setup):
     _, src, _ = setup
     steps, _ = resolve([], str(src), Config(pipeline={"parse": "basic", "attribute": "narrator", "normalize": "rules", "synthesize": "dummy"}), discover())
     assert [(s.stage.name, s.why) for s in steps if s.stage.name == "synthesize"] == [("synthesize", "config")]
+
+
+def test_tags_handles_narration_without_named_speakers(setup):
+    from incant.workdir import WorkDir
+
+    tmp, _, conf = setup
+    src = tmp / "essay.txt"
+    src.write_text("The sun rose. The rain stopped.\n")
+    assert main([str(src), "tags", "-c", str(conf), "--until", "normalize"]) == 0
+    speech = WorkDir(tmp / "work" / "essay").read_speech("0001")
+    assert speech.spans and all(span.speaker == "narrator" for span in speech.spans)
+
+
+def test_full_attribution_fills_chapters_after_partial_run(setup):
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    args = [str(src), "tags", "-c", str(conf), "--until", "normalize"]
+    wd = WorkDir(tmp / "work" / "test-book")
+    for _ in range(2):
+        assert main([*args, "--chapters", "1"]) == 0
+    assert wd.read_speech("0001") is not None
+    assert not wd.spans_path("0002").exists()
+    assert main(args) == 0
+    assert wd.read_spans("0002")
+    assert wd.read_speech("0002") is not None
+
+
+@pytest.mark.parametrize(("options", "message"), [
+    (["--chapters", "nope"], "invalid chapter selection"),
+    (["--chapters", "3-1"], "invalid chapter selection"),
+    (["--chapters", "1-"], "invalid chapter selection"),
+    (["--chapters", "0"], "invalid chapter selection"),
+    (["--until", "unknown"], "unknown stage"),
+    (["--from", "output", "--until", "parse"], "comes after"),
+])
+@pytest.mark.parametrize("batch", [False, True])
+def test_dry_run_rejects_invalid_options(setup, capsys, batch, options, message):
+    tmp, src, conf = setup
+    assert main([str(tmp if batch else src), "-c", str(conf), "--dry-run", *options]) == 2
+    assert message in capsys.readouterr().err
+
+
+def test_run_reports_chapter_missing_from_book(setup, capsys):
+    _, src, conf = setup
+    assert main([str(src), "-c", str(conf), "--until", "attribute", "--chapters", "3"]) == 2
+    assert "unknown chapter(s): 0003" in capsys.readouterr().err
 
 
 # ------------------------------------------------------------------ end to end
@@ -201,6 +249,76 @@ def test_locked_spans_and_say_overrides_survive_reruns(setup):
     assert {s.id: s for s in wd.read_speech("0001").spans}[q.id].say == "Hullo"
 
 
+def test_parse_removes_prose_backslashes_before_attribution(setup):
+    from incant.workdir import WorkDir
+
+    tmp, _, conf = setup
+    src = tmp / "escaped.txt"
+    src.write_text(r'''\"I don\'t know,\" said Alice.''' + "\\\n\n" + r"The file is C:\data\story.txt." + "\n")
+    assert main([str(src), "-c", str(conf), "--until", "attribute"]) == 0
+    wd = WorkDir(tmp / "work" / "escaped")
+    spans = wd.read_spans("0001")
+    assert [s.text for s in spans if s.kind == "dialogue"] == ['"I don\'t know,"']
+    assert wd.read_chapter_text(wd.read_chapters().chapters[0].file) == (
+        '"I don\'t know," said Alice.\n\n' + r"The file is C:\data\story.txt." + "\n"
+    )
+
+
+def test_review_reassigns_speakers_across_chapters_and_locks_edits(setup):
+    from incant.config import load_config
+    from incant.review.server import Book
+    from incant.schemas import Character, CharacterList
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    assert main([str(src), "-c", str(conf), "--until", "attribute"]) == 0
+    wd = WorkDir(tmp / "work" / "test-book")
+    wd.write_characters(CharacterList(characters=[Character(id="ann", canonical_name="Ann"),
+                                                  Character(id="anne", canonical_name="Anne")]))
+    for chapter in wd.read_chapters().chapters:
+        spans = wd.read_spans(chapter.id)
+        spans[0].speaker = "ann"
+        wd.write_spans(chapter.id, spans)
+    book = Book(load_config(conf), wd)
+    assert book.reassign_speaker({"source": "ann", "target": "anne", "chapter_id": "0001"}) == {
+        "moved": 1, "chapters": ["0001"]
+    }
+    assert wd.read_spans("0002")[0].speaker == "ann"
+    assert book.reassign_speaker({"source": "ann", "target": "anne"}) == {"moved": 1, "chapters": ["0002"]}
+    assert main(["test-book", "-c", str(conf), "--from", "attribute", "--until", "attribute", "--force", "attribute"]) == 0
+    for cid in ("0001", "0002"):
+        span = wd.read_spans(cid)[0]
+        assert span.speaker == "anne" and span.locked
+
+
+def test_first_review_audition_prepares_the_cast(setup, monkeypatch):
+    from incant.audio import pcm_to_wav
+    from incant.config import load_config
+    from incant.review.server import Book
+    from incant.workdir import WorkDir
+
+    tmp, src, conf = setup
+    assert main([str(src), "-c", str(conf), "--until", "normalize"]) == 0
+    cfg = load_config(conf)
+    cfg.pipeline["synthesize"] = "kokoro"
+    cfg.audio.level_match = False
+    wd = WorkDir(tmp / "work" / "test-book")
+    book = Book(cfg, wd)
+    voices = []
+
+    def synthesize(text, voice, emotion, variant=0):
+        voices.append(voice.id)
+        return pcm_to_wav(b"\0\0" * 1000, cfg.audio.sample_rate)
+
+    assert wd.read_cast() is None
+    monkeypatch.setattr(book.synth(), "synthesize", synthesize)
+    span = wd.read_spans("0001")[0]
+    result = book.render_span(span.id)
+    assert voices == [book.synth().narrator()] == [result["voice"]]
+    assert wd.read_cast().roles["narrator"] == result["voice"]
+    assert book.segment_audio(result["key"]).is_file()
+
+
 @pytest.mark.skipif(not HAVE_FFMPEG, reason="ffmpeg not installed")
 def test_review_book_api(setup):
     import tomllib
@@ -212,9 +330,12 @@ def test_review_book_api(setup):
     tmp, src, conf = setup
     assert main([str(src), "-c", str(conf), "-o", str(tmp / "o.m4b")]) == 0
     cfg = load_config(conf)
-    cfg.pipeline["synthesize"] = "dummy"
+    cfg.pipeline["synthesize"] = "kokoro"
+    cfg.pipeline["normalize"] = "none"
     book = Book(cfg, WorkDir(tmp / "work" / "test-book"))
     info = book.book()
+    assert info["synthesize"] == "dummy"
+    assert info["normalize"] == "rules"
     assert [c["id"] for c in info["chapters"]] == ["0001", "0002"] and all(c["rendered"] for c in info["chapters"])
     ch = book.chapter("0001")
     spans = [s for p in ch["paragraphs"] for s in p]
@@ -225,12 +346,50 @@ def test_review_book_api(setup):
 
     saved = book.save_span({"id": q["id"], "speaker": "narrator", "emotion": {"text": "wry", "alpha": 0.4}, "say": "Hi"})
     assert saved["locked"] and saved["emotion"]["text"] == "wry"
-    assert book.chapter("0001")["paragraphs"][0] is not None
+    edited = next(s for p in book.chapter("0001")["paragraphs"] for s in p if s["id"] == q["id"])
+    assert edited["say"] == "Hi"
+    assert edited["segment"]["key"] != q["segment"]["key"]
+    audition = book.render_span(q["id"])
+    assert audition["key"] == edited["segment"]["key"] and "Hi" in audition["text"]
+    book.render_chapter("0001")
+    assert book.segment_audio(audition["key"]).exists()
+    book.save_span({"id": q["id"], "omit": True})
+    hidden = next(s for p in book.chapter("0001")["paragraphs"] for s in p if s["id"] == q["id"])
+    assert hidden["omitted"] and hidden["text"] == q["text"]
+    assert hidden["segment"] is None
+    with pytest.raises(KeyError, match="no segment"):
+        book.render_span(q["id"])
+    assert main(["test-book", "-c", str(conf), "--from", "normalize", "--until", "synthesize", "--chapters", "1"]) == 0
+    assert next(s for s in book.wd.read_speech("0001").spans if s.id == q["id"]).omitted
+    assert all(q["id"] not in seg.span_ids for seg in book.renderer().plan(book.wd.read_chapters().chapters[0]))
+    book.save_span({"id": q["id"], "omit": False})
+    kept = next(s for p in book.chapter("0001")["paragraphs"] for s in p if s["id"] == q["id"])
+    assert not kept.get("omitted") and kept["say"] == "Hi"
+    book.save_span({"id": q["id"], "say": None})
+    restored = next(s for p in book.chapter("0001")["paragraphs"] for s in p if s["id"] == q["id"])
+    assert restored["say"] == q["say"] and not restored["say_overridden"]
     with pytest.raises(ValueError):
         book.save_span({"id": q["id"], "speaker": "nobody"})
     assert book.save_cast({"character": "narrator", "voice": None})["roles"].get("narrator") is None
     book.save_lexicon({"Ann": "Anne", " ": "x"})
     assert tomllib.loads((tmp / "work" / "test-book" / "lexicon.toml").read_text())["words"] == {"Ann": "Anne"}
+
+
+def test_review_edits_the_cast_for_the_recorded_backend(tmp_path):
+    from incant.review.server import Book
+    from incant.schemas import Cast
+    from incant.workdir import WorkDir
+
+    wd = WorkDir(tmp_path)
+    (tmp_path / "pipeline.json").write_text(json.dumps({"synthesize": {"method": "openai"}}))
+    active = Cast(engine="kokoro", roles={"narrator": "af_bella"})
+    wd.write_cast(active)
+    saved_path = wd.cast_path_for("openai-kokoro")
+    wd.write_cast(Cast(engine="openai-kokoro", roles={"narrator": "af_heart"}), saved_path)
+    book = Book(Config(pipeline={"synthesize": "kokoro"}), wd)
+    assert book.save_cast({"character": "alice", "voice": "af_heart"})["roles"]["narrator"] == "af_heart"
+    assert wd.read_cast() == active
+    assert wd.read_cast(saved_path).roles["alice"] == "af_heart"
 
 
 @pytest.mark.skipif(not HAVE_FFMPEG, reason="ffmpeg not installed")

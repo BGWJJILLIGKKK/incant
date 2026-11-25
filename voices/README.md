@@ -8,6 +8,12 @@
 }
 ```
 
+**Provenance.** The bundled `voices.json` lists the Voice-Zero reference voices (`source = "voice-zero"`); the
+ids are Voice-Zero's own speaker names. incant ships only this list (names and casting tags), no audio: the
+reference recordings live on your IndexTTS server. Voice-Zero publishes the recordings as public domain. That
+covers copyright in the recordings, not permission to imitate a person's voice, so `consent` is left empty
+unless known; add it when you have it, and `credits.txt` lists every voice used without one.
+
 Any field of `incant.schemas.Voice` may be added to an entry. Casting uses the tags `gender` (male/female),
 `age` (teen/adult/older/neutral) and `tone` (high/neutral/deep); voices without a `gender` are never cast
 automatically. `description` is free text (timbre, pace, accent); `license`, `source` and `consent` are the

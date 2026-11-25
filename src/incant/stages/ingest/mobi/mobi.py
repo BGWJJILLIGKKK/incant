@@ -1,4 +1,4 @@
-"""Kindle books (mobi, azw, azw3, prc, kf8) without Calibre — child of `ebook` (and so of `epub`).
+"""Kindle books (mobi, azw, azw3, prc, kf8) without Calibre — child of `ebook`.
 
 The `mobi` package (KindleUnpack, GPL-3.0; a tool — it puts no terms on the audiobook) unpacks the file:
   KF8 / AZW3   -> an EPUB, read by `epub`
@@ -65,7 +65,7 @@ def mobi6_paragraphs(html: str) -> list[str]:
 
 
 class MobiIngest(EbookIngest):
-    LICENSE = "project code; mobi / KindleUnpack (GPL-3.0, a tool: output not encumbered)"
+    LICENSE = "project code; mobi / KindleUnpack: GPL-3.0 library (in-process); output not encumbered"
     OUTPUT_TERMS = "none"
 
     @classmethod
@@ -85,7 +85,7 @@ class MobiIngest(EbookIngest):
         try:
             out = Path(out)
             if out.suffix.lower() == ".epub":
-                ing = super(EbookIngest, self).load(str(out))  # straight to epub, no converter needed
+                ing = self.load_epub(out)  # straight to epub, no converter needed
                 ing.warnings.append("unpacked from KF8 with mobi")
             else:
                 ing = self._mobi6(out, src)
@@ -93,7 +93,12 @@ class MobiIngest(EbookIngest):
             shutil.rmtree(tmp, ignore_errors=True)
         if not ing.paragraphs:
             raise RuntimeError(f"no text found in {src.name}")
+        ing.input_format = src.suffix.lower().lstrip(".") or "mobi"
         return ing
+
+    def check(self) -> list[tuple[bool, str]]:
+        have_mobi = importlib.util.find_spec("mobi") is not None
+        return [(have_mobi, "kindle unpacker: mobi package" if have_mobi else "missing mobi package (pip install mobi)")]
 
     def _mobi6(self, html: Path, src: Path) -> Ingested:
         folder = html.parent

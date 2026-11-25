@@ -59,6 +59,22 @@ def test_pdf_hyphenation_was_exercised(tmp_path):
     assert len(ends) >= 3
 
 
+def test_pdf_gutenberg_boilerplate_with_inline_and_wrapped_markers(tmp_path):
+    from reportlab.pdfgen.canvas import Canvas
+
+    path = tmp_path / "gutenberg.pdf"
+    body = "Alice opened the door. Beyond the garden she could hear the river running over the stones."
+    pdf = Canvas(str(path))
+    pdf.drawString(40, 750, "License introduction. ***START OF THE PROJECT")
+    pdf.drawString(40, 736, "GUTENBERG EBOOK TEST BOOK*** " + body)
+    pdf.drawString(40, 700, "She followed the path. *** END OF THE PROJECT")
+    pdf.drawString(40, 686, "GUTENBERG EBOOK TEST BOOK *** License footer.")
+    pdf.save()
+    result = ingest_pdf(path)
+    assert result.paragraphs == [body, "She followed the path."]
+    assert "removed Project Gutenberg boilerplate" in result.warnings
+
+
 def test_pdf_without_text_layer_is_rejected(tmp_path):
     from reportlab.pdfgen import canvas
 

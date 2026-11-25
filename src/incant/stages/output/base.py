@@ -7,7 +7,7 @@ from pathlib import Path
 from ...audio import _run
 from ...normalize import slugify
 from ...schemas import BookMeta
-from ...workdir import WorkDir, atomic_write
+from ...workdir import WorkDir, atomic_write, refuse_protected
 from ..base import Context, Method
 
 UNKNOWN_AUTHOR = "Unknown Author"
@@ -65,6 +65,7 @@ class OutputMethod(Method):
 
     def default_path(self, ctx: Context) -> Path:
         if ctx.out:
+            refuse_protected(ctx.out, "An output file")
             return ctx.out
         base = ctx.out_dir or self.cfg.paths.output_dir
         return tree_path(base, ctx.need_wd().read_meta(), self.EXTENSION)

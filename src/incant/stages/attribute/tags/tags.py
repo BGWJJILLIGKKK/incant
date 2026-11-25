@@ -265,7 +265,7 @@ def roster_from_names(names: list[str], counts: Counter, text: str, speaking: se
             groups[target].add(n)
         elif toks:
             groups[n] = {n}
-        chars = []
+    chars = []
     for canon, aliases in groups.items():
         g = honorific_gender(canon)
         if g is None and canon[0].islower():

@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from ...normalize import SCENE_BREAK
+from ...normalize import SCENE_BREAK, unescape_prose
 from ...schemas import Chapter, ChapterList
 from ...workdir import WorkDir, atomic_write
 from .metatext import MetatextSettings, report, strip_metatext
@@ -148,6 +148,10 @@ def metatext_mode(setting: str, source_format: str) -> str:
 def build_chapters(wd: WorkDir, metatext: MetatextSettings | None = None, llm=None) -> tuple[ChapterList, list[str]]:
     meta = wd.read_meta()
     chunks, method, notes = split_chapters(wd.text_path.read_text())
+    # Interpret structural headings before unescaping literal # markers in the body.
+    for chunk in chunks:
+        chunk.title = unescape_prose(chunk.title)
+        chunk.paras = [unescape_prose(p) for p in chunk.paras]
     report_path = wd.root / "removed.txt"
     mode = metatext_mode(metatext.metatext, meta.source_format) if metatext else "off"
     if mode != "off":
@@ -165,7 +169,7 @@ def build_chapters(wd: WorkDir, metatext: MetatextSettings | None = None, llm=No
     for i, ch in enumerate(chunks, start=1):
         cid = f"{i:04d}"
         rel = f"chapters/{cid}.txt"
-        paras = [p.removeprefix("\\") for p in _strip_edge_breaks(ch.paras)]
+        paras = _strip_edge_breaks(ch.paras)
         atomic_write(wd.root / rel, "\n\n".join(paras) + "\n")
         title = ch.title or (meta.title if method == "single" else f"Chapter {i}")
         chapters.append(Chapter(id=cid, index=i, title=title, file=rel, word_count=ch.words))

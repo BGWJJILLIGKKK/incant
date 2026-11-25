@@ -18,9 +18,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urldefrag
 
-from ..base import Ingested, IngestMethod, SourceItem
+from ..base import PreIngestMethod, SourceItem
 
-__all__ = ["BookmarkIngest"]
+__all__ = ["BookmarkPreIngest", "read_bookmarks"]
 
 NETSCAPE_DOCTYPE = "netscape-bookmark-file"
 MAX_JSON_BYTES = 50 * 1024 * 1024
@@ -140,7 +140,7 @@ def unique_pages(links: list[tuple[str, str]]) -> list[SourceItem]:
     return list(seen.values())
 
 
-class BookmarkIngest(IngestMethod):
+class BookmarkPreIngest(PreIngestMethod):
     """A browser bookmark export: every bookmarked page becomes its own book (run as a batch)."""
     LICENSE = 'project code'
     OUTPUT_TERMS = 'none'
@@ -156,6 +156,6 @@ class BookmarkIngest(IngestMethod):
         links = read_bookmarks(p) if p.is_file() else None
         return None if links is None else unique_pages(links)
 
-    def load(self, source: str) -> Ingested:
-        raise RuntimeError(f"'{source}' is a bookmark file holding many pages; pass it as the input to run each "
-                           "page as its own book")
+    def run(self, ctx) -> object:
+        raise RuntimeError(f"'{ctx.source}' is a bookmark file holding many pages; pass it as the input to run "
+                           "each page as its own book")

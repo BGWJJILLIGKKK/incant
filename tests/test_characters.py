@@ -1,6 +1,14 @@
 """Deterministic parts of the `characters` parse method (no LLM)."""
 
+import re
+
+from incant.config import Config, LLMConfig
+from incant.llm import LLMError, estimate_tokens
+from incant.stages.base import Context
 from incant.stages.parse.characters.characters import (
+    CharactersParse,
+    CharactersSettings,
+    Entry,
     _Mention,
     ambiguous,
     build_characters,
@@ -14,6 +22,91 @@ from incant.stages.parse.characters.characters import (
 
 TEXT = ("Mr. Bennet and Mrs. Bennet spoke of Lizzy, whom some call Eliza; Elizabeth Bennet laughed. "
         "Jane, Miss Bennet, smiled. Kitty coughed. Lady Lucas and Sir William Lucas called. The Colonel bowed.")
+
+
+def test_neighbor_context_keeps_evidence_in_target_chapter():
+    cfg = Config(llm=LLMConfig(context_tokens=262144))
+    parser = CharactersParse(CharactersSettings(context_chapters=1), cfg)
+
+    class Model:
+        def chat_json(self, system, prompt, schema, **kwargs):
+            if '<target chapter="0001">' not in prompt:
+                return schema(characters=[])
+            assert '<context chapter="0002">' in prompt
+            mentions = [m("Alice", aliases=["Alicia"], speaks=True), m("Bob", speaks=True)]
+            return schema(characters=[
+                item.model_dump() | {"spoken_quote": "Goodbye", "context_name": "Alicia"} for item in mentions
+            ])
+
+    entries = pool(parser._extract(Model(), [("0001", "Alice waited."),
+                                            ("0002", 'Alicia met Bob. He said “Goodbye.”')], Context(cfg=cfg)))
+    assert [entry.name for entry in entries] == ["Alice"]
+    assert entries[0].chapters == ["0001"]
+    assert entries[0].aliases == [] and not entries[0].speaks
+    assert entries[0].context_names == {"Alicia"}
+    other = pool([("0002", "Alicia met Bob.", m("Alicia"))])[0]
+    assert candidates([other, entries[0]], 1) == [0]
+
+
+def test_batch_packs_chapters_within_256k_and_recovers_truncated_results():
+    cfg = Config(llm=LLMConfig(context_tokens=262144, concurrency=1))
+    settings = CharactersSettings(extraction_mode="batch", batch_chapters=4, window_words=200000)
+    parser = CharactersParse(settings, cfg)
+    requests = []
+
+    class Model:
+        def chat_json(self, system, prompt, schema, **kwargs):
+            ids = re.findall(r'<chapter chapter="(\d+)">', prompt)
+            requests.append(ids)
+            assert estimate_tokens(system + prompt) + kwargs["max_tokens"] <= 262144
+            if len(ids) > 1:
+                raise LLMError("hit max_tokens=16384")
+            return schema(chapters=[{"chapter": ids[0], "characters": [
+                m("Alice", speaks=True).model_dump() | {"spoken_quote": "Hello", "context_name": ""}
+            ]}])
+
+    chapters = [(f"{n:04d}", '“Hello,” said Alice. ' + "story " * 58000) for n in range(1, 4)]
+    mentions = parser._extract(Model(), chapters, Context(cfg=cfg))
+    assert requests == [["0001", "0002"], ["0001"], ["0002"], ["0003"]]
+    assert [chapter for chapter, _, _ in mentions] == ["0001", "0002", "0003"]
+    assert all(mention.speaks for _, _, mention in mentions)
+
+
+def test_batch_keeps_long_chapter_together_when_it_fits_token_budget():
+    cfg = Config(llm=LLMConfig(context_tokens=262144, concurrency=1))
+    parser = CharactersParse(CharactersSettings(extraction_mode="batch", batch_chapters=500, window_words=5000), cfg)
+    paragraph = " ".join(["story"] * 1000)
+    chapter = "\n\n".join([paragraph] * 25)
+    requests = []
+
+    class Model:
+        def chat_json(self, system, prompt, schema, **kwargs):
+            requests.append(prompt)
+            assert estimate_tokens(system + prompt) + kwargs["max_tokens"] <= 262144
+            return schema(chapters=[{"chapter": "0001", "characters": []},
+                                    {"chapter": "0002", "characters": []}])
+
+    parser._extract(Model(), [("0001", chapter), ("0002", paragraph)], Context(cfg=cfg))
+    assert len(requests) == 1
+    assert chapter in requests[0]
+    assert '<chapter chapter="0002">' in requests[0]
+
+
+def test_alias_linker_includes_evidence_beyond_the_old_candidate_limit():
+    cfg = Config()
+    parser = CharactersParse(CharactersSettings(), cfg)
+    entries = [Entry(name=f"Alice {surname}") for surname in
+               ("Adams", "Brown", "Clark", "Davis", "Evans", "Ford", "Green", "Hill")]
+    entries[-1].passages = [("0008", "Alice Hill introduced herself at the gate.")]
+    entries.append(Entry(name="Alice", passages=[("0009", "Alice then waited by the same gate.")]))
+
+    class Model:
+        def chat_json(self, system, prompt, schema, **kwargs):
+            assert "[7, chapter 0008] Alice Hill introduced herself" in prompt
+            assert "[ENTRY, chapter 0009] Alice then waited" in prompt
+            return schema(match=7, reason="Both references concern the same person.")
+
+    assert parser._link(Model(), entries, Context(cfg=cfg)) == {8: 7}
 
 
 def m(name, gender="unknown", aliases=(), age="unknown", speaks=False, desc=""):

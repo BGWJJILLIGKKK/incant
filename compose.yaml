@@ -7,10 +7,13 @@
 # docker compose run --rm incant books/book.epub          (paths relative to the data directory)
 # docker compose run --rm incant --check
 # docker compose run --rm incant pride-and-prejudice --review
+#
+# Images: the release images (`docker compose pull`), or build your own from this checkout (`docker compose
+# build`). INCANT_IMAGE / INCANT_TAG in .env pick another registry or version, e.g. INCANT_TAG=0.4.0.
 services:
   incant:
     build: .
-    image: incant
+    image: ${INCANT_IMAGE:-ghcr.io/bgwjjilligkkk/incant}:${INCANT_TAG:-latest}
     user: "${UID:-1000}:${GID:-1000}"     # files written to the data directory stay yours
     network_mode: host                    # reach the LLM/TTS servers by the names the host uses (localhost:8080)
     volumes:
@@ -27,7 +30,7 @@ services:
       context: .
       args:
         EXTRAS: "qa browser kokoro anthropic nlp mobi torch"
-    image: incant_local
+    image: ${INCANT_IMAGE:-ghcr.io/bgwjjilligkkk/incant}_local:${INCANT_TAG:-latest}
     user: "${UID:-1000}:${GID:-1000}"
     network_mode: host
     volumes:

@@ -103,6 +103,16 @@ def test_chunk_hard_splits_long_sentence():
     assert " ".join(chunks).split() == speakable(s).split()
 
 
+def test_hierarchical_clause_split():
+    # A single sentence that exceeds budget with semicolon and commas
+    s = "This is a primary clause, with a comma; and here is another major clause, also with a comma."
+    # With max_chars=55, it should split at semicolon rather than splitting at comma first
+    chunks = chunk(s, 55)
+    assert len(chunks) == 2
+    assert chunks[0] == "This is a primary clause, with a comma;"
+    assert chunks[1] == "and here is another major clause, also with a comma."
+
+
 # ------------------------------------------------------------------ audio / render helpers
 
 

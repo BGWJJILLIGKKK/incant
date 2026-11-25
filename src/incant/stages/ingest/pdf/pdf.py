@@ -24,6 +24,7 @@ from pathlib import Path
 
 from ....normalize import clean_paragraph, clean_unicode, heading, is_scene_break, SCENE_BREAK
 from ..base import Ingested, IngestMethod
+from ..gutenberg.gutenberg import strip_gutenberg_pdf
 
 __all__ = ["PdfIngest"]
 
@@ -360,9 +361,12 @@ def ingest_pdf(path: Path) -> Ingested:
                            "a scanned PDF needs OCR first (e.g. `ocrmypdf in.pdf out.pdf`)")
     body = body_size_of(pages)
     pages, removed = strip_furniture(pages, body)
-    paras = paragraphs(pages, body)
+    extracted = paragraphs(pages, body)
+    paras = strip_gutenberg_pdf(extracted)
     info = _info(path)
     warnings = [f"removed {n} {what} lines" for what, n in removed.items()]
+    if paras != extracted:
+        warnings.append("removed Project Gutenberg boilerplate")
     empty = sum(1 for p in pages if not p.lines)
     if empty:
         warnings.append(f"{empty} of {len(pages)} pages have no text (images or blank)")

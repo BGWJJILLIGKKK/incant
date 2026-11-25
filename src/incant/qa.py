@@ -52,12 +52,33 @@ def words(text: str) -> list[str]:
     return _WORD.findall(t)
 
 
-def edit_distance(a: list[str], b: list[str]) -> int:
+def _char_edit_distance(s1: str, s2: str) -> int:
+    if s1 == s2:
+        return 0
+    if abs(len(s1) - len(s2)) > 3:
+        return max(len(s1), len(s2))
+    prev = list(range(len(s2) + 1))
+    for c1 in s1:
+        cur = [prev[0] + 1]
+        for j, c2 in enumerate(s2, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (c1 != c2)))
+        prev = cur
+    return prev[-1]
+
+
+def edit_distance(a: list[str], b: list[str], whitelist: set[str] | list[str] | None = None) -> int:
+    wl = set(whitelist) if whitelist else None
     prev = list(range(len(b) + 1))
     for i, x in enumerate(a, 1):
         cur = [i]
         for j, y in enumerate(b, 1):
-            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (x != y)))
+            if x == y:
+                sub_cost = 0
+            elif wl and x in wl and _char_edit_distance(x, y) <= max(1, len(x) // 3):
+                sub_cost = 0
+            else:
+                sub_cost = 1
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + sub_cost))
         prev = cur
     return prev[-1]
 
@@ -103,14 +124,14 @@ class Transcriber:
                              input=wav, capture_output=True, check=True).stdout
         return np.frombuffer(raw, dtype=np.float32)
 
-    def check(self, wav: bytes, text: str) -> Check:
+    def check(self, wav: bytes, text: str, whitelist: set[str] | list[str] | None = None) -> Check:
         model = self._get()
         segments, _ = model.transcribe(self._pcm16k(wav), language="en", beam_size=1, vad_filter=False,
                                        condition_on_previous_text=False)
-        return compare(text, " ".join(s.text.strip() for s in segments))
+        return compare(text, " ".join(s.text.strip() for s in segments), whitelist=whitelist)
 
 
-def compare(text: str, heard: str) -> Check:
+def compare(text: str, heard: str, whitelist: set[str] | list[str] | None = None) -> Check:
     """`text` is what the TTS was given (already normalised); whisper writes "Mr." and "1888", so the
     transcript goes through the same normalisation before comparing."""
     try:
@@ -120,5 +141,5 @@ def compare(text: str, heard: str) -> Check:
     except Exception:  # noqa: BLE001 — never let QA crash a render
         heard_n = heard
     ref, hyp = words(text), words(heard_n)
-    edits = edit_distance(ref, hyp)
+    edits = edit_distance(ref, hyp, whitelist=whitelist)
     return Check(wer=edits / max(1, len(ref)), edits=edits, heard=heard)

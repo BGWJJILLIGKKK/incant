@@ -5,8 +5,9 @@ from __future__ import annotations
 import time
 
 import httpx
+from pydantic import model_validator
 
-from ...config import secret
+from ...config import refuse_inline_key, secret
 from ...schemas import Emotion, Voice
 from .base import SynthesizeMethod, SynthSettings
 
@@ -14,11 +15,16 @@ from .base import SynthesizeMethod, SynthSettings
 class SpeechHTTPSettings(SynthSettings):
     base_url: str = "http://localhost:8880/v1"
     model: str = "kokoro"
-    api_key: str | None = None  # prefer api_key_env (and keep keys in incant.local.toml)
-    api_key_env: str | None = None
+    api_key_env: str | None = None  # the key's name in the environment or a .env file, never the key itself
     speed: float = 1.0
     timeout_s: float = 300.0
     retries: int = 3
+
+    @model_validator(mode="before")
+    @classmethod
+    def _no_inline_key(cls, data):
+        refuse_inline_key(data)
+        return data
 
 
 class SpeechHTTP(SynthesizeMethod):
@@ -29,7 +35,7 @@ class SpeechHTTP(SynthesizeMethod):
     def __init__(self, settings, cfg):
         super().__init__(settings, cfg)
         s = self.settings
-        key = secret(s.api_key_env) if s.api_key_env else s.api_key
+        key = secret(s.api_key_env) if s.api_key_env else None
         self.http = httpx.Client(base_url=s.base_url.rstrip("/"), timeout=s.timeout_s,
                                  headers=self.auth_headers(key) if key else {})
 

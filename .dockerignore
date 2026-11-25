@@ -14,3 +14,12 @@ cookies*.txt
 voices/*
 !voices/README.md
 !voices/voices.json
+
+# Secrets, local state and build output: never part of the build context
+.env
+.env.*
+*.env
+.incant
+uploads
+dist
+concepts_brief.md

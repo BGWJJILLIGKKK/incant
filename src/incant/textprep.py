@@ -14,6 +14,8 @@ from .normalize import is_scene_break
 _ABBREV = r"(?:Mr|Mrs|Ms|Dr|St|Jr|Sr|Prof|Capt|Col|Gen|Lt|Sgt|Rev|Hon|vs|etc|No|Mt|Ft)"
 _SENT_END = re.compile(r"[.!?…][\"”’)\]]*(?=\s+[\"“‘(\[]?[A-Z0-9])")
 _ENDS_WITH_ABBREV = re.compile(rf"\b{_ABBREV}\.$")
+_MAJOR_BREAK = re.compile(r"(?<=[;—–:])\s+")
+_MINOR_BREAK = re.compile(r"(?<=,)\s+")
 _SOFT_BREAK = re.compile(r"(?<=[;:,—–])\s+")
 
 
@@ -37,10 +39,10 @@ def _sentences(t: str) -> list[str]:
     return [s for s in out if s]
 
 
-def _hard_split(s: str, max_chars: int) -> list[str]:
-    """Split one over-long sentence at clause boundaries, then at spaces."""
+def _split_pieces(text: str, delimiter_regex: re.Pattern, max_chars: int) -> list[str]:
+    parts = delimiter_regex.split(text)
     out, cur = [], ""
-    for piece in _SOFT_BREAK.split(s):
+    for piece in parts:
         if cur and len(cur) + 1 + len(piece) > max_chars:
             out.append(cur)
             cur = piece
@@ -48,8 +50,21 @@ def _hard_split(s: str, max_chars: int) -> list[str]:
             cur = f"{cur} {piece}".strip()
     if cur:
         out.append(cur)
+    return out
+
+
+def _hard_split(s: str, max_chars: int) -> list[str]:
+    """Split one over-long sentence hierarchically: at major clause boundaries (; — :),
+    then minor clause boundaries (,), then at spaces."""
+    major_parts = _split_pieces(s, _MAJOR_BREAK, max_chars)
+    minor_parts = []
+    for part in major_parts:
+        if len(part) > max_chars:
+            minor_parts.extend(_split_pieces(part, _MINOR_BREAK, max_chars))
+        else:
+            minor_parts.append(part)
     final = []
-    for c in out:
+    for c in minor_parts:
         while len(c) > max_chars:
             cut = c.rfind(" ", 0, max_chars)
             cut = cut if cut > 0 else max_chars

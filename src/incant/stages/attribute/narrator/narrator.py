@@ -13,6 +13,6 @@ class NarratorAttribute(AttributeMethod):
     LICENSE = 'project code'
     OUTPUT_TERMS = 'none'
     def run(self, ctx: Context):
-        counts = build_spans(ctx.need_wd(), force=True)
+        counts = build_spans(ctx.need_wd(), force=True, only=ctx.chapters)
         ctx.log(f"  {sum(counts.values()):,} spans in {len(counts)} chapters (single narrator)")
         return counts

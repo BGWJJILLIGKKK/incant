@@ -30,12 +30,14 @@ General rules for every file below:
 ```
 work/<slug>/
   meta.json               ingest       BookMeta
+  source.json             ingest       {"paragraphs": [...]}: the ingested paragraphs (ebook drafts start from it)
   text.md                 ingest       whole book, normalized text
   cover.<ext>             ingest       optional image
   chapters.json           parse        ChapterList
   chapters/NNNN.txt       parse        one chapter's text
   characters.json         parse (+attribute, review)   CharacterList
   spans/NNNN.jsonl        attribute (+review)          one Span per line
+  attribution_errors.json attribute    speakers windows that failed; the run is recorded as incomplete
   speech/NNNN.json        normalize    ChapterSpeech
   speech/changes.txt      normalize    human report
   lexicon.toml            human/review per-book pronunciations
@@ -48,14 +50,46 @@ work/<slug>/
   audio/chapters/NNNN.wav         synthesize   assembled chapter
   audio/chapters/NNNN.json        synthesize   assembly fingerprint
   audio/manifest.json             synthesize   AudioManifest
+  audio/gain_baseline.json        synthesize   per-voice gains (see `.lvl.json`)
   audio/qa_report.json            synthesize   segments still failing QA
   audio/concat.txt, ffmetadata.txt  output     ffmpeg inputs (scratch)
   output.json                     output       {"files": [absolute paths written]}; the files are in the output tree
   removed.txt                     parse        author's notes / site text removed (metatext); absent if none
   llm_cache/XX/<sha256>.json      parse, attribute   cached LLM answers
   pipeline.json                   runner       stage skip records
+  ebook.json                      draft (+dashboard)  ebook manuscript (`--mode ebook`)
+  ebook-output.json               publish      the exported EPUB's path
+  ebook-pipeline.json             runner       stage skip records of ebook mode
 ```
 `XX` = first two hex characters of the key.
+
+---
+
+## Stage 0 — preingest (ingest normalization)
+
+**Input:** the raw CLI input (file path or URL), before any book work directory exists.
+**Role:** decide how ingestion is handled — ingest the source as one book, or expand it into a batch of
+sources. PRE stages are consulted by the CLI (`cli.expand_source`) and are never per-book steps: they get
+no step in a resolved plan, write no files, and don't appear in `pipeline.json` or `--from`/`--until`.
+
+A method implements `accepts(source)` (drives auto-detection) and
+`expand(source) -> list[SourceItem] | None`: a list means the source is a container; None means ingest it
+as given. `run()` raises — a PRE method never runs on a book.
+
+### `bookmark` — browser bookmark exports
+- Formats, recognised by content (not just extension, so an ordinary `.html`/`.json` file is never
+  claimed): Netscape bookmark HTML (the export of Firefox, Chrome, Edge, Safari, Pocket, Pinboard…),
+  Chrome/Edge "Bookmarks" JSON, Firefox backup JSON, a plain JSON list of `{url|href|uri, title|name}`
+  objects or `{bookmarks: [...]}`.
+- Only http(s) links are kept (no `javascript:`, `place:`, `file:`); duplicates (ignoring `#fragments`)
+  keep their first title.
+- The CLI runs each item as its own book, exactly like a directory batch; containers inside a batch
+  directory are expanded in place; duplicate sources across the batch are run once.
+- Children resolve their own ingest method (`auto`, normally `url`); the container's own method token is
+  dropped. Naming an ingest method instead (`ingest=url`) suppresses expansion: the file itself is ingested.
+- `SourceItem(source, title?)`: `title` reaches ingest as `Context.title` and is used only when the source
+  has no title of its own (empty, or equal to the URL).
+- `expand` returns None for files it doesn't recognise.
 
 ---
 
@@ -74,6 +108,8 @@ work/<slug>/
 | description | str | no | blurb, becomes the m4b comment |
 | cover | (ext, bytes) | no | e.g. `("jpg", b"...")` |
 | warnings | list[str] | no | logged |
+| source | str | no | canonical address when it differs from the input (a series' URL), so its parts share one book |
+| input_format | str | no | the actual input format before an intermediate conversion (`docx`, `mobi`…) |
 
 ### `meta.json` — BookMeta
 | Field | Type | Req | Meaning |
@@ -85,6 +121,7 @@ work/<slug>/
 | language | str | default `en` | |
 | source | str | yes | absolute path or URL of the input |
 | source_format | enum as above | yes | |
+| input_format | str | no | the input's own format when it was converted first (a Word file read as EPUB) |
 | cover | str | no | file name in the work dir (`cover.jpg`); must exist if set |
 | series, series_index | str, float | no | reserved; not yet used |
 | description | str | no | m4b comment (first 2000 characters) |
@@ -105,15 +142,24 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 
 ### Web pages (`url`) and credentials
 - Title and author: the page metadata's, with a trailing `- Site` / `| Site` removed when it names the site (og:site_name or a domain label). With no author in the metadata, a trailing `by Name` becomes the author if it looks like a name (capitalized words, ≤4; or one handle in a site-templated title).
-`[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), and `sites`: `{host: Site}`.
+`[ingest.url]`: `user_agent`, `timeout_s`, `netrc` (default true), `allow_bogons` (default false), and `sites`: `{host: Site}`.
+- **Bogons:** with `allow_bogons = false`, every request is checked before it is sent: the URL, each redirect
+  hop, and (rendering) each request the page makes in the browser. A host that resolves to any address that
+  isn't public (loopback, RFC 1918 and other private ranges, link-local including cloud metadata
+  169.254.169.254, carrier-grade NAT, multicast, reserved, IPv6 equivalents) is refused with an error naming the
+  setting; the browser blocks such requests. The check resolves the name just before the request, so a DNS
+  server that answers differently a moment later (rebinding) isn't covered.
 - A `sites` key matches that host and its subdomains; the most specific key wins.
 - `Site` fields (all optional):
-  - `username` + `password` | `password_env` → HTTP Basic
-  - `bearer` | `bearer_env` → `Authorization: Bearer`
-  - `headers` {name: value}
+  - `username` + `password_env` → HTTP Basic
+  - `bearer_env` → `Authorization: Bearer`
+  - `headers_env` {header name: variable name} → extra request headers
   - `cookies`: path to a Netscape `cookies.txt` (browser export)
+  - The `*_env` fields name variables resolved by `config.secret()`. Inline `password`, `bearer` and `headers`
+    are refused with a message saying what to use instead.
 - Hosts without an entry use `~/.netrc` (`$NETRC`) when `netrc = true`.
-- **Where secrets go:** `incant.local.toml` (git-ignored) or environment variables (`*_env`).
+- **Where secrets go:** the environment or a `.env` file (data directory first, mode 600), never a TOML file; the
+  site entry in `incant.local.toml` names the variables.
 - **Rules:**
   - Credentials are sent only to their own host. Redirects are followed by hand, and each hop gets its own host's credentials; cookies are scoped by domain.
   - No credentials over plain http, except to localhost.
@@ -146,7 +192,7 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - When text comes from embedded script data, `url` also renders the page (if allowed) and keeps the longer text:
   JavaScript sites can embed reader comments while the article loads separately.
 
-### Other formats (`ebook`, child of `epub`)
+### Other formats (`ebook`, parent of `epub` and `mobi`)
 - mobi / azw / azw3 / lit / pdb (Calibre), docx / odt / rtf / fb2 / local HTML (Calibre or Pandoc; HTML
   bookmark exports excluded) are converted to EPUB in a temp dir, then read by `epub`. `converter =
   auto | calibre | pandoc`, `timeout_s`. Missing tool → error naming the apt package; DRM'd Kindle books fail.
@@ -158,6 +204,8 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
   characters of text layer and only where Docling is installed (else `pdf` explains `ocrmypdf`); explicit
   `ingest=docling` works on any PDF. Headings that repeat (`max_repeats`, default 2) are running headers and
   dropped; image placeholders dropped. ~7 s per page on CPU. Models: `$INCANT_DOCLING_DIR` (baked in the image).
+- Both PDF readers discard text outside explicit Project Gutenberg start and end markers, including markers
+  that PDF extraction joins into a paragraph.
 
 ### Kindle books (`mobi`, child of `ebook`)
 - `.mobi .azw .azw3 .prc .kf8`, read with the `mobi` package (KindleUnpack; extra `mobi`, in the defaults),
@@ -172,18 +220,25 @@ An image (`jpg`/`png`) attached as m4b cover art. Optional.
 - `gutenberg` (inherits `txt`): picked for `.txt` files with `*** START OF THE PROJECT GUTENBERG …` in the first
   64 KB; removes the license header/footer and `[Illustration…]` placeholders (keeping a heading wrapped in one).
 
-### Container sources (`expand`)
-A method that overrides `expand(source) -> list[SourceItem] | None` is a container (today: `bookmark`).
-- The CLI runs each item as its own book, exactly like a directory batch.
-- Containers inside a batch directory are expanded in place.
-- Duplicate sources across the batch are run once.
-- Children resolve their own ingest method (`auto`, normally `url`); the container's own method token is dropped.
-- `SourceItem(source, title?)`: `title` reaches ingest as `Context.title` and is used only when the source has no title of its own (empty, or equal to the URL).
-- `expand` returns None for files it doesn't recognise. `load()`/`run()` on a container raise an error.
+### AO3 works (`ao3`, child of `url`)
+- `archiveofourown.org` (also `.com`, `.net`, `.gay`, `ao3.org`, `www.*`) work URLs: `/works/<id>`,
+  `/works/<id>/chapters/<id>`, and the same under `/collections/<name>/`. Any of them is the same book:
+  `meta.source` is the canonical `https://<host>/works/<id>`.
+- A multi-chapter work is one book: the work's `/navigate` page lists its chapters in the site's reading
+  order, and the `series()` hook ingests each with the same fetcher as a `# <chapter title>` chapter.
+  Single-chapter works are just that page.
+- Title, author (several are comma-joined) and blurb come from the work page's own header (`h2.title`,
+  `a[rel=author]`, `div.summary blockquote.userstuff`), not from its page metadata, which carries the
+  site's "… by … ⋆ AO3" title template. The navigate page's own numbering ("2. Title") is stripped.
+- Adult-rated works are unlocked by default (`view_adult = true`): AO3's `view_adult` cookie plus
+  `?view_adult=true` on every request. Works restricted to logged-in users need your own session: cookies
+  under `[ingest.url.sites."archiveofourown.org"]` (all settings inherit from `url`).
+- `[ingest.ao3]`: `view_adult` (true), `max_parts` (200), `part_delay_s` (1.0).
 
 **Requirements for a new ingester:**
 - `accepts(source)` must be cheap and must never claim another method's input: check the extension or URL
-  scheme. Shared extensions (`.html`, `.json`) need a cheap content sniff, as bookmark does on the first 4 KB.
+  scheme. Shared extensions (`.html`, `.json`) need a cheap content sniff, as the preingest `bookmark`
+  method does on the first 4 KB.
 - Emit chapter boundaries as `# ` headings if the source has structure (EPUB toc, PDF headings).
   Without them, parse falls back to pattern detection.
 - Never emit text that shouldn't be read aloud.
@@ -207,7 +262,8 @@ Chapters are split deterministically, by `stages/parse/chapters.py`. Every parse
   notes, commentary, thanks, calls to comment/fave/vote/tip, links, update notes, site navigation, repeated title
   lines, bylines, page numbers. Listed in `removed.txt` (chapter, start/end, reason, text); no file when nothing is removed.
   - `"auto"` (default): `rules` for `source_format = "url"`, `off` for books. `"rules"`: phrase/style cues, no LLM.
-    `"llm"`: the LLM labels the first/last `metatext_scan` (12) paragraphs per chapter; a label counts only if the
+    `"llm"`: the LLM labels the first/last `metatext_scan` (12) paragraphs per chapter. It sees complete
+    candidate paragraphs in context-sized requests. A label counts only if the
     paragraph also has a cue, is a title line or has ≤ 12 words. `"off"`.
   - Only blocks touching an edge go: the longest edge run that ends on a note, is ≥ ⅔ notes and has no dialogue
     among the rest, or everything before an early scene break when most of it is notes. Never text in the middle.
@@ -229,10 +285,27 @@ Chapters are split deterministically, by `stages/parse/chapters.py`. Every parse
 | .speak_title | bool | default true | announce the title at the start of the chapter audio |
 
 ### `chapters/NNNN.txt`
-The chapter body in the `text.md` format, without the heading, without leading or trailing scene breaks, and with the `\# ` escape removed. **This file is the text of record:** spans must rebuild it exactly.
+The chapter body in the `text.md` format, without the heading or leading and trailing scene breaks. Prose escapes
+such as `\#` and escaped quotes are removed after detecting headings. **This file is the text of record:** spans must rebuild it exactly.
 
 ### `characters.json` — CharacterList
 Written by `parse/characters`; `parse/basic` deletes it. Attribute and the review page update it (see below).
+
+Character extraction defaults to `[parse.characters] extraction_mode = "neighbors"`. Each target chapter or
+window can include `context_chapters` neighboring chapters on each side (default 1). The model reports names,
+aliases and speech from the target. Incant checks names and aliases against the target text and checks claimed
+speech excerpts against its dialogue. It checks names proposed from other chapters against the supplied text
+and passes them to the alias linker as candidates. `extraction_mode = "chapter"` uses the chapter-only prompt.
+
+`extraction_mode = "batch"` profiles up to `batch_chapters` consecutive chapters per request (default 4).
+It splits an individual chapter only when the request token budget requires it. The `window_words`
+setting applies to chapter and neighbors modes.
+It requires a roster under each chapter ID and retries smaller groups if the response is truncated or malformed.
+`batch_max_tokens` defaults to 16,384 generated tokens. Both modes use an estimated
+`[parse.characters] context_tokens` ceiling of 262,144 tokens for prompt and response, capped by the active
+`[llm] context_tokens` budget. Set the profiling ceiling lower if the server allocates less context per slot.
+Alias linking considers up to `link_candidates` eligible earlier entries (default 12). It shows source
+excerpts around attested mentions and expands that evidence when rechecking with thinking enabled.
 
 | Field | Type | Req | Meaning |
 |---|---|---|---|
@@ -275,6 +348,13 @@ Character fields:
 | `tags` + `parse=basic` | no LLM | ~68% (names matched loosely: it builds its own character list) |
 | `narrator` | none | 3.4% (one voice) |
 
+`speakers` uses unmarked prose before and after each target within the chapter. It fits that context to
+`[attribute.speakers] context_tokens` (default 262,144 total, capped by the active LLM budget).
+Set `context_paragraphs` to limit either side explicitly. Target quote and word limits still bound the
+labeling workload. Invalid quote IDs and truncated responses trigger smaller target windows.
+For first-person narration, `narrator_chapters` (default 5) selects chapters across the book, and the
+candidate roster is kept as large as the request budget allows.
+
 `tags` (rule-based): per quotation, its dialogue tag (`said Elizabeth`, `Elizabeth replied`, `said he`, `said his wife`,
 `said Scrooge's nephew`, a tag ending the previous paragraph `he replied:—`), then another tag in the paragraph, then the
 subject of the adjacent narration sentence (action beat), then who is addressed (`"Say, Jim, …"` → not Jim), then
@@ -307,6 +387,7 @@ Spans are split deterministically, in code (`stages/attribute/spans.py`):
 | confidence | float | – | reserved |
 | locked | bool | false | hand-reviewed. A re-split keeps speaker and emotion where the id **and** text still match. |
 | say | str | – | never set here (see normalize) |
+| omitted | bool | – | never set here: normalize sets it in `speech/` for spans review omitted |
 
 Speaker mapping rules for any attribute method:
 - In first-person books, the narrator's narration and lines go to the `characters.narrator` id, so they share one voice.
@@ -353,7 +434,9 @@ Hermione = "Her-my-oh-nee"
 Keys are matched as whole words, case-insensitive; the longest key wins.
 
 ### `say_overrides.json`
-`{span_id: {"text": <span text when edited>, "say": <spoken text>}}`. An entry is ignored once the span's text changes.
+`{span_id: {"text": <span text when edited>, "say": <optional spoken text>, "omit": <optional bool>}}`.
+Review can omit a line and restore it later with its previous pronunciation. An entry is ignored once
+the span's source text changes.
 
 ---
 
@@ -392,7 +475,7 @@ Casting (`casting.auto_cast`):
 - Candidates are voices tagged `male`/`female` that match the character's gender. A character of unknown gender may take any of them. The narrator's voice is avoided where possible.
 - Ranked by: fewest chapters shared with the voice's other characters, not already used by a main character, unused, best age match, best tone match, fewest lines.
 - No candidate means the character falls back to `default_voice`.
-- Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`, OpenAI `nova`).
+- Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`; `openai` `af_heart` with `voices = "kokoro"`, `nova` with `"openai"`; ElevenLabs an account voice described as narration, else George).
 - **Switching backends:** `cast.json` belongs to one voice space. A backend with another space moves it to `cast.<old>.json` and restores `cast.<new>.json` if present, so hand edits for each backend survive switching back and forth.
 - The `[cast] main_unique` characters with the most lines never share a voice, and scene partners avoid sharing one.
 - First-person books (`[cast] first_person_narration = "character"`, the default): the `narrator` role takes the narrating character's voice.
@@ -402,7 +485,7 @@ Casting (`casting.auto_cast`):
 - `kokoro`: built-in list (`voicesets.py`), then `voices/kokoro.json` entries override fields or add voices.
 - `openai`: built-in list named by `voices` (`kokoro`|`openai`|`none`), then `voices/openai.json`.
 
-`{voice_id: {voice, source, default_emotion, gender, age, tone, description?, license?, consent?, ref_audio?, mix?, lang?}}`
+`{voice_id: {voice, source, default_emotion, gender, age, tone, name?, description?, license?, consent?, ref_audio?, mix?, lang?}}`
 - `mix`: `{voice id: weight}` — a blend of the backend's voices (Kokoro locally; sent as `a(0.7)+b(0.3)` over HTTP).
 - `lang`: accent/language for backends that need it (Kokoro: `en-us`, `en-gb`, … — from the id's first letter by default).
 - `gender`: `male`|`female`
@@ -446,7 +529,12 @@ Tags are optional, but **voices without a `gender` tag are never auto-cast** (th
 | variant, attempts | int | which take was kept; how many were tried |
 
 ### `audio/cache/XX/<key>.lvl.json`
-`{voice, lufs}`: loudness of the segment. The per-voice gain is `clamp(voice_target_lufs − median(lufs of voice), ±max_voice_gain_db)`.
+`{voice, lufs}`: loudness of the segment. A complete render measures the unique clips in its current plan
+before assembling any chapter. Each chapter uses the same per-voice gain,
+`clamp(voice_target_lufs − median(lufs of voice), ±max_voice_gain_db)`.
+
+`audio/gain_baseline.json` stores the gains with a fingerprint of the backend, cast, sample rate and
+gain settings. Partial and review renders reuse compatible gains and estimate gains for voices without a baseline.
 
 ### `audio/chapters/NNNN.wav` (+ `.json`)
 - The chapter's segments with per-voice gain and pauses, then a two-pass loudnorm to `target_lufs` (−19) and `true_peak_db` (−3).
@@ -534,10 +622,12 @@ whether a chain of known-permissive methods exists for every stage.
 ## Runner state
 
 ### `pipeline.json`
-`{stage: {"method": name, "key": "<method fingerprint>:<upstream hash>"}}`
+`{stage: {"method": name, "key": "<method fingerprint>:<upstream hash>", "incomplete"?: true}}` (ebook mode: `ebook-pipeline.json`)
 - The fingerprint is sha256 of stage, method and settings. Methods that use the LLM append the model name.
 - The upstream hash is sha256 over the previous stage's `outputs()` files (names and bytes).
-- A stage with `SKIP_IF_UNCHANGED` (parse, attribute) is skipped when its key matches and its outputs exist.
+- A stage with `SKIP_IF_UNCHANGED` (parse, attribute) is skipped when its key matches, its outputs exist and the
+  record isn't `incomplete` (`speakers` windows that failed, `attribution_errors.json`).
+- Attribution records include the chapter selection and require a spans file for each selected chapter.
 - `--force <stage>|all` overrides the skip.
 
 ### Cleanup after failure (`[run] cleanup_failed`, default `"new"`)
@@ -620,7 +710,7 @@ address (`lanes.endpoint(url)`).
 ## External services
 | Service | Contract |
 |---|---|
-| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `schema_style = "simple"`: `$defs` inlined and length/format limits dropped, for servers that reject them (Gemini); answers are still validated against the full schema. `reasoning_effort` (openai dialect) and `min_max_tokens` (a floor on every request's `max_tokens`) for reasoning models whose hidden tokens count against `max_tokens`; all three are added only when set, so other requests and their cache keys don't change. `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key`, or `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). |
+| LLM (`[llm] base_url`) | OpenAI `/v1/chat/completions`; `/v1/models` for `--check`. `dialect = "llama.cpp"` (default; also vLLM/SGLang) adds `chat_template_kwargs.enable_thinking` and top_k/min_p sampling; `"openai"` (Ollama, LM Studio, OpenRouter, OpenAI) sends standard fields only. `structured = "json_schema"` (strict, constrained) or `"json_object"` (schema in the prompt, answer validated; code fences stripped). `schema_style = "simple"`: `$defs` inlined and length/format limits dropped, for servers that reject them (Gemini); answers are still validated against the full schema. `reasoning_effort` (openai dialect) and `min_max_tokens` (a floor on every request's `max_tokens`) for reasoning models whose hidden tokens count against `max_tokens`; all three are added only when set, so other requests and their cache keys don't change. `"anthropic"`: Claude through the official SDK (`llm_anthropic.py`): structured output via `messages.parse`, adaptive thinking with `[llm] effort` / `effort_thinking`, server-side refusal fallback (`fallbacks: "default"`). Key: `api_key_env` resolved by `config.secret()` (environment, then the data directory's `.env`, then the config's); an inline `api_key` is refused, since the dashboard shows and edits TOML. `/v1/models` ids are compared without a `models/` prefix (Gemini lists `models/<name>`). Transient failures (network, 429, 5xx) retry `[llm] retries` times with backoff. Token usage is printed after each run. Shared context (`[llm] context_tokens`). Profiles: `current_llm = "name"` (or `[llm] active = "name"` or CLI `--llm name`) selects a named chunk (`[llm.<name>]`, `[llms.<name>]`, or top-level `[<name>]`), switching all model settings, endpoints and context sizes in one place. |
 | TTS (`openai`) | `POST /v1/audio/speech` `{model, input, voice, response_format, speed?, instructions?}` → audio. 4xx fatal; 5xx/network retried. |
 | TTS (`kokoro`) | none: kokoro-onnx in-process; model files from the kokoro-onnx GitHub release into `model_dir` (`~/.cache/incant/kokoro`). |
 | TTS (IndexTTS) | `POST /v1/audio/speech` `{model, input, voice, response_format:"wav", speed?, extra_params:{lang, use_random, use_emo_text?, emo_text?, emo_alpha?}}` → WAV. A status of 4xx is fatal; 5xx and network errors are retried. |
@@ -630,9 +720,16 @@ address (`lanes.endpoint(url)`).
 ## CLI
 ```
 incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug S] [--from STAGE]
-          [--until STAGE] [--force STAGE|all] [--chapters 1,3-5] [--dry-run] [--list] [--check]
+          [--until STAGE] [--force STAGE|all] [--chapters 1,3-5] [--mode audiobook|ebook] [--llm PROFILE]
+          [--dry-run] [--list] [--check] [--licenses] [--version]
           [--review [--host H --port P]]
+incant --serve [--allow-path DIR]… [--llm PROFILE] [--host H --port P]
 ```
+- **Modes:** `--mode audiobook` (default) runs ingest → … → output; `--mode ebook` runs ingest → `draft`
+  (`work/<slug>/ebook.json`, editable in the dashboard) → `publish` (EPUB, `<output_dir>/ebooks/<slug>.epub`
+  by default). Ebook mode takes no `--chapters` or `--llm`, and refuses EPUB-to-EPUB.
+- **Protected files:** a `.env`, `.env.*`, `*.env` or `*.toml` file is never accepted as the input or the
+  output (`-o`), and directory batches skip them.
 - **Methods:**
   - `stage=method` is explicit.
   - A bare name belongs to its unique stage; a name several stages share goes to the next of them after the previous token's stage.
@@ -640,7 +737,8 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
   - Stages left over take `[pipeline]`, then `auto`, then the stage's only method, then the stage's `DEFAULT`
     (parse `basic`, attribute `narrator`, normalize `rules`, synthesize `kokoro`, output `m4b`).
 - **Input:** a directory without `meta.json` is a batch. Its files are processed in sorted order, failures are reported and the run continues.
-  A container file (bookmark export) is a batch of its items; inside a directory it is expanded in place.
+  A container file (a bookmark export, claimed by the preingest stage) is a batch of its items; inside a
+  directory it is expanded in place.
   With `--from` past ingest, each item's book is found by its source (`meta.json` `source`); an item never
   ingested fails.
 - **Batch lanes** (`lanes.py`, `[run] lanes`): each book's stages are cut into phases where `resource()`
@@ -652,10 +750,46 @@ incant <input|slug|workdir|dir> [method…] [out.ext] [-c cfg] [-o out] [--slug 
   machine shares a lane, since they may share a GPU; `"endpoint"`: one lane per `host:port`; `"off"`: one book
   at a time. `--dry-run` prints the lanes; when books overlap, log lines start with `[n]`, the book's number.
 - **Exit code:** non-zero on any failure.
+- **Environment:** `INCANT_DATA` (data directory), `INCANT_LLM` (LLM profile, like `--llm`), `INCANT_HOME`
+  (installation directory: bundled voices, the dashboard's code root), `INCANT_KOKORO_DIR` (Kokoro model files),
+  `INCANT_DOCLING_DIR` (Docling models), `INCANT_LOCK_DIR` (token-budget lock files shared by concurrent runs;
+  default `/tmp/incant_locks`), `INCANT_PATH_ROOTS` (`--serve`), `INCANT_REVIEW_HOST` (container images only),
+  `INCANT_EXTRAS` / `INCANT_NO_SYNC` (the `./incant` launcher's `uv sync`), and `INCANT_CONFIG` (the Debian
+  launcher's base configuration, default `/etc/incant/incant.toml`).
+
+## Pipeline dashboard (`--serve`, `--daemon`)
+
+The Python server stays in the foreground for use with Docker or a process supervisor. It binds to localhost
+unless launched inside the container with the loopback port mapping. It serves the queue at `/`, review at
+`/review/<slug>/`, and completed output files within the allowed directories.
+
+- One dashboard pipeline job runs at a time. The job executes the normal CLI as a subprocess, so directory
+  and bookmark batches can still use their configured lanes. Queue records and logs live in
+  `<data>/.incant/jobs/`. After a restart, queued jobs resume and formerly running jobs are marked interrupted.
+- Sources can be HTTP(S) URLs, uploads, existing book slugs, or paths in the code, data, or configured work directory.
+  At daemon launch, repeat `--allow-path DIR` or set `INCANT_PATH_ROOTS` (`:` on Linux/macOS, `;` on Windows)
+  to add directories. The roots are fixed for the lifetime of the daemon. TOML edits cannot add roots.
+  Relative input paths are searched in the data directory first. Relative output paths use the configured
+  output directory. Absolute outputs can target any allowed root. The output directory configured at launch
+  is also available for exports.
+- The Configuration view edits the complete TOML documents. Invalid TOML or invalid configured methods are
+  rejected before replacement. The data directory's base replacement keeps installation-relative resources
+  such as bundled voices and lexicons. Running jobs use the config they loaded at startup.
+- The review page exposes the same editor as the single-book server. Review writes and configuration saves
+  are available between pipeline jobs. Ebook drafts are edited at `/ebook/<slug>/`.
+- Uploads are stored under `<data>/uploads/<random>/<name>` and queued as a path source.
+- `.env` and `.toml` files are refused as sources and as outputs (also through symlinks).
+- **Access:** no login of its own. `[review] host` is loopback by default; another address is refused unless
+  `public_domains` and `trusted_proxy_ips` are both set, for an authenticating proxy (Caddy `basic_auth`) whose
+  actual TCP address is trusted (forwarded-for headers are ignored). A request's `Host` must be a local name or a
+  public domain, changes need a matching `Origin` (`https://<domain>` through the proxy) and a JSON body of at
+  most 2 MiB. Responses carry `X-Frame-Options: DENY` and `frame-ancestors 'none'`; sockets time out after 30 s
+  idle. Packaging and proxy setup: `packaging/debian/README.md`.
 
 ## Review server (`--review`)
-No authentication; localhost by default. Bind address: `--host`, else `$INCANT_REVIEW_HOST`, else `[review] host`
-(127.0.0.1). `compose.desktop.yaml` sets `INCANT_REVIEW_HOST=0.0.0.0` inside the container and publishes the port
+No login of its own; the same access rules as the dashboard (Host, Origin, JSON body, no framing; another address
+than loopback only with `public_domains` + `trusted_proxy_ips`). Bind address: `--host`, else `$INCANT_REVIEW_HOST`,
+else `[review] host` (127.0.0.1). `compose.desktop.yaml` sets `INCANT_REVIEW_HOST=0.0.0.0` inside the container and publishes the port
 on the host's 127.0.0.1 only (`docker compose run --service-ports`).
 
 | Method | Path | Body → effect |
@@ -663,13 +797,16 @@ on the host's 127.0.0.1 only (`docker compose run --service-ports`).
 | GET | `/api/book` | meta, chapters (with rendered/QA status), characters, cast, voices |
 | GET | `/api/chapter/NNNN` | spans with `say`, segment keys, QA |
 | GET | `/api/lexicon` | book `{word: say}` |
-| POST | `/api/span` | `{id, speaker?, emotion?: {text, alpha}\|null, say?: str\|null}`: span `locked=true`; `say` goes to `say_overrides.json` |
+| POST | `/api/span` | `{id, speaker?, emotion?: {text, alpha}\|null, say?: str\|null, omit?: bool}`. Spoken-text and omission edits go to `say_overrides.json`. |
+| POST | `/api/reassign` | `{source, target, chapter_id?: str\|null}` moves that speaker's attributed spans to another speaker in the selected chapter or across the book, and locks the moved spans. |
 | POST | `/api/cast` | `{character, voice\|null}`: sets the role (null = back to auto); drops the character from `cast.auto` |
 | POST | `/api/character` | `{id, canonical_name?, gender?, age?}`: `locked=true` |
 | POST | `/api/lexicon` | `{word: say}`: rewrites `<book>/lexicon.toml` |
+| POST | `/api/render` | `{span_id}` auditions a segment, or `{chapter_id}` re-renders a chapter using saved edits |
 | GET | `/audio/segment/<key>.wav`, `/audio/chapter/NNNN.wav`, `/audio/voice/<id>.wav` | audio |
 
-Edits take effect on the next run of the stage that reads them.
+Review renders use the book’s recorded normalization and synthesis methods, falling back to configured defaults
+when a method has no record. The CLI output stage updates the exported audiobook.
 
 ## Eval (`eval/`)
 - **`gold/<book>.json`:** `{"book": slug, "spans": {span_id: label}}`. A label is one of:

@@ -3,10 +3,11 @@
 All notable changes to incant. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and versions follow [Semantic Versioning](https://semver.org/).
 
-## Unreleased
+## 0.4.0 — 2026-11-25
 
 ### Security
-- **Keys are no longer read from configuration files.** `[llm] api_key` and the site settings `password`,
+- **Keys are no longer read from configuration files.** `api_key` in any LLM profile (selected or not) or
+  `[synthesize.*]` table, and the site settings `password`,
   `bearer` and `headers` are refused with a message naming the replacement: put the secret in the
   environment or a `.env` file and name it with `api_key_env`, `password_env`, `bearer_env` or the new
   `headers_env = { "Header" = "VARIABLE" }`. The dashboard shows and edits TOML, so keys there could be read
@@ -64,6 +65,7 @@ and versions follow [Semantic Versioning](https://semver.org/).
 - Refactored e-book ingest inheritance so `EbookIngest` is the parent class for `EpubIngest` and `MobiIngest`. Both `epub` and `mobi` now inherit directly from `ebook`, simplifying method overrides and cleanly grouping e-book formats under `ebook`.
 
 ### Fixed
+- Lockfile: pypdfium2 5.15.1 (yanked upstream for a crash at interpreter exit) is now 5.15.2.
 - `--check` recognizes Gemini models: its OpenAI-style endpoint lists them as `models/<name>`.
 - Backslashes are no longer sent to the TTS. Some web pages contain stray escapes (`doesn\'t`, `\"word\"`)
   that engines read as noise, which failed the speech-to-text check and caused extra re-renders.

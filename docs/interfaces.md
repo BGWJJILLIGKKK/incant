@@ -30,12 +30,14 @@ General rules for every file below:
 ```
 work/<slug>/
   meta.json               ingest       BookMeta
+  source.json             ingest       {"paragraphs": [...]}: the ingested paragraphs (ebook drafts start from it)
   text.md                 ingest       whole book, normalized text
   cover.<ext>             ingest       optional image
   chapters.json           parse        ChapterList
   chapters/NNNN.txt       parse        one chapter's text
   characters.json         parse (+attribute, review)   CharacterList
   spans/NNNN.jsonl        attribute (+review)          one Span per line
+  attribution_errors.json attribute    speakers windows that failed; the run is recorded as incomplete
   speech/NNNN.json        normalize    ChapterSpeech
   speech/changes.txt      normalize    human report
   lexicon.toml            human/review per-book pronunciations
@@ -48,12 +50,16 @@ work/<slug>/
   audio/chapters/NNNN.wav         synthesize   assembled chapter
   audio/chapters/NNNN.json        synthesize   assembly fingerprint
   audio/manifest.json             synthesize   AudioManifest
+  audio/gain_baseline.json        synthesize   per-voice gains (see `.lvl.json`)
   audio/qa_report.json            synthesize   segments still failing QA
   audio/concat.txt, ffmetadata.txt  output     ffmpeg inputs (scratch)
   output.json                     output       {"files": [absolute paths written]}; the files are in the output tree
   removed.txt                     parse        author's notes / site text removed (metatext); absent if none
   llm_cache/XX/<sha256>.json      parse, attribute   cached LLM answers
   pipeline.json                   runner       stage skip records
+  ebook.json                      draft (+dashboard)  ebook manuscript (`--mode ebook`)
+  ebook-output.json               publish      the exported EPUB's path
+  ebook-pipeline.json             runner       stage skip records of ebook mode
 ```
 `XX` = first two hex characters of the key.
 
@@ -102,6 +108,8 @@ as given. `run()` raises — a PRE method never runs on a book.
 | description | str | no | blurb, becomes the m4b comment |
 | cover | (ext, bytes) | no | e.g. `("jpg", b"...")` |
 | warnings | list[str] | no | logged |
+| source | str | no | canonical address when it differs from the input (a series' URL), so its parts share one book |
+| input_format | str | no | the actual input format before an intermediate conversion (`docx`, `mobi`…) |
 
 ### `meta.json` — BookMeta
 | Field | Type | Req | Meaning |
@@ -113,6 +121,7 @@ as given. `run()` raises — a PRE method never runs on a book.
 | language | str | default `en` | |
 | source | str | yes | absolute path or URL of the input |
 | source_format | enum as above | yes | |
+| input_format | str | no | the input's own format when it was converted first (a Word file read as EPUB) |
 | cover | str | no | file name in the work dir (`cover.jpg`); must exist if set |
 | series, series_index | str, float | no | reserved; not yet used |
 | description | str | no | m4b comment (first 2000 characters) |
@@ -378,6 +387,7 @@ Spans are split deterministically, in code (`stages/attribute/spans.py`):
 | confidence | float | – | reserved |
 | locked | bool | false | hand-reviewed. A re-split keeps speaker and emotion where the id **and** text still match. |
 | say | str | – | never set here (see normalize) |
+| omitted | bool | – | never set here: normalize sets it in `speech/` for spans review omitted |
 
 Speaker mapping rules for any attribute method:
 - In first-person books, the narrator's narration and lines go to the `characters.narrator` id, so they share one voice.
@@ -465,7 +475,7 @@ Casting (`casting.auto_cast`):
 - Candidates are voices tagged `male`/`female` that match the character's gender. A character of unknown gender may take any of them. The narrator's voice is avoided where possible.
 - Ranked by: fewest chapters shared with the voice's other characters, not already used by a main character, unused, best age match, best tone match, fewest lines.
 - No candidate means the character falls back to `default_voice`.
-- Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`, OpenAI `nova`).
+- Narrator voice: the method's `narrator` setting, else `[cast] narrator` if the backend has that voice, else the backend's `DEFAULT_NARRATOR` (Kokoro `af_heart`; `openai` `af_heart` with `voices = "kokoro"`, `nova` with `"openai"`; ElevenLabs an account voice described as narration, else George).
 - **Switching backends:** `cast.json` belongs to one voice space. A backend with another space moves it to `cast.<old>.json` and restores `cast.<new>.json` if present, so hand edits for each backend survive switching back and forth.
 - The `[cast] main_unique` characters with the most lines never share a voice, and scene partners avoid sharing one.
 - First-person books (`[cast] first_person_narration = "character"`, the default): the `narrator` role takes the narrating character's voice.
@@ -475,7 +485,7 @@ Casting (`casting.auto_cast`):
 - `kokoro`: built-in list (`voicesets.py`), then `voices/kokoro.json` entries override fields or add voices.
 - `openai`: built-in list named by `voices` (`kokoro`|`openai`|`none`), then `voices/openai.json`.
 
-`{voice_id: {voice, source, default_emotion, gender, age, tone, description?, license?, consent?, ref_audio?, mix?, lang?}}`
+`{voice_id: {voice, source, default_emotion, gender, age, tone, name?, description?, license?, consent?, ref_audio?, mix?, lang?}}`
 - `mix`: `{voice id: weight}` — a blend of the backend's voices (Kokoro locally; sent as `a(0.7)+b(0.3)` over HTTP).
 - `lang`: accent/language for backends that need it (Kokoro: `en-us`, `en-gb`, … — from the id's first letter by default).
 - `gender`: `male`|`female`
@@ -612,10 +622,11 @@ whether a chain of known-permissive methods exists for every stage.
 ## Runner state
 
 ### `pipeline.json`
-`{stage: {"method": name, "key": "<method fingerprint>:<upstream hash>"}}`
+`{stage: {"method": name, "key": "<method fingerprint>:<upstream hash>", "incomplete"?: true}}` (ebook mode: `ebook-pipeline.json`)
 - The fingerprint is sha256 of stage, method and settings. Methods that use the LLM append the model name.
 - The upstream hash is sha256 over the previous stage's `outputs()` files (names and bytes).
-- A stage with `SKIP_IF_UNCHANGED` (parse, attribute) is skipped when its key matches and its outputs exist.
+- A stage with `SKIP_IF_UNCHANGED` (parse, attribute) is skipped when its key matches, its outputs exist and the
+  record isn't `incomplete` (`speakers` windows that failed, `attribution_errors.json`).
 - Attribution records include the chapter selection and require a spans file for each selected chapter.
 - `--force <stage>|all` overrides the skip.
 

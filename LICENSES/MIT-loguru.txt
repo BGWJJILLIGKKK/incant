@@ -1,8 +1,8 @@
-MIT License (loguru 0.7.3; the wheel on PyPI ships no license file)
+MIT License (loguru 0.7.3; the wheel on PyPI ships no license file — verbatim from https://github.com/Delgan/loguru/blob/master/LICENSE)
 
-Copyright (c) Delgan
-(Author as named in the package metadata. The upstream notice, with its year, is in
-https://github.com/Delgan/loguru/blob/master/LICENSE; it was not available offline when this file was made.)
+MIT License
+
+Copyright (c) 2017
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

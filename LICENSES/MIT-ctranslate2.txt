@@ -1,8 +1,9 @@
-MIT License (ctranslate2 4.8.5; the wheel on PyPI ships no license file)
+MIT License (ctranslate2 4.8.5; the wheel on PyPI ships no license file — verbatim from https://github.com/OpenNMT/CTranslate2/blob/master/LICENSE)
 
-Copyright (c) OpenNMT
-(Author as named in the package metadata. The upstream notice, with its year, is in
-https://github.com/OpenNMT/CTranslate2/blob/master/LICENSE; it was not available offline when this file was made.)
+MIT License
+
+Copyright (c) 2018-     SYSTRAN.
+Copyright (c) 2019-     The OpenNMT Authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

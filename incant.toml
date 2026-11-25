@@ -1,5 +1,5 @@
 # incant configuration. Personal overrides go in incant.local.toml (gitignored).
-# Relative paths resolve against this file's directory.
+# Relative paths resolve against this file's directory; work_dir and output_dir against the data directory ([paths]).
 
 # Default method per stage, used when the command line doesn't name one.
 # "auto" = detect from the input (ingest).
@@ -135,7 +135,8 @@ voices = "kokoro"            # built-in voice list: "kokoro", "openai" (alloy, n
 [synthesize.elevenlabs]      # paid cloud TTS; key in ELEVENLABS_API_KEY (environment or the data directory's .env)
 model_id = "eleven_multilingual_v2"
 allow_over_quota = false     # stop before rendering more characters than the subscription has left (or when a
-                             # key without user_read can't tell); narrator default: George (stock)
+                             # key without user_read can't tell); narrator default: an account voice described
+                             # as narration, else George (stock)
 
 [synthesize.dummy]           # offline beeps — exercises the whole pipeline without a TTS server
 concurrency = 4

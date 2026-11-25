@@ -31,6 +31,16 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
+INLINE_KEY_ERROR = ('api_key is no longer read from configuration files: put the key in a .env file '
+                    '(KEY_NAME=…, mode 600) and set api_key_env = "KEY_NAME"')
+
+
+def refuse_inline_key(data, where: str = "") -> None:
+    """Keys never come from TOML (the dashboard shows and edits it): refuse a table that still has api_key."""
+    if isinstance(data, dict) and "api_key" in data:
+        raise ValueError(f"{where}: {INLINE_KEY_ERROR}" if where else INLINE_KEY_ERROR)
+
+
 class LLMConfig(BaseModel):
     """Any OpenAI-compatible chat server: llama.cpp / llama-swap, vLLM, Ollama (http://localhost:11434/v1),
     LM Studio, OpenRouter, OpenAI. `dialect` picks the extra request fields the server understands."""
@@ -72,9 +82,7 @@ class LLMConfig(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _no_inline_key(cls, data):
-        if isinstance(data, dict) and "api_key" in data:
-            raise ValueError('api_key is no longer read from configuration files: put the key in a .env file '
-                             '(KEY_NAME=…, mode 600) and set api_key_env = "KEY_NAME"')
+        refuse_inline_key(data)
         return data
 
 
@@ -245,6 +253,9 @@ def _resolve_llm_profile(data: dict, current_llm: str | None = None) -> None:
     for k, v in data.items():
         if k not in standard_tables and isinstance(v, dict) and (k.endswith("llm") or "model" in v or "dialect" in v):
             profiles[k] = v
+
+    for name, prof in profiles.items():  # inactive profiles too: they stay in the TOML the dashboard shows
+        refuse_inline_key(prof, f"[{name}]")
 
     target = (
         current_llm

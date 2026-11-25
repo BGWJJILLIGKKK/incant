@@ -147,6 +147,20 @@ def test_inline_secrets_refused(tmp_path):
             UrlSettings(sites={"example.com": inline})
     with pytest.raises(ValidationError, match="api_key_env"):
         LLMConfig(api_key="sk-x")
+    from incant.stages.synthesize.speech_http import SpeechHTTPSettings
+
+    with pytest.raises(ValidationError, match="api_key_env"):
+        SpeechHTTPSettings(api_key="sk-x")
+
+
+def test_inline_key_in_inactive_llm_profile_refused(tmp_path):
+    """A profile that isn't selected is still in the TOML the dashboard shows, so its key is refused too."""
+    from incant.config import load_config
+
+    cfg = tmp_path / "incant.toml"
+    cfg.write_text('[llm]\nmodel = "m"\n\n[llm.other]\nmodel = "x"\napi_key = "sk-y"\n')
+    with pytest.raises(ValueError, match=r"\[other\].*api_key_env"):
+        load_config(cfg)
 
 
 def test_gate_and_empty_pages_refused(monkeypatch):

@@ -91,10 +91,10 @@ Wheels that ship no license file, and what is known about them offline:
 - **espeakng-loader 0.2.4**: declares no license in its metadata (author: thewh1teagle). It bundles libespeak-ng
   1.52.0 and espeak-ng-data, which are GPL-3.0-or-later, so it is treated as GPL-3.0-or-later as a whole
   (text: GPL-3.0.txt).
-- **ctranslate2 4.8.5**: MIT per its metadata (author: OpenNMT). The upstream copyright line could not be read
-  offline; MIT-ctranslate2.txt names the author from the metadata and points to the upstream LICENSE.
-- **loguru 0.7.3**: MIT per its classifiers (author: Delgan). As for ctranslate2: MIT-loguru.txt names the author
-  and points to the upstream LICENSE.
+- **ctranslate2 4.8.5**: MIT (Copyright (c) 2018- SYSTRAN, 2019- The OpenNMT Authors). The wheel ships no
+  license file; MIT-ctranslate2.txt is the upstream LICENSE verbatim.
+- **loguru 0.7.3**: MIT (Copyright (c) 2017, author Delgan). As for ctranslate2, MIT-loguru.txt is the upstream
+  LICENSE verbatim.
 - **flatbuffers 25.12.19** (Google; author in metadata: Derek Bailey) and **tokenizers 0.23.3** (Hugging Face):
   Apache-2.0 per their metadata. Any upstream NOTICE file is not in the wheels and was not checked.
 - **onnxruntime**: no license file in its dist-info, but `onnxruntime/LICENSE` (MIT, Microsoft Corporation) and
@@ -267,7 +267,7 @@ Generated with `tools/licenses.py`, as declared by each package. The `.deb` hold
 | pyclipper | 1.4.0 | MIT License |
 | pydantic-settings | 2.16.2 | MIT |
 | pylatexenc | 2.11 | MIT License |
-| pypdfium2 | 5.15.1 | BSD-3-Clause, Apache-2.0, dependency licenses |
+| pypdfium2 | 5.15.2 | BSD-3-Clause, Apache-2.0, dependency licenses |
 | python-docx | 1.2.0 | MIT License |
 | python-dotenv | 1.2.4 | BSD-3-Clause |
 | python-oxmsg | 0.0.2 | MIT License |

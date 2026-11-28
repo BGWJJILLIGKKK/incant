@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import stages as stages_pkg
-from .config import Config
+from .config import Config, deep_merge
 from .stages.base import Context, Method, hash_paths
 from .workdir import WorkDir, atomic_write
 
@@ -90,8 +90,8 @@ def instantiate(cfg: Config, stage: StageInfo, name: str) -> Method:
     cls = load_method_class(stage, name)
     merged: dict = {}
     for parent in reversed(parent_methods(stage, cls)):
-        merged = _merge(merged, cfg.method_settings(stage.name, parent))
-    merged = _merge(merged, cfg.method_settings(stage.name, name))
+        merged = deep_merge(merged, cfg.method_settings(stage.name, parent))
+    merged = deep_merge(merged, cfg.method_settings(stage.name, name))
     fields = cls.Settings.model_fields
     unknown = sorted(set(cfg.method_settings(stage.name, name)) - set(fields))
     if unknown:
@@ -99,13 +99,6 @@ def instantiate(cfg: Config, stage: StageInfo, name: str) -> Method:
                          + (f" (known: {', '.join(fields)})" if fields else " (this method has no settings)"))
     settings = cls.Settings.model_validate({k: v for k, v in merged.items() if k in fields})
     return cls(settings, cfg)
-
-
-def _merge(a: dict, b: dict) -> dict:
-    out = dict(a)
-    for k, v in b.items():
-        out[k] = _merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
-    return out
 
 
 # ------------------------------------------------------------------ resolution
@@ -293,7 +286,7 @@ def _run_steps(steps: list[Step], ctx: Context, *, start: str | None = None, sto
     force = force or set()
     names = [s.stage.name for s in steps]
     validate_stage_range(names, start, stop)
-    active = False if start else True
+    active = not start
     upstream_hash = ""
     checked_chapters = False
     for step in steps:

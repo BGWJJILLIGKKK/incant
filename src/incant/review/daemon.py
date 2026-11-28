@@ -23,7 +23,7 @@ from ..pipeline import PUBLISHING_MODES, discover, instantiate, stages_for, vali
 from ..ebook import draft_path, ensure_draft, output_record, require_conversion, source_format
 from ..workdir import WorkDir, atomic_write, refuse_protected
 from .ebook import ebook_data, save_ebook
-from .server import _LOCAL, Book, make_handler, proxy_ip, request_allowed  # noqa: F401 (re-exported)
+from .server import _LOCAL, Book, make_handler, proxy_ip, request_allowed, validate_review_bind  # noqa: F401 (re-exported)
 
 _JOB_ID = re.compile(r"[a-f0-9]{32}")
 _ACTIVE = {"queued", "running"}
@@ -499,11 +499,10 @@ def make_dashboard_handler(dashboard: Dashboard):
                 if not write and subpath in (None, "/"):
                     return self._send(200, ebook_page, "text/html; charset=utf-8")
                 if subpath == "/api/draft":
-                    wd = dashboard.ebook_workdir(slug)
                     if write:
                         with dashboard.exclusive():
-                            wd = dashboard.ebook_workdir(slug)
-                            return self._json(save_ebook(dashboard, wd, self._body()))
+                            return self._json(save_ebook(dashboard, dashboard.ebook_workdir(slug), self._body()))
+                    wd = dashboard.ebook_workdir(slug)
                     if draft_path(wd).is_file():
                         return self._json(ebook_data(wd))
                     with dashboard.exclusive():
@@ -589,10 +588,7 @@ def make_dashboard_handler(dashboard: Dashboard):
 
 def serve_dashboard(cfg: Config, config: Path | None, profile: str | None, host: str, port: int,
                     *, published: bool = False, allow_paths: tuple[Path, ...] = ()) -> None:
-    if bool(cfg.review.public_domains) != bool(cfg.review.trusted_proxy_ips):
-        raise ValueError("Configure both review.public_domains and review.trusted_proxy_ips for Caddy access")
-    if host not in _LOCAL and not published and not cfg.review.public_domains:
-        raise ValueError("LAN binding requires review.public_domains and review.trusted_proxy_ips")
+    validate_review_bind(cfg.review, host, published)
     if ":" in host:
         import socket
 

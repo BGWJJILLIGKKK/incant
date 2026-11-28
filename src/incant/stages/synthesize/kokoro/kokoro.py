@@ -12,16 +12,15 @@ No emotion control: emotions are ignored.
 
 from __future__ import annotations
 
-import io
 import os
 import threading
-import wave
 from pathlib import Path
 from typing import Literal
 
 import httpx
 from pydantic import Field
 
+from ....audio import pcm_to_wav
 from ....schemas import Emotion, Voice
 from ....voices import VoiceLibrary
 from ....voicesets import KOKORO, KOKORO_LANG, KOKORO_NARRATOR
@@ -162,13 +161,7 @@ class KokoroTTS(SynthesizeMethod):
             with self._lock:  # the phonemizer (espeak) isn't thread-safe
                 audio, rate = kokoro.create(text, voice=style, speed=speed, lang=lang)
         pcm = (np.clip(audio, -1.0, 1.0) * 32767).astype(np.int16).tobytes()
-        buf = io.BytesIO()
-        with wave.open(buf, "wb") as w:
-            w.setnchannels(1)
-            w.setsampwidth(2)
-            w.setframerate(rate)
-            w.writeframes(pcm)
-        return buf.getvalue()
+        return pcm_to_wav(pcm, rate)
 
     def check(self) -> list[tuple[bool, str]]:
         out = []

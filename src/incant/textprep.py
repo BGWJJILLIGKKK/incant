@@ -16,7 +16,6 @@ _SENT_END = re.compile(r"[.!?…][\"”’)\]]*(?=\s+[\"“‘(\[]?[A-Z0-9])")
 _ENDS_WITH_ABBREV = re.compile(rf"\b{_ABBREV}\.$")
 _MAJOR_BREAK = re.compile(r"(?<=[;—–:])\s+")
 _MINOR_BREAK = re.compile(r"(?<=,)\s+")
-_SOFT_BREAK = re.compile(r"(?<=[;:,—–])\s+")
 
 
 def speakable(text: str) -> str:

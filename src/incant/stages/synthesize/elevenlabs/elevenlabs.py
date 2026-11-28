@@ -14,12 +14,11 @@ Free-tier audio must credit ElevenLabs (see credits.txt).
 
 from __future__ import annotations
 
-import io
 import re
-import wave
 
 import httpx
 
+from ....audio import pcm_to_wav
 from ....schemas import Emotion, Voice
 from ....voices import VoiceLibrary
 from ..speech_http import SpeechHTTP, SpeechHTTPSettings
@@ -132,13 +131,7 @@ class ElevenLabs(SpeechHTTP):
         return f"/v1/text-to-speech/{voice.id}?output_format=pcm_{RATE}", body
 
     def decode(self, response: httpx.Response) -> bytes:
-        buf = io.BytesIO()
-        with wave.open(buf, "wb") as w:
-            w.setnchannels(1)
-            w.setsampwidth(2)
-            w.setframerate(RATE)
-            w.writeframes(response.content)
-        return buf.getvalue()
+        return pcm_to_wav(response.content, RATE)
 
     # ------------------------------------------------------------ cost guard
 

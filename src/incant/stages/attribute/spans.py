@@ -20,6 +20,21 @@ _OPEN = "“"
 _CLOSE = "”"
 _STRAIGHT = '"'
 _SPEAKABLE = re.compile(r"[A-Za-z0-9]")
+_FIRST_PERSON = re.compile(r"\b(I|me|my|myself)\b")
+
+
+def group_by_para(spans: list[Span]) -> list[list[Span]]:
+    paras: list[list[Span]] = []
+    for s in spans:
+        if not paras or paras[-1][0].para != s.para:
+            paras.append([])
+        paras[-1].append(s)
+    return paras
+
+
+def first_person_rate(spans: list[Span]) -> float:
+    text = " ".join(s.text for s in spans if s.kind is SpanKind.narration)
+    return 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split()))
 
 
 def split_paragraph(p: str) -> list[tuple[SpanKind, str]]:

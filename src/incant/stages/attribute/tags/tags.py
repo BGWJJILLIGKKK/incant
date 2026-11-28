@@ -28,7 +28,7 @@ from ....normalize import slugify
 from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Gender, Span, SpanKind
 from ...base import Context
 from ..base import AttributeMethod
-from ..spans import keep_locked, split_chapter
+from ..spans import first_person_rate, group_by_para, keep_locked, split_chapter
 
 __all__ = ["TagsAttribute"]
 
@@ -107,7 +107,6 @@ PERSON_NOUNS = set(ROLE_GENDER) | {
     "wizard", "teacher", "schoolmaster", "student", "boy", "girl", "man", "woman"}
 _SEGMENTS = re.compile(r"(?<!\bMr)(?<!\bMrs)(?<!\bMs)(?<!\bDr)(?<!\bSt)[.;]")
 _PRONOUN_AFTER = re.compile(r"\b(he|him|his|himself|she|her|hers|herself)\b", re.I)
-_FIRST_PERSON = re.compile(r"\b(I|me|my|myself)\b")
 
 
 def strip_article(s: str) -> str:
@@ -345,12 +344,7 @@ class TagsAttribute(AttributeMethod):
         for ch in chapters:
             spans = split_chapter(ch.id, wd.read_chapter_text(ch.file))
             all_spans[ch.id] = spans
-            paras: list[list[Span]] = []
-            for s in spans:
-                if not paras or paras[-1][0].para != s.para:
-                    paras.append([])
-                paras[-1].append(s)
-            book[ch.id] = paras
+            book[ch.id] = group_by_para(spans)
 
         chars = wd.read_characters()
         profiled = chars is not None and any(c.origin == "profile" for c in chars.characters)
@@ -359,8 +353,7 @@ class TagsAttribute(AttributeMethod):
         else:
             chars.characters = [c for c in chars.characters if c.origin == "profile"]
         narr_words = [s for spans in all_spans.values() for s in spans][:20000]
-        text = " ".join(s.text for s in narr_words if s.kind is SpanKind.narration)
-        first_person = 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split())) >= self.settings.first_person_rate
+        first_person = first_person_rate(narr_words) >= self.settings.first_person_rate
         me = chars.narrator if chars.narrator else (NARRATOR_ID if first_person else None)
         roster = Roster(chars)
 

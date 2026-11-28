@@ -219,10 +219,10 @@ def env_file(path: Path) -> dict[str, str]:
     return out
 
 
-def _deep_merge(base: dict, over: dict) -> dict:
+def deep_merge(base: dict, over: dict) -> dict:
     out = dict(base)
     for k, v in over.items():
-        out[k] = _deep_merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+        out[k] = deep_merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
     return out
 
 
@@ -277,7 +277,7 @@ def _resolve_llm_profile(data: dict, current_llm: str | None = None) -> None:
             avail = ", ".join(sorted(profiles)) or "none"
             raise ValueError(f"Unknown LLM profile '{target}' (available: {avail})")
 
-        llm_dict = _deep_merge(llm_dict, selected)
+        llm_dict = deep_merge(llm_dict, selected)
         llm_dict["active"] = target
         data["current_llm"] = target
 
@@ -318,7 +318,7 @@ def load_config(path: Path | None = None, *, current_llm: str | None = None,
     used = []
     for f in files:
         if f in edits or f.exists():
-            data = _deep_merge(data, tomllib.loads(edits[f] if f in edits else f.read_text()))
+            data = deep_merge(data, tomllib.loads(edits[f] if f in edits else f.read_text()))
             used.append(f)
     _resolve_llm_profile(data, current_llm)
     cfg = Config.model_validate({**data, "base_dir": base.resolve(), "files": used})

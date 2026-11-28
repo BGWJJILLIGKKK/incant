@@ -250,11 +250,7 @@ class Entry:
         self.speaks |= m.speaks
 
     def gender(self) -> tuple[str, float]:
-        known = {g: n for g, n in self.genders.items() if g != "unknown"}
-        if not known:
-            return "unknown", 0.0
-        g, n = max(known.items(), key=lambda kv: kv[1])
-        return g, n / sum(self.genders.values())
+        return _top_known(self.genders) or ("unknown", 0.0)
 
     def describe(self, label: str) -> str:
         g, _ = self.gender()
@@ -269,8 +265,9 @@ def pool(mentions: list[tuple[str, str, _Mention]]) -> list[Entry]:
     entries: dict[str, Entry] = {}
     for chapter, text, m in mentions:
         name = _norm(m.name)
-        role = _is_bad_name(name) and is_role(name)
-        if (_is_bad_name(name) and not role) or not _occurs(name, text):
+        bad = _is_bad_name(name)
+        role = bad and is_role(name)
+        if (bad and not role) or not _occurs(name, text):
             continue
         key = " ".join(re.findall(r"[a-z0-9]+", name.casefold()))
         scoped = bool(_BARE_TITLE.match(name))
@@ -291,12 +288,18 @@ def role_words(name: str) -> set[str]:
     return {w.casefold() for w in re.findall(r"[A-Za-z]{4,}", n)}
 
 
-def confident_gender(genders: Counter) -> str | None:
-    known = {g: n for g, n in genders.items() if g != "unknown"}
+def _top_known(counts: Counter) -> tuple[str, float] | None:
+    """(most common non-'unknown' value, share of all counts), or None if all are 'unknown'."""
+    known = {k: n for k, n in counts.items() if k != "unknown"}
     if not known:
         return None
-    g, n = max(known.items(), key=lambda kv: kv[1])
-    return g if g in ("male", "female") and n / sum(genders.values()) >= 0.6 else None
+    k, n = max(known.items(), key=lambda kv: kv[1])
+    return k, n / sum(counts.values())
+
+
+def confident_gender(genders: Counter) -> str | None:
+    top = _top_known(genders)
+    return top[0] if top and top[0] in ("male", "female") and top[1] >= 0.6 else None
 
 
 def compatible(a: Counter, b: Counter) -> bool:
@@ -430,15 +433,14 @@ def build_characters(groups: list[list[Entry]]) -> list[Character]:
             chapters += [c for c in e.chapters if c not in chapters]
             mentions += e.mentions
             speaks |= e.speaks
-        known = {g: n for g, n in genders.items() if g != "unknown"}
-        g, conf = (max(known.items(), key=lambda kv: kv[1])[0], max(known.values()) / sum(genders.values())) if known else ("unknown", 0.0)
-        known_ages = {a: n for a, n in ages.items() if a != "unknown"}
+        g, conf = _top_known(genders) or ("unknown", 0.0)
+        top_age = _top_known(ages)
         aliases = sorted({a for a in keep.get(gi, []) if a != name}, key=lambda a: -claims[a][gi])
         chars.append(Character(
             id=slugify(name), canonical_name=name, aliases=aliases,
             gender=Gender(g), gender_confidence=round(conf, 2),
             gender_evidence=evidence.most_common(1)[0][0] if evidence else None,
-            age=AgeBracket(max(known_ages.items(), key=lambda kv: kv[1])[0]) if known_ages else AgeBracket.unknown,
+            age=AgeBracket(top_age[0]) if top_age else AgeBracket.unknown,
             description="; ".join(descriptions[:3]) or None,
             first_chapter=min(chapters) if chapters else None, chapters=sorted(chapters),
             mentions=mentions, speaks=speaks,
@@ -502,11 +504,7 @@ class CharactersParse(ParseMethod):
         return fingerprint + ":token-batch" if self.settings.extraction_mode == "batch" else fingerprint
 
     def check(self) -> list[tuple[bool, str]]:
-        try:
-            ok = self.cfg.llm.model in LLM(self.cfg.llm).models()
-            return [(ok, f"llm model '{self.cfg.llm.model}' at {self.cfg.llm.base_url}")]
-        except Exception as e:  # noqa: BLE001
-            return [(False, f"llm endpoint {self.cfg.llm.base_url}: {e}")]
+        return LLM(self.cfg.llm).check_model()
 
     def run(self, ctx: Context):
         wd = ctx.need_wd()

@@ -218,6 +218,13 @@ class LLM:
         # Gemini's OpenAI-style endpoint lists "models/<name>" but takes the bare name in requests.
         return [m["id"].removeprefix("models/") for m in r.json().get("data", [])]
 
+    def check_model(self) -> list[tuple[bool, str]]:
+        try:
+            ok = self.cfg.model in self.models()
+            return [(ok, f"llm model '{self.cfg.model}' at {self.cfg.base_url}")]
+        except Exception as e:  # noqa: BLE001
+            return [(False, f"llm endpoint {self.cfg.base_url}: {e}")]
+
     def chat_json(self, system: str, user: str, schema: type[M], *, think: bool = False, max_tokens: int = 4096) -> M:
         anthropic_api = self.cfg.dialect == "anthropic"
         if anthropic_api:

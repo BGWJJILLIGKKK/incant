@@ -25,14 +25,13 @@ from ....normalize import slugify
 from ....schemas import NARRATOR_ID, Character, CharacterList, Emotion, Gender, Span, SpanKind
 from ...base import Context
 from ..base import AttributeMethod
-from ..spans import keep_locked, split_chapter
+from ..spans import first_person_rate, group_by_para, keep_locked, split_chapter
 
 __all__ = ["SpeakersAttribute"]
 
 UNKNOWN = "unknown"
 OTHER = "other"  # an unnamed speaker identified by role ("the charwoman"); becomes a minor character
 UNNAMED = "unnamed"
-_FIRST_PERSON = re.compile(r"\b(I|me|my|myself)\b")
 _NEUTRAL = re.compile(r"^\s*(neutral|plain|normal|calm|none|flat|matter[- ]of[- ]fact)\s*$", re.I)
 
 
@@ -130,11 +129,6 @@ _FRONT = re.compile(r"(?i)^(front matter|preface|foreword|introduction|note|dedi
                     r"translator|advertisement|prologue to the|biographical|transcriber)")
 
 
-def first_person_rate(spans: list[Span]) -> float:
-    text = " ".join(s.text for s in spans if s.kind is SpanKind.narration)
-    return 1000 * len(_FIRST_PERSON.findall(text)) / max(1, len(text.split()))
-
-
 # Relationship/role nouns that dialogue tags use for characters ("said the nephew", "his clerk").
 ROLE_NOUNS = {"nephew", "niece", "uncle", "aunt", "cousin", "brother", "sister", "mother", "father", "son", "daughter",
               "wife", "husband", "widow", "clerk", "servant", "maid", "housekeeper", "butler", "landlord", "landlady",
@@ -225,11 +219,7 @@ class SpeakersAttribute(AttributeMethod):
         return f"{super().fingerprint()}:{self.cfg.llm.model}:{self.cfg.llm.context_tokens}:{self.cfg.llm.min_max_tokens}"
 
     def check(self) -> list[tuple[bool, str]]:
-        try:
-            ok = self.cfg.llm.model in LLM(self.cfg.llm).models()
-            return [(ok, f"llm model '{self.cfg.llm.model}' at {self.cfg.llm.base_url}")]
-        except Exception as e:  # noqa: BLE001
-            return [(False, f"llm endpoint {self.cfg.llm.base_url}: {e}")]
+        return LLM(self.cfg.llm).check_model()
 
     def emotion(self, text: str, intensity: float) -> Emotion | None:
         if intensity < self.settings.min_intensity or not text.strip() or _NEUTRAL.match(text):
@@ -265,11 +255,7 @@ class SpeakersAttribute(AttributeMethod):
             text = wd.read_chapter_text(ch.file)
             spans = split_chapter(ch.id, text)
             book[ch.id] = spans
-            paras: list[list[Span]] = []
-            for s in spans:
-                if not paras or paras[-1][0].para != s.para:
-                    paras.append([])
-                paras[-1].append(s)
+            paras = group_by_para(spans)
             roster = roster_for(chars, ch.id, self.settings.roster_top, self.settings.full_roster_max, text=text)
             if chars.narrator and chars.narrator != NARRATOR_ID and chars.narrator not in {c.id for c in roster}:
                 roster.insert(0, next(c for c in chars.characters if c.id == chars.narrator))

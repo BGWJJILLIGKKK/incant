@@ -46,7 +46,7 @@ from .lanes import Job, describe, plan_phases, run_lanes
 from .pipeline import ResolveError, StageInfo, Step, discover, instantiate, load_method_class, resolve, run_pipeline
 from .pipeline import PUBLISHING_MODES, validate_stage_range
 from .stages.base import Context
-from .workdir import ProtectedFileError, WorkDir, is_protected_file
+from .workdir import ProtectedFileError, WorkDir, is_protected_file, refuse_protected
 
 
 def _parse_chapters(spec: str | None) -> set[str] | None:
@@ -255,10 +255,13 @@ def main(argv: list[str] | None = None) -> int:
 
     # INPUT: new source, an existing book (slug or work dir) to resume, or a directory of sources (batch)
     source: str | None = args.input
-    for value, what in ((source, "A book source"), (args.out, "An output file")):
-        if value and "://" not in str(value) and is_protected_file(value):
-            print(f"error: {what} can't be a .env or .toml file (configuration and keys): {value}", file=sys.stderr)
-            return 2
+    try:
+        for value, what in ((source, "A book source"), (args.out, "An output file")):
+            if value and "://" not in str(value):
+                refuse_protected(value, what)
+    except ProtectedFileError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 2
     if args.check and source and not Path(source).exists() and not (cfg.paths.work_dir / source).exists() \
             and (source.partition("=")[0] in {s.name for s in stages} or any(source in s.methods for s in stages)):
         args.methods, source = [source, *args.methods], None  # `--check characters speakers`: methods, no book
@@ -387,7 +390,8 @@ def run_batch(args, cfg, stages, items: list[BatchItem], origin: str, tokens: li
     if args.slug:
         print("error: --slug names one book; a batch names each book from its title", file=sys.stderr)
         return 2
-    tokens = _child_tokens(args.methods, stages) if tokens is None else tokens
+    if tokens is None:
+        tokens = _child_tokens(args.methods, stages)
     seen: set[str] = set()
     plans: list[tuple[BatchItem, list[Step], Path | None]] = []
     for it in items:

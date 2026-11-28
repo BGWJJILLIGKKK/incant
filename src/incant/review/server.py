@@ -491,14 +491,18 @@ def make_handler(book: Book | None = None):
     return Handler
 
 
+def validate_review_bind(review, host: str, published: bool, *, lan_hint: str = "") -> None:
+    if bool(review.public_domains) != bool(review.trusted_proxy_ips):
+        raise ValueError("Configure both review.public_domains and review.trusted_proxy_ips for Caddy access")
+    if host not in _LOCAL and not published and not review.public_domains:
+        raise ValueError("LAN binding requires review.public_domains and review.trusted_proxy_ips" + lan_hint)
+
+
 def serve(cfg: Config, wd: WorkDir, host: str, port: int, published: bool = False) -> None:
     """published: running in a container whose port compose publishes on the host (compose.desktop.yaml), so
     the page is opened at the host's localhost, and who can reach it is decided by the port mapping."""
-    if bool(cfg.review.public_domains) != bool(cfg.review.trusted_proxy_ips):
-        raise ValueError("Configure both review.public_domains and review.trusted_proxy_ips for Caddy access")
-    if host not in _LOCAL and not published and not cfg.review.public_domains:
-        raise ValueError("LAN binding requires review.public_domains and review.trusted_proxy_ips "
-                         "(an authenticating reverse proxy); from another computer, use ssh -L 8765:127.0.0.1:8765")
+    validate_review_bind(cfg.review, host, published,
+                         lan_hint=" (an authenticating reverse proxy); from another computer, use ssh -L 8765:127.0.0.1:8765")
     httpd = ThreadingHTTPServer((host, port), make_handler(Book(cfg, wd)))
     shown = "localhost" if published or host in ("127.0.0.1", "localhost") else host
     print(f"review page for '{wd.read_meta().title}': http://{shown}:{port}/   (Ctrl-C to stop)", flush=True)

@@ -81,7 +81,7 @@ class Renderer:
             for c in chars.characters:
                 for n in (c.canonical_name, *c.aliases):
                     wl.update(words(n))
-        for p in (self.wd.root / "lexicon.toml", Path(self.cfg.resolve(Path("lexicon.toml")))):
+        for p in (self.wd.root / "lexicon.toml", self.cfg.resolve(Path("lexicon.toml"))):
             if p.exists():
                 try:
                     entries = tomllib.loads(p.read_text()).get("words", {})
